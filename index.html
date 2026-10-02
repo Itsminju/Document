@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RTB 문서 모음</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1c2433;
+    --muted: #6b7484;
+    --line: #e3e7ee;
+    --accent: #2f5bd3;
+    --hover: #f4f7fd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12161d;
+      --ink: #e8ecf3;
+      --muted: #9aa3b2;
+      --line: #262d38;
+      --accent: #7fa2ff;
+      --hover: #1a2029;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    line-height: 1.6;
+  }
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 72px 24px 96px;
+  }
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+  .intro {
+    color: var(--muted);
+    margin: 0 0 40px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  li { border-bottom: 1px solid var(--line); }
+  a {
+    display: block;
+    padding: 20px 12px;
+    margin: 0 -12px;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  a:hover { background: var(--hover); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .title {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .desc {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>RTB 문서 모음</h1>
+  <p class="intro">보고 싶은 문서를 눌러 여세요.</p>
+  <ul>
+    <li>
+      <a href="rtb-kakao-feed-auto-reject.html">
+        <span class="title">카카오 톡피드 자동반려</span>
+        <span class="desc">RTB 카카오 톡피드 자동반려 관련 문서</span>
+      </a>
+    </li>
+    <li>
+      <a href="rtb-placement-260929.html">
+        <span class="title">간편유닛 지면관리</span>
+        <span class="desc">2026년 9월 29일 버전</span>
+      </a>
+    </li>
+  </ul>
+</main>
+</body>
+</html>
