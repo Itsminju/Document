@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[카카오]_톡피드_자동반려</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --bg:#F5F6F8; --card:#fff; --ink:#1B1D21; --muted:#6B7280; --faint:#9CA3AF;
+  --line:#E5E7EB; --line2:#D1D5DB;
+  --blue:#1F5FD0; --blue-bg:#EAF1FD;
+  --red:#D93025; --red-bg:#FDECEA;
+  --orange:#C2660B; --orange-bg:#FDF1E3;
+  --green:#1E7C45; --green-bg:#E9F6EE;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Pretendard","맑은 고딕",system-ui,sans-serif;font-size:14px;line-height:1.6}
+.top{background:var(--card);border-bottom:1px solid var(--line);padding:16px 24px;
+  display:flex;align-items:baseline;gap:14px;position:sticky;top:0;z-index:50}
+.top h1{font-size:17px;font-weight:700;margin:0}
+.top span{font-size:12.5px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 440px;height:calc(100vh - 57px)}
+.left{overflow-y:auto;padding:24px}
+.right{overflow-y:auto;border-left:1px solid var(--line);background:var(--card);padding:24px}
+
+.blk{position:relative;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:18px;margin-bottom:22px}
+.blk>h3{margin:0 0 14px;font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.02em}
+.rel{position:relative}
+
+.bdg{position:absolute;z-index:999;background:var(--red);color:#fff;
+  font-size:11px;font-weight:700;line-height:1;padding:3px 5px;border-radius:3px;
+  cursor:pointer;border:1px solid #fff;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bdg:hover{background:#B0221A}
+.tl{top:-9px;left:-9px} .tr{top:-9px;right:-9px}
+
+/* mock ui */
+.bar{display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#FAFBFC}
+.btn{display:inline-block;border:1px solid var(--line2);background:#fff;border-radius:6px;
+  padding:6px 12px;font-size:12.5px;color:var(--ink)}
+.btn.p{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.sm{padding:3px 10px;font-size:11.5px}
+.btn.done{color:#9CA3AF;background:#F3F4F6;border-color:var(--line);cursor:default}
+.inp{border:1px solid var(--line2);border-radius:6px;padding:7px 10px;font-size:12.5px;
+  color:var(--faint);background:#fff}
+.tabs{display:flex;border:1px solid var(--line);border-radius:8px 8px 0 0;overflow:hidden}
+.tabs div{flex:1;text-align:center;padding:10px;font-size:12.5px;color:var(--muted);
+  border-right:1px solid var(--line);background:#FAFBFC}
+.tabs div:last-child{border-right:none}
+.tabs div.on{background:#fff;color:var(--ink);font-weight:700}
+.body{border:1px solid var(--line);border-top:none;border-radius:0 0 8px 8px;padding:16px}
+.row{display:flex;gap:8px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{border:1px solid var(--line2);border-radius:999px;padding:4px 10px;font-size:12px}
+.chip i{color:var(--faint);font-style:normal;margin-left:5px}
+.lbl{font-size:12px;color:var(--muted);margin:0 0 6px}
+.grp{font-size:11.5px;font-weight:700;color:var(--blue);background:var(--blue-bg);
+  border-radius:4px;padding:2px 8px;display:inline-block;margin:14px 0 2px}
+.cnt{font-size:11.5px;color:var(--faint);margin-left:6px}
+.foot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;
+  border-top:1px solid var(--line);padding-top:14px}
+.tg{width:32px;height:18px;border-radius:999px;background:#CBD5E1;display:inline-block;
+  position:relative;vertical-align:middle}
+.tg.on{background:var(--blue)}
+.tg.off{background:#E2E8F0}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;
+  border-radius:50%;background:#fff}
+.tg.on::after{left:16px}
+.dis{opacity:.5;display:inline-flex}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.tbl th{background:#F7F8FA;color:var(--muted);font-weight:700;text-align:left;
+  padding:7px 9px;border:1px solid var(--line)}
+.tbl td{padding:7px 9px;border:1px solid var(--line)}
+
+.con{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.gnb{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.logo{font-size:14px;font-weight:800;color:#1BB98C;letter-spacing:-.02em}
+.lnb{width:150px;border-right:1px solid var(--line);background:#fff;flex:none;padding-bottom:10px}
+.lnb-h{font-size:12px;font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line)}
+.lnb-i{font-size:11.5px;color:#374151;padding:7px 12px;border-bottom:1px solid #F3F4F6}
+.lnb-i.on{background:#2BC48A;color:#fff;font-weight:700;border-color:#2BC48A}
+.lnb-s{font-size:11px;color:#6B7280;padding:5px 12px 5px 20px}
+.lnb-s.cur{color:#111;font-weight:700}
+.cnt2{flex:1;padding:12px 14px;min-width:0;overflow-x:auto}
+.crumb{font-size:12.5px;font-weight:700;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.stat{border-collapse:collapse;font-size:11px;margin-left:auto}
+.stat th,.stat td{border:1px solid var(--line);padding:5px 12px;text-align:center}
+.stat th{background:#F7F8FA;color:#6B7280;font-weight:700}
+.stat .sh{background:#F7F8FA;color:#6B7280;font-weight:700}
+.btn.g{background:#2BC48A;border-color:#2BC48A;color:#fff}
+.btn.g2{background:#8FE0C0;border-color:#8FE0C0;color:#fff}
+.btn.r2{background:#F3A0A0;border-color:#F3A0A0;color:#fff}
+.rd{font-size:11.5px;color:#374151;padding:6px 9px}
+.rd.on{color:#111;font-weight:700}
+.rd::before{content:"○ ";color:#9CA3AF}
+.rd.on::before{content:"● ";color:#2BC48A}
+.lst{width:100%;border-collapse:collapse;font-size:10.5px;white-space:nowrap}
+.lst th{background:#fff;color:#374151;font-weight:700;padding:7px 6px;
+  border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);text-align:left}
+.lst td{padding:9px 6px;border-bottom:1px solid var(--line);color:#374151;vertical-align:middle}
+.lst .st{background:#FBC02D;color:#fff;font-weight:700;border-radius:3px;padding:2px 7px;font-size:10px}
+.lst .im{color:#9CA3AF;background:#F3F4F6;text-align:center;border-radius:3px}
+.lst .lk{color:#1F5FD0;text-decoration:underline}
+
+/* description */
+.item{border:1px solid var(--line);border-radius:8px;padding:13px 15px;margin-bottom:10px;
+  scroll-margin-top:16px;transition:background .2s}
+.item.hl,.h.hl{animation:fl 1.6s ease}
+@keyframes fl{0%,55%{background:#FFF3BF;border-color:#F2CE3C}100%{background:#fff;border-color:var(--line)}}
+.item .no{display:inline-block;background:var(--red);color:#fff;font-size:11px;font-weight:700;
+  padding:2px 6px;border-radius:3px;margin-right:8px;font-variant-numeric:tabular-nums}
+.item.lv2{background:#F8FAFC;border-color:#CBD5E1}
+.item.lv3{margin-left:16px}
+.item .ttl{font-size:13.5px;font-weight:700}
+.item .dsc{margin:9px 0 0;font-size:12.8px;color:#374151;white-space:pre-wrap}
+.dsc .ref{color:var(--red);font-weight:700;cursor:pointer;text-decoration:none;
+  font-variant-numeric:tabular-nums}
+.dsc .ref:hover{text-decoration:underline}
+.dsc .secref{color:var(--blue);font-weight:700;cursor:pointer;text-decoration:none;
+  border-bottom:1px dashed var(--blue)}
+.dsc .secref:hover{border-bottom-style:solid}
+.h{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;
+  margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.h:first-child{margin-top:0}
+.h.sub{color:var(--ink);letter-spacing:0;text-transform:none;margin:16px 0 8px;
+  border-bottom:1px dashed var(--line);scroll-margin-top:16px}
+.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px}
+.tag.r{background:var(--red-bg);color:var(--red)}
+.tag.o{background:var(--orange-bg);color:var(--orange)}
+.tag.g{background:var(--green-bg);color:var(--green)}
+.tag.b{background:var(--blue-bg);color:var(--blue)}
+
+/* page tabs */
+.ptabs{display:flex;gap:2px;background:var(--card);padding:0 24px;border-bottom:1px solid var(--line);
+  position:sticky;top:57px;z-index:40}
+.ptab{padding:12px 18px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px}
+.ptab.on{color:var(--blue);border-bottom-color:var(--blue)}
+.pg{display:none}
+.pg.on{display:contents}
+.pg-spec{display:none}
+.pg-spec.on{display:block}
+.right .grp-desc{display:none}
+.right .grp-desc.on{display:block}
+
+/* material-group setting mock */
+.sg-crumb{font-size:11px;color:#9CA3AF;margin-bottom:4px}
+.sg-title{font-size:20px;font-weight:800;margin:0}
+.sg-tgls{display:flex;gap:16px;align-items:center}
+.sg-tgls .t{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.sg-sec{border:1px solid var(--line);border-radius:8px;margin-top:14px;background:#fff}
+.sg-sec-h{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
+.sg-sec-b{padding:16px 14px}
+.sg-ci{display:flex;gap:22px;align-items:flex-start}
+.sg-slots{display:flex;gap:14px}
+.sg-slot{text-align:center}
+.sg-box{width:92px;height:92px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  position:relative;font-size:10px;color:#B6BAC0;line-height:1.4}
+.sg-box.ph{border:1.5px dashed var(--line2)}
+.sg-box.img{border:1px solid var(--line);background:#7d8a6b;overflow:hidden}
+.sg-box.fav{border:1px solid var(--line);background:linear-gradient(160deg,#fff, #4b4b4b)}
+.sg-box .rm{position:absolute;top:4px;right:4px;width:15px;height:15px;border-radius:50%;
+  background:#9CA3AF;color:#fff;font-size:10px;line-height:15px}
+.sg-box .sq{width:12px;height:12px;background:#D93025}
+.sg-cap{font-size:12px;font-weight:700;margin-top:7px}
+.sg-cap i{display:block;font-size:11px;font-weight:400;color:#9CA3AF;font-style:normal;margin-top:2px}
+.sg-color{display:flex;align-items:center}
+.sg-sw{width:34px;height:34px;background:#242a39;border:1px solid var(--line2);border-radius:6px 0 0 6px}
+.sg-hex{border:1px solid var(--line2);border-left:none;padding:8px 10px;font-size:12px;color:#374151}
+.sg-pick{border:1px solid var(--line2);border-left:none;border-radius:0 6px 6px 0;padding:8px 9px;font-size:12px}
+.sg-note{font-size:11.5px;color:var(--muted);line-height:1.7;max-width:300px}
+.sg-note b{color:#1E7C45;font-weight:700}
+.sg-name{border:1px solid var(--line2);border-radius:6px;padding:11px 12px;
+  font-size:12.5px;color:var(--faint);width:420px;background:#fff}
+
+/* ===== embedded v5 spec doc (scoped) ===== */
+.spec-doc{background:#FBFAF7;padding:40px 44px;border-radius:0;font-size:15.5px;line-height:1.75;color:#1B1B19}
+.spec-doc h1{font-size:30px;line-height:1.25;font-weight:800;margin:4px 0 0;letter-spacing:-.02em;color:#1B1B19}
+.spec-doc header.doc{padding:8px 0 26px;border-bottom:1px solid var(--line)}
+.spec-doc main{padding:0}
+.spec-doc section{padding-top:40px}
+.spec-doc p{margin:0 0 14px}
+.spec-doc ul{margin:0 0 14px;padding-left:0;list-style:none}
+.spec-doc li{position:relative;padding-left:22px;margin-bottom:9px}
+.spec-doc li::before{content:"";position:absolute;left:4px;top:11px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.spec-doc footer{border-top:1px solid var(--line);margin-top:56px;padding-top:18px;font-size:12.5px;color:var(--faint)}
+.spec-flow{margin:14px 0 8px;padding:20px 8px;background:#FCFBF8;border:1px solid #E7E3D9;border-radius:12px;overflow-x:auto}
+.spec-doc{--bg:#FBFAF7; --surface:#FFFFFF; --ink:#1B1B19; --muted:#6E6C64; --faint:#9A988E;
+  --line:#E7E3D9; --line-strong:#D8D3C6; --accent:#2A4FA6; --accent-soft:#EAF0FB;
+  --green:#2E6B2A; --green-soft:#EAF4E5; --green-line:#BCD9B4;
+  --red:#A32D2D; --red-soft:#FBECEC; --red-line:#E9C4C4;
+  --amber:#9A6512; --amber-soft:#FBF1DD; --amber-line:#EBD4A3;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --sans:"Pretendard","맑은 고딕",system-ui,sans-serif;}
+.spec-doc .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}.spec-doc .meta{display:flex;flex-wrap:wrap;gap:8px}.spec-doc .badge{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;padding:5px 12px;
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;color:var(--muted)}.spec-doc .badge b{color:var(--ink);font-weight:600}.spec-doc section{padding-top:46px;scroll-margin-top:24px}.spec-doc h2{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em;margin:0}.spec-doc h2 .num{display:inline-block;min-width:22px;color:var(--faint);font-variant-numeric:tabular-nums}.spec-doc .sec-title{font-size:23px;font-weight:800;letter-spacing:-.015em;margin:6px 0 18px;
+  padding-bottom:12px;border-bottom:1px solid var(--line)}.spec-doc h3{font-size:16.5px;font-weight:700;margin:28px 0 10px;letter-spacing:-.01em}.spec-doc h3 .sub{color:var(--faint);font-weight:600;font-size:14px}.spec-doc p{margin:0 0 14px}.spec-doc ul{margin:0 0 14px;padding-left:0;list-style:none}.spec-doc li{position:relative;padding-left:22px;margin-bottom:9px}.spec-doc li::before{content:"";position:absolute;left:4px;top:11px;width:5px;height:5px;
+  border-radius:50%;background:var(--accent)}.spec-doc code{font-family:var(--mono);font-size:.86em;background:#F3F1EA;border:1px solid var(--line);
+  padding:1px 7px;border-radius:6px;color:#3a4a2e}.spec-doc .tbl{width:100%;border-collapse:collapse;margin:6px 0 16px;font-size:14.5px;
+  border:1px solid var(--line-strong);border-radius:12px;overflow:hidden}.spec-doc .tbl th{background:#F4F2EB;text-align:left;font-weight:700;font-size:13px;color:var(--muted);
+  padding:11px 14px;border-bottom:1px solid var(--line-strong)}.spec-doc .tbl td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}.spec-doc .tbl tr:last-child td{border-bottom:none}.spec-doc .tbl tr:hover td{background:#FBFAF5}.spec-doc .tbl td.key{font-weight:600;color:var(--ink);background:#FCFBF8}.spec-doc .no{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+  border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;
+  font-family:var(--mono);flex:none}.spec-doc .callout{border-radius:12px;padding:15px 18px;margin:16px 0;font-size:14.5px;line-height:1.7}.spec-doc .callout .tag{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.04em;
+  text-transform:uppercase;margin-bottom:6px}.spec-doc .callout.info{background:var(--accent-soft);border:1px solid #cdd9f2}.spec-doc .callout.info .tag{color:var(--accent)}.spec-doc .pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap}.spec-doc .pill.on{background:var(--green-soft);color:var(--green);border:1px solid var(--green-line)}.spec-doc .pill.off{background:var(--red-soft);color:var(--red);border:1px solid var(--red-line)}.spec-doc .pill.new{background:var(--accent-soft);color:var(--accent);border:1px solid #cdd9f2}.spec-doc .pill.keep{background:#F1EFE8;color:var(--muted);border:1px solid var(--line-strong)}.spec-doc .chips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 16px}.spec-doc .chip{font-size:13px;padding:4px 13px;border:1px solid var(--line-strong);
+  border-radius:999px;background:var(--surface);color:var(--ink)}.spec-doc .note{font-size:13.5px;color:var(--muted);font-style:italic;margin:8px 0 14px}
+
+
+.spec-doc section{scroll-margin-top:120px}
+.spec-doc section.hl > h2,.spec-doc section.hl > .sec-title{animation:flsec 1.6s ease;border-radius:4px}
+@keyframes flsec{0%,55%{background:#FFF3BF}100%{background:transparent}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>[카카오]_톡피드_자동반려</h1>
+</div>
+
+<div class="ptabs">
+  <div class="ptab on" data-pg="spec">개요</div>
+  <div class="ptab" data-pg="reject">모비센스_반려조건설정</div>
+  <div class="ptab" data-pg="link">광센_소재그룹 설정</div>
+</div>
+
+<div class="pg-spec on" data-pg="spec">
+  <div class="spec-doc">
+
+  <header class="doc">
+    <h1>카카오_채팅리스트/톡피드 소재<br>자동 반려 조건 설정</h1>
+  </header>
+
+  <section id="s1" style="padding-top:40px">
+    <h2><span class="num">01</span> 소재 판정 흐름</h2>
+    <div class="sec-title">Flowchart</div>
+    <div class="spec-flow">
+<svg viewBox="0 0 1560 470" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'맑은 고딕',sans-serif" style="width:100%;height:auto">
+  <defs>
+    <marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#B7B2A6"/>
+    </marker>
+  </defs>
+
+  <!-- 카테고리 판정 -->
+  <polygon points="30,230 110,185 190,230 110,275" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="110" y="234" text-anchor="middle" font-size="12" fill="#1B1B19">카테고리</text>
+
+  <!-- 송출 불가 카테고리 -> 소재그룹 disable -->
+  <text x="110" y="345" text-anchor="middle" font-size="11" fill="#6E6C64">송출 불가 카테고리</text>
+  <rect x="26" y="380" width="168" height="52" rx="8" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="110" y="402" text-anchor="middle" font-size="11" fill="#1B1B19">소재그룹 &gt; 카카오 송출</text>
+  <text x="110" y="418" text-anchor="middle" font-size="11" font-weight="700" fill="#A32D2D">disable</text>
+
+  <!-- 모비센스 검수 리스트 등재 -->
+  <rect x="300" y="204" width="150" height="52" rx="8" fill="#FFFFFF" stroke="#D8D3C6"/>
+  <text x="375" y="226" text-anchor="middle" font-size="11.5" fill="#1B1B19">모비센스</text>
+  <text x="375" y="242" text-anchor="middle" font-size="11.5" fill="#1B1B19">검수 리스트 등재</text>
+
+  <!-- 광고주 검증 -->
+  <polygon points="510,230 585,188 660,230 585,272" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="585" y="226" text-anchor="middle" font-size="11.5" fill="#1B1B19">광고주</text>
+  <text x="585" y="241" text-anchor="middle" font-size="11.5" fill="#1B1B19">검증</text>
+
+  <!-- 4 diamonds -->
+  <polygon points="760,230 838,188 916,230 838,272" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="838" y="234" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B1B19">필수 요소 결측</text>
+
+  <polygon points="948,230 1020,190 1092,230 1020,270" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="1020" y="234" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B1B19">텍스트 검증</text>
+
+  <polygon points="1122,230 1194,190 1266,230 1194,270" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="1194" y="234" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B1B19">이미지 검증</text>
+
+  <polygon points="1290,230 1368,188 1446,230 1368,272" fill="#F1EFE8" stroke="#D8D3C6" transform="translate(-8,0)"/>
+  <text x="1360" y="234" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B1B19">랜딩 URL 유효성</text>
+
+  <!-- 상태:대기 -->
+  <rect x="1462" y="204" width="86" height="50" rx="9" fill="#EAF4E5" stroke="#BCD9B4"/>
+  <text x="1505" y="234" text-anchor="middle" font-size="12" font-weight="700" fill="#2E6B2A">상태:대기</text>
+
+  <!-- 상태:반려 -->
+  <rect x="1462" y="356" width="86" height="50" rx="9" fill="#FBF1DD" stroke="#EBD4A3"/>
+  <text x="1505" y="386" text-anchor="middle" font-size="12" font-weight="700" fill="#9A6512">상태:반려</text>
+
+  <!-- arrows -->
+  <!-- 카테고리 -> 등재 (카카오 송출on) -->
+  <line x1="190" y1="230" x2="297" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="243" y="220" text-anchor="middle" font-size="11" fill="#1B1B19">카카오 송출on</text>
+  <!-- 카테고리 -> disable (down) -->
+  <line x1="110" y1="275" x2="110" y2="377" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+
+  <!-- 등재 -> 광고주검증 -->
+  <line x1="450" y1="230" x2="507" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <!-- 광고주검증 -> 필수요소 -->
+  <path d="M660,230 L720,230 L757,230" fill="none" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="700" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+
+  <!-- pass chain -->
+  <line x1="916" y1="230" x2="945" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="931" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+  <line x1="1092" y1="230" x2="1119" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="1106" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+  <line x1="1266" y1="230" x2="1287" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="1277" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+  <line x1="1438" y1="230" x2="1459" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="1449" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+
+  <!-- fail rails to 상태:반려 (y=381) -->
+  <line x1="838" y1="272" x2="838" y2="381" stroke="#B7B2A6"/>
+  <line x1="1020" y1="270" x2="1020" y2="381" stroke="#B7B2A6"/>
+  <line x1="1194" y1="270" x2="1194" y2="381" stroke="#B7B2A6"/>
+  <line x1="1360" y1="272" x2="1360" y2="381" stroke="#B7B2A6"/>
+  <text x="848" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+  <text x="1030" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+  <text x="1204" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+  <text x="1370" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+
+  <!-- 광고주검증 fail -> 반려 rail (leftmost drop at x=585) -->
+  <path d="M585,272 L585,381 L1459,381" fill="none" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="595" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+</svg>
+
+</div>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span> 개발 범위</h2>
+    <div class="sec-title">개발 범위</div>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:110px">위치</th><th style="width:220px">대상</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">1</span></td><td>광고주센터</td><td>소재그룹 설정 토글</td><td>화면 변경 없음. 자동 반려 조건에 따라 <b>토글 상태가 자동 전환</b>되는 동작만 신규</td></tr>
+        <tr><td><span class="no">2</span></td><td>모비센스</td><td>검수 리스트 우측 상단</td><td><code>자동 반려 조건</code> 버튼 추가</td></tr>
+        <tr><td><span class="no">3</span></td><td>모비센스</td><td>자동 반려 조건 팝업</td><td>3탭 구성 — 송출 불가 카테고리 / 송출 불가 광고주 / 사용 불가 표현</td></tr>
+        <tr><td><span class="no">4</span></td><td>모비센스</td><td>자동 반려 배치</td><td><b>일배치 — 매일 10시 1회 실행</b>. 검수 리스트에 등재된 소재를 건별로 <b>기본 검증 → 반려 판정 LLM API 호출</b> 순으로 처리하고, 반려 대상을 <b>일괄 모비온 반려</b>로 갱신</td></tr>
+        <tr><td><span class="no">5</span></td><td>모비센스</td><td>반려 판정 LLM API</td><td>사이트명 · 소재 광고문구를 기준으로 소재의 <b>반려 여부를 판정</b>하는 API. 배치가 소재 단위로 호출하며, 판정 결과(반려/통과 및 사유)를 반환 <br>판정 조건은 <b>06. LLM 판정 조건</b> 참조</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <section id="s3">
+    <h2><span class="num">03</span> 카카오 송출 불가 카테고리 광고주</h2>
+    <div class="sec-title">소재그룹 &gt; 카카오 송출 토글 off 및 disable</div>
+    <p>자동 반려 조건 중 카테고리 조건에 해당하는 광고주는 소재그룹 생성시 "카카오 송출" 토글이 off 이며, 변경할 수 없다. </p>
+    <table class="tbl">
+      <thead><tr><th style="width:200px">조건 해당</th><th style="width:130px">카카오 송출</th><th>결과</th></tr></thead>
+      <tbody>
+        <tr><td>송출 불가 카테고리</td><td><span class="pill off">OFF</span></td><td>소재는 생성되나 카카오로 송출되지 않음 <br>(참고) 카카오 송출 off 상태에서 소재 그룹이 생성되었기 때문에  카테고리 조건이 변경되어도 해당 소재가 자동으로 검수 리스트에 등재되지 않음 </td></tr>
+        <tr><td>송출 불가 광고주</td><td><span class="pill on">ON</span></td><td>소재 생성·송출 토글 조건은 유지하되, 모비센스 &gt; 이미지검수 리스트 등재 후 배치로 모비온 반려 처리</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span> 반려 조건 등록</h2>
+    <div class="sec-title">자동 반려 조건 버튼</div>
+    <table class="tbl">
+      <thead><tr><th style="width:140px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="key">위치</td><td>이미지 검수 &gt; 채팅리스트/피드 </td></tr>
+        <tr><td class="key">동작</td><td>클릭 시 자동 반려 조건 팝업 오픈 </td></tr>
+        <tr><td class="key">권한</td><td><b>파트장 이상</b>에게만 노출. 권한 구분은 <b>생성 · 삭제</b> 2종</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span> 자동 반려 조건 팝업</h2>
+    <div class="sec-title">자동 반려 조건 확인 및 등록/수정</div>
+    <p>팝업 내 3개 탭 구조. 우측 상단 <code>X</code> 닫기. 하단 <code>바로 적용</code> / <code>저장</code> 버튼은 전 탭 공통. <br> 팝업 진입자는 전체 내용을 열람할 수 있으며, 별도의 읽기 전용 등급은 두지 않는다. 등록 · 삭제는 각 권한 보유자만 가능</p>
+
+    <h3>5.1 <span class="sub">송출 불가 카테고리</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:150px">구성 요소</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">1</span></td><td>카테고리 선택</td><td>a. 드롭다운.<br> b.이미 등록된 카테고리는 목록에서 제외 <br> c. 광고주센터 > 계정설정 > 카테고리 조건과 동일 </td></tr>
+        <tr><td><span class="no">2</span></td><td>추가</td><td>선택된 카테고리를 하단 목록에 칩(chip) 형태로 추가</td></tr>
+        <tr><td><span class="no">3</span></td><td>등록 목록</td><td> a. 등록된 카테고리 칩 나열 <br> b.각 칩 우측 <code>x</code> 클릭 시 해당 카테고리는 송출 불가 카테고리에서 제외됨 <br> c. 생성 · 삭제 권한자 상이<br> &nbsp;&nbsp;- 열람 : 모비센스 로그인 시 전체 가능<br> &nbsp;&nbsp;- 생성 · 삭제 : 권한 조건 확정 필요</td></tr>
+      </tbody>
+    </table>
+    <p class="note">기본 등록 카테고리 (16종, 고정)</p>
+    <div class="chips">
+      <span class="chip">성기능개선</span><span class="chip">산부인과(성인)</span><span class="chip">비뇨기과(성인)</span>
+      <span class="chip">성형외과(성인)</span><span class="chip">성인방송</span><span class="chip">가상화폐/블록체인</span>
+      <span class="chip">빗썸</span><span class="chip">성인용품</span><span class="chip">타로/사주</span>
+      <span class="chip">제3금융권대출</span><span class="chip">복권/로또</span><span class="chip">성인기타</span>
+      <span class="chip">성인웹툰</span><span class="chip">전자담배/금연용품(성인)</span><span class="chip">스포츠토토</span>
+      <span class="chip">보험상조</span>
+    </div>
+
+    <h3>5.2 <span class="sub">송출 불가 광고주</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:150px">구성 요소</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">4</span></td><td>광고주 검색</td><td>a. 입력창 : 인풋박스, 텍스트 포함 검색
+          <br> b. [X]: 입력값 초기화 버튼 
+          <br> c. 검색버튼 클릭시 최종 검색 </td></tr>
+        <tr><td><span class="no">5</span></td><td>기존 등록 목록</td><td>이미 제외 대상으로 포함된 광고주 계정 노출</td></tr>
+        <tr><td><span class="no">6</span></td><td>검색 결과 추가</td><td>a. 행 우측 <code>추가</code> 버튼으로 제외 목록에 추가<br>b. 이미 등록된 광고주는 <code>추가</code> 비활성 표기<br>c. 등록된 항목은 행 우측 <code>삭제</code> 버튼으로 개별 삭제</td></tr>
+      </tbody>
+    </table>
+
+    <h3>5.3 <span class="sub">사용 불가 표현</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:150px">구성 요소</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">7</span></td><td>테마 선택</td><td>드롭다운. 등록 시 필수 선택 (9종 고정)</td></tr>
+        <tr><td><span class="no">8</span></td><td>표현 입력</td><td>텍스트 입력 후 <code>추가</code> 클릭 
+          <br> 쉼표구분으로 다건 동시 등록. 선택된 테마로 일괄 귀속</td></tr>
+        <tr><td><span class="no">9</span></td><td>등록 목록</td><td>테마별 그룹 헤더 + 칩 나열. 그룹별 건수 및 총 건수 표기. 각 칩 우측 <code>x</code> 클릭 시 개별 삭제. 등록 표현이 없는 테마는 미노출</td></tr>
+        <tr><td><span class="no">10</span></td><td>등록된 표현 찾기</td><td>등록 표현 검색. 입력 후 <code>검색</code> 클릭 시 일치하는 표현만 노출. 중복 확인 및 삭제 용도</td></tr>
+      </tbody>
+    </table>
+    <table class="tbl">
+      <thead><tr><th style="width:140px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="key">등록 대상</td><td>등록된 표현은 <b>무조건 반려</b>. 등록 표현을 기준으로 <b>유사 표현도 LLM 판정하에 반려</b> 처리</td></tr>
+        <tr><td class="key">테마</td><td>카카오 서비스 명칭 변형 · 수식어 · 기능성 표시 표현 · 최상급 표현 · 사실 확인 필요 문구 · 사회정서 침해 · 의약품·의료기기 효능 · 전후비교 표현 · 운영자 추가</td></tr>
+        <tr><td class="key">검수 대상 컬럼</td><td>사이트명, 소재 광고문구</td></tr>
+        <tr><td class="key">매칭 규칙</td><td>공백 제거 · 대소문자 무시 후 포함(contains) 비교 — <code>카톡 채널</code> = <code>카톡채널</code>, <code>카카오톡Channel</code> = <code>카카오톡channel</code></td></tr>
+        <tr><td class="key">중복 처리</td><td>정규화 기준 동일 표현은 추가 차단 후 안내</td></tr>
+        <tr><td class="key">판정 등급</td><td>표현 검출 시 <b>모비온 반려</b>. 반려 사유에 테마명 병기 (예: 텍스트 검증 - 카카오 서비스 명칭 변형)</td></tr>
+      </tbody>
+    </table>
+    <p class="note">등록 필요 표현 — 테마: 카카오 서비스 명칭 변형</p>
+    <div class="chips">
+      <span class="chip">플친</span><span class="chip">플러스친구</span><span class="chip">카스</span>
+      <span class="chip">카카오톡Channel</span><span class="chip">카톡 채널</span>
+    </div>
+
+    <h3>5.4 <span class="sub">하단 공통 버튼</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:120px">버튼</th><th>동작</th></tr></thead>
+      <tbody>
+        <tr><td class="key">바로 적용</td><td>설정값 저장 + 기존 소재 즉시 재판정 반영</td></tr>
+        <tr><td class="key">저장</td><td>설정값만 저장. 다음 배치부터 반영</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <section id="s6">
+    <h2><span class="num">06</span> LLM 판정 조건</h2>
+    <div class="sec-title">배치 · 반려 판정 로직</div>
+    <p>배치는 <b>일배치(매일 10시)</b>로 실행되며, 검수 리스트에 등재된 소재를 건별로 <b>① 기본 검증</b> → <b>② 반려 판정 LLM API 호출</b> 순으로 처리한다.
+      둘 중 하나라도 반려 조건에 해당하면 <b>모비온 반려</b>로 갱신한다.
+      판정 등급은 <b>반려 단일</b>이며, 경고 등 중간 등급은 두지 않는다.</p>
+
+    <h3>6.1 <span class="sub">기본 검증 — LLM 미호출</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:160px">검증 항목</th><th>반려 조건</th><th style="width:190px">반려 사유</th></tr></thead>
+      <tbody>
+        <tr><td class="key">이미지 확장자</td><td><code>jpg</code> · <code>jpeg</code> · <code>png</code> 외 확장자</td><td>이미지 확장자 오류</td></tr>
+        <tr><td class="key">필수 요소 결측</td><td>소재 구성 필수 항목 누락 <br>필수항목:사이트명,프로필로고,배너이미지,소재광고문구,랜딩URL,CTA정보 </td><td>필수 요소 결측</td></tr>
+      </tbody>
+    </table>
+    <p class="note">별도 등록 화면 없이 고정 조건으로 처리한다.</p>
+
+    <h3>6.2 <span class="sub">LLM 판정 — 조건부 반려</span></h3>
+    <p>아래 표현이 포함되면 반려한다. 단, <b>해당 표현이 광고주명과 일치하는 경우 사용 가능</b>하다. (예: 오늘의집)</p>
+    <table class="tbl">
+      <thead><tr><th style="width:170px">테마</th><th>표현 예시</th><th style="width:80px">화면 등록</th></tr></thead>
+      <tbody>
+        <tr><td class="key">수식어</td><td>공식몰, 본사, 전문기업, 프리미엄, 최저가, 믿고사는, 오늘의</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">기능성 표시 표현</td><td>면역케어, 장건강, 다이어트, 글루텐 분해, 혈행 개선, 관절</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">최상급 표현</td><td>1위, 1등, 최다, 최대, 최초, 유일, 국내최고, N년 연속</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">사실 확인 필요 문구</td><td>선정, 인증, 수상, 협회, N대 프랜차이즈</td><td><span class="pill on">O</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.3 <span class="sub">LLM 판정 — 무조건 반려</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:170px">테마</th><th>표현 예시</th><th style="width:80px">화면 등록</th></tr></thead>
+      <tbody>
+        <tr><td class="key">사회정서 침해</td><td>탕감, 감형, 구제, 면책, 무죄, 합의금, 이혼</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">의약품·의료기기 효능</td><td>시술, 치료, 리프팅, 미백, 박멸, 피부과, 약국, 의사 추천, 처방</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">카카오 서비스 명칭 변형</td><td>플친, 플러스친구, 카스, 카카오톡Channel, 카톡 채널</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">전후비교 표현</td><td>전/후, Before, After, 비포, 애프터</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">운영자 추가</td><td>운영자가 직접 등록한 표현 — 위 테마에 속하지 않지만, 운영자 판단한에 반려처리 필요한 표현</td><td><span class="pill on">O</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.4 <span class="sub">LLM 판정 — 형식 · 유효성</span></h3>
+    <p>표현 열거가 불가능한 조건으로, <b>사용 불가 표현 화면의 등록 대상이 아니다.</b></p>
+    <table class="tbl">
+      <thead><tr><th style="width:170px">검증 항목</th><th>반려 조건</th></tr></thead>
+      <tbody>
+        <tr><td class="key">도메인 주소 포함</td><td>사이트명 · 소재 광고문구에 <code>.com</code> <code>.co.kr</code> <code>.kr</code> <code>.net</code> <code>.shop</code> <code>.store</code> 포함, 또는 <code>www.</code> 로 시작</td></tr>
+        <tr><td class="key">띄어쓰기 및 오탈자</td><td>a. 문자 사이 공백이 존재하지 않는 경우<br>b. 오탈자</td></tr>
+        <tr><td class="key">유효기간 종료</td><td>시즌 키워드 경과, 명시된 기간 정보가 만료된 케이스<br>※ 문구에만 기재된 경우는 허용</td></tr>
+        <tr><td class="key">랜딩 URL 유효성</td><td>연결 화면 접속 오류 — 반려 사유 : 유효하지 않은 랜딩 URL<br>※ 추가 점검 항목은 6.7 참조</td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.5 <span class="sub">사용 불가 표현 화면과의 관계</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:140px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="key">검수 대상 컬럼</td><td>사이트명, 소재 광고문구</td></tr>
+        <tr><td class="key">화면 등록 표현</td><td>등록된 표현은 <b>무조건 반려</b>. 등록 표현을 기준으로 <b>유사 표현도 LLM 판정하에 반려</b> 처리한다 <br>미등록 표현도 LLM이 6.2 · 6.3 기준으로 판정한다</td></tr>
+        <tr><td class="key">반려 사유 표기</td><td>텍스트 검증 - {테마명} (예: 텍스트 검증 - 카카오 서비스 명칭 변형)</td></tr>
+        <tr><td class="key">판정 등급</td><td>반려 단일. 경고 등 중간 등급 없음</td></tr>
+      </tbody>
+    </table>
+    <h3>6.6 <span class="sub">프로필 로고 · 배너이미지 반려 조건</span></h3>
+    <p>소재 이미지의 <b>내용</b>을 판정한다. 확장자 검증(6.1)과 별개이며, 아래 조건에 해당하면 <b>모비온 반려</b>로 처리한다.</p>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:150px">검증 항목</th><th style="width:330px">반려 조건</th><th style="width:100px">대상</th><th>반려 사유</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">1</span></td><td>배경 투명</td><td>이미지 배경이 투명한 경우</td><td>로고 · 배너</td><td>배경 투명</td></tr>
+        <tr><td><span class="no">2</span></td><td>외곽선 포함</td><td>이미지 가장자리를 따라 선(stroke)이 그어진 경우</td><td>로고</td><td>외곽 테두리</td></tr>
+        <tr><td><span class="no">3</span></td><td>외곽 여백</td><td>색면이 이미지 끝까지 채워지지 않아 가장자리에 여백이 남는 경우</td><td>로고</td><td>외곽 테두리</td></tr>
+        <tr><td><span class="no">4</span></td><td>빈 이미지</td><td>흰 배경이 전부인 완전 빈 이미지</td><td>로고 · 배너</td><td>빈 이미지</td></tr>
+      </tbody>
+    </table>
+    <p class="note">2 · 3은 가장자리가 <b>액자(프레임)처럼</b> 보이는 동일 현상이므로, 반려 사유는 <code>외곽 테두리</code>로 통일해 표기한다.</p>
+    <p class="note">로고 = 프로필 로고, 배너 = 배너이미지</p>
+
+    <h3>6.7 <span class="sub">랜딩 URL 유효성 — 검토 항목</span></h3>
+    <p>6.4의 랜딩 URL 유효성은 <b>연결 화면 접속 오류</b>만 확정 범위다. 아래는 추가로 검토 필요한 점검 항목으로, 필수 요건은 아님</b></p>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:220px">점검 항목</th><th>내용</th><th style="width:150px">검토 상태</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">1</span></td><td>로그인 페이지 연결</td><td>랜딩 시 콘텐츠가 아닌 로그인 페이지로 연결되는 경우</td><td>케이스 예시 수집 필요</td></tr>
+        <tr><td><span class="no">2</span></td><td>연결 화면 내 서비스 비활성화</td><td>화면은 열리나 내부 서비스가 중단된 경우</td><td>비용 이슈 검토 필요</td></tr>
+        <tr><td><span class="no">3</span></td><td>종료된 이벤트 페이지 · 종료된 URL</td><td>이벤트가 종료되었거나 만료된 URL로 연결되는 경우</td><td>비용 이슈 검토 필요</td></tr>
+      </tbody>
+    </table>
+    <p class="note">2 · 3은 화면 접속 성공 여부만으로 판별할 수 없어 페이지 내용까지 확인해야 하므로, 호출 비용이 발생한다.</p>
+  </section>
+
+  <section id="s7">
+    <h2><span class="num">07</span> 반려 사유</h2>
+    <div class="sec-title">반려 사유 표기 체계</div>
+
+    <h3>7.1 <span class="sub">표기 규칙</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:140px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="key">형식</td><td><b>{검증 단계} - {상세 사유} (검출 표현)</b></td></tr>
+        <tr><td class="key">검출 표현 병기</td><td>검출된 표현을 특정할 수 있는 경우 괄호로 병기한다<br>예) <code>텍스트 검증 - 수식어 (프리미엄)</code></td></tr>
+        <tr><td class="key">복수 사유</td><td>복수 조건에 해당하면 <b>해당 사유를 모두 표기</b>한다<br>리스트에는 대표 1건 + <code>외 N건</code>으로 요약하고, 상세에서 전체를 노출한다</td></tr>
+        <tr><td class="key">노출 위치</td><td>이미지 검수 &gt; 채팅리스트/피드 리스트의 <b>반려사유</b> 컬럼 (기존 컬럼)<br>승인상태가 <code>모비온 반려</code>인 소재에만 표기</td></tr>
+      </tbody>
+    </table>
+
+    <h3>7.2 <span class="sub">사유 목록</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:120px">검증 단계</th><th style="width:220px">상세 사유</th><th>표기 예시</th></tr></thead>
+      <tbody>
+        <tr><td class="key">광고주 검증</td><td>송출 불가 광고주</td><td>광고주 검증 - 송출 불가 광고주</td></tr>
+        <tr><td class="key">필수 요소</td><td>필수 항목 누락</td><td>필수 요소 - 필수 항목 누락 (배너이미지)</td></tr>
+        <tr><td class="key">이미지 검증</td><td>확장자 오류</td><td>이미지 검증 - 확장자 오류 (gif)</td></tr>
+        <tr><td class="key">이미지 검증</td><td>배경 투명</td><td>이미지 검증 - 배경 투명 (프로필 로고)</td></tr>
+        <tr><td class="key">이미지 검증</td><td>외곽 테두리</td><td>이미지 검증 - 외곽 테두리 (프로필 로고)</td></tr>
+        <tr><td class="key">이미지 검증</td><td>빈 이미지</td><td>이미지 검증 - 빈 이미지 (배너이미지)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>카카오 서비스 명칭 변형</td><td>텍스트 검증 - 카카오 서비스 명칭 변형 (플친)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>수식어</td><td>텍스트 검증 - 수식어 (프리미엄)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>기능성 표시 표현</td><td>텍스트 검증 - 기능성 표시 표현 (면역케어)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>최상급 표현</td><td>텍스트 검증 - 최상급 표현 (국내최고)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>사실 확인 필요 문구</td><td>텍스트 검증 - 사실 확인 필요 문구 (N대 프랜차이즈)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>사회정서 침해</td><td>텍스트 검증 - 사회정서 침해 (합의금)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>의약품·의료기기 효능</td><td>텍스트 검증 - 의약품·의료기기 효능 (리프팅)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>전후비교 표현</td><td>텍스트 검증 - 전후비교 표현 (Before)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>운영자 추가</td><td>텍스트 검증 - 운영자 추가 (등록 표현)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>도메인 주소 포함</td><td>텍스트 검증 - 도메인 주소 포함 (www.example.com)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>띄어쓰기 · 오탈자</td><td>텍스트 검증 - 띄어쓰기 · 오탈자</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>유효기간 종료</td><td>텍스트 검증 - 유효기간 종료 (2026 설날 특가)</td></tr>
+        <tr><td class="key">랜딩 URL</td><td>연결 화면 접속 오류</td><td>랜딩 URL - 연결 화면 접속 오류</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>카카오 소재 자동 반려 조건 설정 · 화면기능정의서 · v5</footer>
+
+  </div>
+</div>
+
+<div class="layout">
+
+<div class="left">
+
+  <div class="pg" data-pg="reject">
+
+  <div class="blk" style="padding:0;overflow:hidden">
+    <h3 style="padding:16px 18px 0;margin:0 0 12px">화면위치 : 이미지 검수 &gt; 채팅리스트/피드 <span style="color:var(--muted);font-weight:600">(1~2)</span></h3>
+    <div class="rel" style="margin:0 14px 14px">
+      <div class="con">
+
+        <div class="gnb">
+          <span class="logo">MOBSENSE</span>
+          <span style="margin-left:auto;font-size:11px;color:#6B7280"> _사용자계정정보_</span>
+        </div>
+
+        <div style="display:flex">
+          <div class="lnb">
+            <div class="lnb-h">매체 센터 <span style="float:right;color:#9CA3AF">×</span></div>
+            <div class="lnb-i">개요</div><div class="lnb-i">지면 등록</div>
+            <div class="lnb-i">지면 심사</div><div class="lnb-i">보고서</div>
+            <div class="lnb-i">MY 대행매체 관리</div><div class="lnb-i">정산 관리</div>
+            <div class="lnb-i">CPS 관리</div><div class="lnb-i">공지사항</div>
+            <div class="lnb-i">사용자 관리</div>
+            <div class="lnb-i on">이미지 검수</div>
+            <div class="lnb-s">비즈보드 (상품)</div>
+            <div class="lnb-s">비즈보드 / 네이티브</div>
+            <div class="lnb-s cur">채팅리스트 / 피드</div>
+            <div class="lnb-i">지면 관리</div><div class="lnb-i">시스템 관리</div>
+          </div>
+
+          <div class="cnt2">
+            <div class="crumb">이미지 검수 &gt; 채팅리스트/피드</div>
+
+            <table class="stat">
+              <tr><th></th><th>전체</th><th>대기</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr>
+              <tr><td class="sh">이미지 수</td><td>73</td><td>11</td><td>0</td><td>43</td><td>0</td></tr>
+              <tr><td class="sh">광고주 수</td><td>16</td><td>5</td><td>0</td><td>4</td><td>0</td></tr>
+            </table>
+
+            <div class="rel" style="margin-top:20px">
+
+              <div class="row" style="margin:0 0 10px">
+                <span class="rel">
+                  <span class="bdg tl" data-t="1">1</span>
+                  <span class="inp" style="width:120px">생성일 ▾</span>
+                </span>
+                <span class="inp" style="width:190px">2026-09-14 ~ 2026-09-14</span>
+                <span class="btn g">검색</span>
+              </div>
+
+              <div class="row" style="justify-content:space-between;margin-bottom:14px">
+                <span class="row" style="border:1px solid var(--line);border-radius:6px;overflow:hidden">
+                  <span class="btn g" style="border-radius:0">승인상태</span>
+                  <span class="rd">전체</span><span class="rd on">대기</span><span class="rd">내부승인</span>
+                  <span class="rd">승인</span><span class="rd">모비온 반려</span><span class="rd">카카오 반려</span>
+                </span>
+                <span class="rel">
+                  <span class="bdg tr" data-t="2">2</span>
+                  <span class="btn">자동 반려 조건</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="row" style="margin-bottom:8px">
+              <span class="btn g2">내부승인</span><span class="btn r2">반려</span>
+            </div>
+            <div class="row" style="justify-content:space-between;margin-bottom:10px">
+              <span class="row">
+                <span class="btn g">컬럼 설정</span>
+                <span class="inp" style="width:170px">검색어를 입력하세요.</span>
+                <span class="btn g">검색</span>
+              </span>
+              <span class="row">
+                <span class="inp" style="width:110px">100개씩 보기 ▾</span>
+                <span class="btn g">엑셀</span>
+              </span>
+            </div>
+
+            <table class="lst">
+              <tr><th>NO</th><th>승인상태</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>소재그룹명</th><th>사이트명</th><th>프로필 로고</th><th>소재 광고문구</th><th>랜딩URL</th><th>CTA 정보</th><th>생성일자</th><th>최종업데이트일</th><th class="rel"><span class="bdg tl" data-t="3" style="top:-15px;left:-6px">3</span>반려사유</th><th>비고</th></tr>
+              <tr><td>1</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_2안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>2</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_1안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>3</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_260902</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>4</td><td><span class="st">대기</span></td><td>cdhthank2026</td><td>바르게</td><td>비지니스&gt;마케팅</td><td>최초_테스트</td><td>생활비연구소</td><td class="im">로고</td><td>생활비연구소 테스트</td><td class="lk">https://mediabigpi.com/lifecare</td><td>더알아보기</td><td>2026-09-14 16:08:47</td><td>2026-09-14 16:08:47</td><td>-</td><td>-</td></tr>
+              <tr><td>5</td><td><span class="st">대기</span></td><td>livecom</td><td>이비엠그룹_라이브커머스코리아</td><td>비지니스&gt;마케팅</td><td>제스파</td><td>라이브커머스</td><td class="im">로고</td><td>네이버쇼핑라이브</td><td class="lk">https://view.shoppinglive.naver.com/li…</td><td>바로가기</td><td>2026-09-14 15:12:41</td><td>2026-09-14 15:12:41</td><td>-</td><td>-</td></tr>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>자동 반려 조건 팝업 — 송출 불가 카테고리 <span style="color:var(--muted);font-weight:600">(4~10)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="4">4</span>
+      <div class="rel">
+        <span class="bdg tr" data-t="5">5</span>
+        <div class="tabs">
+          <div class="on">송출 불가 카테고리</div><div>송출 불가 광고주</div><div>사용 불가 표현</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="rel">
+          <p class="lbl">카테고리 선택 <br></p>
+          <div class="row">
+            <span class="rel" style="flex:1">
+              <span class="bdg tl" data-t="6">6</span>
+              <span class="inp" style="display:block">카테고리를 선택하세요 ▾</span>
+            </span>
+            <span class="rel">
+              <span class="bdg tr" data-t="7">7</span>
+              <span class="btn">추가</span>
+            </span>
+          </div>
+          <div class="rel" style="margin-top:14px">
+            <span class="bdg tl" data-t="8">8</span>
+            <div class="chips" style="margin-top:0">
+              <span class="chip">성기능개선<i>×</i></span><span class="chip">산부인과(성인)<i>×</i></span>
+              <span class="chip">비뇨기과(성인)<i>×</i></span><span class="chip">성형외과(성인)<i>×</i></span>
+              <span class="chip">성인방송<i>×</i></span><span class="chip">가상화폐/블록체인<i>×</i></span>
+              <span class="chip">빗썸<i>×</i></span><span class="chip">성인용품<i>×</i></span>
+              <span class="chip">타로/사주<i>×</i></span><span class="chip">제3금융권대출<i>×</i></span>
+              <span class="chip">복권/로또<i>×</i></span><span class="chip">성인기타<i>×</i></span>
+              <span class="chip">성인웹툰<i>×</i></span><span class="chip">전자담배/금연용품(성인)<i>×</i></span>
+              <span class="chip">스포츠토토<i>×</i></span><span class="chip">보험상조<i>×</i></span>
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <span class="rel"><span class="bdg tl" data-t="9">9</span><span class="btn">바로 적용</span></span>
+          <span class="rel"><span class="bdg tr" data-t="10">10</span><span class="btn p">저장</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>자동 반려 조건 팝업 — 송출 불가 광고주 <span style="color:var(--muted);font-weight:600">(11~15)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="11">11</span>
+      <div class="tabs">
+        <div>송출 불가 카테고리</div><div class="on">송출 불가 광고주</div><div>사용 불가 표현</div>
+      </div>
+      <div class="body">
+        <div class="rel">
+          <p class="lbl">광고주 검색</p>
+          <div class="row">
+            <span class="rel" style="flex:1">
+              <span class="bdg tl" data-t="12">12</span>
+              <span class="inp" style="display:block">광고주 ID 또는 광고주명 입력 <span style="float:right;color:#9CA3AF">×</span></span>
+            </span>
+            <span class="rel">
+              <span class="bdg tr" data-t="13">13</span>
+              <span class="btn">검색</span>
+            </span>
+          </div>
+        </div>
+        <div class="rel" style="margin-top:24px">
+          <span class="bdg tl" data-t="14" style="top:-20px">14</span>
+          <p class="lbl">검색 결과</p>
+          <table class="tbl">
+            <tr><th style="width:120px">광고주 ID</th><th>광고주명</th><th style="width:80px">추가</th></tr>
+            <tr><td>livemart</td><td>라이브마트</td><td><span class="btn sm">추가</span></td></tr>
+            <tr><td>livecom</td><td>이베이글로벌</td><td><span class="btn sm done">추가</span></td></tr>
+          </table>
+        </div>
+        <div class="rel" style="margin-top:24px">
+          <span class="bdg tl" data-t="15" style="top:-20px">15</span>
+          <p class="lbl">등록 목록</p>
+          <table class="tbl">
+            <tr><th style="width:120px">광고주 ID</th><th>광고주명</th><th style="width:80px">삭제</th></tr>
+            <tr><td>livecom</td><td>이베이글로벌</td><td><span class="btn sm">삭제</span></td></tr>
+            <tr><td>rentmall</td><td>렌트몰</td><td><span class="btn sm">삭제</span></td></tr>
+            <tr><td>zipbanchan</td><td>집반찬</td><td><span class="btn sm">삭제</span></td></tr>
+            <tr><td>coupangls</td><td>쿠팡로지스틱스</td><td><span class="btn sm">삭제</span></td></tr>
+          </table>
+        </div>
+        <div class="foot">
+          <span class="btn">바로 적용</span><span class="btn p">저장</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>자동 반려 조건 팝업 — 사용 불가 표현 <span style="color:var(--muted);font-weight:600">(16~21)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="16">16</span>
+      <div class="tabs">
+        <div>송출 불가 카테고리</div><div>송출 불가 광고주</div><div class="on">사용 불가 표현</div>
+      </div>
+      <div class="body">
+        <div class="rel">
+          <p class="lbl">표현 등록</p>
+          <div class="row">
+            <span class="rel">
+              <span class="bdg tl" data-t="17">17</span>
+              <span class="inp" style="display:block;width:180px">카카오 서비스 명칭 변형 ▾</span>
+            </span>
+            <span class="rel" style="flex:1">
+              <span class="bdg tl" data-t="18">18</span>
+              <span class="inp" style="display:block">반려 처리할 표현을 입력하세요</span>
+            </span>
+            <span class="rel">
+              <span class="bdg tr" data-t="19">19</span>
+              <span class="btn">추가</span>
+            </span>
+          </div>
+        </div>
+        <div class="rel" style="margin-top:20px">
+          <div class="rel" style="margin-top:4px">
+            <span class="bdg tl" data-t="20" style="top:-20px">20</span>
+            <p class="lbl">등록된 표현 찾기</p>
+            <div class="row">
+              <span class="inp" style="flex:1">검색어를 입력하세요.</span>
+              <span class="btn">검색</span>
+            </div>
+          </div>
+          <div class="rel" style="margin-top:24px">
+            <span class="bdg tl" data-t="21" style="top:-20px">21</span>
+            <p class="lbl">등록 표현 <b style="color:var(--ink)">5</b></p>
+            <div>
+              <span class="grp">카카오 서비스 명칭 변형</span><span class="cnt">6</span>
+              <div class="chips">
+                <span class="chip">플친<i>×</i></span><span class="chip">플러스친구<i>×</i></span>
+                <span class="chip">카스<i>×</i></span><span class="chip">카카오톡Channel<i>×</i></span>
+                <span class="chip">카톡 채널<i>×</i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <span class="btn">바로 적용</span><span class="btn p">저장</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /pg reject -->
+
+  <div class="pg" data-pg="link">
+
+  <div class="blk">
+    <h3>연동 — 소재그룹 설정 <span style="color:var(--muted);font-weight:600">(22~23)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="22">22</span>
+      <div class="con" style="padding:20px 22px;background:#F5F6F8">
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+          <div>
+            <div class="sg-crumb">ROAS_12341% &gt; ROAS_12341%_202608121105</div>
+            <h2 class="sg-title">소재그룹 설정</h2>
+          </div>
+          <div class="sg-tgls rel">
+            <span class="rel">
+              <span class="bdg tl" data-t="23" style="left:-14px">23</span>
+              <span class="dis"><span class="t">카카오 송출 <span class="tg off"></span></span></span>
+            </span>
+            <span class="rel">
+              <span class="t">소재 자동 생성 <span class="tg on"></span></span>
+            </span>
+          </div>
+        </div>
+
+        <div class="sg-sec">
+          <div class="sg-sec-h">CI &amp; 시그니처 컬러 <span style="color:#9CA3AF;font-weight:400">⌃</span></div>
+          <div class="sg-sec-b">
+            <div class="sg-ci">
+              <div class="sg-slots">
+                <div class="sg-slot">
+                  <div class="sg-box ph">사용할 이미지를<br>이곳에 끌어주세요</div>
+                  <div class="sg-cap">로고<i>(200x67)</i></div>
+                </div>
+                <div class="sg-slot">
+                  <div class="sg-box img"><span class="rm">×</span></div>
+                  <div class="sg-cap">프로필 로고<i>(600x600)</i></div>
+                </div>
+                <div class="sg-slot">
+                  <div class="sg-box ph">사용할 이미지를<br>이곳에 끌어주세요</div>
+                  <div class="sg-cap">앱아이콘<i>(512x512)</i></div>
+                </div>
+                <div class="sg-slot">
+                  <div class="sg-box fav"><span class="rm">×</span><span class="sq"></span></div>
+                  <div class="sg-cap">파비콘<i>(16x16)</i></div>
+                </div>
+                <div class="sg-slot">
+                  <div class="sg-color">
+                    <span class="sg-sw"></span><span class="sg-hex">#242a39</span><span class="sg-pick">🖉</span>
+                  </div>
+                  <div class="sg-cap" style="margin-top:15px">시그니처 컬러</div>
+                </div>
+              </div>
+              <div class="sg-note">
+                본 정보는 계정 정보로, 변경 시 CI 및 시그니처 컬러를 사용하는 모든 소재 그룹 프레임에 일괄 반영됩니다.<br><br>
+                시그니처 컬러를 설정하지 않으실 경우, 일부 프레임에서는 기본 색상인 <b>#80af4d</b>으로 출력됩니다.
+                변경이 필요하신 경우, 해당 영역 또는 광고설정에서 변경이 가능합니다.<br><br>
+                ※ 컬러 피커 사용 중에는 스크롤이 제한됩니다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-sec">
+          <div class="sg-sec-h">소재그룹 이름</div>
+          <div class="sg-sec-b">
+            <span class="sg-name">소재그룹 이름을 입력해주세요.</span>
+            <span style="font-size:12px;color:var(--muted);margin-left:10px">0 / 최대 200자</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /pg link -->
+
+</div>
+
+<div class="right">
+
+  <div class="grp-desc" data-pg="reject">
+  <div class="h">진입점 — 이미지 검수 &gt; 채팅리스트/피드 (1~3)</div>
+  <div class="h sub">검색 · 필터 영역</div>
+  <div class="item lv3" id="d1"><span class="no">1</span><span class="ttl">기간 검색 기준 선택<span class="tag b">신규</span></span>
+    <p class="dsc">a. 기간 검색의 날짜 기준을 선택
+b. 드롭다운
+   b-1. 생성일, 최종업데이트일
+   b-2. 디폴트 : 생성일</p></div>
+  <div class="item lv3" id="d2"><span class="no">2</span><span class="ttl">자동 반려 조건 버튼<span class="tag b">신규</span></span>
+    <p class="dsc">a. 승인상태 필터 우측에 위치
+b. 클릭 시 자동 반려 조건 팝업 오픈 → <a class="ref" data-t="4">[4]</a>
+   b-1. 기본 진입 탭 : 송출 불가 카테고리
+c. 노출 권한
+   c-1. 파트장 이상에게만 노출
+   c-2. 권한 구분 : 생성 · 삭제 2종</p></div>
+
+  <div class="h sub">검수 리스트 영역</div>
+  <div class="item lv3" id="d3"><span class="no">3</span><span class="ttl">반려사유 컬럼<span class="tag g">기존 컬럼</span></span>
+    <p class="dsc">a. 컬럼 자체는 기존 화면에 존재. 화면 변경 없음
+b. 자동 반려로 처리된 소재의 반려 사유를 기입
+   b-1. 자동으로 반려 처리 시 반려 처리 규칙에 맞게 반려 사유 기재
+c. 표기 형식 : {검증 단계} - {상세 사유} (검출 표현)
+   c-1. 예) 텍스트 검증 - 수식어 (프리미엄)
+   c-2. 검출 표현을 특정할 수 있는 경우에만 괄호 병기
+d. 복수 사유 검출 시
+   d-1. 리스트에는 대표 1건 + 외 N건으로 요약
+   d-2. 상세에서 전체 사유 노출
+e. 전체 사유 목록은 <a class="secref" data-sec="s7">개요 &gt; 07. 반려 사유</a> 참조</p></div>
+  <div class="h">자동 반려 조건 팝업 — 송출 불가 카테고리 (4~10)</div>
+  <div class="item lv2" id="d4"><span class="no">4</span><span class="ttl">자동 반려 조건 팝업</span>
+    <p class="dsc">a. 3개 탭으로 구성 → <a class="ref" data-t="5">[5]</a>
+b. 하단 바로 적용 / 저장 버튼은 전 탭 공통 → <a class="ref" data-t="9">[9]</a>, <a class="ref" data-t="10">[10]</a>
+c. 우측 상단 X 클릭 시 저장하지 않고 닫기
+d. 팝업 진입자는 전체 내용 열람 가능, 읽기 전용 등급 없음
+   d-1. 등록 · 삭제는 각 권한 보유자만 가능 : 팀장 이상</p></div>
+  <div class="item lv2" id="d5"><span class="no">5</span><span class="ttl">자동 반려 조건_ 탭 구성</span>
+    <p class="dsc">a. 3개 탭
+   a-1. 송출 불가 카테고리→ <a class="ref" data-t="6">[6]</a>
+   a-2. 송출 불가 광고주 → <a class="ref" data-t="11">[11]</a>
+   a-3. 사용 불가 표현 → <a class="ref" data-t="16">[16]</a>
+b. 탭 전환 시 입력 중인 값 유지</p></div>
+  <div class="h sub">카테고리 등록 영역 (6~8)</div>
+  <div class="item lv3" id="d6"><span class="no">6</span><span class="ttl">카테고리 선택 드롭다운</span>
+    <p class="dsc">a. 광고주 카테고리 정보 드롭다운으로 표시 
+      a-1.광고주>계정설정>카테고리>3depth 정보 사용
+      a-2.검색 기능 제공 필요
+b. 이미 등록된 카테고리는 드롭리스트에 노출되지 않음   → <a class="ref" data-t="8">[8]</a>
+c. 광고주센터 &gt; 계정설정의 카테고리 조건과 동일한 목록 사용</p></div>
+  <div class="item lv3" id="d7"><span class="no">7</span><span class="ttl">추가 버튼</span>
+    <p class="dsc">a. 선택된 카테고리를 등록 목록에 칩으로 추가 → <a class="ref" data-t="8">[8]</a>
+b. 미선택 상태에서 클릭 시
+   b-1. 안내 문구 노출
+   b-2. 추가하지 않음</p></div>
+  <div class="item lv3" id="d8"><span class="no">8</span><span class="ttl">등록 카테고리 목록<span class="tag o">16종 기본</span></span>
+    <p class="dsc">a. 등록된 카테고리를 칩 형태로 나열
+b. 칩 우측 × 클릭 시 송출 불가 카테고리에서 제외
+c. 생성 · 삭제 권한자 상이
+    c-1. 열람 : 모비센스 로그인시 전체 가능 
+    c-2. 생성 · 삭제 : [권한조건 추가 필요] 
+d. 기본 등록값 (16종)
+   d-1. 성기능개선, 산부인과(성인), 비뇨기과(성인), 성형외과(성인), 성인방송, 가상화폐/블록체인, 빗썸, 성인용품
+   d-2. 타로/사주, 제3금융권대출, 복권/로또, 성인기타, 성인웹툰, 전자담배/금연용품(성인), 스포츠토토, 보험상조
+e. 해당 카테고리 광고주의 소재그룹은 카카오 송출 토글 OFF로 생성 → <a class="ref" data-t="23">[23]</a>
+   e-1. 소재는 생성되나 검수 리스트에 미등재
+f. <b>비즈보드(상품) 이미지 소재 생성 시 제외하는 광고주 카테고리와 동일</b>
+   f-1. 본 조건을 수정하는 경우 비즈보드 이미지 소재 생성 조건도 함께 수정 필요</p></div>
+  <div class="h sub">하단 공통 버튼 (9~10)</div>
+  <div class="item lv3" id="d9"><span class="no">9</span><span class="ttl">바로 적용<span class="tag g">전 탭 공통</span></span>
+    <p class="dsc">a. 3개 탭 모두 동일하게 노출
+b. 설정값 저장 + 등록된 소재 검증 후 반려처리 
+  b-1. 상태 : 대기인 소재에 대해 검증 후 반려 진행 </p></div>
+  <div class="item lv3" id="d10"><span class="no">10</span><span class="ttl">저장<span class="tag g">전 탭 공통</span></span>
+    <p class="dsc">a. 3개 탭 모두 동일하게 노출
+b. 설정값만 저장, 다음 배치부터 반영</p></div>
+  <div class="h">자동 반려 조건 팝업 — 송출 불가 광고주 (11~15)</div>
+  <div class="item lv2" id="d11"><span class="no">11</span><span class="ttl">송출 불가 광고주 탭</span>
+    <p class="dsc">a. 광고주 계정 단위로 반려 대상 관리
+b. 해당 광고주 소재의 처리 흐름
+   b-1. 검수 리스트에 등재
+   b-2. 배치를 통해 "모비온 반려" 처리</p></div>
+  <div class="h sub">광고주 검색 영역 (12~13)</div>
+  <div class="item lv3" id="d12"><span class="no">12</span><span class="ttl">검색 입력</span>
+    <p class="dsc">a. 인풋박스, 텍스트 포함 검색
+   a-1. 대상 : 광고주 ID, 광고주명
+b. 우측 × 클릭 시 입력값 초기화</p></div>
+  <div class="item lv3" id="d13"><span class="no">13</span><span class="ttl">검색 버튼</span>
+    <p class="dsc">a. 클릭 시점에 검
+b. 결과는 검색 결과 목록에 노출 → <a class="ref" data-t="14">[14]</a></p></div>
+  <div class="h sub">목록 영역 (14~15)</div>
+  <div class="item lv3" id="d14"><span class="no">14</span><span class="ttl">검색 결과 · 추가<span class="tag b">신규</span></span>
+    <p class="dsc">a. 행 우측 <code>추가</code> 버튼 클릭 시 등록 목록에 추가 → <a class="ref" data-t="15">[15]</a>
+b. 이미 등록된 광고주 : 버튼 disable </p></div>
+  <div class="item lv3" id="d15"><span class="no">15</span><span class="ttl">등록 광고주 목록</span>
+    <p class="dsc">a. 이미 제외 대상으로 포함된 광고주 계정 노출
+b. 행 우측 <code>삭제</code> 버튼 클릭 시 개별 삭제
+c. 예시 등록값 : livecom, rentmall, zipbanchan, coupangls</p></div>
+
+  <div class="h">자동 반려 조건 팝업 — 사용 불가 표현 (16~21)</div>
+  <div class="item lv2" id="d16"><span class="no">16</span><span class="ttl">사용 불가 표현 탭</span>
+    <p class="dsc">a. 등록 표현 정의
+   a-1. LLM의 판정 보조
+   a-2. 등록된 표현은 무조건 반려 
+   a-3. 유사표현도 LLM 판정하에 반려 처리됨
+b. 검수 대상 컬럼 
+   b-1. 사이트명
+   b-2. 소재 광고문구
+c. 검출 시 모비온 반려 처리
+   c-1. 반려 사유에 테마명 병기
+   c-2. 판정 등급은 반려 단일, 경고 등 중간 등급 없음
+d. 별도 등록하지 않으나, 텍스트 검수 조건 (참고사항)
+   d-1. 도메인 주소 : 사이트명, 소재 광고문구에 도메인 주소 포함 
+   d-2. 띄어쓰기·오탈자
+   d-3. 유효기간 종료</p></div>
+  <div class="h sub">표현 등록 영역 (17~19)</div>
+  <div class="item lv3" id="d17"><span class="no">17</span><span class="ttl">테마 선택<span class="tag o">9종 고정</span></span>
+    <p class="dsc">a. 등록 시 필수 선택
+b. 테마 > 드롭다운 리스트 
+   b-1. 카카오 서비스 명칭 변형, 수식어, 기능성 표시 표현, 최상급 표현, 사실 확인 필요 문구, 사회정서 침해, 의약품·의료기기 효능, 전후비교 표현, 운영자 추가 </p></div>
+  <div class="item lv3" id="d18"><span class="no">18</span><span class="ttl">표현 입력</span>
+    <p class="dsc">a. 쉼표 또는 줄바꿈 구분으로 다건 동시 등록
+b. 입력된 표현은 선택된 테마로 일괄 귀속 → <a class="ref" data-t="17">[17]</a></p></div>
+  <div class="item lv3" id="d19"><span class="no">19</span><span class="ttl">추가 버튼</span>
+    <p class="dsc">a. 입력 표현을 등록 목록에 추가 → <a class="ref" data-t="21">[21]</a>
+b. 추가 차단 조건
+   b-1. 정규화 기준 동일 표현이 이미 있는 경우 — 차단 후 안내
+   b-2. 테마 미선택 또는 입력값 없음</p></div>
+  <div class="h sub">목록 영역 (20~21)</div>
+  <div class="item lv3" id="d20"><span class="no">20</span><span class="ttl">등록된 표현 찾기</span>
+    <p class="dsc">a. 등록된 표현을 검색하는 입력창
+b. 검색 버튼 클릭 시점에 최종 검색
+c. 일치하는 표현만 목록에 노출 → <a class="ref" data-t="21">[21]</a>
+   c-1. 용도 : 중복 확인 및 삭제</p></div>
+  <div class="item lv3" id="d21"><span class="no">21</span><span class="ttl">테마별 등록 목록</span>
+    <p class="dsc">a. 상단에 전체 등록 표현 수(총 건수) 표시
+b. 테마 그룹 헤더 + 칩으로 나열
+   b-1. 그룹별 건수 표기
+c. 등록 표현이 없는 테마는 미노출
+d. 칩 우측 × 클릭 시 개별 삭제
+e. 등록 필요 표현
+   e-1. 카카오 서비스 명칭 변형 : 플친, 플러스친구, 카스, 카카오톡Channel, 카톡 채널
+  
+  
+  </p></div>
+
+
+  </div><!-- /grp-desc reject -->
+
+  <div class="grp-desc" data-pg="link">
+  <div class="h">연동 — 소재그룹 설정 (22~23)</div>
+  <div class="item lv2" id="d22"><span class="no">22</span><span class="ttl">소재그룹 설정<span class="tag g">기존 화면</span></span>
+    <p class="dsc">a. 화면 구성 변경 없음
+   a-1. 조건에 따른 토글 상태 제어만 신규 개발 대상
+b. 조건 등록 또는 삭제 시 대상 소재그룹 재판정 → 토글 상태 갱신
+c. 조건 해제 시 이미 반려 처리된 소재는 복원하지 않음</p></div>
+  <div class="h sub">상단 토글 영역 (23)</div>
+  <div class="item lv3" id="d23"><span class="no">23</span><span class="ttl">카카오 송출 토글<span class="tag r">disable</span></span>
+    <p class="dsc">a. 송출 불가 카테고리 해당 시 → <a class="ref" data-t="8">[8]</a>
+   a-1. 토글 OFF로 전환
+   a-2. disable 처리, 운영자 변경 불가
+b. 그 외 조건은 수정 없음</p></div>
+  </div><!-- /grp-desc link -->
+
+
+</div>
+</div>
+
+<script>
+function switchPage(pg){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.toggle('on',t.dataset.pg===pg));
+  var spec=document.querySelector('.pg-spec');
+  var layout=document.querySelector('.layout');
+  if(pg==='spec'){
+    spec.classList.add('on'); layout.style.display='none';
+  }else{
+    spec.classList.remove('on'); layout.style.display='';
+    document.querySelectorAll('.pg').forEach(p=>p.classList.toggle('on',p.dataset.pg===pg));
+    document.querySelectorAll('.grp-desc').forEach(d=>d.classList.toggle('on',d.dataset.pg===pg));
+  }
+}
+document.querySelectorAll('.ptab').forEach(function(t){
+  t.addEventListener('click',function(){switchPage(t.dataset.pg);});
+});
+document.querySelectorAll('.bdg,.dsc .ref').forEach(function(b){
+  b.addEventListener('click',function(){
+    var el=document.getElementById('d'+b.dataset.t);
+    if(!el){console.warn('missing',b.dataset.t);return;}
+    var grp=el.closest('.grp-desc');
+    if(grp&&!grp.classList.contains('on')) switchPage(grp.dataset.pg);
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.classList.remove('hl');void el.offsetWidth;el.classList.add('hl');
+  });
+});
+document.querySelectorAll(".secref").forEach(function(a){
+  a.addEventListener("click",function(){
+    var el=document.getElementById(a.dataset.sec);
+    if(!el){console.warn("missing section",a.dataset.sec);return;}
+    switchPage("spec");
+    requestAnimationFrame(function(){
+      el.scrollIntoView({behavior:"smooth",block:"start"});
+      el.classList.remove("hl");void el.offsetWidth;el.classList.add("hl");
+    });
+  });
+});
+var miss=[...document.querySelectorAll('.bdg')].filter(b=>!document.getElementById('d'+b.dataset.t));
+console.log(miss.length?'broken links: '+miss.map(b=>b.dataset.t):'all badge links OK');
+switchPage('spec');
+</script>
+</body>
+</html>
