@@ -1,0 +1,732 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>채팅리스트/피드(AI) 검수 화면</title>
+<style>
+  /* 레이아웃: 기존 Mobon 관리자 화면 재현 (단일 라이트 테마) */
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Noto Sans KR", "Malgun Gothic", sans-serif; font-size: 12px; color: #333; background: #fff; }
+  a { color: inherit; text-decoration: none; }
+  .hidden { display: none !important; }
+
+  /* 헤더 */
+  #headerTop { height: 52px; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; justify-content: space-between; padding: 0 24px 0 12px; }
+  .logo { font-size: 22px; font-weight: 900; letter-spacing: 1px; color: #222; }
+  .logo b { color: #2fb38a; }
+  .rightArea { display: flex; align-items: center; gap: 16px; font-size: 12px; }
+  .adsave { font-weight: 900; font-size: 14px; color: #222; }
+  .adsave b { color: #1e88e5; }
+  .userIcon { color: #2fb38a; font-size: 14px; }
+
+  /* 레이아웃 */
+  #wrapBody { display: flex; min-height: calc(100vh - 52px); }
+  #nav { width: 185px; flex-shrink: 0; border-right: 1px solid #e5e5e5; background: #fff; }
+  .authTitle { height: 42px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 15px; font-weight: 700; border-bottom: 1px solid #eee; }
+  .authTitle span { font-size: 20px; font-weight: 400; }
+  .depth { list-style: none; margin: 0; padding: 0; }
+  .depth > li > a { display: flex; align-items: center; justify-content: space-between; height: 41.5px; padding: 0 12px; border-bottom: 1px solid #f0f0f0; font-size: 12.5px; }
+  .depth > li > a .ico { color: #2fb38a; margin-right: 6px; }
+  .depth > li > a .arrow { color: #aaa; font-size: 10px; }
+  .depth > li.on > a { background: #2fb38a; color: #fff; font-weight: 700; }
+  .depth > li.on > a .ico, .depth > li.on > a .arrow { color: #fff; }
+  .depth ul { list-style: none; margin: 0; padding: 4px 0; background: #f2f3f5; }
+  .depth ul li a { display: block; padding: 7px 0 7px 33px; color: #888; font-size: 11.5px; }
+  .depth ul li a.on { color: #2fb38a; }
+
+  /* 본문 */
+  #sectionWrap { flex: 1; padding: 16px 20px; background: #f7f8fa; min-width: 0; }
+  #sectionWrap > h2 { font-size: 14px; margin: 0 0 8px; padding-bottom: 8px; border-bottom: 1px solid #ddd; }
+
+  .optionBox { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+  .filters { padding-top: 60px; }
+  .dateRow { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+  .dateInput { display: flex; border: 1px solid #2fb38a; border-radius: 2px; overflow: hidden; background: #fff; }
+  .dateInput .icon { width: 28px; background: #2fb38a; color: #fff; display: flex; align-items: center; justify-content: center; }
+  .dateInput input { border: 0; padding: 5px 14px; width: 170px; font-size: 11px; outline: none; }
+  .btnGreen { background: #2fb38a; color: #fff; border: 0; border-radius: 2px; padding: 5px 15px; font-size: 11px; cursor: pointer; }
+  .setType { display: inline-flex; align-items: center; border: 1px solid #ddd; border-radius: 3px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  .setType h4 { margin: 0; background: #2fb38a; color: #fff; font-size: 11px; font-weight: 500; padding: 6px 14px; }
+  .setType .opts { padding: 0 10px; display: flex; gap: 8px; }
+  .setType label { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; cursor: pointer; }
+  .setType input { margin: 0; accent-color: #2fb38a; }
+
+  .tableInfo table { border-collapse: collapse; background: #fff; }
+  .tableInfo th, .tableInfo td { border: 1px solid #e3e3e3; text-align: center; padding: 6px 0; width: 75px; font-size: 11px; }
+  .tableInfo th { background: #f3f4f6; font-weight: 700; }
+
+  .tableSection { background: #fff; border: 1px solid #e7e7e7; padding: 12px; }
+  .productType { display: flex; gap: 10px; margin-bottom: 8px; }
+  .productType button { border: 0; border-radius: 2px; padding: 5px 15px; font-size: 11px; color: #fff; cursor: pointer; }
+  .extraFeatures { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .extraFeatures .left { display: flex; gap: 8px; align-items: center; }
+  .extraFeatures input.search { width: 150px; border: 1px solid #ddd; padding: 5px 8px; font-size: 11px; }
+  .extraFeatures .right { display: flex; gap: 14px; align-items: center; }
+  .extraFeatures select { width: 96px; padding: 4px 6px; font-size: 11px; border: 1px solid #ccc; border-radius: 2px; }
+
+  .detailTable { overflow-x: auto; }
+  #tblExport { border-collapse: collapse; table-layout: fixed; width: 2550px; }
+  #tblExport th { background: #f3f4f6; font-size: 11px; font-weight: 700; padding: 8px 4px; white-space: nowrap; }
+  #tblExport th .sort { color: #bbb; margin-left: 6px; font-size: 10px; }
+  #tblExport td { border-bottom: 1px solid #e5e5e5; text-align: center; font-size: 10.5px; padding: 6px 4px; vertical-align: middle; word-break: break-all; }
+  #tblExport td.url { text-align: left; }
+  #tblExport td.url a { color: #3b5bdb; text-decoration: underline; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stBtn { border: 0; border-radius: 2px; padding: 4px 14px; font-size: 10px; color: #fff; background: #ffd248; }
+  .logoBox { width: 100%; height: 60px; background: #f2f3f5; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .logoBox img { max-width: 100%; max-height: 100%; }
+  .banner_img { width: 50px; height: 50px; margin: auto; border: 1px solid #d8dde6; border-radius: 4px; overflow: hidden; background: linear-gradient(#f8f8f8, #e8edf4); cursor: pointer; }
+  .banner_img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tp-item span { display: block; margin-top: 6px; color: #ff6b00; font-size: 8px; font-weight: 700; }
+  textarea.reason { width: 140px; height: 30px; border: 1px solid #333; font-size: 9px; resize: none; overflow: hidden; }
+  .memo { white-space: nowrap; }
+  .memo input { width: 180px; border: 1px solid #ccc; padding: 4px; }
+  .memo button { border: 1px solid #ccc; background: #fff; padding: 4px 8px; font-size: 10px; }
+
+  /* 문서 탭 (개요 / 화면) */
+  .docTabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; display: flex; gap: 4px; padding: 8px 16px 0; background: #2b2f36; }
+  .docTabs button { border: 0; border-radius: 6px 6px 0 0; background: #474d57; color: #cfd3da; padding: 9px 26px; font-size: 13px; cursor: pointer; }
+  .docTabs button.on { background: #fff; color: #222; font-weight: 700; }
+  #tabOverview { padding: 24px 28px; background: #f7f8fa; min-height: calc(100vh - 42px); }
+  .ovTitle { font-size: 16px; margin: 0 0 14px; }
+
+  /* 흐름도 */
+  .flowWrap { background: #fff; border: 1px solid #e7e7e7; padding: 20px; display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+  .flowWrap h3 { margin: 0 0 10px; font-size: 13px; }
+  .flowWrap svg { display: block; max-width: 100%; height: auto; }
+  .mapTable { border-collapse: collapse; min-width: 380px; }
+  .mapTable th, .mapTable td { border: 1px solid #e3e3e3; padding: 7px 10px; font-size: 11.5px; text-align: left; }
+  .mapTable th { background: #f3f4f6; }
+  .src { display: inline-block; padding: 1px 7px; border-radius: 9px; font-size: 10.5px; font-weight: 700; }
+  .src.api { background: #e3f6ef; color: #1e8a68; }
+  .src.prd { background: #e7efff; color: #3557c9; }
+  .src.ai  { background: #fff0e0; color: #c26a00; }
+  .src.sys { background: #eee; color: #555; }
+  .src.rev { background: #fbe9e9; color: #b84444; }
+  .dbOnly { color: #999; font-size: 10.5px; }
+
+  .mapScroll { overflow-x: auto; max-width: 100%; }
+  .flowWrap > div { min-width: 0; max-width: 100%; }
+  @media (max-width: 760px) {
+    #wrapBody { flex-direction: column; }
+    #nav { width: 100%; border-right: 0; border-bottom: 1px solid #e5e5e5; }
+    #sectionWrap { padding: 16px; }
+    .optionBox { flex-direction: column; }
+    .filters { padding-top: 0; }
+    .tableInfo, .setType { max-width: 100%; overflow-x: auto; }
+    .setType { flex-wrap: wrap; }
+    .extraFeatures { flex-wrap: wrap; gap: 8px; }
+    #tabOverview { padding: 16px; }
+    .flowWrap { padding: 12px; }
+  }
+  .paging { display: flex; justify-content: center; margin-top: 14px; gap: 4px; }
+  .paging span { min-width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #ddd; font-size: 11px; }
+  .paging span.active { background: #2fb38a; color: #fff; border-color: #2fb38a; }
+
+    /* 검색 영역 (개발 중 화면 기준 배치) */
+  .optionBox2 { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .sumRight { align-self: flex-end; }
+  .dateType { border: 1px solid #ccc; border-radius: 2px; background: #fff; padding: 5px 8px; font-size: 11px; color: #555; }
+  .statusRow { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .btnLine { border: 1px solid #ccc; background: #fff; border-radius: 3px; padding: 6px 14px; font-size: 11px; cursor: pointer; }
+  #tabSpec .sumRight2 { display: flex; justify-content: flex-end; }
+  #tabSpec .sel { min-width: 72px; }
+  /* ===== 화면설계서 탭 (좌 목업 / 우 디스크립션 440px) ===== */
+  #tabSpec { display: flex; height: calc(100vh - 42px); background: #f7f8fa; }
+  #tabSpec.hidden { display: none !important; }
+  #tabSpec .tbd { color: #dc2626; font-weight: 600; }
+  #specMock { flex: 1; min-width: 0; overflow: auto; padding: 24px 28px; }
+  #tabSpec .canvas { display: inline-block; min-width: 100%; vertical-align: top; }
+  #tabSpec .pageTitle { font-size: 14px; font-weight: 700; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid #ddd; }
+  #tabSpec .card { background: #fff; border: 1px solid #e7e7e7; padding: 16px; margin-bottom: 14px; }
+  #tabSpec .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  #tabSpec .between { justify-content: space-between; }
+  #tabSpec .el { position: relative; }
+  #tabSpec .badge { position: absolute; top: -9px; left: -9px; z-index: 9999; min-width: 20px; height: 18px; padding: 0 5px; border-radius: 3px; background: #e53935; color: #fff; font-size: 10.5px; font-weight: 700; line-height: 18px; text-align: center; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.25); text-decoration: none; white-space: nowrap; }
+  #tabSpec .badge.r { left: auto; right: -9px; }
+  #tabSpec .badge:hover, #tabSpec .badge:focus-visible { outline: 2px solid #222; outline-offset: 1px; }
+  #tabSpec table { border-collapse: collapse; }
+  #tabSpec .sum th, #tabSpec .sum td { border: 1px solid #e3e3e3; padding: 6px 14px; text-align: center; font-size: 11px; }
+  #tabSpec .sum th { background: #f3f4f6; font-weight: 700; }
+  #tabSpec .btn { border: 1px solid #ccc; background: #fff; border-radius: 2px; padding: 5px 14px; font: inherit; font-size: 11px; }
+  #tabSpec .btn.grn { background: #2fb38a; border-color: #2fb38a; color: #fff; }
+  #tabSpec .btn.green { background: #a3e9cf; border-color: #a3e9cf; color: #fff; }
+  #tabSpec .btn.red { background: #f18282; border-color: #f18282; color: #fff; }
+  #tabSpec .input { border: 1px solid #ddd; border-radius: 2px; padding: 5px 10px; background: #fff; min-width: 170px; color: #888; font-size: 11px; }
+  #tabSpec .radio { display: inline-flex; gap: 10px; border: 1px solid #ddd; border-radius: 3px; padding: 5px 10px; background: #fff; font-size: 11px; }
+  #tabSpec .radio b { color: #2fb38a; }
+  #tabSpec .list { width: 1900px; }
+  #tabSpec .list th { background: #f3f4f6; font-weight: 700; font-size: 11px; padding: 18px 6px 9px; white-space: nowrap; }
+  #tabSpec .list th .el { display: inline-block; }
+  #tabSpec .list th .badge { top: -15px; left: -6px; }
+  #tabSpec .list td { padding: 8px 6px; border-bottom: 1px solid #e5e5e5; text-align: center; vertical-align: middle; font-size: 10.5px; }
+  #tabSpec .pill { display: inline-block; padding: 3px 12px; border-radius: 2px; font-size: 10px; color: #fff; }
+  #tabSpec .pill.wait { background: #ffd248; }
+  #tabSpec .thumb { width: 54px; height: 54px; margin: auto; border: 1px solid #d8dde6; border-radius: 4px; background: #f2f3f5; color: #aaa; font-size: 10px; display: flex; align-items: center; justify-content: center; }
+  #tabSpec .link { color: #3b5bdb; text-decoration: underline; }
+  #tabSpec .memo { display: inline-flex; gap: 4px; }
+  #tabSpec .memo .input { min-width: 120px; }
+  #tabSpec .paging { display: flex; gap: 4px; justify-content: center; margin-top: 0; }
+  #tabSpec .paging span { width: 24px; height: 24px; border: 1px solid #ddd; display: inline-flex; align-items: center; justify-content: center; background: #fff; font-size: 11px; }
+  #tabSpec .paging .on { background: #2fb38a; color: #fff; border-color: #2fb38a; }
+  #specDesc { position: relative; width: 440px; flex-shrink: 0; overflow-y: auto; background: #fff; border-left: 1px solid #e5e5e5; }
+  #tabSpec .descHead { position: sticky; top: 0; z-index: 2; background: #fff; border-bottom: 2px solid #2fb38a; padding: 14px 20px 10px; }
+  #tabSpec .descHead h1 { font-size: 14px; margin: 0 0 6px; }
+  #tabSpec .meta { color: #777; line-height: 1.6; font-size: 11.5px; }
+  #tabSpec .check { margin-top: 6px; font-weight: 700; font-size: 11.5px; }
+  #tabSpec .check.ok { color: #1e8a68; } #tabSpec .check.ng { color: #dc2626; }
+  #tabSpec .item { padding: 12px 20px; border-bottom: 1px solid #f0f0f0; }
+  #tabSpec .item.sub { padding-left: 34px; background: #fcfcfd; }
+  #tabSpec .item h3 { display: flex; gap: 8px; align-items: baseline; margin: 0 0 6px; font-size: 12.5px; }
+  #tabSpec .num { flex-shrink: 0; background: #e53935; color: #fff; font-size: 10.5px; border-radius: 3px; padding: 1px 6px; }
+  #tabSpec .body { white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; line-height: 1.65; color: #444; margin: 0; font: inherit; font-size: 11.5px; }
+  #tabSpec .item.flash { animation: specFlash 1.4s ease; }
+  @keyframes specFlash { 0%, 40% { background: #fff3a3; } 20%, 60% { background: #fff; } 80% { background: #fff3a3; } 100% { background: #fff; } }
+  @media (prefers-reduced-motion: reduce) { #tabSpec .item.flash { animation: none; background: #fff3a3; } }
+  @media (max-width: 900px) {
+    #tabSpec { flex-direction: column; height: auto; }
+    #specMock { overflow-x: auto; padding: 16px; }
+    #specDesc { width: 100%; border-left: 0; border-top: 1px solid #e5e5e5; }
+  }
+</style>
+
+<nav class="docTabs">
+  <button type="button" class="on" data-tab="tabOverview">개요</button>
+  <button type="button" data-tab="tabScreen">화면</button>
+  <button type="button" data-tab="tabSpec">화면설계서</button>
+</nav>
+
+    <!-- ===== 탭: 개요 ===== -->
+<div id="tabOverview">
+  <h2 class="ovTitle">채팅리스트/피드(AI) · 개요</h2>
+      <div class="flowWrap">
+        <div>
+          <h3>매일 배치: 수집 상품 → AI 배너 → 검수 대기</h3>
+          <svg width="820" height="690" viewBox="0 0 820 690" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans KR, Malgun Gothic, sans-serif" role="img" aria-label="채팅리스트/피드(AI) 배치 흐름도">
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+              </marker>
+            </defs>
+
+            <!-- 연결선 (메인) -->
+            <g stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#arr)">
+              <line x1="330" y1="64"  x2="330" y2="98"/>
+              <line x1="330" y1="144" x2="330" y2="178"/>
+              <line x1="330" y1="224" x2="330" y2="248"/>
+              <line x1="330" y1="328" x2="330" y2="368"/>
+              <line x1="330" y1="414" x2="330" y2="448"/>
+              <line x1="330" y1="494" x2="330" y2="528"/>
+              <line x1="330" y1="574" x2="330" y2="608"/>
+              <!-- 분기: 아니오 / 예 → 건너뜀 -->
+              <line x1="450" y1="288" x2="568" y2="288"/>
+              <!-- 다음 광고주/상품으로 루프 -->
+              <path d="M668,310 L668,330 L790,330 L790,122 L452,122" stroke-dasharray="4 3"/>
+            </g>
+            <text x="806" y="226" font-size="10" fill="#999" text-anchor="middle" transform="rotate(90 806 226)">다음 광고주</text>
+
+            <!-- 분기 라벨 -->
+            <g font-size="11" font-weight="700">
+              <text x="508" y="281" fill="#b84444" text-anchor="middle">아니오</text>
+              <text x="342" y="348" fill="#1e8a68">예</text>
+            </g>
+
+            <!-- 1. 시작 -->
+            <rect x="230" y="20" width="200" height="44" rx="22" fill="#2fb38a"/>
+            <text x="330" y="47" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">매일 배치 실행</text>
+
+            <!-- 2. 수집 상품 조회 -->
+            <rect x="210" y="100" width="240" height="44" rx="6" fill="#fff" stroke="#2fb38a" stroke-width="1.5"/>
+            <text x="330" y="119" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">수집 상품 조회</text>
+            <text x="330" y="135" font-size="10.5" fill="#777" text-anchor="middle">광고주별 · 상품 URL / 이미지 포함</text>
+
+            <!-- 3. 광고주 API -->
+            <rect x="210" y="180" width="240" height="44" rx="6" fill="#fff" stroke="#2fb38a" stroke-width="1.5"/>
+            <text x="330" y="199" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">광고주 API 호출</text>
+            <text x="330" y="215" font-size="10.5" fill="#777" text-anchor="middle">on 상태 소재그룹 정보 조회</text>
+
+            <!-- 미정 메모 -->
+            <rect x="480" y="168" width="250" height="68" rx="6" fill="#fffbe8" stroke="#e6c85a" stroke-dasharray="4 3"/>
+            <text x="494" y="189" font-size="11" font-weight="700" fill="#9a7a00">미정</text>
+            <text x="494" y="207" font-size="10.5" fill="#6b5a10">on 소재그룹이 여러 개일 때</text>
+            <text x="494" y="223" font-size="10.5" fill="#6b5a10">그룹별 생성 vs 대표 1개만 사용</text>
+            <line x1="452" y1="202" x2="478" y2="202" stroke="#e6c85a" stroke-dasharray="3 3"/>
+
+            <!-- 4. 분기: on 소재그룹 있음? -->
+            <polygon points="330,250 450,288 330,326 210,288" fill="#fff8ec" stroke="#f0a020" stroke-width="1.5"/>
+            <text x="330" y="286" font-size="12" font-weight="700" fill="#333" text-anchor="middle">on 소재그룹</text>
+            <text x="330" y="301" font-size="12" font-weight="700" fill="#333" text-anchor="middle">있음?</text>
+
+            <!-- 건너뜀 A -->
+            <rect x="570" y="266" width="196" height="44" rx="6" fill="#f2f3f5" stroke="#bbb"/>
+            <text x="668" y="285" font-size="12" font-weight="700" fill="#555" text-anchor="middle">광고주 건너뜀</text>
+            <text x="668" y="301" font-size="10.5" fill="#888" text-anchor="middle">이미지 생성 안 함 (비용 절감)</text>
+
+            <!-- 6. 이미지 생성 -->
+            <rect x="210" y="370" width="240" height="44" rx="6" fill="#fff0e0" stroke="#f0a020" stroke-width="1.5"/>
+            <text x="330" y="389" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">배너 이미지 생성</text>
+            <text x="330" y="405" font-size="10.5" fill="#777" text-anchor="middle">생성형 AI · 850×850 (TP 09)</text>
+
+            <!-- 7. 업로드 -->
+            <rect x="210" y="450" width="240" height="44" rx="6" fill="#fff" stroke="#2fb38a" stroke-width="1.5"/>
+            <text x="330" y="469" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">이미지 업로드</text>
+            <text x="330" y="485" font-size="10.5" fill="#777" text-anchor="middle">이미지 서버 저장</text>
+
+            <!-- 8. INSERT -->
+            <rect x="210" y="530" width="240" height="44" rx="6" fill="#2fb38a"/>
+            <text x="330" y="549" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">소재 정보 저장</text>
+            <text x="330" y="565" font-size="10.5" fill="#e6fff6" text-anchor="middle">소재 정보 + 상품 URL + 배너 · 승인상태 대기</text>
+
+            <!-- 9. 검수 -->
+            <rect x="210" y="610" width="240" height="44" rx="6" fill="#fff" stroke="#2fb38a" stroke-width="1.5"/>
+            <text x="330" y="629" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">채팅리스트/피드(AI) 화면에서 검수</text>
+            <text x="330" y="645" font-size="10.5" fill="#777" text-anchor="middle">내부승인 / 반려</text>
+
+            <!-- 범례 -->
+            <g font-size="10.5" fill="#666">
+              <rect x="20" y="20" width="12" height="12" rx="2" fill="#fff" stroke="#2fb38a"/><text x="38" y="30">처리</text>
+              <rect x="20" y="40" width="12" height="12" fill="#fff8ec" stroke="#f0a020" transform="rotate(45 26 46)"/><text x="38" y="50">분기</text>
+              <rect x="20" y="60" width="12" height="12" rx="2" fill="#f2f3f5" stroke="#bbb"/><text x="38" y="70">건너뜀</text>
+              <rect x="20" y="80" width="12" height="12" rx="2" fill="#fff0e0" stroke="#f0a020"/><text x="38" y="90">AI 생성</text>
+            </g>
+          </svg>
+        </div>
+
+        <div>
+          <h3>테이블 컬럼별 출처</h3>
+          <div class="mapScroll"><table class="mapTable">
+            <thead><tr><th>컬럼</th><th>출처</th><th>비고</th></tr></thead>
+            <tbody>
+              <tr><td>승인상태</td><td><span class="src sys">고정값</span></td><td>W (대기)</td></tr>
+              <tr><td>광고주ID · 광고주명 · 카테고리</td><td><span class="src sys">배치 대상</span></td><td>광고주 정보</td></tr>
+              <tr><td>사이트명</td><td><span class="src api">광고주 API</span></td><td>on 소재그룹</td></tr>
+              <tr><td>프로필 로고</td><td><span class="src api">광고주 API</span></td><td>on 소재그룹</td></tr>
+              <tr><td>소재 광고문구</td><td><span class="src api">광고주 API</span></td><td>on 소재그룹</td></tr>
+              <tr><td>CTA 정보</td><td><span class="src api">광고주 API</span></td><td>on 소재그룹</td></tr>
+              <tr><td>배너이미지</td><td><span class="src ai">AI 생성</span></td><td>850×850 업로드 URL</td></tr>
+              <tr><td>랜딩URL</td><td><span class="src prd">수집 상품</span></td><td>상품별 URL</td></tr>
+              <tr><td>생성일자</td><td><span class="src sys">배치 시각</span></td><td>INSERT 시점</td></tr>
+              <tr><td>최종업데이트일 · 반려사유 · 비고</td><td><span class="src rev">검수</span></td><td>상태 변경 시 갱신</td></tr>
+              <tr><td class="dbOnly">소재그룹 ID (DB만)</td><td><span class="src api">광고주 API</span></td><td class="dbOnly">화면 미노출 · 추적용</td></tr>
+                          </tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+
+
+<!-- ===== 탭: 화면 ===== -->
+<div id="tabScreen" class="hidden">
+<header id="headerTop">
+  <div class="logo"><b>M</b>OBSENSE</div>
+  <div class="rightArea">
+    <span class="adsave"><b>AD</b>SAVE</span>
+    <span>개발지원본부_전민주님</span>
+    <span class="userIcon">●▾</span>
+  </div>
+</header>
+
+<div id="wrapBody">
+  <nav id="nav">
+    <div class="authTitle">매체 센터 <span>✕</span></div>
+    <ul class="depth">
+      <li><a href="#"><span><span class="ico">▣</span>개요</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>지면 등록</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>지면 심사</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>보고서</span><span class="arrow">﹀</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>MY 대행매체 관리</span><span class="arrow">﹀</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>정산 관리</span><span class="arrow">﹀</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>CPS 관리</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>공지사항</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>사용자 관리</span></a></li>
+      <li class="on">
+        <a href="#"><span><span class="ico">▣</span>이미지 검수</span><span class="arrow">﹀</span></a>
+        <ul>
+          <li><a href="#">비즈보드 (상품)</a></li>
+          <li><a href="#">비즈보드 / 네이티브</a></li>
+          <li><a href="#">채팅리스트 / 피드</a></li>
+          <li><a href="#" class="on">채팅리스트 / 피드(AI)</a></li>
+        </ul>
+      </li>
+      <li><a href="#"><span><span class="ico">▣</span>지면 관리</span><span class="arrow">﹀</span></a></li>
+      <li><a href="#"><span><span class="ico">▣</span>시스템 관리</span><span class="arrow">﹀</span></a></li>
+    </ul>
+  </nav>
+
+  <section id="sectionWrap">
+    <h2>이미지 검수 &gt; 채팅리스트/피드(AI)</h2>
+
+
+    <section class="optionBox2">
+      <div class="tableInfo sumRight">
+        <table>
+          <thead><tr><th></th><th>전체</th><th>대기</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr></thead>
+          <tbody>
+            <tr><td>이미지 수</td><td>4</td><td>4</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>광고주 수</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="dateRow">
+        <select class="dateType" aria-label="기간 기준"><option>생성일</option></select>
+        <div class="dateInput"><div class="icon">▦</div><input type="text" value="2026-09-01 ~ 2026-09-30"></div>
+        <button type="button" class="btnGreen">검색</button>
+      </div>
+      <div class="statusRow">
+        <div class="setType">
+          <h4>승인상태</h4>
+          <div class="opts">
+            <label><input type="radio" name="pStatus" value="T">전체</label>
+            <label><input type="radio" name="pStatus" value="W" checked>대기</label>
+            <label><input type="radio" name="pStatus" value="C">내부승인</label>
+            <label><input type="radio" name="pStatus" value="Y">승인</label>
+            <label><input type="radio" name="pStatus" value="MN">모비온 반려</label>
+            <label><input type="radio" name="pStatus" value="KN">카카오 반려</label>
+          </div>
+        </div>
+        <button type="button" class="btnLine">자동 반려 조건</button>
+      </div>
+    </section>
+
+    <section class="tableSection">
+      <div class="productType">
+        <button type="button" style="background:#a3e9cf">내부승인</button>
+        <button type="button" style="background:#f18282">반려</button>
+      </div>
+      <div class="extraFeatures">
+        <div class="left">
+          <button type="button" class="btnGreen">컬럼 설정</button>
+          <input type="text" class="search" placeholder="검색어를 입력하세요.">
+          <button type="button" class="btnGreen">검색</button>
+        </div>
+        <div class="right">
+          <select><option>100개씩 보기</option><option>250개씩 보기</option><option>500개씩 보기</option></select>
+          <button type="button" class="btnGreen">▤ 엑셀</button>
+        </div>
+      </div>
+
+      <div class="detailTable">
+        <table id="tblExport">
+          <colgroup>
+            <col style="width:80px"><col style="width:110px"><col style="width:100px"><col style="width:100px">
+            <col style="width:100px"><col style="width:100px"><col style="width:100px"><col style="width:140px">
+            <col style="width:240px"><col style="width:240px"><col style="width:240px"><col style="width:150px">
+            <col style="width:150px"><col style="width:350px"><col style="width:350px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="allCheck"> NO</th>
+              <th>승인상태<span class="sort">⇅</span></th>
+              <th>광고주ID<span class="sort">⇅</span></th>
+              <th>광고주명<span class="sort">⇅</span></th>
+              <th>카테고리<span class="sort">⇅</span></th>
+              <th>사이트명<span class="sort">⇅</span></th>
+              <th>프로필 로고<span class="sort">⇅</span></th>
+              <th>배너이미지<span class="sort">⇅</span></th>
+              <th>소재 광고문구<span class="sort">⇅</span></th>
+              <th>랜딩URL<span class="sort">⇅</span></th>
+              <th>CTA 정보<span class="sort">⇅</span></th>
+              <th>생성일자<span class="sort">⇅</span></th>
+              <th>최종업데이트일<span class="sort">⇅</span></th>
+              <th>반려사유<span class="sort">⇅</span></th>
+              <th>비고<span class="sort">⇅</span></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+
+      <div class="paging"><span>«</span><span class="active">1</span><span>»</span></div>
+    </section>
+  </section>
+</div>
+
+</div><!-- /tabScreen -->
+
+<!-- ===== 탭: 화면설계서 ===== -->
+<div id="tabSpec" class="hidden">
+<main id="specMock"><div class="canvas">
+  <h2 class="pageTitle">이미지 검수 &gt; 채팅리스트/피드(AI)</h2>
+
+  <!-- 1. 상단 현황 / 2. 검색 조건 (화면 탭과 동일 배치) -->
+  <div class="card" style="width:max-content; min-width:min(100%, 1000px)">
+    <div class="sumRight2">
+      <div class="el">
+        <a class="badge" href="#d-1">1</a>
+        <table class="sum">
+          <tr><th></th><th>전체</th><th>대기</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr>
+          <tr><td>이미지 수</td><td>N</td><td>N</td><td>N</td><td>N</td><td>N</td></tr>
+          <tr><td>광고주 수</td><td>N</td><td>N</td><td>N</td><td>N</td><td>N</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="el" style="margin-top:14px; padding-top:4px">
+      <a class="badge" href="#d-2">2</a>
+      <div class="row" style="margin-bottom:12px">
+        <span class="el row"><a class="badge r" href="#d-2-1">2-1</a><span class="input sel">생성일 ▾</span><span class="input">2026-09-01 ~ 2026-09-30</span><button class="btn grn">검색</button></span>
+      </div>
+      <div class="row between">
+        <div class="el radio"><a class="badge r" href="#d-2-2">2-2</a>승인상태 &nbsp; ○전체 <b>●대기</b> ○내부승인 ○승인 ○모비온 반려 ○카카오 반려</div>
+        <button class="btn">자동 반려 조건</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3~6. 목록 -->
+  <div class="card">
+    <div class="row el" style="margin-bottom:12px; width:max-content">
+      <a class="badge" href="#d-3">3</a>
+      <span class="el"><a class="badge r" href="#d-3-1">3-1</a><button class="btn green">내부승인</button></span>
+      <span class="el"><a class="badge r" href="#d-3-2">3-2</a><button class="btn red">반려</button></span>
+    </div>
+
+    <div class="row el" style="margin-bottom:14px; width:max-content; gap:28px">
+      <a class="badge" href="#d-4">4</a>
+      <div class="row">
+        <span class="el"><a class="badge r" href="#d-4-1">4-1</a><button class="btn grn">컬럼 설정</button></span>
+        <span class="el row"><a class="badge r" href="#d-4-2">4-2</a><span class="input">검색어를 입력하세요.</span><button class="btn grn">검색</button></span>
+      </div>
+      <div class="row">
+        <span class="el"><a class="badge r" href="#d-4-3">4-3</a><span class="input" style="min-width:110px">100개씩 보기 ▾</span></span>
+        <span class="el"><a class="badge r" href="#d-4-4">4-4</a><button class="btn grn">엑셀</button></span>
+      </div>
+    </div>
+
+    <div class="scrollX">
+      <table class="list el">
+        <thead>
+          <tr>
+            <th><span class="el"><a class="badge" href="#d-5">5</a>☐ NO</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-1">5-1</a>승인상태</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-2">5-2</a>광고주ID</span></th>
+            <th>광고주명</th>
+            <th>카테고리</th>
+            <th><span class="el"><a class="badge" href="#d-5-3">5-3</a>사이트명</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-4">5-4</a>프로필 로고</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-5">5-5</a>배너이미지</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-6">5-6</a>소재 광고문구</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-7">5-7</a>랜딩URL</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-8">5-8</a>CTA 정보</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-9">5-9</a>생성일자</span></th>
+            <th>최종업데이트일</th>
+            <th><span class="el"><a class="badge" href="#d-5-10">5-10</a>반려사유</span></th>
+            <th><span class="el"><a class="badge" href="#d-5-11">5-11</a>비고</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>☐ 1</td>
+            <td><span class="pill wait">대기</span></td>
+            <td>adver_id</td>
+            <td>광고주명 예시</td>
+            <td>대&gt;중&gt;소 카테고리</td>
+            <td>사이트명 예시</td>
+            <td><div class="thumb">로고</div></td>
+            <td><div class="thumb">850×850</div><div style="color:var(--orange);font-size:9px;font-weight:700;margin-top:4px">TP 09</div></td>
+            <td>광고문구 예시</td>
+            <td><span class="link">https://상품URL…</span></td>
+            <td>바로가기</td>
+            <td>YYYY-MM-DD HH:MM:SS</td>
+            <td>-</td>
+            <td><span class="input" style="min-width:150px;display:inline-block;text-align:left">(반려 시 사유 노출)</span></td>
+            <td><span class="memo"><span class="input">메모</span><button class="btn">입력</button></span></td>
+          </tr>
+          <tr>
+            <td>☐ 2</td>
+            <td><span class="pill wait">대기</span></td>
+            <td>adver_id</td>
+            <td>광고주명 예시</td>
+            <td>대&gt;중&gt;소 카테고리</td>
+            <td>사이트명 예시</td>
+            <td><div class="thumb">로고</div></td>
+            <td><div class="thumb">850×850</div><div style="color:var(--orange);font-size:9px;font-weight:700;margin-top:4px">TP 09</div></td>
+            <td>광고문구 예시</td>
+            <td><span class="link">https://상품URL…</span></td>
+            <td>바로가기</td>
+            <td>YYYY-MM-DD HH:MM:SS</td>
+            <td>-</td>
+            <td><span class="input" style="min-width:150px;display:inline-block;text-align:left">&nbsp;</span></td>
+            <td><span class="memo"><span class="input">메모</span><button class="btn">입력</button></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="el paging" style="margin-top:16px; width:max-content; margin-inline:auto">
+      <a class="badge" href="#d-6">6</a>
+      <span>«</span><span class="on">1</span><span>2</span><span>3</span><span>»</span>
+    </div>
+  </div>
+</div></main>
+<aside id="specDesc">
+  <div class="descHead">
+    <h1>채팅리스트/피드(AI) 화면설계서</h1>
+    <div class="meta">메뉴: 이미지 검수 &gt; 채팅리스트 / 피드(AI)<br>
+      목적: 매일 배치로 AI 생성된 850×850 배너 소재를 검수(내부승인/반려)<br>
+      URL: <span class="tbd">/image/aiCreative (확정 필요)</span></div>
+    <div class="check" id="linkCheck">링크 검증 중…</div>
+  </div>
+
+  <section class="item" id="d-1"><h3><span class="num">1</span>[상단 현황]</h3><pre class="body">a. 승인상태별 이미지 수와 광고주 수를 표로 보여준다.
+b. 컬럼: 전체 / 대기 / 승인 / 모비온 반려 / 카카오 반려 (기존 채팅리스트/피드와 동일).
+c. 값 예시: "이미지 수 N건", "광고주 수 N개".
+<span class="tbd">d. 집계 기준 확인 필요: 상단 기간(2-1) 필터 반영 여부, '내부승인' 상태 컬럼 추가 여부.</span></pre></section>
+
+  <section class="item" id="d-2"><h3><span class="num">2</span>[검색 조건]</h3><pre class="body">a. 기간과 승인상태로 목록을 조회한다.
+b. 조건 변경 시 목록과 상단 현황을 새로 불러온다.</pre></section>
+
+  <section class="item sub" id="d-2-1"><h3><span class="num">2-1</span>[기간 선택 · 검색]</h3><pre class="body">a. 기본값: 이번 달 1일 ~ 말일.
+b. 프리셋: 오늘 / 어제 / 이번달 / 전월 / 전전월 / 최근 7일 / 최근 30일 / 최근 90일 / 최근 180일 / 사용자 선택.
+c. [검색] 클릭 시 선택한 기간으로 조회한다.</pre></section>
+
+  <section class="item sub" id="d-2-2"><h3><span class="num">2-2</span>[승인상태 필터]</h3><pre class="body">a. 옵션: 전체 / 대기 / 내부승인 / 승인 / 모비온 반려 / 카카오 반려.
+b. 기본값: 대기.
+c. 라디오 클릭 즉시 조회한다(별도 검색 버튼 없음).</pre></section>
+
+  <section class="item" id="d-3"><h3><span class="num">3</span>[일괄 처리]</h3><pre class="body">a. 목록에서 체크한 소재의 상태를 한 번에 변경한다.
+b. 선택된 소재가 없으면 "변경할 이미지를 선택해 주세요." 안내 후 중단한다.
+c. 선택한 소재 ID와 광고주 ID를 함께 모달로 전달한다.</pre></section>
+
+  <section class="item sub" id="d-3-1"><h3><span class="num">3-1</span>[내부승인]</h3><pre class="body">a. 클릭 시 내부승인 확인 모달을 연다(500×200).
+b. 확인 시 선택 소재를 '내부승인' 상태로 변경한다.
+<span class="tbd">c. 내부승인 이후 카카오 심사 요청 · '승인'/'카카오 반려' 상태 반영 방식 확인 필요.</span></pre></section>
+
+  <section class="item sub" id="d-3-2"><h3><span class="num">3-2</span>[반려]</h3><pre class="body">a. 클릭 시 반려 모달을 연다(500×450).
+b. 반려 사유를 입력하면 선택 소재를 '모비온 반려' 상태로 변경하고 사유를 저장한다.
+c. 저장된 사유는 목록의 반려사유(5-10)에 노출된다.
+<span class="tbd">d. 반려 사유 템플릿 제공 여부 확인 필요 (반려타입 컬럼은 이 화면에서 제외됨).</span></pre></section>
+
+  <section class="item" id="d-4"><h3><span class="num">4</span>[목록 도구]</h3><pre class="body">a. 목록 표시 방식과 내보내기를 설정한다.</pre></section>
+
+  <section class="item sub" id="d-4-1"><h3><span class="num">4-1</span>[컬럼 설정]</h3><pre class="body">a. 목록에 보일 컬럼을 켜고 끈다.
+b. 기존 채팅리스트/피드와 같은 공통 컬럼 설정 기능을 쓴다.</pre></section>
+
+  <section class="item sub" id="d-4-2"><h3><span class="num">4-2</span>[검색어 검색]</h3><pre class="body">a. 검색어 입력 후 [검색] 클릭 또는 Enter로 조회한다.
+<span class="tbd">b. 검색 대상 컬럼 확인 필요 (예: 광고주ID, 광고주명, 사이트명, 광고문구).</span></pre></section>
+
+  <section class="item sub" id="d-4-3"><h3><span class="num">4-3</span>[보기 개수]</h3><pre class="body">a. 옵션: 100개 / 250개 / 500개씩 보기.
+b. 기본값: 100개.
+c. 변경 즉시 다시 조회한다.</pre></section>
+
+  <section class="item sub" id="d-4-4"><h3><span class="num">4-4</span>[엑셀 다운로드]</h3><pre class="body">a. 현재 검색 조건(기간 · 승인상태 · 검색어)으로 목록을 엑셀 파일로 받는다.
+b. 엑셀 컬럼은 화면 목록과 같다.
+<span class="tbd">c. 배너이미지 컬럼 포함 방식 확인 필요 (기존 화면은 엑셀에 배너이미지 없음 → URL 텍스트로 넣을지).</span></pre></section>
+
+  <section class="item" id="d-5"><h3><span class="num">5</span>[소재 목록]</h3><pre class="body">a. AI 생성 소재 1건이 1행이다.
+b. 맨 앞 체크박스로 일괄 처리(3) 대상을 고른다. 헤더 체크박스는 전체 선택.
+c. NO는 현재 페이지 기준 순번이다.
+<span class="tbd">d. 기본 정렬 확인 필요 (예: 생성일자 최신순).</span></pre></section>
+
+  <section class="item sub" id="d-5-1"><h3><span class="num">5-1</span>[승인상태]</h3><pre class="body">a. 상태를 색 버튼으로 표시한다: 대기(노랑) / 내부승인 / 승인 / 모비온 반려 / 카카오 반려.
+b. 배치로 생성된 직후 상태는 '대기'.</pre></section>
+
+  <section class="item sub" id="d-5-2"><h3><span class="num">5-2</span>[광고주 정보]</h3><pre class="body">a. 광고주ID · 광고주명 · 카테고리를 표시한다.
+b. 값은 배치 대상 광고주 정보에서 가져온다.
+c. 카테고리 표기 예시: "대분류&gt;중분류&gt;소분류".</pre></section>
+
+  <section class="item sub" id="d-5-3"><h3><span class="num">5-3</span>[사이트명]</h3><pre class="body">a. 광고주 API에서 받은 on 상태 소재그룹의 사이트명을 표시한다.
+b. 생성 시점 값으로 저장되어, 이후 소재그룹이 바뀌어도 그대로 유지된다.
+<span class="tbd">c. on 소재그룹이 여러 개일 때 어느 그룹 값을 쓸지 확정 필요 (그룹별 생성 / 대표 1개).</span></pre></section>
+
+  <section class="item sub" id="d-5-4"><h3><span class="num">5-4</span>[프로필 로고]</h3><pre class="body">a. 광고주 API의 on 소재그룹 프로필 로고를 썸네일로 표시한다.
+b. 클릭 시 원본 크기 미리보기 팝업(600×600)을 연다.</pre></section>
+
+  <section class="item sub" id="d-5-5"><h3><span class="num">5-5</span>[배너이미지]</h3><pre class="body">a. AI로 생성한 850×850 배너를 썸네일로 표시하고, 아래에 사이즈 타입 'TP 09'를 적는다.
+b. 클릭 시 미리보기 팝업(850×850)을 연다.</pre></section>
+
+  <section class="item sub" id="d-5-6"><h3><span class="num">5-6</span>[소재 광고문구]</h3><pre class="body">a. 광고주 API의 on 소재그룹 광고문구를 표시한다.
+b. 긴 문구도 줄바꿈해서 전부 보여준다.</pre></section>
+
+  <section class="item sub" id="d-5-7"><h3><span class="num">5-7</span>[랜딩URL]</h3><pre class="body">a. 상품 수집 시 저장한 상품별 URL을 표시한다.
+b. 클릭 시 새 탭으로 연다. 마우스를 올리면 전체 URL을 툴팁으로 보여준다.</pre></section>
+
+  <section class="item sub" id="d-5-8"><h3><span class="num">5-8</span>[CTA 정보]</h3><pre class="body">a. 광고주 API의 on 소재그룹 CTA 문구를 표시한다.
+b. 값 예시: "바로가기".</pre></section>
+
+  <section class="item sub" id="d-5-9"><h3><span class="num">5-9</span>[생성일자 · 최종업데이트일]</h3><pre class="body">a. 생성일자: 배치가 소재를 만든 시각.
+b. 최종업데이트일: 상태 · 사유 · 메모가 마지막으로 바뀐 시각. 변경 이력이 없으면 비워 둔다.
+c. 표기 형식: YYYY-MM-DD HH:MM:SS.</pre></section>
+
+  <section class="item sub" id="d-5-10"><h3><span class="num">5-10</span>[반려사유]</h3><pre class="body">a. 반려(3-2) 시 입력한 사유를 읽기 전용 텍스트 영역에 표시한다.
+<span class="tbd">b. 카카오 반려 사유를 이 칸에 함께 노출할지 확인 필요.</span></pre></section>
+
+  <section class="item sub" id="d-5-11"><h3><span class="num">5-11</span>[비고]</h3><pre class="body">a. 검수자가 소재별 메모를 남긴다.
+b. 입력 후 [입력] 클릭 시 저장하고 "정상 처리 하였습니다." 안내 후 목록을 새로 고친다.
+c. 승인상태와 관계없이 언제든 수정할 수 있다.</pre></section>
+
+  <section class="item" id="d-6"><h3><span class="num">6</span>[페이징]</h3><pre class="body">a. 보기 개수(4-3) 단위로 페이지를 나눈다.
+b. «, » 로 이전 · 다음 페이지로 이동하고, 현재 페이지는 파란색으로 표시한다.
+c. 페이지 이동 시 검색 조건을 그대로 유지한다.</pre></section>
+</aside>
+</div>
+
+<script>
+  const IMG = 'https://img.mobon.net/ad/imgfile';
+  const LOGO = IMG + '/2026/aG9tZXBsdXNfZXhw/1001173219-wmSp97cimgnameKakaoLogo.png';
+  const rows = [
+    { id: 14643, banner: '//20260916123644-WOPyslGghI-850x850.png', text: '햇꽃게 특가', url: 'https://abr.ge/@homeplus/mobon?ad_creative=crabW30&ad_group=banner', created: '2026-09-16 12:48:01' },
+    { id: 14642, banner: '//20260916124143-i6NuzUBZkl-850x850.png', text: '제철 과일 할인', url: 'https://abr.ge/@homeplus/mobon?ad_creative=fruitW30&ad_group=banner', created: '2026-09-16 12:47:34' },
+    { id: 14641, banner: '//20260916124123-c5BGZEbZFX-850x850.png', text: '추석 먹거리 모음', url: 'https://abr.ge/@homeplus/mobon?ad_creative=chooseokW30&ad_group=banner', created: '2026-09-16 12:47:22' },
+    { id: 14640, banner: '//20260916124043-RESCh7si5R-850x850.png', text: 'LA꽃갈비 특가', url: 'https://abr.ge/@homeplus/mobon?ad_creative=LAgalbiW30&ad_group=banner', created: '2026-09-16 12:47:09' },
+  ];
+
+  document.getElementById('rows').innerHTML = rows.map((r, i) => `
+    <tr>
+      <td><input type="checkbox" name="imageID[]" value="${r.id}"> ${i + 1}</td>
+      <td><button type="button" class="stBtn">대기</button></td>
+      <td>homeplus_exp</td>
+      <td>NHNAD_홈플러스익스프레스(APP)</td>
+      <td>기타&gt;인물&gt;쇼핑페스타</td>
+      <td>홈플러스 익스프레스</td>
+      <td><div class="logoBox"><img src="${LOGO}" alt="프로필 로고" onerror="this.remove()"></div></td>
+      <td>
+        <div class="tp-item">
+          <div class="banner_img"><img src="${IMG + r.banner}" alt="TP 09 배너 미리보기" onerror="this.remove()"></div>
+          <span>TP 09</span>
+        </div>
+      </td>
+      <td>${r.text}</td>
+      <td class="url"><a href="${r.url}" target="_blank" title="${r.url}">${r.url}</a></td>
+      <td>바로가기</td>
+      <td>${r.created}</td>
+      <td></td>
+      <td><textarea class="reason" readonly></textarea></td>
+      <td><div class="memo"><input type="text"> <button type="button">입력</button></div></td>
+    </tr>`).join('');
+
+  document.querySelectorAll('.docTabs button').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.docTabs button').forEach(b => b.classList.toggle('on', b === btn));
+    ['tabOverview', 'tabScreen', 'tabSpec'].forEach(id => document.getElementById(id).classList.toggle('hidden', id !== btn.dataset.tab));
+    window.scrollTo(0, 0);
+  }));
+
+  document.getElementById('allCheck').addEventListener('change', e => {
+    document.querySelectorAll('input[name="imageID[]"]').forEach(cb => cb.checked = e.target.checked);
+  });
+  // 화면설계서: 배지 클릭 → 디스크립션 스크롤 + 하이라이트
+  (function () {
+    const desc = document.getElementById('specDesc');
+    const head = desc.querySelector('.descHead');
+    document.querySelectorAll('#tabSpec .badge').forEach(b => b.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.getElementById(b.getAttribute('href').slice(1));
+      if (!t) return;
+      desc.scrollTo({ top: t.offsetTop - head.offsetHeight - 4, behavior: 'smooth' });
+      t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash');
+    }));
+    const badges = [...document.querySelectorAll('#tabSpec .badge')].map(b => b.getAttribute('href').slice(1));
+    const items = [...document.querySelectorAll('#tabSpec .item')].map(i => i.id);
+    const errs = [];
+    const dup = badges.filter((v, i) => badges.indexOf(v) !== i);
+    const noT = badges.filter(id => !items.includes(id));
+    const noB = items.filter(id => !badges.includes(id));
+    const mis = [...document.querySelectorAll('#tabSpec .badge')].filter(b => 'd-' + b.textContent.trim() !== b.getAttribute('href').slice(1)).map(b => b.textContent);
+    if (dup.length) errs.push('중복 배지: ' + dup.join(', '));
+    if (noT.length) errs.push('설명 없음: ' + noT.join(', '));
+    if (noB.length) errs.push('배지 없음: ' + noB.join(', '));
+    if (mis.length) errs.push('번호 불일치: ' + mis.join(', '));
+    const el = document.getElementById('linkCheck');
+    el.textContent = errs.length ? '링크 오류 · ' + errs.join(' / ') : '링크 검증 정상 · 배지 ' + badges.length + '개 = 설명 ' + items.length + '개';
+    el.className = 'check ' + (errs.length ? 'ng' : 'ok');
+  })();
+</script>
+
+
+</body></html>
