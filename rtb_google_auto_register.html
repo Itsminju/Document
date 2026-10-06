@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google RTB 부모·자식 지면 자동 등록 — 최종 화면설계서 | MOBSENSE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard','Noto Sans KR',sans-serif;font-size:13px;color:#1a1a1a;background:#eef0ee;min-height:100vh}
+
+/* ═══════ 상단 네비 ═══════ */
+.topnav{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #e5e7eb;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.topnav__title{padding:12px 24px 0;font-size:13px;font-weight:700;color:#0f6e56;letter-spacing:-.2px}
+.topnav__title span{color:#9ca3af;font-weight:500;font-size:11.5px;margin-left:8px}
+.topnav__tabs{display:flex;gap:2px;padding:8px 24px 0}
+.topnav__tabs button{padding:10px 20px;border:none;background:none;cursor:pointer;font-size:13.5px;color:#6b7280;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;font-weight:500;transition:color .12s}
+.topnav__tabs button:hover{color:#111827}
+.topnav__tabs button.on{color:#1d9e75;font-weight:700;border-bottom-color:#1d9e75}
+.topnav__tabs button .n{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#e5e7eb;color:#6b7280;font-size:11px;font-weight:700;margin-right:7px}
+.topnav__tabs button.on .n{background:#1d9e75;color:#fff}
+
+/* ═══════ 화면 패널 ═══════ */
+.screen-panel{display:none}
+.screen-panel.active{display:block}
+
+/* ═══════ 서브탭 (데모/화면설계서) ═══════ */
+.subtab-bar{display:flex;gap:4px;background:#fff;border-bottom:1px solid #e5e7eb;padding:0 24px;position:sticky;top:87px;z-index:60}
+.subtab{padding:11px 20px;border:none;background:none;cursor:pointer;font-size:13px;color:#8b8f94;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit;font-weight:500}
+.subtab:hover{color:#111827}
+.subtab.on{color:#1a1a1a;font-weight:700;border-bottom-color:#1a1a1a}
+.subpanel{display:none}
+.subpanel.on{display:block}
+
+/* ═══════ 설계서 공통 안내 배너 ═══════ */
+.spec-banner{max-width:1720px;margin:14px auto 0;padding:0 24px}
+.spec-banner__inner{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:11px 15px;font-size:12px;color:#92400e;line-height:1.7}
+.spec-banner__inner b{color:#7c4a03}
+
+/* ═══════ 설계서 레이아웃 (우:설명표 / 좌:화면) ═══════ */
+.spec{display:flex;flex-direction:row-reverse;gap:26px;align-items:flex-start;max-width:1720px;margin:0 auto;padding:18px 24px 60px}
+.spec__legend{width:460px;flex-shrink:0;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px 18px 22px;position:sticky;top:132px;max-height:calc(100vh - 150px);overflow-y:auto}
+.spec__legend h2{font-size:15px;font-weight:700;margin:0 0 4px}
+.spec__legend .sub{font-size:11.5px;color:#9ca3af;margin:0 0 14px;line-height:1.5}
+.spec-table{width:100%;border-collapse:collapse}
+.spec-table th,.spec-table td{border:1px solid #e5e7eb;padding:7px 9px;font-size:12px;vertical-align:top;text-align:left;line-height:1.65}
+.spec-table th{background:#f3f4f6;font-weight:600}
+.spec-table td:first-child,.spec-table th:first-child{width:40px;text-align:center}
+.spec-table .grp td{background:#f0faf6;color:#0f6e56;font-weight:700;font-size:12px;text-align:left}
+.spec-table .item{font-weight:600;color:#1a1a1a}
+.spec-table .tag{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px;margin-left:4px;vertical-align:middle;white-space:nowrap}
+.spec-table .tag-req{background:#fde8e8;color:#c0392b}
+.spec-table .tag-cond{background:#eef2ff;color:#4f46e5}
+.spec-table .tag-fix{background:#ecfdf5;color:#0f6e56}
+.src{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:3px;white-space:nowrap}
+.src-mob{background:#e0f2fe;color:#0369a1}
+.src-goog{background:#fef3c7;color:#92400e}
+.num-cell{display:inline-flex;align-items:center;justify-content:center;min-width:21px;height:21px;padding:0 4px;border-radius:11px;background:#e24b4a;color:#fff;font-size:11px;font-weight:700}
+.num-cell--sub{height:18px;border-radius:9px;font-size:10px;background:#eb8a89}
+.num-cell--m{background:#8b5cf6}
+.sub-row{display:flex;gap:8px;align-items:flex-start;margin-top:7px;padding:7px 9px;background:#fafafa;border-left:2px solid #f0a0a0;font-size:11.5px;color:#4b5563;border-radius:0 4px 4px 0}
+.sub-row .num-cell{flex-shrink:0}
+.spec__screen{flex:1;min-width:0;padding-left:42px}
+
+/* 마커 */
+.spec-num{position:absolute;z-index:5;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:#e24b4a;color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #fff;white-space:nowrap}
+.marker-host{position:relative}
+.spec-note{font-size:11.5px;color:#9ca3af;margin:16px 0 6px;font-weight:500}
+.reg-card__mount .section,.reg-card__mount .section-body{overflow:visible}
+
+/* ═══════ 데모 컨트롤 바 ═══════ */
+.demo-ctrl{max-width:1060px;margin:14px auto 0;padding:0 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.demo-ctrl .lbl{font-size:12px;color:#6b7280}
+.demo-hint{font-size:11.5px;color:#9ca3af;margin-left:auto}
+
+/* ═══════ 지면 등록 폼 화면 ═══════ */
+.main{flex:1;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid #e8e8e8;padding:10px 24px;display:flex;align-items:center;justify-content:space-between}
+.breadcrumb{font-size:13px;color:#999}
+.breadcrumb strong{color:#1a1a1a;font-weight:600}
+.reg-wrap{max-width:1000px;margin:0 auto;padding:18px 24px 30px;width:100%}
+.section{background:#fff;border:1px solid #e8e8e8;border-radius:8px;margin-bottom:12px;overflow:visible}
+.section-header{padding:11px 16px;border-bottom:1px solid #e8e8e8;font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;background:#fafafa;color:#1a1a1a}
+.section-header svg{width:14px;height:14px;color:#1d9e75}
+.section-header .hint{margin-left:8px;font-size:11px;font-weight:400;color:#c0392b}
+.section-body{padding:16px 20px}
+.form-row{display:grid;grid-template-columns:150px 1fr;align-items:start;gap:10px;margin-bottom:13px}
+.form-row:last-child{margin-bottom:0}
+.form-label{font-size:12.5px;color:#555;padding-top:7px;display:flex;align-items:center;gap:4px;line-height:1.4;flex-wrap:wrap}
+.form-label .q{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:#e5e7eb;color:#888;font-size:9px;font-weight:700;font-style:normal}
+.req{color:#e24b4a;font-size:11px}
+.edit-mark{color:#c0392b;font-size:11px;font-weight:700;margin-left:6px}
+input[type=text],textarea,select{font-family:inherit;font-size:12.5px;color:#1a1a1a;background:#fff;border:1px solid #ddd;border-radius:5px;padding:6px 10px;outline:none;width:100%}
+input[type=text]:focus,textarea:focus,select:focus{border-color:#1d9e75;box-shadow:0 0 0 2px rgba(29,158,117,.12)}
+select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;appearance:none;padding-right:28px}
+textarea{resize:vertical;line-height:1.6}
+.info-text{font-size:11.5px;color:#888;margin-top:4px}
+.radio-grp{display:flex;gap:18px;align-items:center;padding-top:7px;flex-wrap:wrap}
+.radio-grp label{display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer;white-space:nowrap;color:#333}
+.radio-grp input{accent-color:#1d9e75}
+.chk-grp{display:flex;flex-direction:column;gap:9px;padding-top:6px}
+.chk-grp label{display:flex;align-items:center;gap:6px;font-size:12.5px;cursor:pointer;color:#333}
+.chk-grp input{accent-color:#1d9e75}
+/* 세그먼트 토글 */
+.seg{display:inline-flex;border:1px solid #d1d5db;border-radius:6px;overflow:hidden}
+.seg button{padding:6px 22px;border:none;background:#fff;font-size:12.5px;cursor:pointer;color:#555;font-family:inherit}
+.seg button.on{background:#1d9e75;color:#fff;font-weight:600}
+.seg button+button{border-left:1px solid #d1d5db}
+.seg--sm button{padding:5px 16px;font-size:12px}
+/* 노출형태 큰 세그 */
+.expose-seg{display:flex;border:1px solid #d9d9d9;border-radius:6px;overflow:hidden;max-width:520px}
+.expose-seg button{flex:1;padding:14px 0;border:none;background:#fff;font-size:13px;color:#666;cursor:pointer;font-family:inherit;font-weight:500}
+.expose-seg button.on{background:#3cb878;color:#fff;font-weight:700}
+.expose-seg button+button{border-left:1px solid #e5e5e5}
+/* 매체상세 App/Web 필 */
+.pill-seg{display:inline-flex;border:1px solid #d1d5db;border-radius:6px;overflow:hidden}
+.pill-seg button{padding:5px 18px;border:none;background:#fff;font-size:12px;cursor:pointer;color:#666;font-family:inherit}
+.pill-seg button.on{background:#3cb878;color:#fff;font-weight:600}
+/* 지면 사이즈 그리드 */
+.size-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid #e5e5e5;border-radius:6px;overflow:hidden}
+.size-cell{border:1px solid #ededed;padding:16px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;background:#fff;min-height:110px;justify-content:center}
+.size-cell .box{border:1.5px solid #bbb;background:#fff}
+.size-cell .cap{font-size:10.5px;color:#666;text-align:center;line-height:1.3}
+.size-cell.on{background:#3cb878}
+.size-cell.on .cap{color:#fff;font-weight:600}
+.size-cell.on .box{border-color:#fff;background:rgba(255,255,255,.35)}
+/* 업로드 박스 */
+.upload-box{border:1.5px dashed #ccc;border-radius:6px;padding:16px;text-align:center;color:#aaa;font-size:12px;line-height:1.7;background:#fafafa}
+/* 정산 라인 */
+.settle-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.settle-line input[type=text],.settle-line select{width:auto}
+.settle-line .date{width:210px}
+.settle-line .memo{width:200px}
+.btn-plus{width:26px;height:26px;border:none;border-radius:5px;background:#3cb878;color:#fff;font-size:16px;line-height:1;cursor:pointer}
+.footer-btns{display:flex;justify-content:center;gap:10px;padding:22px 0 0}
+.btn-primary{padding:9px 32px;background:#3cb878;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-ghost{padding:9px 26px;background:#fff;color:#888;border:1px solid #ddd;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit}
+
+/* ═══════ 지면 심사 목록(데모) ═══════ */
+.page-h1{font-size:16px;font-weight:700;padding:16px 24px 0;color:#1a1a1a}
+.rtb-tabs{display:flex;gap:0;padding:14px 24px 0}
+.rtb-tab{padding:7px 20px;border:1px solid #d9d9d9;font-size:12.5px;cursor:pointer;color:#555;background:#fafafa}
+.rtb-tab:first-child{border-radius:5px 0 0 5px}
+.rtb-tab:last-child{border-radius:0 5px 5px 0;border-left:none}
+.rtb-tab.on{background:#fff;color:#1d9e75;font-weight:700;border-color:#1d9e75}
+.rtb-tab.disabled{color:#bbb;cursor:not-allowed;background:#f5f5f5}
+.list-note{margin:10px 24px 0;font-size:11.5px;color:#777;background:#f7f9f8;border:1px solid #e5eae8;border-radius:6px;padding:8px 12px;line-height:1.6}
+.filter-bar{margin:14px 24px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-bar .fl{font-size:12px;color:#555;font-weight:600;margin-left:8px}
+.filter-bar .fl:first-child{margin-left:0}
+.filter-bar select{font-size:12px;border:1px solid #d1d5db;border-radius:5px;padding:6px 28px 6px 10px;color:#333;width:auto;min-width:120px;cursor:pointer;-webkit-appearance:none;appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6'%3E%3Cpath d='M0 0l4 6 4-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.filter-bar .date-box,.filter-bar input[type=text]{font-size:12px;border:1px solid #d1d5db;border-radius:5px;padding:6px 10px;background:#fff;color:#333;width:auto}
+.filter-bar .date-box{background:#f6f8ff;white-space:nowrap}
+.filter-bar input[type=text]{min-width:240px;flex:1 1 260px;max-width:560px}
+.btn-green{padding:6px 16px;background:#5cb85c;color:#fff;border:none;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.bulk-bar{margin:12px 24px 0;display:flex;gap:8px}
+.rev-table-wrap{margin:12px 24px 0;border:1px solid #e5e7eb;border-radius:8px;overflow:auto;background:#fff}
+.rev-table{width:100%;border-collapse:collapse;min-width:1080px}
+.rev-table th{background:#efefef;padding:10px 8px;font-size:11.5px;font-weight:600;color:#444;border-bottom:2px solid #d9d9d9;text-align:center;white-space:nowrap}
+.rev-table td{padding:9px 8px;font-size:12px;color:#333;border-bottom:1px solid #f0f0f0;text-align:center;vertical-align:middle}
+.rev-table tbody tr:hover,.rev-table tbody tr:hover{background:#f5fbf5}
+.rev-table .zno{color:#888}
+.cell-select{font-size:11.5px;padding:4px 24px 4px 8px;border:1px solid #d1d5db;border-radius:4px;color:#333;cursor:pointer;min-width:92px;-webkit-appearance:none;appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6'%3E%3Cpath d='M0 0l4 6 4-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.btn-approve{padding:5px 15px;border:none;border-radius:5px;background:#5cb85c;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-reject{padding:5px 15px;border:none;border-radius:5px;background:#c0392b;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-recheck{padding:4px 11px;border:1px solid #c0392b;border-radius:5px;background:#fff;color:#c0392b;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-detail{padding:5px 13px;border:1px solid #337ab7;border-radius:5px;background:#fff;color:#337ab7;font-size:11.5px;cursor:pointer;font-family:inherit}
+.st-approved{color:#0f6e56;font-weight:600;line-height:1.5}
+.st-rejected{color:#c0392b;font-weight:600;line-height:1.5}
+
+/* ═══════ 심사 하단 컬럼 정의 ═══════ */
+.col-def{max-width:1720px;margin:0 auto;padding:6px 24px 60px}
+.col-def h2{font-size:15px;font-weight:700;margin:14px 0 4px}
+.col-def .sub{font-size:11.5px;color:#9ca3af;margin-bottom:14px}
+.col-table{width:100%;border-collapse:collapse;background:#fff}
+.col-table th,.col-table td{border:1px solid #e5e7eb;padding:9px 12px;font-size:12.5px;vertical-align:top;text-align:left;line-height:1.7}
+.col-table th{background:#f3f4f6;font-weight:600;text-align:center}
+.col-table td:nth-child(1){width:44px;text-align:center;color:#666}
+.col-table td:nth-child(2){width:130px;font-weight:600}
+.col-table td:nth-child(3){width:210px;font-family:Consolas,monospace;font-size:11.5px;color:#4f46e5}
+.plat{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.plat-web{background:#e0f2fe;color:#0369a1}
+.plat-app{background:#fef3c7;color:#92400e}
+.plat-common{background:#f3f4f6;color:#4b5563}
+
+/* ═══════ 개요 / 플로우 ═══════ */
+.ov-wrap{max-width:1720px;margin:0 auto;padding:22px 24px 60px}
+.ov-head{margin-bottom:16px}
+.ov-head h1{font-size:19px;font-weight:700;color:#1a1a1a;margin-bottom:6px;letter-spacing:-.3px}
+.ov-head p{font-size:12.5px;color:#6b7280;line-height:1.7;max-width:900px}
+.ov-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 22px}
+.ov-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 18px}
+.ov-card .step{font-size:11px;font-weight:700;color:#1d9e75;letter-spacing:.5px}
+.ov-card h3{font-size:14px;font-weight:700;margin:4px 0 8px}
+.ov-card p{font-size:12px;color:#5b6169;line-height:1.65}
+.flow-box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;overflow-x:auto}
+.flow-box h2{font-size:14px;font-weight:700;margin-bottom:4px}
+.flow-box .cap{font-size:11.5px;color:#9ca3af;margin-bottom:14px}
+.flow-svg{width:100%;min-width:1500px;height:auto;display:block}
+.flow-svg .node{fill:#fff;stroke:#8b9099;stroke-width:1.6}
+.flow-svg .node-start{fill:#f0faf6;stroke:#1d9e75}
+.flow-svg .node-end-ok{fill:#eefaf3;stroke:#1d9e75}
+.flow-svg .node-end-no{fill:#fdf0ef;stroke:#d98a86}
+.flow-svg .lbl{fill:#2f333a;font-size:14px;font-family:'Pretendard','Noto Sans KR',sans-serif}
+.flow-svg .lbl-b{fill:#2f333a;font-size:14px;font-weight:700;font-family:'Pretendard','Noto Sans KR',sans-serif}
+.flow-svg .edge{stroke:#9098a1;stroke-width:1.6;fill:none}
+.flow-svg .edge-lbl{fill:#6b7280;font-size:13px;font-family:'Pretendard','Noto Sans KR',sans-serif}
+.flow-svg .cond{fill:#4b5563;font-size:12.5px;font-family:'Pretendard','Noto Sans KR',sans-serif}
+.legend-inline{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:11.5px;color:#6b7280}
+.legend-inline span{display:inline-flex;align-items:center;gap:6px}
+.lg-swatch{width:22px;height:14px;border:1.4px solid #8b9099;border-radius:3px;display:inline-block}
+.lg-swatch.diamond{transform:rotate(45deg);width:12px;height:12px;border-radius:2px}
+.lg-swatch.pill{border-radius:8px}
+.lg-swatch.start{background:#f0faf6;border-color:#1d9e75}
+
+/* ═══════ 개요 : 변경 히스토리 ═══════ */
+.history-box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-top:18px}
+.history-box h2{font-size:14px;font-weight:700;margin-bottom:4px}
+.history-box .cap{font-size:11.5px;color:#9ca3af;margin-bottom:14px}
+.history-item{display:flex;gap:18px;padding:14px 0;border-top:1px solid #f0f0f0}
+.history-item:first-of-type{border-top:none;padding-top:2px}
+.history-date{flex-shrink:0;width:96px;font-size:12.5px;font-weight:700;color:#0f6e56;padding-top:1px}
+.history-body{flex:1;min-width:0}
+.history-body ul{list-style:none}
+.history-body li{font-size:12.5px;color:#374151;line-height:1.8;margin-bottom:3px}
+.history-body li b{color:#1a1a1a}
+.history-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:3px;margin-right:7px;vertical-align:middle;white-space:nowrap}
+.history-tag.parent{background:#e0f2fe;color:#0369a1}
+.history-tag.child{background:#fef3c7;color:#92400e}
+
+/* ═══════ 등록 : 부모/자식 툴바 · 토글 ═══════ */
+.reg-toolbar{display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #e5e7eb;padding:0 24px;position:sticky;top:87px;z-index:60}
+.reg-subtabs{display:flex;gap:4px}
+.type-badge{display:inline-block;font-size:14px;font-weight:700;color:#e24b4a;margin-bottom:8px}
+.reg-role__inline{font-size:11.5px;color:#0f6e56;background:#f0faf6;border:1px solid #bfe6d6;border-radius:7px;padding:9px 13px;margin-bottom:14px;line-height:1.65}
+.reg-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 18px}
+.reg-card__title{font-size:14px;font-weight:700;margin-bottom:12px;color:#1a1a1a}
+.footer{text-align:center;padding:16px;font-size:11px;color:#aaa;background:#eef0ee}
+/* ═══════ 261001 수정 표시 : 붉은 박스 · 수정 내역 패널 ═══════ */
+.chg-box{border:1.5px solid #e2564b;background:#fff5f4;border-radius:6px;padding:8px 10px;margin:4px 0}
+span.chg-box{display:block}
+.sub-row .chg-box{margin:0;flex:1}
+.topnav__tabs{align-items:center}
+.chg-btn{margin-left:auto;padding:7px 14px!important;border:1.5px solid #e2564b!important;border-radius:6px;background:#fff5f4!important;color:#c0392b!important;font-weight:700!important;font-size:12.5px!important;margin-bottom:6px!important}
+.chg-btn:hover{background:#fde8e6!important}
+.chg-btn .cnt{display:inline-block;min-width:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:#e2564b;color:#fff;font-size:11px;line-height:18px;text-align:center}
+.chg-panel{display:none;position:fixed;top:86px;right:24px;width:420px;max-width:calc(100vw - 32px);max-height:calc(100vh - 110px);overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.14);z-index:150;padding:16px 16px 10px}
+.chg-panel.on{display:block}
+.chg-panel h3{font-size:14px;font-weight:700;margin-bottom:2px}
+.chg-panel .cap{font-size:11.5px;color:#9ca3af;margin-bottom:10px;padding-right:20px}
+.chg-panel .x{position:absolute;top:12px;right:14px;border:none;background:none;font-size:16px;color:#9ca3af;cursor:pointer}
+.chg-grp{font-size:11.5px;font-weight:700;color:#0f6e56;margin:12px 0 4px;padding-top:10px;border-top:1px solid #f0f0f0}
+.chg-grp:first-child{border-top:none;padding-top:0;margin-top:4px}
+.chg-item{display:block;width:100%;text-align:left;border:none;background:none;padding:7px 8px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12.5px;color:#374151;line-height:1.55}
+.chg-item:hover{background:#fff5f4;color:#c0392b}
+.chg-item .where{display:inline-block;font-size:10.5px;font-weight:700;color:#6b7280;background:#f3f4f6;border-radius:3px;padding:0 6px;margin-right:6px}
+.chg-item .go{float:right;color:#c0392b;font-size:11px;font-weight:700;margin-left:8px}
+@keyframes chgFlash{0%,40%{background-color:#fde68a}100%{background-color:transparent}}
+.chg-flash,.chg-flash>td{animation:chgFlash 2.2s ease-out}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ 상단 네비 ═══════════════ -->
+<div class="topnav">
+  <div class="topnav__title">Google RTB 부모·자식 지면 자동 등록 · 최종 화면설계서
+    <span></span></div>
+  <div class="topnav__tabs">
+    <button class="on" data-screen="overview" onclick="showScreen('overview')"><span class="n">1</span>개요 · 플로우</button>
+    <button data-screen="review" onclick="showScreen('review')"><span class="n">2</span>지면 심사</button>
+    <button data-screen="register-parent" onclick="showScreen('register-parent')"><span class="n">3</span>부모지면등록</button>
+    <button data-screen="register-child" onclick="showScreen('register-child')"><span class="n">4</span>자식지면등록</button>
+    <button class="chg-btn" onclick="chgToggle()">📝 오늘 수정 내역 (10/01)<span class="cnt" id="chg-cnt"></span></button>
+  </div>
+</div>
+<div class="chg-panel" id="chg-panel">
+  <button class="x" onclick="chgToggle(false)">✕</button>
+  <h3>2026-10-01 수정 내역 요약</h3>
+  <p class="cap">항목을 클릭하면 해당 위치로 이동합니다 · 화면 내 <span class="edit-mark" style="margin:0">261001_수정</span> 표시 / 붉은 박스 = 오늘 수정된 설명</p>
+  <div id="chg-list"></div>
+</div>
+
+<!-- ═══════════════ [1] 개요 · 플로우 ═══════════════ -->
+<section class="screen-panel active" id="screen-overview">
+  <div class="ov-wrap">
+    <div class="ov-head">
+      <h1>부모 지면 자동 등록 → 심사 → 라이브 전체 흐름</h1>
+      <p id="chg-ov-intro">구글 RTB bid request가 동일 지면 기준 <b>5,000건 이상</b> 수신되면 시스템이 <b>부모 지면</b>을 자동 생성한다.
+         <br> 기존 지면과 <b>①앱네임(또는 최상위 도메인) · ②광고노출 위치 · ③리워드 여부</b> <br>3가지 조합이 일치하면 자식 지면으로 연결되고,
+         일치 조합이 없으면 <b>심사 대기</b> 상태로 부모 지면이 등록되어 운영자 승인 절차를 거친다.
+         <span class="chg-box"><b>부모 지면 생성 시 입찰 전문의 리워드 여부(rwdd)를 확인</b>해 <b>N / Y 부모 지면을 분리</b> 생성한다. (N : 기존과 동일 / Y : 지면명·태그 ID 끝에 <b>_reward</b>)
+         <br>자식 지면은 자신의 리워드 여부와 <b>같은 리워드 여부의 부모 지면</b> 하위로만 연결된다. (N → N 부모 / Y → Y 부모)<span class="edit-mark">261001_수정</span></span></p>
+    </div>
+
+    <div class="ov-cards" id="chg-ov-cards">
+      <div class="ov-card">
+        <div class="step">STEP 01 · 자동 생성</div>
+        <h3>bid request 5,000건+ 감지</h3>
+        <p>동일 지면 조건으로 입찰 요청이 임계치를 넘으면 부모 지면이 자동 채번·생성된다. <br>최초 수신일이 생성일 기준이 된다.<span class="chg-box">리워드 여부(rwdd)에 따라 <b>N 부모 / Y 부모(_reward)</b>로 분리 생성된다.<span class="edit-mark">261001_수정</span></span></p>
+      </div>
+      <div class="ov-card">
+        <div class="step">STEP 02 · 심사</div>
+        <h3>운영자 승인 / 반려</h3>
+        <p>조합 일치가 없는 신규 부모 지면은 '심사 대기'로 진입한다. 승인 시 카테고리 지정 후 시스템심사로 진행된다. <span class="chg-box">반려 시 지면 사용 불가로 종료되며, 재심사는 없다.<span class="edit-mark">261001_수정</span></span></p>
+      </div>
+      <div class="ov-card">
+        <div class="step">STEP 03 · 라이브</div>
+        <h3>자식 지면 연결 후 송출</h3>
+        <p>승인·시스템심사 통과 후 연결된 자식 지면이 있으면 실제 라이브가 가능하다.<br>자식 지면이 없으면 송출 대상이 없는 상태로 남는다.<span class="chg-box">자식 지면은 리워드 여부가 같은 부모 지면 하위로만 연결된다.<span class="edit-mark">261001_수정</span></span></p>
+      </div>
+    </div>
+
+    <div class="flow-box" id="chg-ov-flow">
+      <h2>업무 플로우차트</h2>
+      <p class="cap">◇ 판단(조건) · ▭ 처리 · ▱ 시스템 처리 · ◗ 종료(결과)</p>
+      <svg class="flow-svg" viewBox="0 0 1900 800" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0 0 L9 4.5 L0 9 z" fill="#9098a1"/>
+          </marker>
+        </defs>
+
+        <!-- ===== 상단 밴드 : 조합 있음 경로 ===== -->
+        <rect class="node node-start" x="30" y="60" width="180" height="66" rx="8"/>
+        <text class="lbl" x="120" y="88" text-anchor="middle">bid request</text>
+        <text class="lbl" x="120" y="108" text-anchor="middle">5,000건+</text>
+
+        <polygon class="node" points="380,32 470,94 380,156 290,94"/>
+        <text class="lbl" x="380" y="88" text-anchor="middle">부모 지면</text>
+        <text class="lbl" x="380" y="106" text-anchor="middle">정보 확인</text>
+
+        <rect class="node" x="835" y="60" width="160" height="66" rx="4"/>
+        <text class="lbl" x="915" y="98" text-anchor="middle">자식 지면 등록</text>
+        <rect x="790" y="134" width="250" height="60" rx="6" fill="#fff5f4" stroke="#e2564b" stroke-width="1.5"/>
+        <text class="cond" x="915" y="150" text-anchor="middle">리워드 여부가 같은 부모 하위로 연결</text>
+        <text x="915" y="186" text-anchor="middle" fill="#c0392b" font-size="11" font-weight="700">261001_수정</text>
+        <text class="cond" x="915" y="168" text-anchor="middle">(N → N 부모 / Y → Y 부모)</text>
+
+        <polygon class="node" points="1160,32 1250,94 1160,156 1070,94"/>
+        <text class="lbl" x="1160" y="88" text-anchor="middle">부모 지면</text>
+        <text class="lbl" x="1160" y="106" text-anchor="middle">상태</text>
+
+        <rect class="node node-end-ok" x="1400" y="62" width="160" height="62" rx="30"/>
+        <text class="lbl" x="1480" y="88" text-anchor="middle">지면</text>
+        <text class="lbl" x="1480" y="106" text-anchor="middle">사용 가능</text>
+
+        <!-- 상단 엣지 -->
+        <path class="edge" d="M210 94 L286 94" marker-end="url(#arw)"/>
+        <text class="cond" x="560" y="66" text-anchor="middle">1. 앱네임 or 최상위 도메인</text>
+        <text class="cond" x="560" y="84" text-anchor="middle">&amp; 2. 광고노출 위치</text>
+        <text class="cond" x="560" y="110" text-anchor="middle"> &3.리워드 여부일치하는 조합 있음</text>
+        <path class="edge" d="M470 94 L831 94" marker-end="url(#arw)"/>
+        <path class="edge" d="M995 94 L1066 94" marker-end="url(#arw)"/>
+        <path class="edge" d="M1250 94 L1396 94" marker-end="url(#arw)"/>
+
+        <!-- 부모 정보확인 → (조합 없음) 아래로 -->
+        <path class="edge" d="M380 156 L380 402" marker-end="url(#arw)"/>
+        <text class="cond" x="398" y="230" text-anchor="start">1. 앱네임 or 최상위 도메인</text>
+        <text class="cond" x="398" y="248" text-anchor="start">&amp; 2. 광고노출 위치 &amp; 3. 리워드 여부</text>
+        <text class="cond" x="398" y="266" text-anchor="start">일치하는 조합 없음</text>
+        <rect x="388" y="286" width="360" height="64" rx="6" fill="#fff5f4" stroke="#e2564b" stroke-width="1.5"/>
+        <text class="cond" x="398" y="304" text-anchor="start">※ 리워드 여부(rwdd)로 부모 분리 생성 <tspan fill="#c0392b" font-size="11" font-weight="700">261001_수정</tspan></text>
+        <text class="cond" x="398" y="322" text-anchor="start">· N (rwdd=0/없음) : RTB_WEB_매체명 (기존과 동일)</text>
+        <text class="cond" x="398" y="340" text-anchor="start">· Y (rwdd=1) : RTB_WEB_매체명_reward</text>
+
+        <!-- ===== 하단 밴드 : 심사 경로 ===== -->
+        <rect class="node" x="290" y="404" width="180" height="72" rx="4"/>
+        <text class="lbl" x="380" y="434" text-anchor="middle">부모 지면 등록</text>
+        <text class="lbl" x="380" y="456" text-anchor="middle">심사 상태 : 대기</text>
+
+        <polygon class="node" points="640,382 726,440 640,498 554,440"/>
+        <text class="lbl" x="640" y="446" text-anchor="middle">지면 승인</text>
+
+        <rect class="node" x="808" y="408" width="164" height="64" rx="4"/>
+        <text class="lbl" x="890" y="446" text-anchor="middle">지면카테고리 선택</text>
+
+        <rect class="node" x="1030" y="408" width="176" height="64" rx="4"/>
+        <text class="lbl" x="1118" y="438" text-anchor="middle">오디언스카테고리</text>
+        <text class="lbl" x="1118" y="456" text-anchor="middle">선택</text>
+
+        <polygon class="node" points="1280,408 1440,408 1418,472 1258,472"/>
+        <text class="lbl" x="1350" y="446" text-anchor="middle">시스템심사</text>
+
+        <polygon class="node" points="1560,378 1652,440 1560,502 1468,440"/>
+        <text class="lbl" x="1560" y="434" text-anchor="middle">자식 지면</text>
+        <text class="lbl" x="1560" y="452" text-anchor="middle">유무</text>
+
+        <rect class="node node-end-ok" x="1710" y="408" width="170" height="64" rx="32"/>
+        <text class="lbl" x="1795" y="434" text-anchor="middle">실제 라이브 가능</text>
+        <text class="lbl" x="1795" y="454" text-anchor="middle">지면 있음</text>
+
+        <!-- 하단 엣지 -->
+        <path class="edge" d="M470 440 L550 440" marker-end="url(#arw)"/>
+        <text class="edge-lbl" x="510" y="428" text-anchor="middle">　</text>
+        <path class="edge" d="M726 440 L804 440" marker-end="url(#arw)"/>
+        <text class="edge-lbl" x="765" y="428" text-anchor="middle">승인</text>
+        <path class="edge" d="M972 440 L1026 440" marker-end="url(#arw)"/>
+        <path class="edge" d="M1206 440 L1254 440" marker-end="url(#arw)"/>
+        <path class="edge" d="M1440 440 L1464 440" marker-end="url(#arw)"/>
+        <path class="edge" d="M1652 440 L1706 440" marker-end="url(#arw)"/>
+        <text class="edge-lbl" x="1685" y="428" text-anchor="middle">자식 지면 있음</text>
+
+        <!-- 자식 유무 → 없음(아래) -->
+        <rect class="node node-end-no" x="1475" y="700" width="170" height="64" rx="32"/>
+        <text class="lbl" x="1560" y="726" text-anchor="middle">실제 라이브 가능</text>
+        <text class="lbl" x="1560" y="746" text-anchor="middle">지면 없음</text>
+        <path class="edge" d="M1560 502 L1560 696" marker-end="url(#arw)"/>
+        <text class="edge-lbl" x="1578" y="600" text-anchor="start">자식 지면이 없음</text>
+
+        <!-- 지면 승인 → 반려(아래) → 지면 사용 불가 (재심사 없음) -->
+        <path class="edge" d="M640 498 L640 696" marker-end="url(#arw)"/>
+        <rect x="650" y="572" width="210" height="26" rx="6" fill="#fff5f4" stroke="#e2564b" stroke-width="1.5"/>
+        <text class="edge-lbl" x="658" y="590" text-anchor="start">반려 (재심사 없음) <tspan fill="#c0392b" font-size="11" font-weight="700">261001_수정</tspan></text>
+        <rect class="node node-end-no" x="560" y="700" width="160" height="62" rx="30"/>
+        <text class="lbl" x="640" y="726" text-anchor="middle">지면</text>
+        <text class="lbl" x="640" y="744" text-anchor="middle">사용 불가</text>
+      </svg>
+
+      <div class="legend-inline">
+        <span><i class="lg-swatch start"></i> 시작 (bid request)</span>
+        <span><i class="lg-swatch diamond"></i> 판단 / 조건 분기</span>
+        <span><i class="lg-swatch"></i> 처리 단계</span>
+        <span><i class="lg-swatch pill"></i> 종료 / 결과</span>
+      </div>
+    </div>
+
+    <div class="history-box" id="chg-ov-history">
+      <h2>변경 히스토리</h2>
+      <p class="cap">화면설계서 반영 기준 · 최신순</p>
+
+      <div class="history-item">
+        <div class="history-date">2026-10-01</div>
+        <div class="history-body"><ul>
+          <li><span class="history-tag parent">부모</span>부모 지면 생성 시 입찰 전문 <b>리워드 여부(rwdd)</b> 확인 → <b>N / Y 부모 지면 분리 생성</b> (같은 매체라도 N·Y 부모가 각각 존재)</li>
+          <li><span class="history-tag parent">부모</span>[10] 지면명 · [15] 태그 ID — 리워드 N은 기존과 동일, 리워드 Y는 끝에 <b>_reward</b> 추가 (예: RTB_WEB_매체명_reward / web_최상위도메인_reward_v2)</li>
+          <li><span class="history-tag child">자식</span>[13] 부모 지면 매칭 — 자식 지면은 <b>리워드 여부가 같은 부모 지면</b> 하위로만 연결 (N → N 부모 / Y → Y 부모)</li>
+          <li><span class="history-tag parent">부모</span>지면 심사 — <b>재심사 기능 삭제</b> : 반려는 최종 상태(지면 사용 불가), 재심사 버튼·[14] 항목·플로우 루프백 제거</li>
+          <li><span class="history-tag parent">부모</span>지면 심사 — 리워드 여부 표기 O/X → <b>Y/N</b>으로 통일, 목록 예시를 부모 지면명 규칙 기준으로 변경</li>
+        </ul></div>
+      </div>
+
+      <div class="history-item">
+        <div class="history-date">2026-07-21</div>
+        <div class="history-body"><ul>
+          <li><span class="history-tag child">자식</span>[17] metric 항목 전체 삭제 — CTR/viewability 예측 지표 및 GROUP 12등급 변환 로직 폐기</li>
+          <li><span class="history-tag child">자식</span>[8] 지면 사이즈 — <b>구글 RTB에서 해당 값 사용하지 않음 / 특정 사이즈를 고정으로 사용하지 않음</b>으로 설명 변경</li>
+          <li><span class="history-tag child">자식</span>[10] 지면명 · [15] 태그 ID — metric 등급 토큰 제거, <b>리워드여부(rwdd)</b> 토큰 추가 (rwdd=1 → Y, 0 또는 필드 없음 → N)</li>
+        </ul></div>
+      </div>
+
+      <div class="history-item">
+        <div class="history-date">2026-07-15</div>
+        <div class="history-body"><ul>
+          <li><span class="history-tag child">자식</span>[10] 지면명 · [15] 태그 ID — 광고형식(배너/전면)_위치(pos) + CTR 등급_viewability GROUP등급 토큰 추가</li>
+          <li><span class="history-tag child">자식</span>[17] metric 필드 신설 — CTR/viewability 예측 지표를 읽기 전용으로 노출, GROUP 변환 기준표 포함</li>
+        </ul></div>
+      </div>
+
+      <div class="history-item">
+        <div class="history-date">2026-07-14</div>
+        <div class="history-body"><ul>
+          <li><span class="history-tag parent">부모</span>[12] 지면 설정 — <b>등급 / 등급명</b> 필드 추가 (등급은 드롭다운 1~13 직접 선택, 등급명은 텍스트 직접 입력)</li>
+          <li><span class="history-tag parent">부모</span>[10] 지면명 · [15] 태그 ID — 자동 생성 규칙 정의</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ [2] 지면 심사 ═══════════════ -->
+<section class="screen-panel" id="screen-review">
+  <div class="subtab-bar">
+    <button class="subtab on" data-sub="rev-demo" onclick="showSub('review','rev-demo')">데모</button>
+    <button class="subtab" data-sub="rev-spec" onclick="showSub('review','rev-spec')">화면설계서</button>
+  </div>
+
+  <!-- ---------- 데모 ---------- -->
+  <div class="subpanel on" id="rev-demo">
+    <div class="page-h1">매체 센터 &gt; 지면 심사</div>
+    <div class="rtb-tabs">
+      <div class="rtb-tab">일반지면</div>
+      <div class="rtb-tab on">구글RTB_부모</div>
+    </div>
+    <div class="list-note">· 일반 지면 목록과 <b>분리된 구글 RTB 지면 심사 대기 전용 목록</b>입니다. 
+      <br>bid request 자동 파싱 또는 수동 등록으로 <b>승인 대기 중인 구글 RTB부모 지면</b>이 노출됩니다.</div>
+
+    <div class="filter-bar">
+      <span class="fl">매체 상세</span>
+      <select><option>전체</option><option>WEB</option><option>APP</option></select>
+      <span class="fl">심사상태</span>
+      <select id="rev-filter-status" onchange="revFilter()"><option value="all">전체</option><option value="wait">대기</option><option value="approve">승인</option><option value="reject">반려</option></select>
+      <span class="fl" id="chg-rev-filter">리워드여부<span class="edit-mark">261001_수정</span></span>
+      <select><option>전체</option><option>Y (리워드)</option><option>N (일반)</option></select>
+    </div>
+    <div class="filter-bar">
+      <span class="date-box">📅 2026-07-01 ~ 2026-07-08</span>
+      <input type="text" placeholder="지면 번호 / 매체명 / 지면명 / 태그ID">
+      <button class="btn-green">검색</button>
+    </div>
+
+    <div class="bulk-bar">
+      <button class="btn-green" onclick="revToast('심사 대기 상태의 지면만 처리할 수 있습니다.')">반려</button>
+      <button class="btn-green" onclick="revToast('심사할 지면을 선택해 주세요.')">완료</button>
+      <button class="btn-green" onclick="showScreen('register-parent')">추가</button>
+    </div>
+
+    <div class="rev-table-wrap" id="chg-rev-table">
+      <table class="rev-table">
+        <thead>
+          <tr>
+            <th style="width:34px"><input type="checkbox"></th>
+            <th>지면 번호</th><th>매체명</th><th>지면명<span class="edit-mark">261001_수정</span></th><th>매체 상세</th><th>노출 형태</th>
+            <th>리워드 여부<span class="edit-mark">261001_수정</span></th><th>지면카테고리</th><th>오디언스카테고리</th><th style="width:200px">심사 상태</th><th>자세히 보기</th>
+          </tr>
+        </thead>
+        <tbody id="rev-tbody">
+          <tr data-st="wait">
+            <td><input type="checkbox"></td>
+            <td class="zno">966101</td>
+            <td>bntnews.co.kr</td>
+            <td style="text-align:left">RTB_WEB_bntnews.co.kr</td>
+            <td>WEB</td><td>배너</td><td>N</td>
+            <td><select class="cell-select"><option>포털</option><option>언론사</option></select></td>
+            <td><select class="cell-select"><option>포털사</option><option>종합</option></select></td>
+            <td>
+              <button class="btn-approve" onclick="revApprove(this)">승인</button>
+              <button class="btn-reject" onclick="revReject(this)">반려</button>
+            </td>
+            <td><button class="btn-detail" onclick="showScreen('register-parent')">자세히 보기</button></td>
+          </tr>
+          <tr data-st="wait">
+            <td><input type="checkbox"></td>
+            <td class="zno">966104</td>
+            <td>bntnews.co.kr</td>
+            <td style="text-align:left">RTB_WEB_bntnews.co.kr_reward</td>
+            <td>WEB</td><td>배너</td><td>Y</td>
+            <td><select class="cell-select"><option>포털</option><option>언론사</option></select></td>
+            <td><select class="cell-select"><option>포털사</option><option>종합</option></select></td>
+            <td>
+              <button class="btn-approve" onclick="revApprove(this)">승인</button>
+              <button class="btn-reject" onclick="revReject(this)">반려</button>
+            </td>
+            <td><button class="btn-detail" onclick="showScreen('register-parent')">자세히 보기</button></td>
+          </tr>
+          <tr data-st="approve">
+            <td><input type="checkbox"></td>
+            <td class="zno">966102</td>
+            <td>Toss</td>
+            <td style="text-align:left">RTB_APP_Toss_reward</td>
+            <td>APP</td><td>전면</td><td>Y</td>
+            <td><select class="cell-select" disabled><option>APP</option></select></td>
+            <td><select class="cell-select" disabled><option>IT 일반</option></select></td>
+            <td><span class="st-approved">2026-05-02<br>승인</span></td>
+            <td><button class="btn-detail" onclick="showScreen('register-parent')">자세히 보기</button></td>
+          </tr>
+          <tr data-st="reject">
+            <td><input type="checkbox"></td>
+            <td class="zno">966103</td>
+            <td>당근마켓</td>
+            <td style="text-align:left">RTB_APP_당근마켓</td>
+            <td>APP</td><td>배너</td><td>N</td>
+            <td><select class="cell-select"><option>커머스</option></select></td>
+            <td><select class="cell-select"><option>중고거래</option></select></td>
+            <td>
+              <span class="st-rejected">2026-05-02 반려</span>
+            </td>
+            <td><button class="btn-detail" onclick="showScreen('register-parent')">자세히 보기</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo-ctrl" style="margin-top:12px"><span class="demo-hint">승인·반려 버튼과 상태 필터가 실제로 동작합니다. (반려는 최종 상태 · 재심사 없음<span class="edit-mark">261001_수정</span>) · 같은 매체(bntnews.co.kr)라도 리워드 N / Y 부모 지면이 각각 별도 행으로 생성됩니다.<span class="edit-mark">261001_수정</span></span></div>
+    <div id="rev-toast" style="position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#2c2c2a;color:#fff;font-size:12.5px;padding:11px 20px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:200"></div>
+  </div>
+
+  <!-- ---------- 화면설계서 ---------- -->
+  <div class="subpanel" id="rev-spec">
+    <div class="spec-banner"><div class="spec-banner__inner">
+      빨간 번호가 화면 요소이고, 우측 표의 같은 번호가 해당 요소의 <b>기능·동작·조건</b> 정의입니다. 심사 상태 컬럼은 <b>대기 / 승인 / 반려</b> 3가지 상태를 각 행에 예시로 표기했습니다. (반려는 최종 상태, 재심사 없음)<span class="edit-mark">261001_수정</span> 하단 컬럼 정의 표는 <b>구글 RTB 입찰 전문(bid request)</b> 필드 기준이며, 웹(Site)/앱(App) 전문이 다른 항목은 구분 표기했습니다.
+    </div></div>
+
+    <div class="spec">
+      <!-- 우측 범례 -->
+      <div class="spec__legend">
+        <h2>지면 심사 — 기능 정의</h2>
+        <p class="sub">매체 센터 &gt; 지면 심사 · 구글RTB_부모 탭 · 부모 지면 심사 목록</p>
+        <table class="spec-table">
+          <thead><tr><th>No.</th><th>항목</th><th>설명 · 동작 · 조건</th></tr></thead>
+          <tbody>
+            <tr class="grp"><td colspan="3">A. 목록 유형 탭</td></tr>
+            <tr><td><span class="num-cell">1</span></td><td class="item">구글RTB_부모 탭</td>
+              <td>a. 일반지면 / 구글RTB_부모 탭 전환<br>b. 구글RTB_부모 선택 시 : bid request 자동 파싱으로 생성된 <b>부모 지면</b> 심사 목록 노출
+                <br> (파싱된 내용으로 부모 지면 등록 리스트 작성)
+                <br>c. 일반지면 선택 시 : 기존 일반 지면 심사 목록 노출(기존 화면 유지)
+                <br>d. 탭 전환 시 필터·검색 조건 초기화</td></tr>
+
+            <tr class="grp"><td colspan="3">B. 검색 필터</td></tr>
+            <tr><td><span class="num-cell">2</span></td><td class="item">매체 상세 필터</td>
+              <td>a. 리스트 : 전체 / WEB / APP<br>b. 판별 기준 : 입찰 전문 내 site 객체 존재 → WEB, app 객체 존재 → APP<br>c. 디폴트 : 전체</td></tr>
+            <tr><td><span class="num-cell">3</span></td><td class="item">심사상태 필터</td>
+              <td>a. 리스트 : 전체 / 대기 / 승인 / 반려<br>b. 디폴트 : 전체<br>c. 선택 시 [12] 심사 상태 기준으로 목록 필터링</td></tr>
+            <tr id="chg-rev-4"><td><span class="num-cell">4</span></td><td class="item">리워드여부 필터<span class="edit-mark">261001_수정</span></td>
+              <td><div class="chg-box">a. 리스트 : 전체 / Y(리워드) / N(일반)<br>b. 판별 기준 : 입찰 전문 rwdd 값 (rwdd=1 → Y, 0 또는 필드 없음 → N)<br>c. 디폴트 : 전체<br>d. 부모 지면은 리워드 여부별로 분리 생성되므로, 같은 매체라도 N / Y 부모 지면이 각각 별도 행으로 노출</div></td></tr>
+            <tr><td><span class="num-cell">5</span></td><td class="item">조회 기간</td>
+              <td>a. 부모 지면 자동 생성일(최초 bid request 수신일) 기준 조회<br>b. 디폴트 : 최근 7일<br>c. 캘린더에서 시작일~종료일 직접 선택 가능</td></tr>
+            <tr><td><span class="num-cell">6</span></td><td class="item">검색어 입력</td>
+              <td>a. 검색 대상 : 지면 번호 / 매체명 / 지면명 / 태그ID<br>b. 부분 일치 검색<br>c. 미입력 시 전체 조회</td></tr>
+            <tr><td><span class="num-cell">7</span></td><td class="item">검색 버튼</td>
+              <td>a. [2]~[6] 조건을 조합(AND)하여 목록 조회<br>b. 결과 없을 시 "검색 결과가 없습니다." 표시</td></tr>
+
+            <tr class="grp"><td colspan="3">C. 일괄 처리</td></tr>
+            <tr><td><span class="num-cell">8</span></td><td class="item">반려 (일괄)</td>
+              <td>a. 체크박스 선택된 지면 일괄 반려 처리<br>b. 심사 상태 '대기'인 지면만 처리 가능
+                <div class="sub-row"><span class="num-cell num-cell--sub">8-1</span><div>선택 항목 없을 시 : 토스트 "심사할 지면을 선택해 주세요."</div></div>
+                <div class="sub-row"><span class="num-cell num-cell--sub">8-2</span><div>'대기' 외 상태 포함 시 : 토스트 "심사 대기 상태의 지면만 처리할 수 있습니다."</div></div></td></tr>
+            <tr><td><span class="num-cell">9</span></td><td class="item">완료 (일괄)</td>
+              <td>a. 체크박스 선택된 지면 일괄 승인 처리<br>b. 처리 조건·예외는 [8]과 동일<br>c. 승인 시 지면 상태 '활성' 전환 및 시스템 심사</td></tr>
+            <tr><td><span class="num-cell">10</span></td><td class="item">추가</td>
+              <td>a. 부모 지면 수동 등록 화면으로 이동<br>b. 자동 파싱 누락·신규 매체 선등록 시 사용</td></tr>
+
+            <tr class="grp"><td colspan="3">D. 목록 — 심사 상태 · 상세</td></tr>
+            <tr><td><span class="num-cell">11</span></td><td class="item">승인 버튼 <span class="tag tag-cond">대기 시</span></td>
+              <td>a. 심사 상태 '대기'일 때만 노출<br>b. 클릭 시 해당 지면 즉시 승인
+                <div class="sub-row"><span class="num-cell num-cell--sub">11-1</span><div>승인 후 : 승인일 + '승인' 텍스트로 전환(예: 2026-05-02 승인), 버튼 미노출</div></div>
+                <div class="sub-row"><span class="num-cell num-cell--sub">11-2</span><div>승인과 동시에 지면카테고리/오디언스카테고리 드롭다운 비활성(수정 불가) 처리</div></div></td></tr>
+            <tr id="chg-rev-12"><td><span class="num-cell">12</span></td><td class="item">반려 버튼 <span class="tag tag-cond">대기 시</span></td>
+              <td>a. 심사 상태 '대기'일 때만 노출<br>b. 클릭 시 해당 지면 반려 처리
+                <div class="sub-row"><span class="num-cell num-cell--sub">12-1</span><div class="chg-box">반려 후 : 반려일 + '반려' 텍스트로 전환(예: 2026-05-02 반려), 버튼 미노출<span class="edit-mark">261001_수정</span></div></div>
+                <div class="sub-row"><span class="num-cell num-cell--sub">12-2</span><div>반려된 지면은 광고 송출 불가(비활성 유지)</div></div>
+                <div class="sub-row"><span class="num-cell num-cell--sub">12-3</span><div class="chg-box">반려는 최종 상태이며 <b>재심사 기능 없음</b> (대기 복귀 불가)<span class="edit-mark">261001_수정</span></div></div></td></tr>
+            <tr><td><span class="num-cell">13</span></td><td class="item">자세히 보기</td>
+              <td>a. 클릭 시 부모 지면 등록/수정 상세 화면으로 이동(매체 센터 &gt; 지면 등록)<br>b. 심사 상태와 무관하게 항상 노출<br>c. 상세 화면에서 지면 구현 방식·사이즈·태그 ID·정산 정보 확인 가능</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 좌측 화면 목업 -->
+      <div class="spec__screen">
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 22px">
+          <div style="font-size:15px;font-weight:700;margin-bottom:14px">매체 센터 &gt; 지면 심사</div>
+
+          <div class="rtb-tabs" style="padding:0 0 0">
+            <div class="rtb-tab">일반지면</div>
+            <span class="marker-host"><span class="spec-num" style="right:-11px;top:-11px;left:auto">1</span>
+              <div class="rtb-tab on">구글RTB_부모</div></span>
+          </div>
+
+          <div class="filter-bar" style="margin:16px 0 0">
+            <span class="fl">매체 상세</span>
+            <span class="marker-host"><span class="spec-num" style="right:-11px;top:-11px;left:auto">2</span><select><option>전체</option></select></span>
+            <span class="fl">심사상태</span>
+            <span class="marker-host"><span class="spec-num" style="right:-11px;top:-11px;left:auto">3</span><select><option>전체</option></select></span>
+            <span class="fl">리워드여부</span>
+            <span class="marker-host"><span class="spec-num" style="right:-11px;top:-11px;left:auto">4</span><select><option>전체</option></select></span>
+          </div>
+          <div class="filter-bar" style="margin:14px 0 0">
+            <span class="marker-host"><span class="spec-num" style="right:-11px;top:-11px;left:auto">5</span><span class="date-box">📅 2026-07-01 ~ 2026-07-08</span></span>
+            <span class="marker-host"><span class="spec-num" style="right:-11px;top:-11px;left:auto">6</span><input type="text" placeholder="검색어를 입력하세요." readonly></span>
+            <span class="marker-host"><span class="spec-num" style="right:-11px;top:-11px;left:auto">7</span><button class="btn-green">검색</button></span>
+          </div>
+          <div class="bulk-bar" style="margin:16px 0 0">
+            <span class="marker-host"><span class="spec-num" style="left:-11px;top:-11px">8</span><button class="btn-green">반려</button></span>
+            <span class="marker-host"><span class="spec-num" style="left:-11px;top:-11px">9</span><button class="btn-green">완료</button></span>
+            <span class="marker-host"><span class="spec-num" style="left:-11px;top:-11px">10</span><button class="btn-green">추가</button></span>
+          </div>
+
+          <div class="rev-table-wrap" style="margin:16px 0 0">
+            <table class="rev-table">
+              <thead><tr>
+                <th style="width:34px"><input type="checkbox" disabled></th>
+                <th>지면 번호</th><th>매체명</th><th>지면명<span class="edit-mark">261001_수정</span></th><th>매체 상세</th><th>노출 형태</th>
+                <th>리워드 여부<span class="edit-mark">261001_수정</span></th><th>지면카테고리</th><th>오디언스카테고리</th><th style="width:190px">심사 상태</th><th>자세히 보기</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" disabled></td><td class="zno">부모지면 번호</td><td>(예시) 최상위 도메인</td>
+                  <td style="text-align:left">RTB_WEB_최상위 도메인<br>(Y : _reward)</td><td>WEB</td><td>노출 단위</td><td>Y/N</td>
+                  <td><select class="cell-select"><option>포털</option></select></td>
+                  <td><select class="cell-select"><option>포털사</option></select></td>
+                  <td>
+                    <span class="marker-host"><span class="spec-num" style="right:-9px;top:-13px;left:auto">11</span><button class="btn-approve">승인</button></span>
+                    <span class="marker-host" style="margin-left:6px"><span class="spec-num" style="right:-9px;top:-13px;left:auto">12</span><button class="btn-reject">반려</button></span>
+                  </td>
+                  <td><span class="marker-host"><span class="spec-num" style="right:-11px;top:-13px;left:auto">13</span><button class="btn-detail">자세히 보기</button></span></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" disabled></td><td class="zno">부모지면 번호</td><td>앱서비스명</td>
+                  <td style="text-align:left">RTB_APP_앱서비스명<br>(Y : _reward)</td><td>APP</td><td>노출 단위</td><td>Y/N</td>
+                  <td><select class="cell-select"><option>APP</option></select></td>
+                  <td><select class="cell-select"><option>IT 일반</option></select></td>
+                  <td><span class="st-approved">2026-05-02<br>승인</span></td>
+                  <td><button class="btn-detail">자세히 보기</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" disabled></td><td class="zno">부모지면 번호</td><td>앱서비스명</td>
+                  <td style="text-align:left">RTB_APP_앱서비스명<br>(Y : _reward)</td><td>APP</td><td>노출 단위</td><td>Y/N</td>
+                  <td><select class="cell-select"><option>APP</option></select></td>
+                  <td><select class="cell-select"><option>IT 일반</option></select></td>
+                  <td><span class="st-rejected">2026-05-02 반려</span></td>
+                  <td><button class="btn-detail">자세히 보기</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 하단 컬럼 정의 -->
+    <div class="col-def" id="chg-rev-col">
+      <h2>목록 컬럼 정의 — 구글 RTB 입찰 전문(bid request) 매핑</h2>
+      <p class="sub">부모 지면 자동 등록 시 bid request에서 파싱되는 값 기준 · 
+        <span class="plat plat-web">WEB</span> Site 전문 / <span class="plat plat-app">APP</span> App 전문 / <span class="plat plat-common">공통</span> 두 전문 동일</p>
+      <table class="col-table">
+        <thead><tr><th>No.</th><th>컬럼명</th><th>입찰 전문 필드</th><th>설명 · 표시 규칙</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>지면 번호</td><td>— (시스템 채번)</td>
+            <td><span class="plat plat-common">공통</span>bid request 자동 파싱으로 부모 지면 생성 시 시스템이 발급하는 내부 고유 번호. 입찰 전문 필드가 아닌 내부 키</td></tr>
+          <tr><td>2</td><td>매체명</td><td>site.publisher.domain / app.name</td>
+            <td><span class="plat plat-web">WEB</span>site.publisher.domain — 판매자의 최상위 도메인 표시(예: bntnews.co.kr). 도메인 단위 성과 측정 및 화이트/블랙리스트 관리 축.
+              <br><span class="plat plat-app">APP</span>app.name — 사람이 읽는 앱 서비스명 표시(예: Toss). 이름은 변경될 수 있으므로 내부 식별 키는 app.bundle(패키지명/번들 ID, 불변값)로 별도 저장.</td></tr>
+          <tr><td>3</td><td>지면명<span class="edit-mark">261001_수정</span></td><td>매체명 + rwdd</td>
+            <td><span class="plat plat-common">공통</span><div class="chg-box">부모 지면 자동 생성 규칙([부모지면등록] [10] 참고) : 리워드 여부 <b>N</b> → <b>RTB_WEB(MOB/APP)_매체명</b> (기존과 동일) / 리워드 여부 <b>Y</b> → <b>RTB_WEB(MOB/APP)_매체명_reward</b>.</div></td></tr>
+          <tr><td>4</td><td>매체 상세</td><td>site 객체 / app 객체</td>
+            <td><span class="plat plat-common">공통</span>입찰 전문에 site 객체 존재 → <b>WEB</b>, app 객체 존재 → <b>APP</b> 표시. </td></tr>
+          <tr><td>5</td><td>노출 형태</td><td>imp.banner / native.request / instl</td>
+            <td><span class="plat plat-common">공통</span>imp 노출 단위 기준 표시 : banner 객체 → 배너, native.request → 네이티브, instl=1 또는 banner.pos=7 → 전면. 
+              <br>전면 광고는 CTR이 높아 일반 배너와 분리 운영 대상. 하나의 요청에 노출(구좌)이 여러 개인 경우 imp.id로 구분.</td></tr>
+          <tr><td>6</td><td>리워드 여부<span class="edit-mark">261001_수정</span></td><td>rwdd</td>
+            <td><span class="plat plat-common">공통</span><div class="chg-box">rwdd = 1 → <b>Y</b>(리워드 지면), 0 또는 필드 없음 → <b>N</b>(일반 지면). 리워드/논리워드 지면 구분의 기준 필드이며 지면 원장에 자동 파싱 저장.
+              <br>부모 지면 생성 시 이 값으로 <b>N 부모 / Y 부모를 분리</b>하며, 자식 지면은 같은 값의 부모 지면 하위로만 연결된다.</div></td></tr>
+          <tr><td>7</td><td>지면카테고리</td><td>— (운영 설정)</td>
+            <td><span class="plat plat-common"></span>별도 전달 <b>심사 상태 '대기'</b>일 때만 수정 가능. <br>속성 : 드롭다운 </td></tr>
+          <tr><td>8</td><td>오디언스카테고리</td><td>— (운영 설정)</td>
+            <td><span class="plat plat-common">공통</span>별도 전달. <b>심사 상태 '대기'</b>일 때만 수정 가능.<br>속성 : 드롭다운</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ [3] 부모지면등록 ═══════════════ -->
+<section class="screen-panel" id="screen-register-parent">
+  <div class="reg-toolbar">
+    <div class="reg-subtabs">
+      <button class="subtab on" data-sub="reg-demo-parent" onclick="showSub('register-parent','reg-demo-parent')">데모</button>
+      <button class="subtab" data-sub="reg-spec-parent" onclick="showSub('register-parent','reg-spec-parent')">화면설계서</button>
+    </div>
+  </div>
+
+  <div class="subpanel on" id="reg-demo-parent">
+    <div class="topbar">
+      <div class="breadcrumb"><a href="#" style="color:#999;text-decoration:none" onclick="showScreen('review');return false">RTB 지면 심사</a> &gt; <strong>매체 센터 &gt; 지면 등록</strong></div>
+    </div>
+    <div id="reg-demo-mount-parent"></div>
+  </div>
+
+  <div class="subpanel" id="reg-spec-parent">
+    <div id="reg-spec-mount-parent"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ [4] 자식지면등록 ═══════════════ -->
+<section class="screen-panel" id="screen-register-child">
+  <div class="reg-toolbar">
+    <div class="reg-subtabs">
+      <button class="subtab on" data-sub="reg-demo-child" onclick="showSub('register-child','reg-demo-child')">데모</button>
+      <button class="subtab" data-sub="reg-spec-child" onclick="showSub('register-child','reg-spec-child')">화면설계서</button>
+    </div>
+  </div>
+
+  <div class="subpanel on" id="reg-demo-child">
+    <div class="topbar">
+      <div class="breadcrumb"><a href="#" style="color:#999;text-decoration:none" onclick="showScreen('review');return false">RTB 지면 심사</a> &gt; <strong>매체 센터 &gt; 지면 등록</strong></div>
+    </div>
+    <div id="reg-demo-mount-child"></div>
+  </div>
+
+  <div class="subpanel" id="reg-spec-child">
+    <div id="reg-spec-mount-child"></div>
+  </div>
+</section>
+
+<div id="reg-toast" style="position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#2c2c2a;color:#fff;font-size:12.5px;padding:11px 20px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:200"></div>
+
+<div class="footer">MOBSENSE · 매체 센터 · Google RTB 부모·자식 지면 자동 등록 화면설계서 · 2026</div>
+
+<script>
+/* ── 상단 네비 ── */
+function showScreen(name){
+  document.querySelectorAll('.screen-panel').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('screen-'+name).classList.add('active');
+  document.querySelectorAll('.topnav__tabs button').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-screen')===name);
+  });
+  window.scrollTo(0,0);
+}
+/* ── 서브탭 (데모/화면설계서) ── */
+function showSub(screen, sub){
+  var sec = document.getElementById('screen-'+screen);
+  sec.querySelectorAll('.subpanel').forEach(function(p){p.classList.remove('on')});
+  document.getElementById(sub).classList.add('on');
+  sec.querySelectorAll('.subtab').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-sub')===sub);
+  });
+  window.scrollTo(0,0);
+}
+
+/* ── 데모 : 세그먼트/사이즈 토글 ── */
+function segPick(btn){
+  var grp = btn.parentElement;
+  grp.querySelectorAll('button').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+}
+function sizePick(cell){
+  var grid = cell.parentElement;
+  grid.querySelectorAll('.size-cell').forEach(function(c){c.classList.remove('on')});
+  cell.classList.add('on');
+}
+
+/* ── 데모 : 심사 목록 동작 ── */
+function revToastShow(id,msg){
+  var t=document.getElementById(id); t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._tm); t._tm=setTimeout(function(){t.style.opacity='0'},2600);
+}
+function revToast(msg){ revToastShow('rev-toast', msg); }
+function revApprove(btn){
+  var tr=btn.closest('tr'); var cell=btn.closest('td');
+  tr.setAttribute('data-st','approve');
+  var d=new Date().toISOString().slice(0,10);
+  cell.innerHTML='<span class="st-approved">'+d+'<br>승인</span>';
+  tr.querySelectorAll('.cell-select').forEach(function(s){s.disabled=true});
+  revToast('승인되었습니다. 지면이 시스템 심사가 진행됩니다.');
+}
+function revReject(btn){
+  var tr=btn.closest('tr'); var cell=btn.closest('td');
+  tr.setAttribute('data-st','reject');
+  var d=new Date().toISOString().slice(0,10);
+  cell.innerHTML='<span class="st-rejected">'+d+' 반려</span>';
+  revToast('반려 처리되었습니다. 광고 송출이 불가합니다.');
+}
+function revFilter(){
+  var v=document.getElementById('rev-filter-status').value;
+  document.querySelectorAll('#rev-tbody tr').forEach(function(tr){
+    tr.style.display=(v==='all'||tr.getAttribute('data-st')===v)?'':'none';
+  });
+}
+
+function regSave(){ revToastShow('reg-toast','등록이 완료되었습니다. 심사 대기 목록으로 이동합니다.');
+  setTimeout(function(){showScreen('review');},1200); }
+
+/* ── 지면 등록 : 부모/자식 공통 폼 템플릿 ── */
+var REG_SIZES=[
+ ['9','46','openRTB_120 * 600','(120_600)',0],
+ ['12','46','openRTB_160 * 600','(160_600)',1],
+ ['34','34','openRTB_250 * 250','(250_250)',0],
+ ['42','34','openRTB_300 * 250','(300_250)',0],
+ ['44','22','openRTB_300 * 150','(300_150)',0],
+ ['20','44','openRTB_300 * 600','(300_600)',0],
+ ['46','9','openRTB_640*107','(640_107)',0],
+ ['46','8','openRTB_720*120','(720_120)',0],
+ ['46','6','openRTB_728 * 90','(728_90)',0],
+ ['46','12','openRTB_970 * 250','(970_250)',0],
+ ['46','5','openRTB_970 * 90','(970_90)',0],
+ ['32','32','200*200','(200_200)',0],
+ ['46','6','468*60','(468_60)',0],
+ ['44','25','openRTB_336*190','(350_200)',0],
+ ['40','30','open RTB_App_100%','_100%(이미지없음)',0]
+];
+function sizeGridHTML(){
+  var h='<div class="size-grid">';
+  REG_SIZES.forEach(function(z){
+    var dash=/이미지없음/.test(z[3])?';border-style:dashed':'';
+    h+='<div class="size-cell'+(z[4]?' on':'')+'" onclick="sizePick(this)"><div class="box" style="width:'+z[0]+'px;height:'+z[1]+'px'+dash+'"></div><div class="cap">'+z[2]+'<br>'+z[3]+'</div></div>';
+  });
+  return h+'</div>';
+}
+function regRole(type){
+  return type==='parent'
+    ? '<b>부모 지면</b> — 신규 조합(①앱네임·최상위 도메인 / ②광고노출 위치 / ③리워드 여부)이 처음 감지될 때 자동 생성되는 상위(그룹) 지면입니다. <span class="chg-box">입찰 전문의 <b>리워드 여부(rwdd)</b>에 따라 <b>N 부모 / Y 부모(_reward)</b>로 분리 생성됩니다.<span class="edit-mark">261001_수정</span></span> 부모 지면 단독으로는 광고가 송출되지 않으며, 연결된 <b>자식 지면이 1개 이상</b> 있어야 실제 라이브가 가능합니다.'
+    : '<b>자식 지면</b> — 기존 부모 지면에 조합이 매칭되거나, 신규 조합과 함께 등록되는 <b>실제 광고 송출 단위</b> 지면입니다. <span class="chg-box">자신의 리워드 여부와 <b>같은 리워드 여부의 부모 지면</b> 하위로만 연결됩니다. (N → N 부모 / Y → Y 부모)<span class="edit-mark">261001_수정</span></span>부모 지면이 승인되면 연결된 자식 지면도 함께 심사 처리됩니다.';
+}
+function regFormHTML(type){
+  var T = type==='parent' ? '부모' : '자식';
+  return ''+
+  '<div class="reg-wrap reg-form">'+
+    '<div class="type-badge">('+T+' 지면)</div>'+
+    '<div class="reg-role__inline">'+regRole(type)+'</div>'+
+
+    '<div class="section"><div class="section-header">광고 노출 형태</div><div class="section-body">'+
+      '<div data-mark="1" style="display:flex;align-items:center;justify-content:space-between;gap:16px">'+
+        '<div class="expose-seg"><button class="on" onclick="segPick(this)">배너(b)</button><button onclick="segPick(this)">아이커버(i)</button></div>'+
+        '<a href="#" onclick="return false" style="font-size:11.5px;color:#888;white-space:nowrap">노출형태 상세정보 확인하기 &gt;</a>'+
+      '</div></div></div>'+
+
+    '<div class="section"><div class="section-header">사이트 정보 <span class="hint">* 네이버 블로그는 스크립트 삽입이 어렵습니다.</span></div><div class="section-body">'+
+      '<div class="form-row" data-mark="2"><div class="form-label">사이트 형태 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-st" checked> 웹</label><label><input type="radio" name="'+type+'-st"> 모바일</label></div></div>'+
+      '<div class="form-row" data-mark="3"><div class="form-label">매체 상세 <i class="q">?</i></div><div class="pill-seg"><button class="on" onclick="segPick(this)">App</button><button onclick="segPick(this)">Web</button></div></div>'+
+      '<div data-mark="4">'+
+        '<div class="form-row" style="margin-bottom:11px"><div class="form-label">반응형 웹 지원 여부 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-rs"> 지원</label><label><input type="radio" name="'+type+'-rs" checked> 미지원</label></div></div>'+
+        '<div class="form-row" style="margin-bottom:0"><div class="form-label">사이트 통신 규약 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-pr"> http</label><label><input type="radio" name="'+type+'-pr" checked> https</label></div></div>'+
+      '</div>'+
+      '<div class="form-row" data-mark="5" style="margin-top:13px"><div class="form-label">사이트 URL <i class="q">?</i></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;color:#888">https://</span><input type="text" placeholder="사이트 URL을 입력하세요."></div></div>'+
+    '</div></div>'+
+
+    '<div class="section"><div class="section-header">지면 영역</div><div class="section-body">'+
+      '<div class="form-row" data-mark="6"><div class="form-label">지면 구현 방식 <i class="q">?</i></div><select style="max-width:230px"><option>RTB</option></select></div>'+
+      '<div class="form-row" data-mark="7"><div class="form-label">지면 형태 <i class="q">?</i></div><select style="max-width:230px"><option>배너</option></select></div>'+
+      '<div class="form-row" data-mark="8" style="align-items:start"><div class="form-label">지면 사이즈 <i class="q">?</i></div>'+sizeGridHTML()+'</div>'+
+    '</div></div>'+
+
+    '<div class="section"><div class="section-header">지면 정보</div><div class="section-body">'+
+      '<div class="form-row" data-mark="9"><div class="form-label">지면 구분 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-zd" checked> 일반지면</label><label><input type="radio" name="'+type+'-zd"> 피드지면</label></div></div>'+
+      '<div class="form-row" data-mark="10"><div class="form-label">지면명 <span class="req">*</span></div><input type="text" value="'+(type==='child'?'RTB_APP_앱서비스명_배너_3_N':'RTB_App_앱서비스명')+'"></div>'+
+      '<div class="form-row" data-mark="11" style="align-items:start"><div class="form-label">지면 상세 설명 / 이미지</div><div style="display:flex;flex-direction:column;gap:10px"><input type="text" placeholder="지면 상세 설명을 입력하세요."><div class="upload-box">🖼 jpg, jpeg, png<br>파일을 이곳에 올려주세요.</div></div></div>'+
+    '</div></div>'+
+
+    '<div class="section"><div class="section-header">지면 설정 <span class="hint">* 지면 특성 수정 시 반려 후 재심사 처리가 필수입니다.</span></div><div class="section-body" data-mark="12">'+
+      '<div class="form-row"><div class="form-label">광고 자동 설정 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-aa" checked> 사용</label><label><input type="radio" name="'+type+'-aa"> 미사용</label></div></div>'+
+      '<div class="form-row"><div class="form-label">무과금 광고 제외 설정 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-fa" checked> 미사용</label><label><input type="radio" name="'+type+'-fa"> 무과금 제외</label><label><input type="radio" name="'+type+'-fa"> 무과금, 최후의순간 제외</label></div></div>'+
+      '<div class="form-row" data-mark="12"><div class="form-label">지면 카테고리</div><select style="max-width:230px"><option>엔터테인먼트</option><option>포털</option><option>커머스</option><option>금융</option></select></div>'+
+      '<div class="form-row" data-mark="12"><div class="form-label">오디언스 카테고리</div><select style="max-width:230px"><option>일반</option><option>IT 일반</option><option>포털사</option></select></div>'+
+      (type==='parent'?(
+        '<div class="form-row" data-mark="12"><div class="form-label">등급<span class="edit-mark">260714_수정</span></div><select style="max-width:120px"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option></select></div>'+
+        '<div class="form-row" data-mark="12"><div class="form-label">등급명<span class="edit-mark">260714_수정</span></div><input type="text" placeholder="등급명을 입력하세요." style="max-width:230px"></div>'
+      ):'')+
+      '<div class="form-row" style="align-items:start"><div class="form-label">지면 특성 <i class="q">?</i></div><div class="chk-grp"><label><input type="checkbox"> 프리미엄 지면</label><label><input type="checkbox"> 성인광고주가능 지면</label><label><input type="checkbox"> 저단가 지면</label><label><input type="checkbox"> 멀티리워드 지면 (단독 선택만 가능)</label></div></div>'+
+      '<div class="form-row"><div class="form-label">노출 임계치 <i class="q">?</i></div><div style="display:flex;align-items:center;gap:6px"><input type="text" placeholder="입력하세요." style="max-width:160px"><span style="font-size:12.5px;color:#666">%</span></div></div>'+
+      '<div class="form-row" style="margin-bottom:0"><div class="form-label">CPC 최소 단가 <i class="q">?</i></div><div style="display:flex;align-items:center;gap:6px"><input type="text" placeholder="입력하세요." style="max-width:160px"><span style="font-size:12.5px;color:#666">원</span></div></div>'+
+    '</div></div>'+
+
+    '<div class="section"><div class="section-header">RTB 설정 <span class="hint" style="color:#c0392b">(지면 구현 방식이 RTB일 때 노출 됩니다.)</span></div><div class="section-body">'+
+      '<div class="form-row" data-mark="13"><div class="form-label">RTB 지면 구분 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-rd"> 카카오지면</label><label><input type="radio" name="'+type+'-rd" checked> 부모자식지면</label><label><input type="radio" name="'+type+'-rd"> 일반지면</label></div></div>'+
+      '<div class="form-row" data-mark="14"><div class="form-label">구글 지면 구분 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-gd"> 일반</label><label><input type="radio" name="'+type+'-gd"> 일반_NA</label><label><input type="radio" name="'+type+'-gd"> 전면</label><label><input type="radio" name="'+type+'-gd"> 리워드</label><label><input type="radio" name="'+type+'-gd"> 리워드전면</label></div></div>'+
+      '<div class="form-row" data-mark="15" style="margin-bottom:0"><div class="form-label">태그 ID <i class="q">?</i></div><input type="text" value="부모:" style="max-width:280px"></div>'+
+    '</div></div>'+
+
+    '<div class="section"><div class="section-header">정산 정보</div><div class="section-body" data-mark="16">'+
+      '<div class="form-row" style="align-items:start"><div class="form-label">매체사 정산 방식 <i class="q">?</i></div><div class="settle-line"><input type="text" class="date" value="2026-07-08 ~ 2222-12-31"><select><option>비딩</option></select><input type="text" value="0" style="width:70px;text-align:right"><input type="text" class="memo" value="구글RTB '+T+' 지면 자동 등록" style="width:230px"><button class="btn-plus">+</button></div></div>'+
+      '<div class="form-row"><div class="form-label">매체사 보장 여부 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-gu"> 사용</label><label><input type="radio" name="'+type+'-gu" checked> 미사용</label></div></div>'+
+      '<div class="form-row" style="margin-bottom:0"><div class="form-label">대행사 정산 여부 <i class="q">?</i></div><div class="radio-grp"><label><input type="radio" name="'+type+'-ag"> 사용</label><label><input type="radio" name="'+type+'-ag" checked> 미사용</label></div></div>'+
+    '</div></div>'+
+
+    '<div class="footer-btns"><button class="btn-ghost" onclick="showScreen(\'review\')">취소</button><button class="btn-primary" onclick="regSave()">저장</button></div>'+
+  '</div>';
+}
+
+/* ── 자동 생성 조건 레전드 (부모/자식 완전 분리) ── */
+function regLegendHTML(type){
+  return type==='parent' ? regLegendHTMLParent() : regLegendHTMLChild();
+}
+function regLegendHTMLParent(){
+  var M='<span class="src src-mob">모비온</span>', G='<span class="src src-goog">구글</span>';
+  return ''+
+  '<h2>지면 등록 — 부모 지면 자동 생성 조건</h2>'+
+  '<p class="sub">매체 센터 &gt; 지면 등록 · [구글 RTB _ 부모 지면 자동 등록 시] 해당 조건으로 지면이 생성됨</p>'+
+  '<table class="spec-table"><thead><tr><th>No.</th><th>항목</th><th>구분 · 설명 · 동작 · 조건</th></tr></thead><tbody>'+
+  '<tr><td><span class="num-cell">1</span></td><td class="item">광고 노출 형태 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정 = <b>배너</b></td></tr>'+
+  '<tr><td><span class="num-cell">2</span></td><td class="item">사이트 형태 <span class="tag tag-fix">고정</span></td><td>'+G+' 자동 등록 시 하위 값 고정 (웹 / 모바일)</td></tr>'+
+  '<tr><td><span class="num-cell">3</span></td><td class="item">매체 상세</td><td>'+G+' site 객체 / app 객체 기준<br>a. 공통 입찰 전문에 site 객체 존재 → <b>WEB</b><br>b. app 객체 존재 → <b>APP</b> 표시</td></tr>'+
+  '<tr><td><span class="num-cell">4</span></td><td class="item">기타 사이트 정보 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정<br>a. 반응형 웹 지원 여부 : <b>미지원</b><br>b. 사이트 통신 규약 : <b>https</b></td></tr>'+
+  '<tr><td><span class="num-cell">5</span></td><td class="item">사이트 URL</td><td>'+G+' a. WEB : 판매자의 최상위 도메인(ex. naver.com, cnn.com)<br>b. APP : 앱스토어 주소</td></tr>'+
+  '<tr><td><span class="num-cell">6</span></td><td class="item">지면 구현 방식 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정 = <b>RTB</b></td></tr>'+
+  '<tr><td><span class="num-cell">7</span></td><td class="item">지면 형태 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정 = <b>배너</b></td></tr>'+
+  '<tr><td><span class="num-cell">8</span></td><td class="item">지면 사이즈</td><td>'+G+' 입찰 전문의 지면 대표 사이즈(banner.w / h) 값으로 자동 선택<br>· 구글이 해당 지면의 최적 사이즈로 알려주는 기준 수치</td></tr>'+
+  '<tr><td><span class="num-cell">9</span></td><td class="item">지면 구분 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정 = <b>일반</b></td></tr>'+
+  '<tr id="chg-p-10"><td><span class="num-cell">10</span></td><td class="item">지면명<span class="edit-mark">261001_수정</span></td><td>'+G+'<div class="chg-box">자동 생성 규칙 — 입찰 전문 <b>rwdd</b> 값으로 리워드 여부(N/Y) 확인 후 생성<br><b>a. 리워드 N</b> (rwdd=0 또는 필드 없음) : 기존과 동일<br>· PC 웹 : <b>RTB_WEB_매체명</b><br>· 모 웹 : <b>RTB_MOB_매체명</b><br>· APP : <b>RTB_APP_앱서비스명</b><br><b>b. 리워드 Y</b> (rwdd=1) : 끝에 <b>_reward</b> 추가<br>· PC 웹 : <b>RTB_WEB_매체명_reward</b><br>· 모 웹 : <b>RTB_MOB_매체명_reward</b><br>· APP : <b>RTB_APP_앱서비스명_reward</b><br>=&gt; 매체명은 사이트 url 혹은 앱 번들 ID와 매칭값<br>=&gt; 같은 매체라도 리워드 N / Y 부모 지면이 각각 별도로 생성됨</div></td></tr>'+
+  '<tr><td><span class="num-cell">11</span></td><td class="item">기타 지면 정보</td><td>'+M+' 구글 RTB 부모 지면 자동 등록 시에는 사용하지 않음 (지면 상세 설명 · 지면 이미지)</td></tr>'+
+  '<tr><td><span class="num-cell">12</span></td><td class="item">지면 설정<span class="edit-mark">260714_수정</span></td><td>'+M+' 부모 지면 자동 등록 시 <b>[지면 카테고리] / [오디언스 카테고리] / [등급] / [등급명]만 선택·입력 가능</b>. 그 외 값은 아래로 고정<br>a. 광고 자동 설정 : 사용<br>b. 무과금 광고 제외 설정 : 미사용<br>c. 지면 특성 : 빈 값<br>d. 노출 임계치 : 빈 값<br>e. CPC 최소 단가 : 빈 값<br>f. 지면 카테고리 / 오디언스 카테고리 별첨(기존과 동일)<br>g. 등급 : <b>드롭다운(1~13)</b>, 사람이 직접 선택<br>h. 등급명 : <b>텍스트 입력</b>, 사람이 직접 작성</td></tr>'+
+  '<tr id="chg-p-13"><td><span class="num-cell">13</span></td><td class="item">RTB 지면 구분 <span class="tag tag-fix">고정</span><span class="edit-mark">261001_수정</span></td><td>'+M+' 자동 등록 시 하위 값 고정<br>a. RTB 지면 구분 : <b>부모자식지면</b><div class="chg-box">b. 리워드 여부(N/Y)별로 부모 지면이 분리되며, 이후 자식 지면은 리워드 여부가 같은 부모 하위로만 연결됨</div></td></tr>'+
+  '<tr><td><span class="num-cell">14</span></td><td class="item">구글 지면 구분</td><td>'+M+' 구글 RTB 부모 지면 자동 등록 시에는 사용하지 않음 = <b>빈값 유지</b></td></tr>'+
+  '<tr id="chg-p-15"><td><span class="num-cell">15</span></td><td class="item">태그 ID<span class="edit-mark">261001_수정</span></td><td>'+G+'<div class="chg-box"><b>a. 리워드 N</b> : 기존과 동일<br>· PC 웹 : RTB_web_매체명 <br>→ web_최상위도메인_v2 <br>· 모 웹 : RTB_mob_앱서비스명 <br>→ mob_최상위도메인_v2<br>· APP : RTB_app_앱서비스명 <br>→ app_bundle ID_v2<br><b>b. 리워드 Y</b> : 끝에 <b>_reward</b> 추가<br>· PC 웹 : RTB_web_매체명_reward <br>→ <b>web_최상위도메인_reward_v2</b> <br>· 모 웹 : RTB_mob_앱서비스명_reward <br>→ <b>mob_최상위도메인_reward_v2</b><br>· APP : RTB_app_앱서비스명_reward <br>→ <b>app_bundle ID_reward_v2</b></div></td></tr>'+
+  '<tr><td><span class="num-cell">16</span></td><td class="item">정산 정보 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정<br>a. 매체사 정산 방식 : 당일 ~ 2222-12-31<br>b. 정산방식 : 비딩<br>c. 인풋 박스 값 : 0<br>d. 비고 없음<br>e. 매체사 보장 여부 : 미사용<br>f. 대행사 정산 여부 : 미사용</td></tr>'+
+  '</tbody></table>';
+}
+function regLegendHTMLChild(){
+  var M='<span class="src src-mob">모비온</span>', G='<span class="src src-goog">구글</span>';
+  return ''+
+  '<h2>지면 등록 — 자식 지면 자동 생성 조건</h2>'+
+  '<p class="sub">매체 센터 &gt; 지면 등록 · [구글 RTB _ 자식 지면 자동 등록 시] 해당 조건으로 지면이 생성됨</p>'+
+  '<table class="spec-table"><thead><tr><th>No.</th><th>항목</th><th>구분 · 설명 · 동작 · 조건</th></tr></thead><tbody>'+
+  '<tr><td><span class="num-cell">1</span></td><td class="item">광고 노출 형태 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정 = <b>배너</b></td></tr>'+
+  '<tr><td><span class="num-cell">2</span></td><td class="item">사이트 형태 <span class="tag tag-fix">고정</span></td><td>'+G+' 자동 등록 시 하위 값 고정 (웹 / 모바일)</td></tr>'+
+  '<tr><td><span class="num-cell">3</span></td><td class="item">매체 상세</td><td>'+G+' site 객체 / app 객체 기준<br>a. 공통 입찰 전문에 site 객체 존재 → <b>WEB</b><br>b. app 객체 존재 → <b>APP</b> 표시</td></tr>'+
+  '<tr><td><span class="num-cell">4</span></td><td class="item">기타 사이트 정보 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정<br>a. 반응형 웹 지원 여부 : <b>미지원</b><br>b. 사이트 통신 규약 : <b>https</b></td></tr>'+
+  '<tr><td><span class="num-cell">5</span></td><td class="item">사이트 URL</td><td>'+G+' a. WEB : 판매자의 최상위 도메인(ex. naver.com, cnn.com)<br>b. APP : 앱스토어 주소</td></tr>'+
+  '<tr><td><span class="num-cell">6</span></td><td class="item">지면 구현 방식 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정 = <b>RTB</b></td></tr>'+
+  '<tr><td><span class="num-cell">7</span></td><td class="item">지면 형태 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정 = <b>배너</b></td></tr>'+
+  '<tr><td><span class="num-cell">8</span></td><td class="item">지면 사이즈<span class="edit-mark">260721_수정</span></td><td>'+M+' 구글 RTB에서 해당 값 사용하지 않음<br>· 특정 사이즈를 고정으로 사용하지 않음</td></tr>'+
+  '<tr><td><span class="num-cell">9</span></td><td class="item">지면 구분 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정 = <b>일반</b></td></tr>'+
+  '<tr><td><span class="num-cell">10</span></td><td class="item">지면명<span class="edit-mark">260721_수정</span></td><td>'+G+' 자동 생성 규칙<br>· PC 웹 : <b>RTB_WEB_매체명_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)</b><br>· 모 웹 : <b>RTB_MOB_매체명_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)</b><br>· APP : <b>RTB_APP_앱서비스명_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)</b><br>=&gt; 매체명은 사이트 url 혹은 앱 번들 ID와 매칭값<br>· 리워드여부 표기 : rwdd=1 → <b>Y</b>, 0 또는 필드 없음 → <b>N</b></td></tr>'+
+  '<tr><td><span class="num-cell">11</span></td><td class="item">기타 지면 정보</td><td>'+M+' 구글 RTB 자식 지면 자동 등록 시에는 사용하지 않음 (지면 상세 설명 · 지면 이미지)</td></tr>'+
+  '<tr><td><span class="num-cell">12</span></td><td class="item">지면 설정</td><td>'+M+' 자식 지면 자동 등록 시 <b>[지면 카테고리] / [오디언스 카테고리]만 선택 가능</b>. 그 외 값은 아래로 고정<br>a. 광고 자동 설정 : 사용<br>b. 무과금 광고 제외 설정 : 미사용<br>c. 지면 특성 : 빈 값<br>d. 노출 임계치 : 빈 값<br>e. CPC 최소 단가 : 빈 값<br>f. 지면 카테고리 / 오디언스 카테고리 별첨(기존과 동일)</td></tr>'+
+  '<tr id="chg-c-13"><td><span class="num-cell">13</span></td><td class="item">RTB 지면 구분 <span class="tag tag-fix">고정</span><span class="edit-mark">261001_수정</span></td><td>'+M+' 자동 등록 시 하위 값 고정<br>a. RTB 지면 구분 : <b>부모자식지면</b><div class="chg-box">b. 연결 부모 지면 : 자식 지면의 리워드 여부(rwdd)와 <b>같은 리워드 여부의 부모 지면</b> 하위로 등록<br>· 리워드 N → 리워드 N 부모 하위 (예: RTB_WEB_매체명)<br>· 리워드 Y → 리워드 Y 부모 하위 (예: RTB_WEB_매체명_reward)<br>· 리워드 여부가 다른 부모 지면으로는 연결되지 않음</div></td></tr>'+
+  '<tr><td><span class="num-cell">14</span></td><td class="item">구글 지면 구분</td><td>'+M+' 구글 RTB 자식 지면 자동 등록 시에는 사용하지 않음 = <b>빈값 유지</b></td></tr>'+
+  '<tr><td><span class="num-cell">15</span></td><td class="item">태그 ID<span class="edit-mark">260721_수정</span></td><td>'+G+' 자동 생성 규칙<br>· PC 웹 : <b>RTB_WEB_매체명_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)</b><br>→ web_최상위도메인_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)_v2<br>· 모 웹 : <b>RTB_MOB_매체명_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)</b><br>→ mob_최상위도메인_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)_v2<br>· APP : <b>RTB_APP_앱서비스명_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)</b><br>→ app_bundle ID_광고형식(배너/전면)_위치(pos)_리워드여부(rwdd)_v2<br>· 리워드여부 표기 : rwdd=1 → <b>Y</b>, 0 또는 필드 없음 → <b>N</b></td></tr>'+
+  '<tr><td><span class="num-cell">16</span></td><td class="item">정산 정보 <span class="tag tag-fix">고정</span></td><td>'+M+' 자동 등록 시 하위 값 고정<br>a. 매체사 정산 방식 : 당일 ~ 2222-12-31<br>b. 정산방식 : 비딩<br>c. 인풋 박스 값 : 0<br>d. 비고 없음<br>e. 매체사 보장 여부 : 미사용<br>f. 대행사 정산 여부 : 미사용</td></tr>'+
+  '</tbody></table>';
+}
+function specBannerHTML(type){
+  var T = type==='parent' ? '부모' : '자식';
+  return '<div class="spec-banner"><div class="spec-banner__inner">좌측 화면의 빨간 번호가 우측 표의 번호와 대응합니다. 우측 표는 <b>[구글 RTB _ '+T+' 지면 자동 등록 시]</b> 각 항목이 어떤 값으로 생성·고정되는지를 정의합니다. <br><span class="src src-mob">모비온</span> = 시스템 고정, <span class="src src-goog">구글</span> = bid request 파싱. 운영자가 직접 수정 가능한 항목은 <b>지면 카테고리 · 오디언스 카테고리</b> 뿐입니다.</div></div>';
+}
+/* ── 마커 주입 (spec 화면 클론용) ── */
+function injectMarkers(root){
+  root.querySelectorAll('[data-mark]').forEach(function(el){
+    el.classList.add('marker-host');
+    var m=el.getAttribute('data-mark');
+    var sp=document.createElement('span');
+    sp.className='spec-num'; sp.textContent=m;
+    var isBlock=el.classList.contains('section-body')||!el.classList.contains('form-row');
+    sp.style.left='-28px'; sp.style.top=isBlock?'12px':'5px';
+    el.insertBefore(sp, el.firstChild);
+  });
+}
+
+/* ── 마운트 ── */
+function mountRegDemo(type){
+  var m=document.getElementById('reg-demo-mount-'+type);
+  m.innerHTML=regFormHTML(type);
+  var role=m.querySelector('.reg-role__inline'); if(role) role.id='chg-role-'+type;
+}
+
+/* ── 오늘 수정 내역 (261001) : 요약 패널 · 위치 이동 ── */
+var CHG=[
+ ['개요 · 플로우', [
+  ['overview','','chg-ov-intro','개요 설명','부모 지면 생성 시 리워드 여부(rwdd)로 N / Y 부모 분리 · 자식은 같은 리워드 부모로 연결'],
+  ['overview','','chg-ov-cards','STEP 카드','STEP 01 N/Y 분리 생성 · STEP 02 반려 시 종료(재심사 없음) · STEP 03 같은 리워드 부모 연결'],
+  ['overview','','chg-ov-flow','플로우차트','리워드 N/Y 부모 분리 노트 추가 · 반려 → 지면 사용 불가 직행(재심사·루프백 삭제)'],
+  ['overview','','chg-ov-history','변경 히스토리','2026-10-01 항목 추가']]],
+ ['지면 심사', [
+  ['review','rev-demo','chg-rev-filter','데모','리워드여부 필터 O/X → Y/N'],
+  ['review','rev-demo','chg-rev-table','데모','목록 지면명을 부모 규칙으로 변경 · 같은 매체 N/Y 부모 행 예시 · 재심사 버튼 삭제'],
+  ['review','rev-spec','chg-rev-4','설계서 [4]','리워드여부 필터 Y/N · 같은 매체도 N/Y 부모 별도 행 노출'],
+  ['review','rev-spec','chg-rev-12','설계서 [12]','반려는 최종 상태 · 재심사 기능 없음 ([14] 재심사 버튼 항목 삭제)'],
+  ['review','rev-spec','chg-rev-col','컬럼 정의','3. 지면명(_reward 규칙) · 6. 리워드 여부(Y/N, 부모 분리 기준)']]],
+ ['부모지면등록', [
+  ['register-parent','reg-demo-parent','chg-role-parent','데모','상단 설명 — 리워드 여부로 N / Y 부모 분리 생성'],
+  ['register-parent','reg-spec-parent','chg-p-10','설계서 [10]','지면명 — Y는 끝에 _reward (RTB_WEB_매체명_reward 등)'],
+  ['register-parent','reg-spec-parent','chg-p-13','설계서 [13]','RTB 지면 구분 — N/Y 부모 분리, 자식은 같은 리워드 부모로'],
+  ['register-parent','reg-spec-parent','chg-p-15','설계서 [15]','태그 ID — Y는 끝에 _reward (web_최상위도메인_reward_v2 등)']]],
+ ['자식지면등록', [
+  ['register-child','reg-demo-child','chg-role-child','데모','상단 설명 — 같은 리워드 여부의 부모 하위로만 연결'],
+  ['register-child','reg-spec-child','chg-c-13','설계서 [13]','연결 부모 지면 — N → N 부모 / Y → Y 부모']]]
+];
+function chgRender(){
+  var h='', n=0;
+  CHG.forEach(function(g, gi){
+    h+='<div class="chg-grp">'+g[0]+'</div>';
+    g[1].forEach(function(it, ii){ n++;
+      h+='<button class="chg-item" onclick="goChgAt('+gi+','+ii+')"><span class="go">이동 →</span><span class="where">'+it[3]+'</span>'+it[4]+'</button>';
+    });
+  });
+  document.getElementById('chg-list').innerHTML=h;
+  document.getElementById('chg-cnt').textContent=n;
+}
+function chgToggle(on){
+  var pn=document.getElementById('chg-panel');
+  pn.classList.toggle('on', on===undefined ? !pn.classList.contains('on') : on);
+}
+function goChgAt(gi, ii){ var it=CHG[gi][1][ii]; goChg(it[0], it[1], it[2]); }
+function goChg(screen, sub, id){
+  showScreen(screen);
+  if(sub) showSub(screen, sub);
+  chgToggle(false);
+  var el=document.getElementById(id); if(!el) return;
+  setTimeout(function(){
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.remove('chg-flash'); void el.offsetWidth; el.classList.add('chg-flash');
+  }, 30);
+}
+chgRender();
+function mountRegSpec(type){
+  var mount=document.getElementById('reg-spec-mount-'+type);
+  var tmp=document.createElement('div'); tmp.innerHTML=regFormHTML(type);
+  var form=tmp.firstElementChild;
+  form.style.maxWidth='none'; form.style.padding='0'; form.style.margin='0';
+  var badge=form.querySelector('.type-badge'); if(badge) badge.remove();
+  var role=form.querySelector('.reg-role__inline'); if(role) role.remove();
+  form.querySelectorAll('*').forEach(function(el){
+    Array.prototype.slice.call(el.attributes).forEach(function(a){ if(/^on/i.test(a.name)) el.removeAttribute(a.name); });
+  });
+  form.querySelectorAll('input,select,textarea').forEach(function(el){el.setAttribute('disabled','')});
+  form.querySelectorAll('[name]').forEach(function(el){el.setAttribute('name', el.getAttribute('name')+'-s');});
+  var fb=form.querySelector('.footer-btns'); if(fb) fb.remove();
+  injectMarkers(form);
+  mount.innerHTML = specBannerHTML(type)
+    + '<div class="spec"><div class="spec__legend">'+regLegendHTML(type)+'</div>'
+    + '<div class="spec__screen"><div class="reg-card"><div class="reg-card__title">매체 센터 &gt; 지면 등록</div><div class="reg-card__mount"></div></div></div></div>';
+  mount.querySelector('.reg-card__mount').appendChild(form);
+}
+mountRegDemo('parent'); mountRegSpec('parent');
+mountRegDemo('child'); mountRegSpec('child');
+
+</script>
+</body>
+</html>
