@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>매체명 매칭 — 화면설계서 | MOBON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard','Noto Sans KR',sans-serif;font-size:13px;color:#1a1a1a;background:#f5f5f3;min-height:100vh}
+
+/* 상단 탭 */
+.doc-tabs{display:flex;border-bottom:1px solid #e2e2e0;background:#fff;padding:0 26px}
+.doc-tab{padding:14px 22px;font-size:14px;color:#8a8a8a;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;cursor:pointer;font-weight:500}
+.doc-tab.active{color:#1d9e75;border-bottom-color:#1d9e75;font-weight:700}
+.doc-panel{display:none}
+.doc-panel.active{display:block}
+
+/* 헤더/설명 */
+.page-wrap{max-width:1720px;margin:0 auto;padding:26px 30px 40px}
+.page-title{font-size:18px;font-weight:700;color:#222;margin-bottom:14px}
+.page-title .badge-new{color:#e24b4a;font-size:14px;font-weight:700;margin-left:8px}
+.info-line{background:#f3f4f3;border-radius:6px;padding:10px 16px;font-size:12.5px;color:#555;line-height:1.7;margin-bottom:10px}
+.info-line .dot{color:#1d9e75;font-weight:700;margin-right:4px}
+.legend-box{background:#f6f9f7;border:1px solid #e3ebe6;border-radius:6px;padding:11px 16px;font-size:12.5px;color:#555;line-height:1.9;margin-bottom:24px}
+.plat{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:7px;vertical-align:middle}
+.plat-web{background:#e0f2fe;color:#0369a1}
+.plat-app{background:#fef3c7;color:#92400e}
+
+/* WEB/APP 분리 탭 */
+.media-tabs{display:flex;gap:10px;margin-bottom:20px}
+.media-tab{padding:11px 40px;border:1.5px solid #cfcfcf;border-radius:8px;background:#fff;font-size:14px;font-weight:600;color:#555;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:8px}
+.media-tab .mt-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px}
+.media-tab.on{border-color:#1d9e75;color:#1d9e75;background:#f2fbf7;box-shadow:0 0 0 1px #1d9e75 inset}
+.media-view{display:none}
+.media-view.on{display:block}
+
+/* AI 툴바 */
+.ai-bar{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding:12px 16px;background:#f4f2fb;border:1px solid #e3ddf5;border-radius:8px}
+.btn-ai{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border:none;border-radius:7px;background:#6c4cd6;color:#fff;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+.btn-ai:disabled{background:#c3b8e8;cursor:default}
+.btn-ai .spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;display:inline-block;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ai-hint{font-size:12px;color:#6a5aa0}
+.ai-hint b{color:#5a3fc0}
+
+/* 검색 */
+.search-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.search-input{width:430px;padding:11px 14px;border:1px solid #d6d6d4;border-radius:6px;font-size:13px;color:#333;font-family:inherit}
+.search-input::placeholder{color:#b3b3b3}
+.btn-green{padding:11px 30px;border:none;border-radius:6px;background:#5cb85c;color:#fff;font-size:13.5px;font-weight:600;font-family:inherit;cursor:pointer}
+.date-select{padding:10px 12px;border:1px solid #d6d6d4;border-radius:6px;font-size:13px;color:#333;font-family:inherit;background:#fff}
+.date-input{padding:9px 12px;border:1px solid #d6d6d4;border-radius:6px;font-size:13px;color:#333;font-family:inherit;background:#fff}
+.date-tilde{color:#999;font-weight:600}
+
+/* 테이블 */
+.mm-table{width:100%;border-collapse:collapse;border-top:2px solid #d5d5d3}
+.mm-table th{background:#efefef;padding:13px 12px;font-size:12.5px;font-weight:600;color:#444;border-bottom:2px solid #d5d5d3;text-align:center;white-space:nowrap}
+.mm-table td{padding:14px 12px;font-size:13px;color:#333;border-bottom:1px solid #eee;text-align:center;vertical-align:middle}
+.mm-table tbody tr:hover{background:#f5fbf5}
+.mm-table .col-domain,.mm-table .col-bundle{color:#2f6fbf;font-weight:600}
+.mm-table .col-app{font-weight:600}
+.st-badge{font-size:13px;font-weight:700}
+.st-new{color:#d33b3a}
+.st-fixed{color:#7a7a7a}
+.mm-table .col-date{color:#777;font-size:12.5px;white-space:nowrap}
+.name-cell{display:flex;align-items:center;gap:8px;justify-content:center}
+.name-input{flex:1;max-width:420px;padding:9px 12px;border:1px solid #d6d6d4;border-radius:6px;font-size:13px;color:#222;font-family:inherit}
+.name-input:disabled{background:#f5f5f5;color:#888;border-color:#e6e6e6}
+.name-input.empty{background:#fffaf5;border-color:#f0d3b5}
+.btn-ai-row{flex-shrink:0;padding:8px 12px;border:1px solid #6c4cd6;border-radius:6px;background:#fff;color:#6c4cd6;font-size:11.5px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap}
+.btn-ai-row:disabled{opacity:.5;cursor:default}
+.btn-save{padding:7px 20px;border:none;border-radius:5px;background:#5cb85c;color:#fff;font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer}
+.btn-save.done{background:#fff;color:#5cb85c;border:1px solid #5cb85c}
+.cell-select{font-size:12px;padding:6px 24px 6px 8px;border:1px solid #d6d6d4;border-radius:6px;color:#333;cursor:pointer;width:100%;max-width:150px;font-family:inherit;-webkit-appearance:none;appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6'%3E%3Cpath d='M0 0l4 6 4-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.cell-select:disabled{background-color:#f5f5f5;color:#888;border-color:#e6e6e6;cursor:default}
+.edit-mark{color:#c0392b;font-size:11px;font-weight:700;margin-left:6px}
+.col-quality{font-size:13px;font-weight:700}
+.q-high{color:#1d9e75}
+.q-low{color:#b45309}
+.q-fail{color:#d33b3a}
+
+/* 일괄 선택 · 적용 */
+.chk-col{width:34px}
+.bulk-bar{display:none;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:11px 14px;background:#f4f2fb;border:1px solid #e3ddf5;border-radius:8px;font-size:12.5px;color:#4a3a6b}
+.bulk-bar.show{display:flex}
+.bulk-bar .bulk-count{font-weight:700;color:#4a2fb0;white-space:nowrap}
+.bulk-bar select{width:auto;max-width:150px}
+.bulk-bar .btn-green{padding:7px 16px;font-size:12.5px}
+.bulk-bar .btn-cat{padding:7px 16px;border:1px solid #6c4cd6;border-radius:6px;background:#fff;color:#6c4cd6;font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer}
+.bulk-bar .btn-bulk-save{padding:7px 16px;border:1px solid #5cb85c;border-radius:6px;background:#fff;color:#3f9d3f;font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer;margin-left:auto}
+
+/* 카테고리 일괄 적용 모달 */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,20,20,.4);z-index:300;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:10px;padding:24px 26px;width:360px;box-shadow:0 12px 32px rgba(0,0,0,.18)}
+.modal-box h3{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:4px}
+.modal-box .modal-sub{font-size:12px;color:#888;margin-bottom:18px}
+.modal-field{margin-bottom:16px}
+.modal-field label{display:block;font-size:12.5px;color:#555;font-weight:600;margin-bottom:6px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+/* 화면설계서 내 모달 표기 */
+.spec-modal{margin-top:26px;padding-top:22px;border-top:1px dashed #e2e2e0}
+.spec-modal__label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#374151;margin-bottom:14px}
+.modal-box--inline{position:relative;border:1px solid #ececec}
+.btn-ghost{padding:9px 18px;border:1px solid #d6d6d4;border-radius:6px;background:#fff;color:#555;font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer}
+.foot-note{text-align:center;color:#a5a5a5;font-size:12px;margin-top:24px;line-height:1.8}
+.copyright{text-align:center;color:#bcbcbc;font-size:11.5px;margin-top:6px}
+
+
+/* 플로우 */
+.flow-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:22px 18px;overflow-x:auto;margin-bottom:18px}
+.flow-wrap svg{min-width:1200px;width:100%;height:auto;display:block}
+.flow-caption{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.fc-card{flex:1;min-width:320px;display:flex;gap:12px;align-items:flex-start;background:#fafbfa;border:1px solid #e8ece9;border-radius:10px;padding:14px 16px;font-size:12.5px;color:#444;line-height:1.7}
+.fc-num{flex-shrink:0;color:#fff;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:14px;white-space:nowrap}
+
+/* 변경 히스토리 */
+.history-box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:24px}
+.history-box h2{font-size:14px;font-weight:700;margin-bottom:4px;color:#1a1a1a}
+.history-box .cap{font-size:11.5px;color:#9ca3af;margin-bottom:14px}
+.history-item{display:flex;gap:18px;padding:12px 0;border-top:1px solid #f0f0f0}
+.history-item:first-of-type{border-top:none;padding-top:2px}
+.history-date{flex-shrink:0;width:96px;font-size:12.5px;font-weight:700;color:#1d9e75;padding-top:1px}
+.history-body{flex:1;min-width:0}
+.history-body ul{list-style:none}
+.history-body li{font-size:12.5px;color:#374151;line-height:1.8;margin-bottom:3px}
+.history-body li b{color:#1a1a1a}
+
+/* 토스트 */
+.toast{position:fixed;left:50%;bottom:36px;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:12px 22px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;z-index:99;pointer-events:none;max-width:80vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* 화면설계서 */
+.spec{display:flex;flex-direction:row-reverse;gap:28px;align-items:flex-start;max-width:1720px;margin:0 auto;padding:24px 30px 40px}
+.spec__legend{width:620px;flex-shrink:0;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px 18px 22px}
+.spec__legend h2{font-size:15px;font-weight:700;margin:0 0 4px}
+.spec__legend .sub{font-size:11.5px;color:#9ca3af;margin:0 0 14px}
+.spec-table{width:100%;border-collapse:collapse}
+.spec-table th,.spec-table td{border:1px solid #e5e7eb;padding:7px 9px;font-size:12.5px;color:#1f2937;vertical-align:top;text-align:left;line-height:1.7}
+.spec-table th{background:#f3f4f6;font-weight:600}
+.spec-table td:first-child,.spec-table th:first-child{width:40px;text-align:center}
+.spec-table .grp td{background:#f0faf6;color:#0f6e56;font-weight:600}
+.spec-table .item{font-weight:600;color:#1a1a1a}
+.spec-table .tag{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px;margin-left:4px;vertical-align:middle}
+.tag-req{background:#fde8e8;color:#c0392b}
+.tag-cond{background:#eef2ff;color:#4f46e5}
+.tag-ai{background:#efe9fb;color:#6c4cd6}
+.tag-web{background:#e0f2fe;color:#0369a1}
+.tag-app{background:#fef3c7;color:#92400e}
+.num-cell{display:inline-flex;align-items:center;justify-content:center;min-width:21px;height:21px;padding:0 4px;border-radius:11px;background:#e24b4a;color:#fff;font-size:11px;font-weight:700}
+.num-cell--sub{height:19px;border-radius:10px;font-size:10.5px;background:#e05654}
+.sub-row{display:flex;gap:8px;align-items:flex-start;margin-top:7px;padding:7px 9px;background:#f6f7f8;border-left:2.5px solid #e05654;font-size:12.5px;color:#1f2937;border-radius:0 4px 4px 0}
+.sub-row .num-cell{flex-shrink:0}
+.spec__screen{flex:1;min-width:0;padding-left:44px;position:sticky;top:16px;align-self:flex-start}
+.spec-num{position:absolute;z-index:5;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:#e24b4a;color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px #fff;white-space:nowrap}
+.mh{position:relative}
+.screen{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:24px 28px 30px;overflow:visible}
+.mockup-scroll{overflow-x:auto;padding:2px 20px 10px;margin:0 -20px}
+.mockup-scroll .mm-table{min-width:1040px}
+.spec-banner{max-width:1720px;margin:14px auto 0;padding:0 30px}
+.spec-banner__inner{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;line-height:1.6}
+.spec-tabs{max-width:1720px;margin:16px auto 0;padding:0 30px;display:flex;gap:10px}
+.spec-view{display:none}
+.spec-view.on{display:block}
+</style>
+</head>
+<body>
+
+<div class="doc-tabs">
+  <button class="doc-tab" onclick="showDoc('flow',this)">개요·플로우</button>
+  <button class="doc-tab" onclick="showDoc('demo',this)">데모</button>
+  <button class="doc-tab active" onclick="showDoc('spec',this)">화면설계서</button>
+</div>
+
+
+<!-- ═══════════════ 개요·플로우 ═══════════════ -->
+<div class="doc-panel" id="panel-flow">
+  <div class="page-wrap">
+    <div class="page-title">매체명 매칭 → 지면명 적용 플로우 <span class="badge-new"></span></div>
+    <div class="info-line"><span class="dot">·</span>RTB request 수신부터 부모 지면 자동 생성 → 매체명 매칭(신규) → AI 배치 생성 → 운영자 확정 → 지면명 적용까지의 전체 파이프라인입니다.</div>
+    <div class="flow-wrap">
+      <svg viewBox="0 0 1690 522" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'Noto Sans KR',sans-serif">
+<defs>
+  <marker id="ah" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M0 0L8 3L0 6z" fill="#8a938e"/></marker>
+</defs>
+<text x="122" y="30" font-size="15" font-weight="700" fill="#1f2937">구글 RTB 매체명 매칭 → 지면명 적용 파이프라인</text>
+<rect x="122" y="48" width="1554" height="140" fill="#f0f4f8" stroke="#e3e8e5"/>
+<rect x="14" y="48" width="108" height="140" fill="#f0f4f8" stroke="#e3e8e5"/>
+<text x="68.0" y="118.0" font-size="12.5" font-weight="700" fill="#3b5266" text-anchor="middle" dominant-baseline="middle">매체 · SSP</text>
+<rect x="122" y="188" width="1554" height="202" fill="#eefaf4" stroke="#e3e8e5"/>
+<rect x="14" y="188" width="108" height="202" fill="#eefaf4" stroke="#e3e8e5"/>
+<text x="68.0" y="289.0" font-size="12.5" font-weight="700" fill="#0f6e56" text-anchor="middle" dominant-baseline="middle">시스템 (최고관리자)</text>
+<rect x="122" y="390" width="1554" height="132" fill="#f7f2fb" stroke="#e3e8e5"/>
+<rect x="14" y="390" width="108" height="132" fill="#f7f2fb" stroke="#e3e8e5"/>
+<text x="68.0" y="456.0" font-size="12.5" font-weight="700" fill="#5a3fc0" text-anchor="middle" dominant-baseline="middle">운영자</text>
+<rect x="131.0" y="95.0" width="168" height="46" rx="23" fill="#1d9e75" stroke="#158a64" stroke-width="1.5"/>
+<text x="215" y="118" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="middle">RTB request 수신</text>
+<path d="M405 210.0L479.0 252L405 294.0L331.0 252z" fill="#fef7e6" stroke="#e0b342" stroke-width="1.5"/>
+<text x="405" y="246" font-size="11.5" font-weight="700" fill="#8a6d18" text-anchor="middle">등록 조건</text><text x="405" y="263" font-size="11.5" fill="#9a7b1e" text-anchor="middle">충족?</text>
+<rect x="511.0" y="223.0" width="178" height="58" rx="9" fill="#fff" stroke="#1d9e75" stroke-width="1.5"/>
+<text x="600" y="246" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">부모 지면 자동 생성</text><text x="600" y="263" font-size="10.5" fill="#7a8a84" text-anchor="middle">최상위 도메인 활용</text>
+<rect x="709.0" y="223.0" width="182" height="58" rx="9" fill="#fff" stroke="#1d9e75" stroke-width="1.5"/>
+<text x="800" y="246" font-size="12" font-weight="600" fill="#1f2937" text-anchor="middle">매체명 매칭 리스트 노출</text><text x="800" y="263" font-size="10.5" fill="#d33b3a" text-anchor="middle">상태 · 신규</text>
+<rect x="909.0" y="223.0" width="182" height="58" rx="9" fill="#f4f2fb" stroke="#6c4cd6" stroke-width="1.5"/>
+<text x="1000" y="246" font-size="12" font-weight="600" fill="#4a2fb0" text-anchor="middle">✨ AI 매체명 자동 생성</text><text x="1000" y="263" font-size="10.5" fill="#6c4cd6" text-anchor="middle">배치 ① · WEB 신규건 한정</text>
+<rect x="1112.0" y="431.0" width="166" height="50" rx="9" fill="#fff" stroke="#a98fd8" stroke-width="1.5"/>
+<text x="1195" y="456" font-size="12" font-weight="600" fill="#4a3a6b" text-anchor="middle" dominant-baseline="middle">매체명 검토 · 수정</text>
+<rect x="1307.0" y="431.0" width="166" height="50" rx="9" fill="#f7f2fb" stroke="#6c4cd6" stroke-width="1.5"/>
+<text x="1390" y="456" font-size="12" font-weight="700" fill="#4a2fb0" text-anchor="middle" dominant-baseline="middle">저장 → 상태 '확정'</text>
+<rect x="1495.0" y="223.0" width="180" height="58" rx="9" fill="#0f6e56" stroke="#0b5744" stroke-width="1.5"/>
+<text x="1585" y="246" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">지면명 적용</text><text x="1585" y="263" font-size="10.5" fill="#c9eadf" text-anchor="middle">배치 ② · 확정건</text>
+<rect x="521.0" y="330.0" width="158" height="40" rx="20" fill="#f4f5f4" stroke="#c3c9c5" stroke-width="1.2"/>
+<text x="600" y="350" font-size="11" font-weight="500" fill="#8a938e" text-anchor="middle" dominant-baseline="middle">제외 · 대기 후 재판정</text>
+<path d="M299 118 L405 118 L405 206" fill="none" stroke="#8a938e" stroke-width="1.6" marker-end="url(#ah)"/>
+<path d="M479 252 L511 252" fill="none" stroke="#8a938e" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="495" y="204" font-size="10.5" font-weight="700" fill="#0f6e56" text-anchor="middle">예 &amp; 부모지면 기준</text>
+<text x="495" y="218" font-size="10.5" font-weight="700" fill="#0f6e56" text-anchor="middle">등록된 지면 없음</text>
+<path d="M405 294 L405 350 L521 350" fill="none" stroke="#8a938e" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="417" y="322.0" font-size="11" font-weight="700" fill="#b45309" text-anchor="start">아니오</text>
+<path d="M689 252 L709 252" fill="none" stroke="#8a938e" stroke-width="1.6" marker-end="url(#ah)"/>
+<path d="M891 252 L909 252" fill="none" stroke="#8a938e" stroke-width="1.6" marker-end="url(#ah)"/>
+<path d="M1091 252 L1195 252 L1195 427" fill="none" stroke="#8a938e" stroke-width="1.6" marker-end="url(#ah)"/>
+<path d="M1278 456 L1307 456" fill="none" stroke="#8a938e" stroke-width="1.6" marker-end="url(#ah)"/>
+<path d="M1473 456 L1585 456 L1585 285" fill="none" stroke="#8a938e" stroke-width="1.6" marker-end="url(#ah)"/>
+</svg>
+    </div>
+    <div class="flow-caption">
+      <div class="fc-card">
+        <div class="fc-num" style="background:#6c4cd6">배치 ①</div>
+        <div><b>AI 매체명 자동 생성</b> — <b>WEB 탭</b>의 상태 <span style="color:#d33b3a;font-weight:600">신규</span>인 건만 대상으로 AI가 매체명을 생성(APP은 AI 미사용, 앱네임을 기본 제안).
+          <br>운영자가 검토·수정 후 저장하면 상태가 <span style="color:#0f6e56;font-weight:600">확정</span>으로 전환됩니다.</div>
+      </div>
+      <div class="fc-card">
+        <div class="fc-num" style="background:#0f6e56">배치 ②</div>
+        <div><b>지면명 적용</b> — 상태가 <span style="color:#0f6e56;font-weight:600">확정</span>된 매체명만 모아 구글 RTB 부모·자식 지면의 <b>지면명 자동 생성 규칙</b>에 반영합니다. 
+          <br>기존에 생성된 지면명도 해당 배치시 수정해줍니다.  </div>
+      </div>
+    </div>
+
+    <div class="history-box">
+      <h2>변경 히스토리</h2>
+      <p class="cap">화면설계서 반영 기준 · 최신순</p>
+      <div class="history-item">
+        <div class="history-date">2026-07-21</div>
+        <div class="history-body"><ul>
+          <li><b>최초 작성</b> — 매체명 매칭 화면설계서 신규 작성</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="copyright">최고관리자 · 매체 센터 · Google RTB 부모·자식 지면 자동 등록 화면설계서 · 2026</div>
+  </div>
+</div>
+
+<!-- ═══════════════ 데모 ═══════════════ -->
+<div class="doc-panel" id="panel-demo">
+  <div class="page-wrap">
+    <div class="page-title">매체 &gt; 구글 RTB _ 매체명 매칭 <span class="badge-new"></span></div>
+    <div class="info-line"><span class="dot">·</span>구글 RTB 부모·자식 지면의 <b>지면명</b> 자동 생성 규칙에 쓰이는 <b>매체명</b>을 관리하는 화면입니다.</div>
+    <div class="legend-box">
+      <span class="plat plat-web">WEB</span>최상위 도메인을 분석해 <b>AI가 체크된 신규·대기중 건에 한해</b> 매체명을 자동 제안하고,
+      <span class="plat plat-app">APP</span><b>앱네임을 기본 매체명으로 제안</b>합니다(AI 미사용). 운영자가 값을 <b>직접 수정</b>한 뒤 저장할 수 있습니다.
+    </div>
+
+    <div class="media-tabs">
+      <button class="media-tab on" id="tab-web" onclick="showMedia('web')"><span class="mt-badge plat-web">WEB</span> 최상위 도메인</button>
+      <button class="media-tab" id="tab-app" onclick="showMedia('app')"><span class="mt-badge plat-app">APP</span> 앱네임 · 번들명</button>
+    </div>
+
+    <!-- WEB -->
+    <div class="media-view on" id="view-web">
+      <div class="ai-bar">
+        <button class="btn-ai" id="ai-web" onclick="runAI('web')" disabled><span class="ai-ico">✨</span> AI 매체명 자동 생성 <span class="ai-cnt"></span></button>
+        <span class="ai-hint">체크박스로 선택한 <b>"신규"/"대기중"</b> 건만 매체명 자동 생성이 가능하며, 선택된 행이 없으면 버튼이 비활성화됩니다.</span>
+      </div>
+      <div class="search-row">
+        <select class="date-select" id="filter-status-web"><option value="all">상태 전체</option><option value="new">신규</option><option value="pending">대기중</option><option value="fixed">확정</option></select>
+        <select class="date-select" id="filter-quality-web"><option value="all">퀄리티 전체</option><option>High</option><option>Low</option><option>Fail</option></select>
+        <select class="date-select"><option>등록일</option><option>업데이트일</option></select>
+        <input type="date" class="date-input" value="2026-07-13">
+        <span class="date-tilde">~</span>
+        <input type="date" class="date-input" value="2026-07-20">
+        <input class="search-input" placeholder="최상위 도메인 / 매체명 검색">
+        <button class="btn-green">검색</button>
+      </div>
+      <div class="bulk-bar" id="bulk-web">
+        <span class="bulk-count"></span>
+        <button class="btn-cat" onclick="openCategoryModal('web')">지면 · 오디언스카테고리 일괄 설정</button>
+        <button class="btn-bulk-save" onclick="bulkSave('web')">선택 일괄저장</button>
+      </div>
+      <table class="mm-table">
+        <thead><tr>
+          <th class="chk-col"><input type="checkbox" onchange="toggleAll('web',this)"></th>
+          <th style="width:90px">상태</th>
+          <th style="width:20%">최상위 도메인</th>
+          <th>매체명</th>
+          <th style="width:130px">지면카테고리</th>
+          <th style="width:130px">오디언스카테고리</th>
+          <th style="width:90px">퀄리티</th>
+          <th style="width:105px">등록일</th>
+          <th style="width:105px">업데이트일</th>
+          <th style="width:110px">저장</th>
+        </tr></thead>
+        <tbody>
+          <tr data-state="new" data-key="bntnews.co.kr">
+            <td><input type="checkbox" class="row-chk" onchange="onRowCheck('web')"></td>
+            <td><span class="st-badge st-new">신규</span></td>
+            <td class="col-domain">bntnews.co.kr</td>
+            <td><div class="name-cell"><input class="name-input empty" placeholder="AI 자동 생성 또는 직접 입력"><button class="btn-ai-row" onclick="runAIRow(this)">✨AI</button></div></td>
+            <td><select class="cell-select cat-select"><option>포털</option><option>엔터테인먼트</option><option>커머스</option><option>금융</option></select></td>
+            <td><select class="cell-select aud-select"><option>일반</option><option>IT 일반</option><option>포털사</option></select></td>
+            <td><span class="col-quality q-fail">Fail</span></td>
+            <td class="col-date">2026-07-18</td>
+            <td class="col-date col-upd">-</td>
+            <td><button class="btn-save" onclick="toggleSave(this)">저장</button></td>
+          </tr>
+          <tr data-state="fixed" data-key="news.nate.com">
+            <td><input type="checkbox" class="row-chk" onchange="onRowCheck('web')"></td>
+            <td><span class="st-badge st-fixed">확정</span></td>
+            <td class="col-domain">news.nate.com</td>
+            <td><div class="name-cell"><input class="name-input" value="네이트뉴스" disabled></div></td>
+            <td><select class="cell-select cat-select" disabled><option>포털</option><option>엔터테인먼트</option><option>커머스</option><option>금융</option></select></td>
+            <td><select class="cell-select aud-select" disabled><option>일반</option><option>IT 일반</option><option>포털사</option></select></td>
+            <td><span class="col-quality q-high">High</span></td>
+            <td class="col-date">2026-07-15</td>
+            <td class="col-date col-upd">2026-07-16</td>
+            <td><button class="btn-save done" onclick="toggleSave(this)">수정</button></td>
+          </tr>
+          <tr data-state="new" data-key="m.sampleweb.com">
+            <td><input type="checkbox" class="row-chk" onchange="onRowCheck('web')"></td>
+            <td><span class="st-badge st-new">신규</span></td>
+            <td class="col-domain">m.sampleweb.com</td>
+            <td><div class="name-cell"><input class="name-input empty" placeholder="AI 자동 생성 또는 직접 입력"><button class="btn-ai-row" onclick="runAIRow(this)">✨AI</button></div></td>
+            <td><select class="cell-select cat-select"><option>포털</option><option>엔터테인먼트</option><option>커머스</option><option>금융</option></select></td>
+            <td><select class="cell-select aud-select"><option>일반</option><option>IT 일반</option><option>포털사</option></select></td>
+            <td><span class="col-quality q-low">Low</span></td>
+            <td class="col-date">2026-07-19</td>
+            <td class="col-date col-upd">-</td>
+            <td><button class="btn-save" onclick="toggleSave(this)">저장</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- APP -->
+    <div class="media-view" id="view-app">
+      <div class="search-row">
+        <select class="date-select" id="filter-status-app"><option value="all">상태 전체</option><option value="fixed">확정</option></select>
+        <select class="date-select" id="filter-quality-app"><option value="all">퀄리티 전체</option><option>High</option><option>Low</option><option>Fail</option></select>
+        <select class="date-select"><option>등록일</option><option>업데이트일</option></select>
+        <input type="date" class="date-input" value="2026-07-13">
+        <span class="date-tilde">~</span>
+        <input type="date" class="date-input" value="2026-07-20">
+        <input class="search-input" placeholder="앱네임 / 번들명 / 매체명 검색">
+        <button class="btn-green">검색</button>
+      </div>
+      <div class="bulk-bar" id="bulk-app">
+        <span class="bulk-count"></span>
+        <button class="btn-cat" onclick="openCategoryModal('app')">지면 · 오디언스카테고리 일괄 설정</button>
+        <button class="btn-bulk-save" onclick="bulkSave('app')">선택 일괄저장</button>
+      </div>
+      <table class="mm-table">
+        <thead><tr>
+          <th class="chk-col"><input type="checkbox" onchange="toggleAll('app',this)"></th>
+          <th style="width:90px">상태</th>
+          <th style="width:14%">앱네임</th>
+          <th style="width:18%">번들명</th>
+          <th>매체명</th>
+          <th style="width:130px">지면카테고리</th>
+          <th style="width:130px">오디언스카테고리</th>
+          <th style="width:90px">퀄리티</th>
+          <th style="width:105px">등록일</th>
+          <th style="width:105px">업데이트일</th>
+          <th style="width:110px">저장</th>
+        </tr></thead>
+        <tbody>
+          <tr data-state="fixed" data-key="viva.republica.toss" data-app="Toss">
+            <td><input type="checkbox" class="row-chk" onchange="onRowCheck('app')"></td>
+            <td><span class="st-badge st-fixed">확정</span></td>
+            <td class="col-app">Toss</td>
+            <td class="col-bundle">viva.republica.toss</td>
+            <td><div class="name-cell"><input class="name-input" value="Toss" disabled></div></td>
+            <td><select class="cell-select cat-select" disabled><option>금융</option><option>포털</option><option>엔터테인먼트</option><option>커머스</option></select></td>
+            <td><select class="cell-select aud-select" disabled><option>IT 일반</option><option>일반</option><option>포털사</option></select></td>
+            <td><span class="col-quality q-high">High</span></td>
+            <td class="col-date">2026-07-18</td>
+            <td class="col-date col-upd">-</td>
+            <td><button class="btn-save done" onclick="toggleSave(this)">수정</button></td>
+          </tr>
+          <tr data-state="fixed" data-key="com.towneers.www" data-app="당근마켓">
+            <td><input type="checkbox" class="row-chk" onchange="onRowCheck('app')"></td>
+            <td><span class="st-badge st-fixed">확정</span></td>
+            <td class="col-app">당근마켓</td>
+            <td class="col-bundle">com.towneers.www</td>
+            <td><div class="name-cell"><input class="name-input" value="당근마켓" disabled></div></td>
+            <td><select class="cell-select cat-select" disabled><option>커머스</option><option>포털</option><option>엔터테인먼트</option><option>금융</option></select></td>
+            <td><select class="cell-select aud-select" disabled><option>일반</option><option>IT 일반</option><option>포털사</option></select></td>
+            <td><span class="col-quality q-high">High</span></td>
+            <td class="col-date">2026-07-14</td>
+            <td class="col-date col-upd">2026-07-15</td>
+            <td><button class="btn-save done" onclick="toggleSave(this)">수정</button></td>
+          </tr>
+          <tr data-state="fixed" data-key="com.sampleapp.baemin" data-app="배달의민족">
+            <td><input type="checkbox" class="row-chk" onchange="onRowCheck('app')"></td>
+            <td><span class="st-badge st-fixed">확정</span></td>
+            <td class="col-app">배달의민족</td>
+            <td class="col-bundle">com.sampleapp.baemin</td>
+            <td><div class="name-cell"><input class="name-input" value="배달의민족" disabled></div></td>
+            <td><select class="cell-select cat-select" disabled><option>커머스</option><option>포털</option><option>엔터테인먼트</option><option>금융</option></select></td>
+            <td><select class="cell-select aud-select" disabled><option>일반</option><option>IT 일반</option><option>포털사</option></select></td>
+            <td><span class="col-quality q-low">Low</span></td>
+            <td class="col-date">2026-07-19</td>
+            <td class="col-date col-upd">-</td>
+            <td><button class="btn-save done" onclick="toggleSave(this)">수정</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="info-line" style="margin-top:14px"><span class="dot">·</span>APP 탭은 <b>AI를 사용하지 않고</b>, 매체명은 <b>앱네임이 기본값으로 사용</b>되어 파싱과 동시에 <b>"확정"</b> 상태입니다. 운영자는 [수정]으로 값을 변경할 수 있습니다.</div>
+    </div>
+
+    <div class="foot-note">✨ [AI 매체명 자동 생성]은 <b>WEB 탭에서 체크박스로 선택한 신규·대기중</b> 매체만 처리합니다(APP은 앱네임을 기본 제안, AI 미사용). 선택된 행이 없으면 버튼은 비활성화됩니다. 값을 확인·수정 후 [저장]하면 <b>확정</b> 상태로 전환됩니다.</div>
+    <div class="copyright">최고관리자 · 센터 · Google RTB 부모·자식 지면 자동 등록 화면설계서 · 2026</div>
+  </div>
+</div>
+
+<!-- ═══════════════ 화면설계서 ═══════════════ -->
+<div class="doc-panel active" id="panel-spec">
+  <div class="spec-banner"><div class="spec-banner__inner">
+    빨간 번호가 화면 요소, 우측 표의 같은 번호가 기능·동작·조건 정의입니다. 화면설계서는 <b>WEB 버전 / APP 버전 2개</b>로 제공되며 아래 탭에서 전환합니다. <b>AI 매체명 자동 생성은 WEB 탭에서 체크박스로 선택한 '신규'·'대기중' 상태 매체에만</b> 적용되며, 선택된 행이 없으면 버튼이 비활성화됩니다 (APP 탭은 AI 미사용, 앱네임을 그대로 사용).
+  </div></div>
+
+  <div class="spec-tabs">
+    <button class="media-tab on" id="spec-tab-web" onclick="showSpec('web')"><span class="mt-badge plat-web">WEB</span> 화면설계서 — 최상위 도메인</button>
+    <button class="media-tab" id="spec-tab-app" onclick="showSpec('app')"><span class="mt-badge plat-app">APP</span> 화면설계서 — 앱네임 · 번들명</button>
+  </div>
+
+  <!-- ─────────── WEB 버전 ─────────── -->
+  <div class="spec-view on" id="spec-web">
+  <div class="spec">
+    <div class="spec__legend">
+      <h2>매체명 매칭 — 기능 정의 <span class="tag tag-web">WEB</span></h2>
+      <p class="sub">매체 &gt; 구글 RTB _ 매체명 매칭 · WEB(최상위 도메인) 탭 기준</p>
+      <table class="spec-table">
+        <thead><tr><th>No.</th><th>항목</th><th>설명 · 동작 · 조건</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="3">A. 매체 상세 탭</td></tr>
+          <tr><td><span class="num-cell">1</span></td>
+            <td class="item">WEB 탭</td>
+            <td>a. 매체 상세를 <b>WEB · APP 2개 독립 탭</b>으로 분리<br>
+              b. 컬럼 — <b>상태 · 최상위 도메인 · 매체명 · 지면카테고리 · 오디언스카테고리 · 퀄리티 · 등록일 · 업데이트일 · 저장</b><br>
+              c. 탭 전환 시 검색어 초기화</td></tr>
+
+          <tr class="grp"><td colspan="3">B. AI 매체명 자동 생성</td></tr>
+          <tr><td><span class="num-cell">2</span></td>
+            <td class="item">AI 일괄 생성 버튼 <span class="tag tag-ai">AI</span></td>
+            <td>a. 클릭 시 <b>체크박스로 선택한 행</b> 중 상태가 <b>"신규"/"대기중"</b>인 건에 한해 AI 매체명 생성 API 호출
+              <div class="sub-row"><span class="num-cell num-cell--sub">a-1</span><div>대상 상태 : <b>"신규"</b>, <b>"대기중"</b> (확정 건은 선택되어도 처리 대상에서 제외)</div></div>
+              <div class="sub-row"><span class="num-cell num-cell--sub">a-2</span><div>체크된 행이 <b>없으면 버튼 비활성화(disabled)</b></div></div>
+              b. <b>최상위 도메인</b>을 기준으로 브랜드 / 서비스명 추론
+              <div class="sub-row"><span class="num-cell num-cell--sub">b-1</span><div><b>크롤링</b>
+                <br>(예시) head &gt; title : "bntnews"</div></div>
+              <div class="sub-row"><span class="num-cell num-cell--sub">b-2</span><div><b>크롤링된 값</b> : 크롤링된 값을 LLM이 다시 검수해서 정확한 매체(도메인)명 확인<br>ex) 잡코리아 | 대한민국 대표 구인구직, 취업 정보 &amp; 채용 플랫폼 ⇒ <b>잡코리아</b></div></div>
+              c. AI가 찾아온 매체명은 <b>매체명 컬럼에 노출</b>
+              <div class="sub-row"><span class="num-cell num-cell--sub">c-1</span><div>상태 : <b>"대기중"</b></div></div>
+              <div class="sub-row"><span class="num-cell num-cell--sub">c-2</span><div>저장 컬럼은 <b>[적용] [수정]</b> 2개 버튼 노출</div></div></td></tr>
+          <tr class="grp"><td colspan="3">C. 검색</td></tr>
+          <tr><td><span class="num-cell">3</span></td>
+            <td class="item">기간 조회 조건</td>
+            <td>a. 기준 선택 — <b>등록일 / 업데이트일</b> 중 택 1
+              <div class="sub-row"><span class="num-cell num-cell--sub">a-1</span><div>디폴트 : 등록일</div></div>
+              b. <b>시작일 ~ 종료일</b> 범위 조회, 미지정 시 전체 기간<br>
+              c. 시작일보다 앞선 종료일 선택 불가<br>
+              d. 디폴트 : 최근 1주일</td></tr>
+          <tr><td><span class="num-cell">4</span></td>
+            <td class="item">검색어 입력</td>
+            <td>a. 부분 검색 허용 <br>
+                b.  미입력 시 전체 조회<br>
+                c. 검색 대상 — <b>최상위 도메인 · 매체명</b></td></tr>
+          <tr><td><span class="num-cell">5</span></td>
+            <td class="item">검색 버튼</td>
+            <td>a. WEB 탭 기준, <b>기간 조건 + 검색어 AND</b> 조회<br>b. 결과 없을 시 "검색 결과가 없습니다."</td></tr>
+
+          <tr class="grp"><td colspan="3">D. 목록</td></tr>
+          <tr><td><span class="num-cell">6</span></td>
+            <td class="item">상태<span class="edit-mark">260724_수정</span></td>
+            <td>a. 속성 : 읽기 전용 텍스트(색상만 구분, 배지 아님)<br>b. <b>상태</b> — <span class="st-badge st-new" style="font-size:12.5px">신규</span> 지면 생성 후 매체명 미확정 / <br>
+              <span class="st-badge st-fixed" style="font-size:12.5px">확정</span> 저장 완료(AI 제외)
+              <div class="sub-row"><span class="num-cell num-cell--sub">a-1</span><div>신규 상태에서 지면명은 최상위 도메인을 사용하고 있음</div></div></td></tr>
+          <tr><td><span class="num-cell">7</span></td>
+            <td class="item">최상위 도메인</td>
+            <td>a. 입찰 전문 <b>site.publisher.domain</b> 기준 · <b>매칭 키</b>로 사용</td></tr>
+          <tr><td><span class="num-cell">8</span></td>
+            <td class="item">매체명 자동 제안 · 수정 <span class="tag tag-req">필수</span></td>
+            <td>a. AI 제안값 표시, 운영자 인라인 수정 가능<br>b. <b>지면명 자동 생성 규칙 , 최상위 도메인과 대치</b>의 기준값<br>
+              c. 미입력 저장 시 얼럿
+              <div class="sub-row"><span class="num-cell num-cell--sub">c-1</span><div>매체명을 입력해주세요.</div></div>
+              d. AI 실행 전 값이 없는 경우 : "-"로 표기</td></tr>
+          <tr><td><span class="num-cell">9</span></td>
+            <td class="item">행별 AI 버튼 <span class="tag tag-ai">AI</span> <span class="tag tag-cond">신규 · 대기중</span></td>
+            <td>a. 상태 : <b>"신규", "대기중"</b><br>b. 클릭 시 해당 매체 <b>단건</b> 재생성<br>c. <b>"확정"</b> 행에는 미노출</td></tr>
+          <tr><td><span class="num-cell">10</span></td>
+            <td class="item">지면카테고리<span class="edit-mark">260723_신규</span> <span class="tag tag-cond">수정 가능</span></td>
+            <td>a. 속성 : 드롭다운(select)<br>b. 옵션 : 포털 / 엔터테인먼트 / 커머스 / 금융 (지면 등록 폼과 동일 리스트)<br>c. 저장 전까지 운영자가 직접 선택 가능</td></tr>
+          <tr><td><span class="num-cell">11</span></td>
+            <td class="item">오디언스카테고리<span class="edit-mark">260723_신규</span> <span class="tag tag-cond">수정 가능</span></td>
+            <td>a. 속성 : 드롭다운(select)<br>b. 옵션 : 일반 / IT 일반 / 포털사 (지면 등록 폼과 동일 리스트)<br>c. 저장 전까지 운영자가 직접 선택 가능</td></tr>
+          <tr><td><span class="num-cell">12</span></td>
+            <td class="item">퀄리티<span class="edit-mark">260723_신규</span></td>
+            <td>a. 속성 : 읽기 전용 텍스트(색상만 구분, 배지 아님)<br>b. 값 : <b>High</b>(녹색) / <b>Low</b>(주황) / <b>Fail</b>(빨강)<br>c. 시스템이 산정한 매체 품질 값을 노출, 운영자 수정 불가</td></tr>
+          <tr><td><span class="num-cell">13</span></td>
+            <td class="item">등록일</td>
+            <td>a. 부모 지면 자동 생성 시점(<b>지면 등록일</b>) 기준<br>
+              </td></tr>
+          <tr><td><span class="num-cell">14</span></td>
+            <td class="item">업데이트일</td>
+            <td>a. 매체명 <b>마지막 저장(확정·재저장) 시점</b><br>
+              b. 저장 이력 없는 신규 건은 <b>'-'</b> 표시<br>
+              </td></tr>
+          <tr><td><span class="num-cell">15</span></td>
+            <td class="item">저장 버튼</td>
+            <td>a. 속성 : 버튼<br>
+              b. 상태에 따른 노출 버튼
+              <div class="sub-row"><span class="num-cell num-cell--sub">b-1</span><div><b>"신규" , "대기중"</b> : <b>[저장]</b></div></div>
+              <div class="sub-row"><span class="num-cell num-cell--sub">b-2</span><div><b>"확정"</b> : <b>[수정]</b></div></div>
+              c. <b>[저장]</b> 버튼 클릭 시
+              <div class="sub-row"><span class="num-cell num-cell--sub">c-1</span><div>상태 변경 : <b>"확정"</b></div></div>
+              <div class="sub-row"><span class="num-cell num-cell--sub">c-2</span><div>매체명 · 지면카테고리 · 오디언스카테고리 수정 불가</div></div>
+              d. <b>[수정]</b> 버튼 클릭 시
+              <div class="sub-row"><span class="num-cell num-cell--sub">d-1</span><div>매체명 · 지면카테고리 · 오디언스카테고리 수정 가능</div></div>
+              <div class="sub-row"><span class="num-cell num-cell--sub">d-2</span><div>수정 상태에서 <b>[저장]</b>을 클릭하지 않는 경우 : 별도 액션 없음</div></div></td></tr>
+
+          <tr class="grp"><td colspan="3">E. 일괄 처리<span class="edit-mark">260724_신규</span></td></tr>
+          <tr><td><span class="num-cell">16</span></td>
+            <td class="item">조회 조건 — 상태 · 퀄리티 필터</td>
+            <td>a. <b>상태</b> : 전체 / 신규 / 대기중 / 확정<br>b. <b>퀄리티</b> : 전체 / High / Low / Fail<br>c. 검색 버튼 클릭 시 기존 조회 조건(기간·검색어)과 AND로 적용</td></tr>
+          <tr><td><span class="num-cell">17</span></td>
+            <td class="item">행 선택 체크박스</td>
+            <td>a. 각 행 좌측 체크박스로 다중 선택<br>b. 헤더 체크박스 클릭 시 현재 목록 전체 선택 · 해제<br>c. 1건 이상 선택 시 하단 <b>일괄 처리 도구바</b> 노출</td></tr>
+          <tr><td><span class="num-cell">18</span></td>
+            <td class="item">지면 · 오디언스카테고리 일괄 설정 버튼</td>
+            <td>a. 클릭 시 <b>지면카테고리 · 오디언스카테고리 선택 모달</b> 오픈(선택된 행 수 표시)<br>b. 모달에서 값 선택 후 <b>[적용]</b> 클릭 시 반영, <b>[취소]</b> 또는 모달 바깥 클릭 시 닫힘<br>c. 선택된 행 중 <b>"확정"</b>이 아닌(수정 가능 상태) 행에만 값이 일괄 반영<br>d. "확정" 상태 행은 적용 대상에서 제외(드롭다운 잠김)</td></tr>
+          <tr><td><span class="num-cell">19</span></td>
+            <td class="item">선택 일괄저장 버튼</td>
+            <td>a. 선택된 행 중 <b>"신규" · "대기중"</b> 상태만 일괄로 <b>[저장]</b> 처리(= 확정 전환)<br>b. <b>"확정"</b> 상태로 선택된 행은 그대로 건너뜀<br>c. 매체명이 비어 있는 행은 저장 제외, 결과를 건수로 안내</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spec__screen">
+      <div class="screen">
+        <div class="page-title" style="font-size:16px">매체 &gt; 구글 RTB _ 매체명 매칭 <span class="badge-new"></span></div>
+        <div class="info-line"><span class="dot">·</span>구글 RTB 부모·자식 지면의 지면명 자동 생성 규칙에 쓰이는 매체명을 관리하는 화면입니다.</div>
+
+        <div class="media-tabs" style="margin-top:18px">
+          <span class="mh"><span class="spec-num" style="left:-14px;top:-13px">1</span>
+            <button class="media-tab on"><span class="mt-badge plat-web">WEB</span> 최상위 도메인</button></span>
+          <button class="media-tab"><span class="mt-badge plat-app">APP</span> 앱네임 · 번들명</button>
+        </div>
+
+        <div class="ai-bar">
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">2</span>
+            <button class="btn-ai">✨ AI 매체명 자동 생성</button></span>
+          <span class="ai-hint">체크박스로 선택한 <b>"신규"/"대기중"</b> 건만 매체명 자동 생성이 가능하며, 선택된 행이 없으면 버튼이 비활성화됩니다.</span>
+        </div>
+
+        <div class="search-row">
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">16</span>
+            <select class="date-select" disabled><option>상태 전체</option></select></span>
+          <select class="date-select" disabled><option>퀄리티 전체</option></select>
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">3</span>
+            <select class="date-select" disabled><option>등록일</option></select></span>
+          <input type="date" class="date-input" value="2026-07-13" disabled>
+          <span class="date-tilde">~</span>
+          <input type="date" class="date-input" value="2026-07-20" disabled>
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">4</span>
+            <input class="search-input" placeholder="최상위 도메인 / 매체명 검색" disabled></span>
+          <span class="mh"><span class="spec-num" style="right:-11px;top:-13px">5</span>
+            <button class="btn-green">검색</button></span>
+        </div>
+
+        <div class="bulk-bar show">
+          <span class="bulk-count">1개 선택됨</span>
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">18</span>
+            <button class="btn-cat" disabled>지면 · 오디언스카테고리 일괄 설정</button></span>
+          <span class="mh"><span class="spec-num" style="right:-11px;top:-13px">19</span>
+            <button class="btn-bulk-save" disabled>선택 일괄저장</button></span>
+        </div>
+
+        <div class="mockup-scroll">
+        <table class="mm-table">
+          <thead><tr>
+            <th class="chk-col"><input type="checkbox" disabled></th>
+            <th style="width:90px">상태</th><th style="width:20%">최상위 도메인</th>
+            <th>매체명</th><th style="width:130px">지면카테고리</th><th style="width:130px">오디언스카테고리</th><th style="width:90px">퀄리티</th><th style="width:105px">등록일</th><th style="width:105px">업데이트일</th><th style="width:110px">저장</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:4px">17</span><input type="checkbox" checked disabled></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:4px">6</span><span class="st-badge st-new">신규</span></td>
+              <td class="col-domain"><span class="mh"><span class="spec-num" style="left:-26px;top:-3px">7</span>bntnews.co.kr</span></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:6px">8</span>
+                <div class="name-cell"><input class="name-input" value="비엔티뉴스" disabled>
+                <span class="mh"><span class="spec-num" style="left:-13px;top:-14px">9</span><button class="btn-ai-row">✨AI</button></span></div></td>
+              <td class="mh"><span class="spec-num" style="left:-13px;top:-14px">10</span><select class="cell-select" disabled><option>포털</option></select></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:6px">11</span><select class="cell-select" disabled><option>일반</option></select></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:6px">12</span><span class="col-quality q-fail">Fail</span></td>
+              <td class="mh"><span class="spec-num" style="right:-10px;top:4px">13</span><span class="col-date">2026-07-18</span></td>
+              <td class="mh"><span class="spec-num" style="right:-10px;top:4px">14</span><span class="col-date">-</span></td>
+              <td class="mh"><span class="spec-num" style="right:0;top:-11px">15</span><button class="btn-save">저장</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" disabled></td>
+              <td><span class="st-badge st-fixed">확정</span></td>
+              <td class="col-domain">news.nate.com</td>
+              <td><div class="name-cell"><input class="name-input" value="네이트뉴스" disabled></div></td>
+              <td><select class="cell-select" disabled><option>커머스</option></select></td>
+              <td><select class="cell-select" disabled><option>IT 일반</option></select></td>
+              <td><span class="col-quality q-high">High</span></td>
+              <td class="col-date">2026-07-15</td>
+              <td class="col-date">2026-07-16</td>
+              <td><button class="btn-save done">수정</button></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="spec-modal">
+          <div class="spec-modal__label"><span class="num-cell">18</span> 지면 · 오디언스카테고리 일괄 설정 모달</div>
+          <div class="modal-box modal-box--inline">
+            <h3>지면카테고리 · 오디언스카테고리 일괄 설정</h3>
+            <p class="modal-sub">2개 행에 적용됩니다.</p>
+            <div class="modal-field"><label>지면카테고리</label>
+              <select class="date-select" style="width:100%" disabled><option>포털</option></select></div>
+            <div class="modal-field"><label>오디언스카테고리</label>
+              <select class="date-select" style="width:100%" disabled><option>일반</option></select></div>
+            <div class="modal-actions"><button class="btn-ghost">취소</button><button class="btn-green">적용</button></div>
+          </div>
+        </div>
+        <div class="foot-note" style="margin-top:20px">※ APP 탭의 상세 정의는 상단 <b>[APP 화면설계서]</b> 탭을 참조하세요.</div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ─────────── APP 버전 ─────────── -->
+  <div class="spec-view" id="spec-app">
+  <div class="spec">
+    <div class="spec__legend">
+      <h2>매체명 매칭 — 기능 정의 <span class="tag tag-app">APP</span></h2>
+      <p class="sub">매체 &gt; 구글 RTB _ 매체명 매칭 · APP(앱네임 · 번들명) 탭 기준</p>
+      <table class="spec-table">
+        <thead><tr><th>No.</th><th>항목</th><th>설명 · 동작 · 조건</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="3">A. 매체 상세 탭</td></tr>
+          <tr><td><span class="num-cell">1</span></td>
+            <td class="item">APP 탭</td>
+            <td>a. 매체 상세를 <b>WEB · APP 2개 독립 탭</b>으로 분리<br>
+
+              b. 컬럼 — <b>상태 · 앱네임 · 번들명 · 매체명 · 지면카테고리 · 오디언스카테고리 · 퀄리티 · 등록일 · 업데이트일 · 저장</b><br>
+              c. 탭 전환 시 검색어 초기화<br>
+              d. <b>AI 매체명 자동 생성 미사용</b>
+              <br>매체명은 <b>앱네임을 기본값으로 제안</b></td></tr>
+
+          <tr class="grp"><td colspan="3">B. 검색</td></tr>
+          <tr><td><span class="num-cell">2</span></td>
+            <td class="item">기간 조회 조건</td>
+            <td>a. 기준 선택 — <b>등록일 / 업데이트일</b> 중 택 1
+              <div class="sub-row"><span class="num-cell num-cell--sub">a-1</span><div>디폴트 : 등록일</div></div>
+              b. <b>시작일 ~ 종료일</b> 범위 조회, 미지정 시 전체 기간<br>
+              c. 시작일보다 앞선 종료일 선택 불가<br>
+              d. 디폴트 : 최근 1주일</td></tr>
+          <tr><td><span class="num-cell">3</span></td>
+            <td class="item">검색어 입력</td>
+            <td>a. 부분 일치, 미입력 시 전체 조회<br>b. 검색 대상 — <b>앱네임 · 번들명 · 매체명</b></td></tr>
+          <tr><td><span class="num-cell">4</span></td>
+            <td class="item">검색 버튼</td>
+            <td>a. APP 탭 기준, <b>기간 조건 + 검색어 AND</b> 조회<br>b. 결과 없을 시 "검색 결과가 없습니다."</td></tr>
+
+          <tr class="grp"><td colspan="3">C. 목록</td></tr>
+          <tr><td><span class="num-cell">5</span></td>
+            <td class="item">상태<span class="edit-mark">260724_수정</span></td>
+            <td>a. 속성 : 읽기 전용 텍스트(색상만 구분, 배지 아님)<br>b. 상태 : <span class="st-badge st-fixed" style="font-size:12.5px">확정</span> 하나만 사용</td></tr>
+          <tr><td><span class="num-cell">6</span></td>
+            <td class="item">앱네임</td>
+            <td>a. 입찰 전문 <b>app.name</b> 기준 · 스토어 표기명(표시용, 변경 가능)<br></td></tr>
+          <tr><td><span class="num-cell">7</span></td>
+            <td class="item">번들명</td>
+            <td>a. 입찰 전문 <b>app.bundle</b> 기준 · <b>불변 키</b>, 매칭 키로 사용<br></td></tr>
+          <tr><td><span class="num-cell">8</span></td>
+            <td class="item">매체명 기본 제안 · 수정 <span class="tag tag-req">필수</span></td>
+            <td>a. 앱네임(app.name)을 매체명으로 사용, 운영자 수정 가능<br>b. 지면명 자동 생성 규칙의 기준값<br>c. 미입력 저장 시 차단(에러 토스트)</td></tr>
+          <tr><td><span class="num-cell">9</span></td>
+            <td class="item">지면카테고리<span class="edit-mark">260723_신규</span> <span class="tag tag-cond">수정 가능</span></td>
+            <td>a. 속성 : 드롭다운(select)<br>b. 옵션 : 포털 / 엔터테인먼트 / 커머스 / 금융 (지면 등록 폼과 동일 리스트)<br>c. 저장 전까지 운영자가 직접 선택 가능</td></tr>
+          <tr><td><span class="num-cell">10</span></td>
+            <td class="item">오디언스카테고리<span class="edit-mark">260723_신규</span> <span class="tag tag-cond">수정 가능</span></td>
+            <td>a. 속성 : 드롭다운(select)<br>b. 옵션 : 일반 / IT 일반 / 포털사 (지면 등록 폼과 동일 리스트)<br>c. 저장 전까지 운영자가 직접 선택 가능</td></tr>
+          <tr><td><span class="num-cell">11</span></td>
+            <td class="item">퀄리티<span class="edit-mark">260723_신규</span></td>
+            <td>a. 속성 : 읽기 전용 텍스트(색상만 구분, 배지 아님)<br>b. 값 : <b>High</b>(녹색) / <b>Low</b>(주황) / <b>Fail</b>(빨강)<br>c. 시스템이 산정한 매체 품질 값을 노출, 운영자 수정 불가</td></tr>
+          <tr><td><span class="num-cell">12</span></td>
+            <td class="item">등록일</td>
+            <td>a. 부모 지면 자동 생성 시점(<b>지면 등록일</b>) 기준</td></tr>
+          <tr><td><span class="num-cell">13</span></td>
+            <td class="item">업데이트일</td>
+            <td>a. 매체명 <b>마지막 저장(재저장) 시점</b><br>
+              b. 수정·저장 이력 없는 건은 <b>'-'</b> 표시</td></tr>
+          <tr><td><span class="num-cell">14</span></td>
+            <td class="item">수정 및 저장 버튼</td>
+            <td>a. 속성 : 버튼<br>
+              b. APP은 <b>"확정" 상태 하나만 사용</b> → 기본 <b>[수정]</b> 버튼 노출
+              <div class="sub-row"><span class="num-cell num-cell--sub">b-1</span><div>앱네임을 매체명 기본값으로 사용하므로 파싱과 동시에 <b>"확정"</b></div></div>
+              c. <b>[수정]</b> 버튼 클릭 시
+              <div class="sub-row"><span class="num-cell num-cell--sub">c-1</span><div>매체명 · 지면카테고리 · 오디언스카테고리 수정 가능, 버튼 <b>[저장]</b>으로 전환</div></div>
+              <div class="sub-row"><span class="num-cell num-cell--sub">c-2</span><div>수정 상태에서 <b>[저장]</b>을 클릭하지 않는 경우 : 별도 액션 없음</div></div>
+              d. <b>[저장]</b> 버튼 클릭 시
+              <div class="sub-row"><span class="num-cell num-cell--sub">d-1</span><div>매체명 · 지면카테고리 · 오디언스카테고리 재저장(상태 <b>"확정"</b> 유지), 입력 비활성 + 버튼 <b>[수정]</b>으로 복귀</div></div></td></tr>
+
+          <tr class="grp"><td colspan="3">D. 일괄 처리<span class="edit-mark">260724_신규</span></td></tr>
+          <tr><td><span class="num-cell">15</span></td>
+            <td class="item">조회 조건 — 상태 · 퀄리티 필터</td>
+            <td>a. <b>상태</b> : 전체 / 확정 (APP은 <b>"확정"</b> 하나만 사용)<br>b. <b>퀄리티</b> : 전체 / High / Low / Fail<br>c. 검색 버튼 클릭 시 기존 조회 조건(기간·검색어)과 AND로 적용</td></tr>
+          <tr><td><span class="num-cell">16</span></td>
+            <td class="item">행 선택 체크박스</td>
+            <td>a. 각 행 좌측 체크박스로 다중 선택<br>b. 헤더 체크박스 클릭 시 현재 목록 전체 선택 · 해제<br>c. 1건 이상 선택 시 하단 <b>일괄 처리 도구바</b> 노출</td></tr>
+          <tr><td><span class="num-cell">17</span></td>
+            <td class="item">지면 · 오디언스카테고리 일괄 설정 버튼</td>
+            <td>a. 클릭 시 <b>지면카테고리 · 오디언스카테고리 선택 모달</b> 오픈(선택된 행 수 표시)<br>b. 모달에서 값 선택 후 <b>[적용]</b> 클릭 시 반영, <b>[취소]</b> 또는 모달 바깥 클릭 시 닫힘<br>c. 선택된 행 중 <b>[수정]</b>으로 잠금 해제된 행에만 값이 일괄 반영<br>d. 잠겨 있는(수정 전) 행은 적용 대상에서 제외</td></tr>
+          <tr><td><span class="num-cell">18</span></td>
+            <td class="item">선택 일괄저장 버튼</td>
+            <td>a. 선택된 행 중 <b>"신규" · "대기중"</b> 상태만 일괄로 <b>[저장]</b> 처리(= 확정 전환)<br>b. APP은 파싱과 동시에 모든 매체가 <b>"확정"</b>이므로 이 버튼의 적용 대상이 없음<br>c. APP에서 값 변경은 행별 <b>[수정] → [저장]</b>으로 처리</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spec__screen">
+      <div class="screen">
+        <div class="page-title" style="font-size:16px">매체 센터 &gt; 구글 RTB _ 매체명 매칭 <span class="badge-new"></span></div>
+        <div class="info-line"><span class="dot">·</span>구글 RTB 부모·자식 지면의 지면명 자동 생성 규칙에 쓰이는 매체명을 관리하는 화면입니다.</div>
+
+        <div class="media-tabs" style="margin-top:18px">
+          <button class="media-tab"><span class="mt-badge plat-web">WEB</span> 최상위 도메인</button>
+          <span class="mh"><span class="spec-num" style="left:-14px;top:-13px">1</span>
+            <button class="media-tab on"><span class="mt-badge plat-app">APP</span> 앱네임 · 번들명</button></span>
+        </div>
+
+        <div class="search-row" style="margin-top:18px">
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">15</span>
+            <select class="date-select" disabled><option>상태 전체</option></select></span>
+          <select class="date-select" disabled><option>퀄리티 전체</option></select>
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">2</span>
+            <select class="date-select" disabled><option>등록일</option></select></span>
+          <input type="date" class="date-input" value="2026-07-13" disabled>
+          <span class="date-tilde">~</span>
+          <input type="date" class="date-input" value="2026-07-20" disabled>
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">3</span>
+            <input class="search-input" placeholder="앱네임 / 번들명 / 매체명 검색" disabled></span>
+          <span class="mh"><span class="spec-num" style="right:-11px;top:-13px">4</span>
+            <button class="btn-green">검색</button></span>
+        </div>
+
+        <div class="bulk-bar show">
+          <span class="bulk-count">1개 선택됨</span>
+          <span class="mh"><span class="spec-num" style="left:-13px;top:-13px">17</span>
+            <button class="btn-cat" disabled>지면 · 오디언스카테고리 일괄 설정</button></span>
+          <span class="mh"><span class="spec-num" style="right:-11px;top:-13px">18</span>
+            <button class="btn-bulk-save" disabled>선택 일괄저장</button></span>
+        </div>
+
+        <div class="mockup-scroll">
+        <table class="mm-table">
+          <thead><tr>
+            <th class="chk-col"><input type="checkbox" disabled></th>
+            <th style="width:90px">상태</th><th style="width:14%">앱네임</th><th style="width:18%">번들명</th>
+            <th>매체명</th><th style="width:130px">지면카테고리</th><th style="width:130px">오디언스카테고리</th><th style="width:90px">퀄리티</th><th style="width:105px">등록일</th><th style="width:105px">업데이트일</th><th style="width:110px">저장</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:4px">16</span><input type="checkbox" checked disabled></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:4px">5</span><span class="st-badge st-fixed">확정</span></td>
+              <td class="col-app"><span class="mh"><span class="spec-num" style="left:-24px;top:-3px">6</span>Toss</span></td>
+              <td class="col-bundle"><span class="mh"><span class="spec-num" style="left:-24px;top:-3px">7</span>viva.republica.toss</span></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:6px">8</span>
+                <div class="name-cell"><input class="name-input" value="Toss" disabled></div></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:6px">9</span><select class="cell-select" disabled><option>금융</option></select></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:6px">10</span><select class="cell-select" disabled><option>IT 일반</option></select></td>
+              <td class="mh"><span class="spec-num" style="left:-16px;top:6px">11</span><span class="col-quality q-high">High</span></td>
+              <td class="mh"><span class="spec-num" style="right:-10px;top:4px">12</span><span class="col-date">2026-07-18</span></td>
+              <td class="mh"><span class="spec-num" style="right:-10px;top:4px">13</span><span class="col-date">-</span></td>
+              <td class="mh"><span class="spec-num" style="right:0;top:-11px">14</span><button class="btn-save done">수정</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" disabled></td>
+              <td><span class="st-badge st-fixed">확정</span></td>
+              <td class="col-app">당근마켓</td>
+              <td class="col-bundle">com.towneers.www</td>
+              <td><div class="name-cell"><input class="name-input" value="당근마켓" disabled></div></td>
+              <td><select class="cell-select" disabled><option>커머스</option></select></td>
+              <td><select class="cell-select" disabled><option>일반</option></select></td>
+              <td><span class="col-quality q-low">Low</span></td>
+              <td class="col-date">2026-07-14</td>
+              <td class="col-date">2026-07-15</td>
+              <td><button class="btn-save done">수정</button></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="info-line" style="margin-top:14px"><span class="dot">·</span>APP 탭은 <b>AI를 사용하지 않고</b>, 매체명은 <b>앱네임이 기본값으로 사용</b>되어 파싱과 동시에 <b>"확정"</b> 상태입니다. 운영자는 [수정]으로 값을 변경할 수 있습니다.</div>
+        <div class="spec-modal">
+          <div class="spec-modal__label"><span class="num-cell">17</span> 지면 · 오디언스카테고리 일괄 설정 모달</div>
+          <div class="modal-box modal-box--inline">
+            <h3>지면카테고리 · 오디언스카테고리 일괄 설정</h3>
+            <p class="modal-sub">2개 행에 적용됩니다.</p>
+            <div class="modal-field"><label>지면카테고리</label>
+              <select class="date-select" style="width:100%" disabled><option>포털</option></select></div>
+            <div class="modal-field"><label>오디언스카테고리</label>
+              <select class="date-select" style="width:100%" disabled><option>일반</option></select></div>
+            <div class="modal-actions"><button class="btn-ghost">취소</button><button class="btn-green">적용</button></div>
+          </div>
+        </div>
+        <div class="foot-note" style="margin-top:20px">※ WEB 탭의 상세 정의는 상단 <b>[WEB 화면설계서]</b> 탭을 참조하세요.</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="cat-modal-overlay" onclick="if(event.target===this)closeCategoryModal()">
+  <div class="modal-box">
+    <h3>지면카테고리 · 오디언스카테고리 일괄 설정</h3>
+    <p class="modal-sub" id="cat-modal-count"></p>
+    <div class="modal-field">
+      <label>지면카테고리</label>
+      <select class="date-select" id="modal-cat" style="width:100%"><option>포털</option><option>엔터테인먼트</option><option>커머스</option><option>금융</option></select>
+    </div>
+    <div class="modal-field">
+      <label>오디언스카테고리</label>
+      <select class="date-select" id="modal-aud" style="width:100%"><option>일반</option><option>IT 일반</option><option>포털사</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeCategoryModal()">취소</button>
+      <button class="btn-green" onclick="confirmBulkCategory()">적용</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var FALLBACK={
+ 'bntnews.co.kr':'비엔티뉴스','news.nate.com':'네이트뉴스','m.sampleweb.com':'샘플웹',
+ 'viva.republica.toss':'토스','com.towneers.www':'당근마켓','com.sampleapp.baemin':'배달의민족'
+};
+function showDoc(name,btn){
+  document.querySelectorAll('.doc-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.doc-panel').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+}
+function showMedia(name){
+  document.getElementById('tab-web').classList.toggle('on',name==='web');
+  document.getElementById('tab-app').classList.toggle('on',name==='app');
+  document.getElementById('view-web').classList.toggle('on',name==='web');
+  document.getElementById('view-app').classList.toggle('on',name==='app');
+}
+function showSpec(name){
+  document.getElementById('spec-tab-web').classList.toggle('on',name==='web');
+  document.getElementById('spec-tab-app').classList.toggle('on',name==='app');
+  document.getElementById('spec-web').classList.toggle('on',name==='web');
+  document.getElementById('spec-app').classList.toggle('on',name==='app');
+}
+function toast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('show');},2600);
+}
+function fillRow(row,name){
+  var inp=row.querySelector('.name-input');
+  inp.value=name;inp.classList.remove('empty');
+}
+function localFallback(view,key,app){
+  if(FALLBACK[key])return FALLBACK[key];
+  if(view==='app'&&app)return app;
+  var h=key.replace(/^(www|m|news|mobile)\./,'').split('.')[0];
+  return h.charAt(0).toUpperCase()+h.slice(1);
+}
+async function callAnthropic(items){
+  var prompt='당신은 광고 매체명 정규화 도우미입니다. 아래 각 항목의 한국어 매체명(브랜드/서비스명)만 추론하세요. '
+    +'WEB은 최상위 도메인, APP은 앱네임/번들명 기준입니다. 반드시 JSON 배열만 출력(설명·마크다운 금지). '
+    +'형식: [{"key":"...","name":"..."}]\n목록:\n'+JSON.stringify(items);
+  var res=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+  });
+  if(!res.ok)throw new Error('api');
+  var data=await res.json();
+  var text=data.content.filter(function(i){return i.type==='text';}).map(function(i){return i.text;}).join('');
+  text=text.replace(/```json|```/g,'').trim();
+  var arr=JSON.parse(text),m={};
+  arr.forEach(function(o){m[o.key]=o.name;});return m;
+}
+async function processRows(view,rows,btn){
+  var orig=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span> 생성 중...';
+  var items=rows.map(function(r){return {type:view,key:r.dataset.key,app:r.dataset.app||''};});
+  var map={};
+  try{map=await callAnthropic(items);}catch(e){map={};}
+  rows.forEach(function(r){
+    var name=map[r.dataset.key]||localFallback(view,r.dataset.key,r.dataset.app);
+    fillRow(r,name);
+  });
+  btn.disabled=false;btn.innerHTML=orig;
+  return rows.length;
+}
+async function runAI(view){
+  var rows=checkedRows(view).filter(function(r){return r.dataset.state==='new'||r.dataset.state==='pending';});
+  if(rows.length===0){toast('선택한 행 중 신규·대기중 상태가 없습니다.');return;}
+  var n=await processRows(view,rows,document.getElementById('ai-'+view));
+  toast(n+'건 매체명을 AI로 생성했습니다. 검토 후 저장해 주세요.');
+}
+async function runAIRow(btn){
+  var row=btn.closest('tr'),view=row.closest('.media-view').id.replace('view-','');
+  await processRows(view,[row],btn);
+  toast('매체명을 AI로 생성했습니다.');
+}
+function toggleSave(btn,silent){
+  var row=btn.closest('tr'),inp=row.querySelector('.name-input');
+  if(!btn.classList.contains('done')){
+    if(!inp.value.trim()){if(!silent)toast('매체명을 입력해 주세요.');return false;}
+    inp.disabled=true;inp.classList.remove('empty');
+    row.querySelectorAll('.cell-select').forEach(function(s){s.disabled=true});
+    row.dataset.state='fixed';
+    var upd=row.querySelector('.col-upd');
+    if(upd){var d=new Date(),p=function(n){return ('0'+n).slice(-2);};upd.textContent=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+    row.querySelector('.st-badge').outerHTML='<span class="st-badge st-fixed">확정</span>';
+    var air=row.querySelector('.btn-ai-row');if(air)air.remove();
+    btn.textContent='수정';btn.classList.add('done');
+    if(!silent)toast('저장되었습니다. (확정)');
+    return true;
+  }else{
+    inp.disabled=false;inp.focus();
+    row.querySelectorAll('.cell-select').forEach(function(s){s.disabled=false});
+    btn.textContent='저장';btn.classList.remove('done');
+    return true;
+  }
+}
+
+/* ---------- 체크박스 일괄 선택 · 적용 · 저장 ---------- */
+function tableBody(view){ return document.querySelector('#view-'+view+' .mm-table tbody'); }
+function checkedRows(view){
+  return [].slice.call(tableBody(view).querySelectorAll('tr')).filter(function(r){
+    var c=r.querySelector('.row-chk'); return c&&c.checked;
+  });
+}
+function updateBulkBar(view){
+  var n=checkedRows(view).length, bar=document.getElementById('bulk-'+view);
+  bar.classList.toggle('show',n>0);
+  bar.querySelector('.bulk-count').textContent=n+'개 선택됨';
+  var aiBtn=document.getElementById('ai-'+view);
+  if(aiBtn)aiBtn.disabled=(n===0);
+}
+function onRowCheck(view){ updateBulkBar(view); }
+function toggleAll(view,master){
+  tableBody(view).querySelectorAll('.row-chk').forEach(function(c){c.checked=master.checked;});
+  updateBulkBar(view);
+}
+var modalView=null;
+function openCategoryModal(view){
+  var rows=checkedRows(view);
+  if(!rows.length){toast('선택된 행이 없습니다.');return;}
+  modalView=view;
+  document.getElementById('cat-modal-count').textContent=rows.length+'개 행에 적용됩니다.';
+  document.getElementById('cat-modal-overlay').classList.add('show');
+}
+function closeCategoryModal(){
+  modalView=null;
+  document.getElementById('cat-modal-overlay').classList.remove('show');
+}
+function confirmBulkCategory(){
+  var view=modalView; if(!view)return;
+  var rows=checkedRows(view);
+  var catVal=document.getElementById('modal-cat').value;
+  var audVal=document.getElementById('modal-aud').value;
+  var applied=0;
+  rows.forEach(function(r){
+    var cat=r.querySelector('.cat-select'), aud=r.querySelector('.aud-select');
+    if(cat&&!cat.disabled){cat.value=catVal;applied++;}
+    if(aud&&!aud.disabled){aud.value=audVal;}
+  });
+  closeCategoryModal();
+  if(!applied){toast('선택한 행이 모두 확정 상태라 지면카테고리·오디언스카테고리를 적용할 수 없습니다.');return;}
+  toast(applied+'건에 지면카테고리·오디언스카테고리를 일괄 적용했습니다.');
+}
+function bulkSave(view){
+  var rows=checkedRows(view).filter(function(r){return r.dataset.state!=='fixed';});
+  if(!rows.length){toast('일괄저장할 신규·대기중 상태의 선택 행이 없습니다.');return;}
+  var saved=0,failed=0;
+  rows.forEach(function(r){
+    var btn=r.querySelector('.btn-save');
+    if(toggleSave(btn,true))saved++;else failed++;
+  });
+  if(failed)toast(saved+'건 저장, '+failed+'건은 매체명이 비어 있어 저장하지 못했습니다.');
+  else toast(saved+'건을 일괄 저장했습니다. (확정)');
+  updateBulkBar(view);
+}
+</script>
+</body>
+</html>
