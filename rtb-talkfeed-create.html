@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>채팅리스트/피드(AI) 검수 화면</title>
+<title>상품형 톡피드 소재 자동 생성</title>
 <style>
   /* 레이아웃: 기존 Mobon 관리자 화면 재현 (단일 라이트 테마) */
   :root { color-scheme: light; }
@@ -86,6 +86,10 @@
   .docTabs button.on { background: #fff; color: #222; font-weight: 700; }
   #tabOverview { padding: 24px 28px; background: #f7f8fa; min-height: calc(100vh - 42px); }
   .ovTitle { font-size: 16px; margin: 0 0 14px; }
+  .subTabs { display: flex; gap: 4px; margin: 0 0 14px; border-bottom: 2px solid #2fb38a; }
+  .subTabs button { border: 1px solid #ddd; border-bottom: 0; border-radius: 6px 6px 0 0; background: #eef0f3; color: #666; padding: 9px 22px; font-size: 13px; cursor: pointer; }
+  .subTabs button.on { background: #2fb38a; border-color: #2fb38a; color: #fff; font-weight: 700; }
+  .subPane { min-height: 300px; }
 
   /* 흐름도 */
   .flowWrap { background: #fff; border: 1px solid #e7e7e7; padding: 20px; display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
@@ -126,6 +130,44 @@
   .dateType { border: 1px solid #ccc; border-radius: 2px; background: #fff; padding: 5px 8px; font-size: 11px; color: #555; }
   .statusRow { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
   .btnLine { border: 1px solid #ccc; background: #fff; border-radius: 3px; padding: 6px 14px; font-size: 11px; cursor: pointer; }
+  .btnGroup { display: flex; gap: 6px; }
+
+  /* 생성 조건 팝업 */
+  #genCondModal { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; padding: 16px; }
+  #genCondModal .gcBox, .gcMock .gcBox { width: 720px; max-width: 100%; max-height: 100%; overflow: auto; background: #fff; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.2); }
+  #genCondModal .gcHead, .gcMock .gcHead { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; font-size: 14px; font-weight: 700; border-bottom: 1px solid #eee; }
+  #genCondModal .gcClose, .gcMock .gcClose { border: 0; background: none; font-size: 18px; color: #888; cursor: pointer; line-height: 1; }
+  #genCondModal .gcTabs, .gcMock .gcTabs { display: flex; border-bottom: 1px solid #e5e5e5; }
+  #genCondModal .gcTabs button, .gcMock .gcTabs button { flex: 1; border: 0; border-bottom: 2px solid transparent; background: #fff; padding: 11px 0; font-size: 12px; color: #666; cursor: pointer; }
+  #genCondModal .gcTabs button.on, .gcMock .gcTabs button.on { color: #1a1a1a; font-weight: 700; border-bottom-color: #4a90e2; }
+  #genCondModal .gcPane, .gcMock .gcPane { padding: 16px 20px 18px; }
+  #genCondModal .gcFilter, .gcMock .gcFilter { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+  #genCondModal .gcSel, .gcMock .gcSel { border: 1px solid #ccc; border-radius: 3px; background: #fff; padding: 8px 10px; font-size: 11.5px; min-width: 150px; }
+  #genCondModal .gcDate, .gcMock .gcDate { display: flex; align-items: center; gap: 8px; border: 1px solid #ccc; border-radius: 3px; padding: 4px 12px 4px 4px; font-size: 11.5px; }
+  #genCondModal .gcDate .ic, .gcMock .gcDate .ic { width: 26px; height: 26px; border: 1px solid #4a90e2; border-radius: 3px; color: #4a90e2; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  #genCondModal .gcFilter, .gcMock .gcFilter { flex-wrap: wrap; }
+  #genCondModal .gcRight, .gcMock .gcRight { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  #genCondModal .gcPer, .gcMock .gcPer { width: 96px; padding: 4px 6px; font-size: 11px; border: 1px solid #ccc; border-radius: 2px; }
+  #genCondModal .gcSearch, .gcMock .gcSearch { border: 0; border-radius: 3px; background: #4a90e2; color: #fff; padding: 8px 18px; font-size: 11.5px; cursor: pointer; }
+  #genCondModal table, .gcMock table { width: 100%; border-collapse: collapse; }
+  #genCondModal th, .gcMock th { background: #f1f0ee; font-size: 11.5px; padding: 10px 8px; text-align: left; }
+  #genCondModal td, .gcMock td { border-bottom: 1px solid #eee; font-size: 11.5px; padding: 11px 8px; }
+  #genCondModal .gcTag, .gcMock .gcTag { display: inline-block; min-width: 92px; text-align: center; padding: 3px 10px; border-radius: 12px; border: 1px solid; font-size: 11px; }
+  #genCondModal .gcTag.red, .gcMock .gcTag.red { background: #fdecec; border-color: #e0525a; color: #c23b44; }
+  #genCondModal .gcTag.yel, .gcMock .gcTag.yel { background: #fff7e0; border-color: #f0a020; color: #b86e00; }
+  #genCondModal .gcTag.blu, .gcMock .gcTag.blu { background: #e6f0fd; border-color: #4a90e2; color: #2c63b3; }
+  #genCondModal .gcCatTbl, .gcMock .gcCatTbl { border: 1px solid #e3e0d8; }
+  #genCondModal .gcCatTbl th, .gcMock .gcCatTbl th { background: #f5f3ee; font-size: 12.5px; font-weight: 500; padding: 11px 14px; border-bottom: 1px solid #e3e0d8; }
+  #genCondModal .gcCatTbl th:first-child, #genCondModal .gcCatTbl td:first-child, .gcMock .gcCatTbl th:first-child, #genCondModal .gcCatTbl td:first-child { width: 150px; border-right: 1px solid #e3e0d8; }
+  #genCondModal .gcCatTbl td, .gcMock .gcCatTbl td { font-size: 12.5px; padding: 11px 14px; line-height: 1.6; border-bottom: 1px solid #e3e0d8; }
+  .gcMock .gcBox { max-width: none; box-shadow: none; }
+  .gcMock .gcTabs .gcT { flex: 1; position: relative; text-align: center; padding: 11px 0; font-size: 12px; color: #666; border-bottom: 2px solid transparent; }
+  .gcMock .gcTabs .gcT.on { color: #1a1a1a; font-weight: 700; border-bottom-color: #4a90e2; }
+  .gcMock .gcTabs .gcT .badge { top: -3px; left: 2px; }
+  .gcMock .gcSel, .gcMock .gcPer { display: inline-block; }
+  .gcMock .gcSearch { display: inline-block; }
+  #genCondModal .gcNote, .gcMock .gcNote { margin: 14px 0 0; font-size: 10.5px; color: #777; }
+  #genCondModal .gcEmpty, .gcMock .gcEmpty { padding: 48px 0; text-align: center; color: #aaa; font-size: 12px; }
   #tabSpec .sumRight2 { display: flex; justify-content: flex-end; }
   #tabSpec .sel { min-width: 72px; }
   /* ===== 화면설계서 탭 (좌 목업 / 우 디스크립션 440px) ===== */
@@ -195,7 +237,111 @@
 
     <!-- ===== 탭: 개요 ===== -->
 <div id="tabOverview">
-  <h2 class="ovTitle">채팅리스트/피드(AI) · 개요</h2>
+  <h2 class="ovTitle">상품형 톡피드 소재 자동 생성 - 개요 </h2>
+  <div class="subTabs">
+    <button type="button" class="on" data-sub="ovCond">1. 자동생성 조건</button>
+    <button type="button" data-sub="ovFlow">2. 톡피드 소재 생성 flow</button>
+  </div>
+
+  <!-- ===== 서브 탭 1: 자동생성 조건 (빈 화면) ===== -->
+  <div id="ovCond" class="subPane">
+    <div class="flowWrap">
+      <div>
+        <h3>일 1,500개가 될 때까지 광고주를 순서대로 돌며 생성</h3>
+        <svg width="680" height="830" viewBox="0 0 680 830" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans KR, Malgun Gothic, sans-serif" role="img" aria-label="자동생성 조건 흐름도">
+          <defs>
+            <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#aaa69b"/>
+            </marker>
+          </defs>
+
+          <!-- 연결선 (실선) -->
+          <g stroke="#aaa69b" stroke-width="1.5" fill="none" marker-end="url(#arr2)">
+            <line x1="282" y1="75"  x2="282" y2="100"/>
+            <line x1="282" y1="150" x2="282" y2="183"/>
+            <line x1="282" y1="232" x2="282" y2="261"/>
+            <line x1="282" y1="365" x2="282" y2="378"/>
+            <line x1="282" y1="427" x2="282" y2="443"/>
+            <line x1="282" y1="547" x2="282" y2="572"/>
+            <line x1="282" y1="621" x2="282" y2="638"/>
+            <line x1="282" y1="742" x2="282" y2="767"/>
+            <!-- 생성 대상 광고주? 아니오 → 건너뜀 -->
+            <path d="M432,313 L555,313 L555,376"/>
+            <!-- 만들 상품 있음? 아니오 → 건너뜀 -->
+            <path d="M432,495 L555,495 L555,427"/>
+          </g>
+          <!-- 연결선 (점선: 다음 광고주 루프) -->
+          <g stroke="#bdb9ae" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arr2)">
+            <path d="M635,400 L651,400 L651,207 L417,207"/>
+            <path d="M132,690 L30,690 L30,207 L148,207"/>
+          </g>
+
+          <!-- 분기 라벨 -->
+          <g font-size="11">
+            <text x="454" y="296" fill="#c26a00">아니오</text>
+            <text x="454" y="490" fill="#c26a00">아니오</text>
+            <text x="66" y="684" fill="#c26a00">아니오</text>
+            <text x="292" y="364" fill="#c26a00" font-size="10.5">예</text>
+            <text x="292" y="560" fill="#c26a00" font-size="10.5">예</text>
+            <text x="292" y="755" fill="#c26a00" font-size="10.5">예</text>
+            <text x="62" y="199" fill="#777" text-anchor="middle">다음 광고주</text>
+            <text x="526" y="199" fill="#777" text-anchor="middle">다음 광고주</text>
+          </g>
+
+          <!-- 1. 시작 -->
+          <rect x="150" y="28" width="265" height="47" rx="23.5" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="49" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">생성 배치 실행</text>
+          <text x="282" y="65" font-size="10.5" fill="#777" text-anchor="middle">매일 01:00 · 주말·공휴일 제외</text>
+
+          <!-- 2. 이어서 -->
+          <rect x="150" y="100" width="265" height="50" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="122" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">전날 끊긴 광고주부터 이어서</text>
+          <text x="282" y="139" font-size="10.5" fill="#777" text-anchor="middle">남은 수량을 먼저 생성</text>
+
+          <!-- 3. 다음 광고주 -->
+          <rect x="150" y="183" width="265" height="49" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="205" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">리스트에서 다음 광고주 불러오기</text>
+          <text x="282" y="222" font-size="10.5" fill="#777" text-anchor="middle">1번 → 끝번 순서</text>
+
+          <!-- 4. 분기: 생성 대상 광고주? -->
+          <polygon points="282,261 432,313 282,365 132,313" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="310" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">생성 대상 광고주?</text>
+          <text x="282" y="327" font-size="10.5" fill="#777" text-anchor="middle">이벤트 ON · 제외 카테고리 아님</text>
+
+          <!-- 건너뜀 -->
+          <rect x="477" y="376" width="158" height="49" rx="8" fill="#efede8" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="556" y="397" font-size="12.5" font-weight="700" fill="#555" text-anchor="middle">광고주 건너뜀</text>
+          <text x="556" y="414" font-size="10.5" fill="#888" text-anchor="middle">이미지 생성 안 함</text>
+
+          <!-- 5. Top 100 조회 -->
+          <rect x="150" y="378" width="265" height="49" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="400" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">전환 Top 100 상품 조회</text>
+          <text x="282" y="417" font-size="10.5" fill="#777" text-anchor="middle">1달 안에 생성한 상품은 제외</text>
+
+          <!-- 6. 분기: 만들 상품 있음? -->
+          <polygon points="282,443 432,495 282,547 132,495" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="499" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">만들 상품 있음?</text>
+
+          <!-- 7. AI 생성 -->
+          <rect x="150" y="572" width="265" height="49" rx="8" fill="#e6eefb" stroke="#3b7bd6" stroke-width="2"/>
+          <text x="282" y="594" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">상품 이미지 생성 (AI)</text>
+          <text x="282" y="611" font-size="10.5" fill="#777" text-anchor="middle">광고주당 1일 최대 30개</text>
+
+          <!-- 8. 분기: 일 1,500개 도달? -->
+          <polygon points="282,638 432,690 282,742 132,690" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="694" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">일 1,500개 도달?</text>
+
+          <!-- 9. 종료 -->
+          <rect x="150" y="767" width="265" height="48" rx="24" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="788" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">배치 종료</text>
+          <text x="282" y="804" font-size="10.5" fill="#777" text-anchor="middle">끊긴 광고주의 남은 수량은 다음 생성일에</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 서브 탭 2: 톡피드 소재 생성 flow ===== -->
+  <div id="ovFlow" class="subPane hidden">
       <div class="flowWrap">
         <div>
           <h3>매일 배치: 수집 상품 → AI 배너 → 검수 대기</h3>
@@ -300,6 +446,7 @@
           </table></div>
         </div>
       </div>
+  </div><!-- /ovFlow -->
     </div>
 
 
@@ -372,7 +519,10 @@
             <label><input type="radio" name="pStatus" value="KN">카카오 반려</label>
           </div>
         </div>
-        <button type="button" class="btnLine">자동 반려 조건</button>
+        <div class="btnGroup">
+          <button type="button" class="btnLine">자동 반려 조건</button>
+          <button type="button" class="btnLine" id="btnGenCond">생성 조건</button>
+        </div>
       </div>
     </section>
 
@@ -428,6 +578,60 @@
   </section>
 </div>
 
+<!-- 생성 조건 팝업 -->
+<div id="genCondModal" class="hidden" role="dialog" aria-modal="true" aria-label="생성 대상 광고주">
+  <div class="gcBox">
+    <div class="gcHead"><span>생성 대상 광고주</span><button type="button" class="gcClose" aria-label="닫기">✕</button></div>
+    <div class="gcTabs">
+      <button type="button" class="on" data-gc="gcList">광고주 리스트 (생성 순서)</button>
+      <button type="button" data-gc="gcCat">생성 제외 카테고리</button>
+      <button type="button" data-gc="gcAdv">생성 제외 광고주</button>
+    </div>
+
+    <div id="gcList" class="gcPane">
+      <div class="gcFilter">
+        <select class="gcSel"><option>최근 생성일</option><option>다음 생성 예정일</option></select>
+        <div class="gcDate"><span class="ic">▦</span>2026-10-01 ~ 2026-10-31</div>
+        <button type="button" class="gcSearch">검색</button>
+        <div class="gcRight">
+          <select class="gcPer" aria-label="보기 개수"><option>100개씩 보기</option><option>250개씩 보기</option><option>500개씩 보기</option></select>
+          <button type="button" class="btnGreen">▤ 엑셀</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>순번</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>최근 생성일</th><th>다음 생성 예정일</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>adv_a</td><td>광고주 A</td><td>쇼핑</td><td>2026-10-01</td><td>2026-11-02</td><td>—</td></tr>
+          <tr><td>2</td><td>adv_b</td><td>광고주 B</td><td>성인용품</td><td>—</td><td>—</td><td><span class="gcTag red">제외 카테고리</span></td></tr>
+          <tr><td>3</td><td>adv_c</td><td>광고주 C</td><td>쇼핑</td><td>2026-09-15</td><td>—</td><td><span class="gcTag yel">생성 제외 광고주</span></td></tr>
+          <tr><td>4</td><td>adv_d</td><td>광고주 D</td><td>패션</td><td>—</td><td>2026-10-08</td><td><span class="gcTag blu">신규 광고주</span></td></tr>
+        </tbody>
+      </table>
+      <p class="gcNote">※ 생성 제외 카테고리는 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록</p>
+    </div>
+    <div id="gcCat" class="gcPane hidden">
+      <table class="gcCatTbl">
+        <thead><tr><th>구분</th><th>소카테고리</th></tr></thead>
+        <tbody>
+          <tr><td>성인·의료</td><td>성기능개선, 산부인과(성인), 비뇨기과(성인), 성형외과(성인), 성인기타</td></tr>
+          <tr><td>성인 콘텐츠·용품</td><td>성인웹툰, 성인용품, 성인방송</td></tr>
+          <tr><td>담배</td><td>전자담배/금연용품</td></tr>
+          <tr><td>금융·투자</td><td>가상화폐/블록체인, 빗썸, 제3금융권대출, 보험상조</td></tr>
+          <tr><td>사행·운세</td><td>복권/로또, 스포츠토토, 타로/사주</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="gcAdv" class="gcPane hidden">
+      <table>
+        <thead><tr><th>광고주ID</th><th>광고주명</th></tr></thead>
+        <tbody>
+          <tr><td>adv_c</td><td>광고주 C</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 </div><!-- /tabScreen -->
 
 <!-- ===== 탭: 화면설계서 ===== -->
@@ -454,7 +658,10 @@
       </div>
       <div class="row between">
         <div class="radio" style="padding:0 10px 0 0; align-items:center"><span style="background:#2fb38a; color:#fff; font-weight:700; padding:5px 12px; margin-right:2px">승인상태</span>○전체 <b>●대기</b> ○내부승인 ○승인 ○모비온 반려 ○카카오 반려</div>
-        <button class="btn">자동 반려 조건</button>
+        <div class="row" style="gap:6px">
+          <button class="btn">자동 반려 조건</button>
+          <span class="el"><a class="badge r" href="#d-7">7</a><button class="btn">생성 조건</button></span>
+        </div>
       </div>
     </div>
   </div>
@@ -539,6 +746,76 @@
     <div class="el paging" style="margin-top:16px; width:max-content; margin-inline:auto">
       <a class="badge" href="#d-6">6</a>
       <span>«</span><span class="on">1</span><span>2</span><span>3</span><span>»</span>
+    </div>
+  </div>
+
+  <!-- 7. 생성 조건 팝업 (7 버튼 클릭 시) -->
+  <div class="card gcMock" style="width:max-content; min-width:min(100%, 760px)">
+    <div class="pageTitle" style="font-size:13px">[생성 조건] 클릭 시 팝업 - 생성 대상 광고주</div>
+
+    <div class="gcBox" style="margin-bottom:20px">
+      <div class="gcHead"><span>생성 대상 광고주</span><span class="gcClose">✕</span></div>
+      <div class="gcTabs">
+        <div class="el gcT on"><a class="badge" href="#d-7-1">7-1</a>광고주 리스트 (생성 순서)</div>
+        <div class="el gcT"><a class="badge" href="#d-7-2">7-2</a>생성 제외 카테고리</div>
+        <div class="el gcT"><a class="badge" href="#d-7-3">7-3</a>생성 제외 광고주</div>
+      </div>
+      <div class="gcPane">
+        <div class="gcFilter">
+          <span class="gcSel">최근 생성일 ▾</span>
+          <div class="gcDate"><span class="ic">▦</span>2026-10-01 ~ 2026-10-31</div>
+          <span class="gcSearch">검색</span>
+          <div class="gcRight"><span class="gcPer" style="padding:4px 8px">100개씩 보기 ▾</span><span class="btn grn">▤ 엑셀</span></div>
+        </div>
+        <table>
+          <thead><tr><th>순번</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>최근 생성일</th><th>다음 생성 예정일</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>adv_a</td><td>광고주 A</td><td>쇼핑</td><td>2026-10-01</td><td>2026-11-02</td><td>—</td></tr>
+            <tr><td>2</td><td>adv_b</td><td>광고주 B</td><td>성인용품</td><td>—</td><td>—</td><td><span class="gcTag red">제외 카테고리</span></td></tr>
+            <tr><td>3</td><td>adv_c</td><td>광고주 C</td><td>쇼핑</td><td>2026-09-15</td><td>—</td><td><span class="gcTag yel">생성 제외 광고주</span></td></tr>
+            <tr><td>4</td><td>adv_d</td><td>광고주 D</td><td>패션</td><td>—</td><td>2026-10-08</td><td><span class="gcTag blu">신규 광고주</span></td></tr>
+          </tbody>
+        </table>
+        <p class="gcNote">※ 생성 제외 카테고리는 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록</p>
+      </div>
+    </div>
+
+    <div class="gcBox">
+      <div class="gcHead"><span>생성 대상 광고주</span><span class="gcClose">✕</span></div>
+      <div class="gcTabs">
+        <div class="gcT">광고주 리스트 (생성 순서)</div>
+        <div class="gcT on">생성 제외 카테고리</div>
+        <div class="gcT">생성 제외 광고주</div>
+      </div>
+      <div class="gcPane">
+        <table class="gcCatTbl">
+          <thead><tr><th>구분</th><th>소카테고리</th></tr></thead>
+          <tbody>
+            <tr><td>성인·의료</td><td>성기능개선, 산부인과(성인), 비뇨기과(성인), 성형외과(성인), 성인기타</td></tr>
+            <tr><td>성인 콘텐츠·용품</td><td>성인웹툰, 성인용품, 성인방송</td></tr>
+            <tr><td>담배</td><td>전자담배/금연용품</td></tr>
+            <tr><td>금융·투자</td><td>가상화폐/블록체인, 빗썸, 제3금융권대출, 보험상조</td></tr>
+            <tr><td>사행·운세</td><td>복권/로또, 스포츠토토, 타로/사주</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="gcBox" style="margin-top:20px">
+      <div class="gcHead"><span>생성 대상 광고주</span><span class="gcClose">✕</span></div>
+      <div class="gcTabs">
+        <div class="gcT">광고주 리스트 (생성 순서)</div>
+        <div class="gcT">생성 제외 카테고리</div>
+        <div class="gcT on">생성 제외 광고주</div>
+      </div>
+      <div class="gcPane">
+        <table>
+          <thead><tr><th>광고주ID</th><th>광고주명</th></tr></thead>
+          <tbody>
+            <tr><td>adv_c</td><td>광고주 C</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div></main>
@@ -630,6 +907,38 @@ b. 카카오 반려 사유 발생 시 카카오 반려 사유로 덮어쓰기</p
   <section class="item" id="d-6"><h3><span class="num">6</span>[페이징]</h3><pre class="body">a. 보기 개수(4-3) 단위로 페이지 구분
 b. «, » 클릭 시 이전 · 다음 페이지로 이동하며, 현재 페이지는 파란색으로 표시
 c. 페이지 이동 시 검색 조건 유지</pre></section>
+
+  <section class="item" id="d-7"><h3><span class="num">7</span>[생성 조건]</h3><pre class="body">a. 검색 조건 영역의 [자동 반려 조건] 버튼 옆에 노출
+b. 클릭 시 '생성 대상 광고주' 팝업 오픈
+c. 소재를 생성하는 광고주의 순서와 제외 기준 조회용 팝업
+d. [x] 버튼 클릭시 팝업 닫힘</pre></section>
+
+  <section class="item sub" id="d-7-1"><h3><span class="num">7-1</span>[광고주 리스트 (생성 순서)]</h3><pre class="body">a. 팝업 오픈 시 기본 노출 탭
+b. 해당 리스트의 순서 대로 생성
+c. 조회 조건:
+   c-1. 드롭박스 : 최근생성일(디폴트), 다음 생성 예정일
+   c-2. [검색] 클릭시 조회
+d. 보기 개수: 100개 / 250개 / 500개씩 보기
+   d-1. 기본값 100개, 변경 시 즉시 재조회
+e. [엑셀]: 현재 조회된 테이블 그대로 엑셀로 데이터 다운
+   e-1. 파일명: talkfeedcreative_YYYYMMDD
+f. 컬럼: 순번 / 광고주ID / 광고주명 / 카테고리 / 최근 생성일 / 다음 생성 예정일 / 비고
+   f-1. 최근 생성일 · 다음 생성 예정일이 없는 경우 '—' 노출
+g. 비고
+   g-1. 제외 카테고리
+        : 광고주 카테고리가 생성 제외 카테고리에 해당
+   g-2. 생성 제외 광고주
+   g-3. 신규 광고주: 새로 등록된 광고주
+   g-4. 해당 없는 경우 '—' 노출</pre></section>
+
+  <section class="item sub" id="d-7-2"><h3><span class="num">7-2</span>[생성 제외 카테고리]</h3><pre class="body">a. 소재를 생성하지 않는 카테고리를 구분별로 노출
+b. 컬럼: 구분 / 소카테고리
+c. 구분: 성인·의료 / 성인 콘텐츠·용품 / 담배 / 금융·투자 / 사행·운세
+d. 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록 (한쪽 변경 시 동일하게 반영 필요)</pre></section>
+
+  <section class="item sub" id="d-7-3"><h3><span class="num">7-3</span>[생성 제외 광고주]</h3><pre class="body">a. 소재 생성에서 제외된 광고주 목록 노출
+b. 컬럼: 광고주ID / 광고주명
+c. 이 목록에 있는 광고주는 광고주 리스트(7-1)의 비고에 '생성 제외 광고주'로 노출</pre></section>
 </aside>
 </div>
 
@@ -671,6 +980,26 @@ c. 페이지 이동 시 검색 조건 유지</pre></section>
     ['tabOverview', 'tabScreen', 'tabSpec'].forEach(id => document.getElementById(id).classList.toggle('hidden', id !== btn.dataset.tab));
     window.scrollTo(0, 0);
   }));
+
+  document.querySelectorAll('.subTabs button').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.subTabs button').forEach(b => b.classList.toggle('on', b === btn));
+    ['ovCond', 'ovFlow'].forEach(id => document.getElementById(id).classList.toggle('hidden', id !== btn.dataset.sub));
+  }));
+
+  // 생성 조건 팝업
+  (function () {
+    const modal = document.getElementById('genCondModal');
+    const open = () => modal.classList.remove('hidden');
+    const close = () => modal.classList.add('hidden');
+    document.getElementById('btnGenCond').addEventListener('click', open);
+    modal.querySelector('.gcClose').addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    modal.querySelectorAll('.gcTabs button').forEach(btn => btn.addEventListener('click', () => {
+      modal.querySelectorAll('.gcTabs button').forEach(b => b.classList.toggle('on', b === btn));
+      ['gcList', 'gcCat', 'gcAdv'].forEach(id => document.getElementById(id).classList.toggle('hidden', id !== btn.dataset.gc));
+    }));
+  })();
 
   document.getElementById('allCheck').addEventListener('change', e => {
     document.querySelectorAll('input[name="imageID[]"]').forEach(cb => cb.checked = e.target.checked);
