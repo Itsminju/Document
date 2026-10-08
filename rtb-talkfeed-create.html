@@ -247,8 +247,8 @@
   <div id="ovCond" class="subPane">
     <div class="flowWrap">
       <div>
-        <h3>일 1,500개가 될 때까지 광고주를 순서대로 돌며 생성</h3>
-        <svg width="680" height="830" viewBox="0 0 680 830" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans KR, Malgun Gothic, sans-serif" role="img" aria-label="자동생성 조건 흐름도">
+        <h3>하루 50개 광고주를 순서대로 생성 (광고주당 최대 30개 × 50 = 최대 1,500개)</h3>
+        <svg width="680" height="880" viewBox="0 0 680 880" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans KR, Malgun Gothic, sans-serif" role="img" aria-label="자동생성 조건 흐름도">
           <defs>
             <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill="#aaa69b"/>
@@ -258,34 +258,40 @@
           <!-- 연결선 (실선) -->
           <g stroke="#aaa69b" stroke-width="1.5" fill="none" marker-end="url(#arr2)">
             <line x1="282" y1="75"  x2="282" y2="100"/>
-            <line x1="282" y1="150" x2="282" y2="183"/>
-            <line x1="282" y1="232" x2="282" y2="261"/>
-            <line x1="282" y1="365" x2="282" y2="378"/>
-            <line x1="282" y1="427" x2="282" y2="443"/>
-            <line x1="282" y1="547" x2="282" y2="572"/>
-            <line x1="282" y1="621" x2="282" y2="638"/>
-            <line x1="282" y1="742" x2="282" y2="767"/>
+            <line x1="282" y1="150" x2="282" y2="175"/>
+            <line x1="282" y1="246" x2="282" y2="262"/>
+            <line x1="282" y1="366" x2="282" y2="392"/>
+            <line x1="282" y1="441" x2="282" y2="468"/>
+            <line x1="282" y1="572" x2="282" y2="598"/>
+            <line x1="282" y1="647" x2="282" y2="673"/>
+            <line x1="282" y1="777" x2="282" y2="803"/>
+            <!-- 종료 조건 충족 → 배치 종료 -->
+            <path d="M432,314 L477,314"/>
             <!-- 생성 대상 광고주? 아니오 → 건너뜀 -->
-            <path d="M432,313 L555,313 L555,376"/>
+            <path d="M432,520 L556,520 L556,560"/>
             <!-- 만들 상품 있음? 아니오 → 건너뜀 -->
-            <path d="M432,495 L555,495 L555,427"/>
+            <path d="M432,725 L556,725 L556,609"/>
           </g>
+          <!-- 합류 지점 (C → D) -->
+          <line x1="282" y1="225" x2="282" y2="243" stroke="#aaa69b" stroke-width="1.5"/>
+          <circle cx="282" cy="243" r="3.5" fill="#aaa69b"/>
+
           <!-- 연결선 (점선: 다음 광고주 루프) -->
           <g stroke="#bdb9ae" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arr2)">
-            <path d="M635,400 L651,400 L651,207 L417,207"/>
-            <path d="M132,690 L30,690 L30,207 L148,207"/>
+            <path d="M635,585 L651,585 L651,243 L290,243"/>
+            <path d="M150,827 L30,827 L30,243 L274,243"/>
           </g>
 
           <!-- 분기 라벨 -->
           <g font-size="11">
-            <text x="454" y="296" fill="#c26a00">아니오</text>
-            <text x="454" y="490" fill="#c26a00">아니오</text>
-            <text x="66" y="684" fill="#c26a00">아니오</text>
-            <text x="292" y="364" fill="#c26a00" font-size="10.5">예</text>
-            <text x="292" y="560" fill="#c26a00" font-size="10.5">예</text>
-            <text x="292" y="755" fill="#c26a00" font-size="10.5">예</text>
-            <text x="62" y="199" fill="#777" text-anchor="middle">다음 광고주</text>
-            <text x="526" y="199" fill="#777" text-anchor="middle">다음 광고주</text>
+            <text x="446" y="306" fill="#c26a00">예</text>
+            <text x="292" y="386" fill="#c26a00">아니오</text>
+            <text x="454" y="512" fill="#c26a00">아니오</text>
+            <text x="454" y="717" fill="#c26a00">아니오</text>
+            <text x="292" y="592" fill="#c26a00" font-size="10.5">예</text>
+            <text x="292" y="797" fill="#c26a00" font-size="10.5">예</text>
+            <text x="62" y="235" fill="#777" text-anchor="middle">다음 광고주</text>
+            <text x="520" y="235" fill="#777" text-anchor="middle">다음 광고주</text>
           </g>
 
           <!-- 1. 시작 -->
@@ -293,48 +299,54 @@
           <text x="282" y="49" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">생성 배치 실행</text>
           <text x="282" y="65" font-size="10.5" fill="#777" text-anchor="middle">매일 01:00 · 주말·공휴일 제외</text>
 
-          <!-- 2. 이어서 -->
+          <!-- 2. 신규 광고주 우선 -->
           <rect x="150" y="100" width="265" height="50" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
-          <text x="282" y="122" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">전날 끊긴 광고주부터 이어서</text>
-          <text x="282" y="139" font-size="10.5" fill="#777" text-anchor="middle">남은 수량을 먼저 생성</text>
+          <text x="282" y="122" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">신규 인입 광고주를 맨 앞에 배치</text>
+          <text x="282" y="139" font-size="10.5" fill="#777" text-anchor="middle">전날 인입된 광고주는 다음날 바로 생성</text>
 
-          <!-- 3. 다음 광고주 -->
-          <rect x="150" y="183" width="265" height="49" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
-          <text x="282" y="205" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">리스트에서 다음 광고주 불러오기</text>
-          <text x="282" y="222" font-size="10.5" fill="#777" text-anchor="middle">1번 → 끝번 순서</text>
+          <!-- 3. 이어서 -->
+          <rect x="150" y="175" width="265" height="50" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="197" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">전날 마지막 광고주 다음부터 이어서</text>
+          <text x="282" y="214" font-size="10.5" fill="#777" text-anchor="middle">기존 광고주는 순번 순서대로 진행</text>
 
-          <!-- 4. 분기: 생성 대상 광고주? -->
-          <polygon points="282,261 432,313 282,365 132,313" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
-          <text x="282" y="310" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">생성 대상 광고주?</text>
-          <text x="282" y="327" font-size="10.5" fill="#777" text-anchor="middle">이벤트 ON · 제외 카테고리 아님</text>
+          <!-- 4. 분기: 종료 조건 -->
+          <polygon points="282,262 432,314 282,366 132,314" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="310" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">50개 광고주 처리 완료?</text>
+          <text x="282" y="327" font-size="10.5" fill="#777" text-anchor="middle">생성한 광고주 기준</text>
+
+          <!-- 배치 종료 -->
+          <rect x="477" y="290" width="158" height="48" rx="24" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="556" y="310" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">배치 종료</text>
+          <text x="556" y="326" font-size="10" fill="#777" text-anchor="middle">다음 생성일은 이어서 진행</text>
+
+          <!-- 5. 다음 광고주 -->
+          <rect x="150" y="392" width="265" height="49" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="414" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">리스트에서 다음 광고주 불러오기</text>
+          <text x="282" y="431" font-size="10.5" fill="#777" text-anchor="middle">1번 → 끝번 순서 · 끝번 다음은 1번으로</text>
+
+          <!-- 6. 분기: 생성 대상 광고주? -->
+          <polygon points="282,468 432,520 282,572 132,520" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="517" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">생성 대상 광고주?</text>
+          <text x="282" y="534" font-size="10.5" fill="#777" text-anchor="middle">이벤트 ON · 제외 카테고리 아님</text>
 
           <!-- 건너뜀 -->
-          <rect x="477" y="376" width="158" height="49" rx="8" fill="#efede8" stroke="#c9c5bb" stroke-width="1.5"/>
-          <text x="556" y="397" font-size="12.5" font-weight="700" fill="#555" text-anchor="middle">광고주 건너뜀</text>
-          <text x="556" y="414" font-size="10.5" fill="#888" text-anchor="middle">이미지 생성 안 함</text>
+          <rect x="477" y="560" width="158" height="49" rx="8" fill="#efede8" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="556" y="581" font-size="12.5" font-weight="700" fill="#555" text-anchor="middle">광고주 건너뜀</text>
+          <text x="556" y="598" font-size="10.5" fill="#888" text-anchor="middle">이미지 생성 안 함</text>
 
-          <!-- 5. Top 100 조회 -->
-          <rect x="150" y="378" width="265" height="49" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
-          <text x="282" y="400" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">전환 Top 100 상품 조회</text>
-          <text x="282" y="417" font-size="10.5" fill="#777" text-anchor="middle">1달 안에 생성한 상품은 제외</text>
+          <!-- 7. Top 100 조회 -->
+          <rect x="150" y="598" width="265" height="49" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="620" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">전환 Top 100 상품 조회</text>
+          <text x="282" y="637" font-size="10.5" fill="#777" text-anchor="middle">1달 안에 생성한 상품은 제외</text>
 
-          <!-- 6. 분기: 만들 상품 있음? -->
-          <polygon points="282,443 432,495 282,547 132,495" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
-          <text x="282" y="499" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">만들 상품 있음?</text>
+          <!-- 8. 분기: 만들 상품 있음? -->
+          <polygon points="282,673 432,725 282,777 132,725" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="729" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">만들 상품 있음?</text>
 
-          <!-- 7. AI 생성 -->
-          <rect x="150" y="572" width="265" height="49" rx="8" fill="#e6eefb" stroke="#3b7bd6" stroke-width="2"/>
-          <text x="282" y="594" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">상품 이미지 생성 (AI)</text>
-          <text x="282" y="611" font-size="10.5" fill="#777" text-anchor="middle">광고주당 1일 최대 30개</text>
-
-          <!-- 8. 분기: 일 1,500개 도달? -->
-          <polygon points="282,638 432,690 282,742 132,690" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
-          <text x="282" y="694" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">일 1,500개 도달?</text>
-
-          <!-- 9. 종료 -->
-          <rect x="150" y="767" width="265" height="48" rx="24" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
-          <text x="282" y="788" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">배치 종료</text>
-          <text x="282" y="804" font-size="10.5" fill="#777" text-anchor="middle">끊긴 광고주의 남은 수량은 다음 생성일에</text>
+          <!-- 9. AI 생성 -->
+          <rect x="150" y="803" width="265" height="49" rx="8" fill="#e6eefb" stroke="#3b7bd6" stroke-width="2"/>
+          <text x="282" y="825" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">상품 이미지 생성 (AI)</text>
+          <text x="282" y="842" font-size="10.5" fill="#777" text-anchor="middle">광고주당 1일 최대 30개</text>
         </svg>
       </div>
     </div>
