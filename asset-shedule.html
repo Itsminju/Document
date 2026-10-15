@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>소재그룹 게재 기간 등록 </title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{--ink:#1f2328;--sub:#5b6470;--mute:#8a929c;--line:#e3e6ea;--bg:#f4f5f7;--blue:#1e6fe8;--red:#e5484d;--orange:#e07b00;--green:#2e9e4f;--yellow:#fff6d6}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Pretendard,"Noto Sans KR",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.55}
+  .tabbar{position:fixed;top:0;left:0;right:0;height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:32px;padding:0 24px;z-index:10}
+  .tabbar h1{font-size:16px;margin:0;white-space:nowrap}
+  .tabbar h1 small{font-weight:400;color:var(--mute);margin-left:6px;font-size:13px}
+  .tabbar nav{display:flex;height:100%}
+  .tabbar button{border:0;background:none;font:inherit;font-size:14px;color:var(--sub);padding:0 18px;height:100%;cursor:pointer;border-bottom:3px solid transparent}
+  .tabbar button.on{color:var(--blue);font-weight:700;border-bottom-color:var(--blue)}
+  .tabbar button:focus-visible{outline:2px solid var(--blue);outline-offset:-4px}
+  main{padding-top:56px}
+  .tab{display:none}
+  .tab.on{display:block}
+  .frame{width:100%;height:calc(100vh - 56px);border:0;display:block;background:#fff}
+
+  /* 개요 */
+  .ov{max-width:1080px;margin:0 auto;padding:28px 24px 64px;display:grid;gap:16px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:22px 24px}
+  .card h2{font-size:15px;margin:0 0 14px;display:flex;gap:10px;align-items:baseline}
+  .card h2 .no{color:var(--blue);font-variant-numeric:tabular-nums}
+  .card p{margin:0 0 8px}
+  .note{color:var(--mute);font-size:12px;margin-top:10px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .cols h3{font-size:13px;margin:0 0 8px;color:var(--sub)}
+  ul.plain{margin:0;padding-left:18px}
+  ul.plain li{margin:3px 0}
+  .btns{display:flex;gap:8px;margin-top:16px}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:6px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
+  .btn.pri{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+  table.t{width:100%;border-collapse:collapse;font-size:13px}
+  table.t th,table.t td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  table.t td .tag{margin-left:0}
+  table.t th{background:#f8f9fa;color:var(--sub);font-weight:600}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  .flow span{border:1px solid var(--line);border-radius:6px;padding:6px 10px;background:#f8f9fa;font-size:13px}
+  .flow i{font-style:normal;color:var(--mute)}
+  svg.fc{width:100%;max-width:800px;height:auto;display:block;margin:0 0 14px}
+  svg.fc .ln path{fill:none;stroke:#8a94a0;stroke-width:1.5;marker-end:url(#ar)}
+  svg.fc rect,svg.fc .dm{fill:#f8f9fa;stroke:#c9ced4;stroke-width:1.2}
+  svg.fc .dm,svg.fc rect.st{fill:#eef4ff;stroke:#7aa2e8}
+  svg.fc rect.ok{fill:#eaf7ee;stroke:#74c08a}svg.fc rect.no{fill:#fdeeee;stroke:#e59a9a}
+  svg.fc text{font-size:12.5px;fill:#222;font-family:inherit}svg.fc .sm,svg.fc .lb{font-size:11px;fill:#666}
+  .tag{display:inline-block;font-size:11px;font-weight:600;border-radius:3px;padding:1px 6px;margin-left:4px}
+  .tag.ok{background:#eaf6ec;color:var(--green)}
+  .tag.todo{background:#fff0dc;color:var(--orange)}
+  .tag.keep{background:#f0f0f0;color:var(--sub)}
+  @media (max-width:820px){.cols{grid-template-columns:1fr}.tabbar{gap:12px}.tabbar h1 small{display:none}}
+</style>
+</head>
+<body>
+
+<header class="tabbar">
+  <h1>소재그룹 게재 기간 등록<small>화면 기획 패키지</small></h1>
+  <nav>
+    <button data-tab="overview">개요</button>
+    <button data-tab="demo">데모</button>
+    <button data-tab="spec">화면설계서</button>
+  </nav>
+</header>
+
+<main>
+<!-- ================= 탭 1. 개요 ================= -->
+<section class="tab" id="tab-overview">
+<div class="ov">
+
+  <div class="card">
+    <h2><span class="no">01</span>배경과 목적</h2>
+    <div class="cols">
+      <div>
+        <h3>As-is</h3>
+        <ul class="plain">
+          <li>게재 기간 설정이 캠페인 &gt; 광고그룹까지만 가능</li>
+          <li>소재그룹은 수동 ON/OFF로 운영: 업무 외 시간 대응이 생기고, 누락 등 운영자 휴먼 에러 발생</li>
+          <li>광고그룹을 복사해서 쓰는 경우 예산·데이터가 분산되어 최적화가 어려움</li>
+        </ul>
+      </div>
+      <div>
+        <h3>To-be</h3>
+        <ul class="plain">
+          <li>게재 기간 설정을 캠페인 &gt; 광고그룹 &gt; 소재그룹까지 확장</li>
+          <li>단, 광고그룹의 시작일~종료일 사이에 소재그룹의 게재 기간 커버리지는 100%여야 함
+            <ul class="plain">
+              <li>시작일 상세 조건: 시작일 00시 00분</li>
+              <li>종료일 상세 조건: 종료일 23시 59분</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="no">02</span>변경 범위</h2>
+    <table class="t">
+      <tr><th style="width:44px">No</th><th style="width:150px">화면</th><th style="width:56px">구분</th><th style="width:200px">요구사항</th><th>상세</th><th style="width:72px">설계서</th></tr>
+      <tr><td>1</td><td>광고그룹 등록 &gt; 광고 기간</td><td><span class="tag todo">신규</span></td><td>소재그룹 기간 안내 문구 추가</td><td>기존 안내 문구 아래에 노출.<br>스타일은 기존 문구와 동일</td><td>1-2</td></tr>
+      <tr><td>2</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>게재 기간 관리 버튼</td><td>광고그룹 미선택 시 얼럿 "광고그룹을 선택해주세요".<br>클릭 시 해당 광고그룹 기준 팝업, 설정 방식 기본값 일괄 적용</td><td>2-1</td></tr>
+      <tr><td>3</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>게재 기간 컬럼</td><td>상태 컬럼 우측에 열 삽입. "시작일 00:00 / ~ 종료일 23:59" 또는 "~ 종료일 미설정".<br>시작일 정렬, 컬럼설정·다운로드 포함</td><td>2-2</td></tr>
+      <tr><td>4</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>소재그룹 수동 OFF 시 유효성 체크</td><td>OFF 변경 시 게재 기간 커버리지 검사.<br>조건 미충족 시 얼럿, OFF 처리 불가</td><td>2-3</td></tr>
+      <tr><td>5</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>설정 방식 선택</td><td>일괄 적용(기본) / 소재그룹별 설정</td><td>3-2</td></tr>
+      <tr><td>6</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>일괄 적용</td><td>[적용] 클릭 시 전체 소재그룹의 게재 기간을 광고그룹 기간과 동일하게 변경</td><td>3-3</td></tr>
+      <tr><td>7</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>날짜 단위 입력·검증</td><td>시작일 00:00, 종료일 23:59 고정.<br>설정 범위 밖이거나 시작일 &gt; 종료일이면 저장 불가</td><td>3-4</td></tr>
+      <tr><td>8</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>게재 기간 커버리지 검증</td><td>설정 범위 전체가 채워져야(100%) 저장 가능.<br>[저장] 클릭 시 검사, 공백 구간은 얼럿으로 안내</td><td>3-6</td></tr>
+      <tr><td>9</td><td>광고그룹 등록</td><td><span class="tag keep">유지</span></td><td>광고 기간 입력 방식, 광고 일정</td><td>변경 없음</td><td>-</td></tr>
+      <tr><td>10</td><td>소재그룹 목록</td><td><span class="tag keep">유지</span></td><td>기존 컬럼·필터·지표·다운로드</td><td>변경 없음</td><td>-</td></tr>
+      <tr><td>11</td><td>공통</td><td><span class="tag keep">유지</span></td><td>광고그룹당 소재그룹 최소 1개 연결 규칙(ON/OFF)</td><td>변경 없음</td><td>-</td></tr>
+    </table>
+    <div class="btns">
+      <button class="btn pri" data-go="demo">데모 보기</button>
+      <button class="btn" data-go="spec">화면설계서 보기</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="no">03</span>용어 정의</h2>
+    <table class="t">
+      <tr><th style="width:170px">용어</th><th>정의 / 계산식</th></tr>
+      <tr><td>광고 기간</td><td>광고그룹의 시작일시 ~ 종료일시.<br>종료일시를 "없음"으로 두면 목록에 "종료일 미설정"으로 표시합니다.</td></tr>
+      <tr><td>게재 기간</td><td>소재그룹이 게재되는 기간.<br>날짜 단위로 설정하며 시작일 00:00 ~ 종료일 23:59로 고정됩니다.<br>기본값은 광고그룹 시작일 ~ 종료일입니다.</td></tr>
+      <tr><td>설정 범위</td><td>소재그룹 게재 기간을 설정할 수 있는 범위 = 광고그룹 시작일 00:00 ~ 종료일 23:59. 광고 기간의 시각(예: 15:00)과 관계없이 날짜 기준입니다.</td></tr>
+      <tr><td>게재 기간 커버리지</td><td>설정 범위의 모든 날짜가 소재그룹 게재 기간으로 채워진 정도(%).<br>빈 날짜 없이 100%로 채워져야 저장할 수 있습니다.<br>광고 기간이 종료일 미설정이면 종료일 미설정 소재그룹이 1개 이상 있어야 100%가 됩니다.</td></tr>
+      <tr><td>공백 구간</td><td>설정 범위 중 어떤 소재그룹의 게재 기간에도 포함되지 않는 구간.</td></tr>
+      <tr><td>일괄 적용 / 소재그룹별 설정</td><td>게재 기간 관리 팝업의 설정 방식.<br>일괄 적용은 전체 소재그룹의 게재 기간을 광고그룹 기간과 동일하게 변경하고, 소재그룹별 설정은 행마다 직접 수정합니다.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="no">04</span>핵심 로직</h2>
+    <svg class="fc" viewBox="0 0 800 210" role="img" aria-label="게재 기간 저장 흐름도">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a94a0"/></marker></defs>
+      <g class="ln"><path d="M130 60H160"/><path d="M300 60H330"/><path d="M450 60H480"/><path d="M600 60H650"/><path d="M540 90V150"/><path d="M480 175H390V90"/></g>
+      <rect x="10" y="35" width="120" height="50" rx="8" class="st"/><rect x="160" y="35" width="140" height="50" rx="8"/><rect x="330" y="35" width="120" height="50" rx="8"/><rect x="650" y="35" width="120" height="50" rx="8" class="ok"/><rect x="480" y="150" width="120" height="50" rx="8" class="no"/>
+      <path d="M540 30L600 60L540 90L480 60z" class="dm"/>
+      <g text-anchor="middle">
+        <text x="70" y="64">광고 기간 설정</text>
+        <text x="230" y="55">게재 기간 기본값</text><text x="230" y="72" class="sm">시작일 00:00 ~ 종료일 23:59</text>
+        <text x="390" y="55">설정 범위 안에서</text><text x="390" y="72">날짜 단위 수정</text>
+        <text x="540" y="56">저장 시</text><text x="540" y="71" class="sm">커버리지 100%?</text>
+        <text x="710" y="64">저장</text>
+        <text x="540" y="171">공백 구간 안내</text><text x="540" y="188">저장 불가</text>
+        <text x="625" y="50" class="lb">예</text><text x="552" y="125" class="lb" text-anchor="start">아니오</text>
+        <text x="435" y="168" class="lb">다시 수정</text>
+      </g>
+    </svg>
+    <table class="t">
+      <tr><th style="width:260px">상황</th><th style="width:240px">판단</th><th>결과</th></tr>
+      <tr><td>설정 범위 밖 날짜, 시작일 &gt; 종료일</td><td>행 단위 검증 (같은 날 시작·종료는 허용)</td><td>입력칸 빨간 테두리, 저장 불가</td></tr>
+      <tr><td>공백 구간 있음</td><td>게재 기간 커버리지 &lt; 100%</td><td>저장 시 얼럿, 저장 불가</td></tr>
+      <tr><td>광고 기간 종료일 미설정</td><td>종료일 미설정 소재그룹 1개 이상</td><td>없으면 마지막 종료일 이후가 공백</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="no">05</span>기존 소재그룹 마이그레이션</h2>
+    <table class="t">
+      <tr><th style="width:170px">구분</th><th>내용</th></tr>
+      <tr><td>마이그레이션 조건</td><td>캠페인 상태 ON<br>광고그룹 상태 ON<br>소재그룹 게재 상태 ON</td></tr>
+      <tr><td>기간 조건</td><td>광고그룹과 동일</td></tr>
+    </table>
+  </div>
+
+</div>
+</section>
+
+<section class="tab" id="tab-demo"><iframe class="frame" id="f-demo" title="데모"></iframe></section>
+<section class="tab" id="tab-spec"><iframe class="frame" id="f-spec" title="화면설계서"></iframe></section>
+</main>
+
+<!-- ================= 탭 2. 데모 (독립 페이지) ================= -->
+<template id="tpl-demo">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{--ink:#222;--sub:#555;--mute:#999;--line:#e3e3e3;--blue:#1e6fe8;--red:#e5484d;--orange:#e07b00;--green:#43a047;--yellow:#fffbea}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Pretendard,"Noto Sans KR",sans-serif;color:var(--ink);font-size:13px;background:#f3f4f6}
+  button,input,select{font:inherit}
+  .switch{display:flex;gap:6px;align-items:center;background:#2b2f36;color:#cfd3d8;padding:8px 16px;font-size:12px}
+  .switch button{background:#3b414b;color:#fff;border:0;border-radius:4px;padding:5px 10px;cursor:pointer}
+  .switch button.on{background:var(--blue)}
+  .switch .n{margin-left:auto;color:#9aa1aa}
+  .gnb{height:56px;background:#fff;display:flex;align-items:center;padding:0 20px;gap:18px;border-bottom:1px solid #eee}
+  .logo{color:#2bb24c;font-weight:900;font-size:26px;letter-spacing:-.5px}
+  .gnb .sp{flex:1}
+  .gnb .ic{font-size:11px;color:#444;text-align:center}
+  .gnb .ic i{display:block;width:20px;height:20px;margin:0 auto 2px;border:1.5px solid #777;border-radius:4px}
+  .gnb .user{text-align:right;font-size:12px;line-height:1.4;border-left:1px solid #ddd;padding-left:16px}
+  .gnb .out{color:var(--blue);font-size:12px}
+  .hide{display:none!important}
+
+  /* 광고그룹 등록 화면 (기존 재현, 동작 없음) */
+  .wiz{display:flex;min-height:calc(100vh - 92px)}
+  .steps{width:226px;background:#fff;padding:16px 0}
+  .steps .t{padding:0 14px 14px;border-bottom:1px solid #eee;font-weight:500}
+  .steps .s{padding:14px;color:#999;display:flex;gap:10px;align-items:center}
+  .steps .s b{width:20px;height:20px;border-radius:50%;background:#e8e8e8;color:#999;font-size:11px;display:grid;place-items:center;font-weight:400}
+  .steps .s.on{color:#111;font-weight:700;font-size:14px}.steps .s.on b{background:var(--blue);color:#fff}
+  .steps .sub{padding:0 0 8px 60px;color:#555;font-size:12px;line-height:2.3}
+  .wcards{flex:1;display:flex;flex-direction:column;align-items:center;gap:22px;padding:10px 20px 40px}
+  .wcard{width:100%;max-width:1090px;background:#fff;border:1px solid var(--line)}
+  .wcard h3{margin:0;padding:16px 26px;border-bottom:1px solid var(--line);font-size:15px}
+  .wbody{padding:22px 26px;display:flex;gap:16px}
+  .wbody .l{flex:1}
+  .wbody .r{width:250px;border-left:1px solid var(--line);padding-left:16px;color:#555;line-height:1.6}
+  .lbl{color:#555;font-size:12px;margin:0 0 8px}
+  .sel{display:inline-flex;justify-content:space-between;align-items:center;height:52px;border:1px solid #bdbdbd;padding:0 14px;width:230px;background:#fff}
+  .sel.sm{width:120px}.sel.dis{background:#eee;border-color:#d6d6d6}
+  .sel::after{content:"";border:5px solid transparent;border-top-color:#555;margin-top:5px}
+  .sel.dis::after{border-top-color:#bbb}
+  .rad{display:flex;align-items:center;gap:8px;margin:10px 0}
+  .rad i{width:18px;height:18px;border-radius:50%;border:1.5px solid #9e9e9e;display:inline-block}
+  .rad i.on{border:5px solid var(--blue)}
+
+  /* 소재그룹 목록 */
+  .app{display:flex;min-height:calc(100vh - 92px)}
+  .rail{width:58px;background:var(--green);border-radius:0 28px 28px 0;margin-top:6px;height:350px;padding-top:22px;display:flex;flex-direction:column;align-items:center;gap:22px}
+  .rail i{width:18px;height:18px;border:1.5px solid #fff;border-radius:4px}
+  .rail i.on{width:36px;height:36px;background:#fff;border:0;border-radius:8px}
+  .menu{width:202px;margin:4px 12px;}
+  .menu .box{background:#fff;border-radius:16px;padding:12px 6px}
+  .menu .h{color:var(--green);font-size:11px;padding:6px 16px 10px}
+  .menu .it{padding:14px 20px;font-size:11px}
+  .menu .it.on{background:var(--green);color:#fff;font-weight:700;border-radius:22px}
+  .menu .ex{padding:24px 18px 0;font-size:11px;line-height:4}
+  .main{flex:1;min-width:0;background:#fff;padding:2px 20px 40px}
+  .filters{display:flex;gap:8px;padding:2px 0 14px;border-bottom:1px solid var(--line);align-items:center}
+  .fbox{border:1px solid #bdbdbd;padding:6px 10px;font-size:9px;color:#555;min-width:96px;background:#fff}
+  .fbox select{display:block;border:0;padding:0;margin-top:1px;font-size:10px;color:#222;background:none;cursor:pointer;max-width:190px}
+  .fbox.act{border:1.5px solid var(--blue)}
+  .fbox.date{margin-left:auto;font-size:10px;color:#222;padding:14px 12px}
+  h2.ttl{font-size:18px;font-weight:500;margin:14px 0}
+  .tools{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+  .pill{border:1px solid #d6d6d6;background:#fff;border-radius:18px;padding:7px 16px;font-size:11px;color:#333}
+  .pill.pri{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+  .pill.blue{color:var(--blue)}
+  .pill.new{border:1.5px solid var(--blue);color:var(--blue);font-weight:700;cursor:pointer}
+  .pill.new:disabled,.pill.new.off{border-color:#d6d6d6;color:#b5b5b5}
+  .tools .r{margin-left:auto;display:flex;gap:8px}
+  .tw{overflow-x:auto;border-top:1px solid var(--line)}
+  table.list{border-collapse:collapse;min-width:1300px;width:100%}
+  .list th,.list td{border-bottom:1px solid #e6e6e6;padding:10px 8px;text-align:center;font-size:11px;white-space:nowrap}
+  .list th{font-weight:500;color:#333;height:58px}
+  .list td.nm,.list th.nm{text-align:left;border-right:1px solid #e6e6e6}
+  .list tr.sum td{background:#fafafa}
+  .nmw{display:flex;gap:10px;align-items:center}
+  .th{width:48px;height:48px;flex:none}
+  .lnk{color:var(--blue)}
+  .st{color:var(--orange);line-height:1.6}
+  .cb{width:13px;height:13px;border:1px solid #888;border-radius:2px;display:inline-block;vertical-align:middle}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-left:10px;vertical-align:middle;cursor:pointer;box-shadow:0 0 0 4px transparent}
+  .dot:hover{box-shadow:0 0 0 4px #e6f4e8}
+  .dot.off{background:#e53935}
+  .dot.off:hover{box-shadow:0 0 0 4px #fdecec}
+  .smenu{position:absolute;z-index:50;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.14);padding:4px 0;min-width:110px}
+  .smenu div{padding:8px 16px;cursor:pointer;display:flex;gap:8px;align-items:center;font-size:12px}
+  .smenu div:hover{background:#f4f6f8}
+  .smenu i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .per{line-height:1.6;position:relative}
+  .tg{display:inline-block;font-size:10px;font-weight:600;border-radius:3px;padding:0 5px}
+  .tg.ind{background:#fff0dc;color:var(--orange)}
+  .tg.same{background:#f0f0f0;color:#777}
+  .tg.chg{background:#fff6d6;color:#b88a00}
+
+  /* 팝업 */
+  .dim{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:40px 16px;z-index:50}
+  .modal{background:#fff;border-radius:8px;width:1000px;max-width:100%;padding:26px 30px 22px}
+  .mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .mh h3{margin:0;font-size:18px}
+  .x{border:0;background:none;font-size:22px;cursor:pointer;color:#555}
+  .info{background:#f7f8fa;border-radius:6px;padding:12px 16px;line-height:1.9}
+  .info span{display:inline-block;width:72px;color:#888}
+  .info b{color:var(--blue)}
+  .mode{display:flex;gap:22px;align-items:center;margin:18px 0}
+  .mode strong{width:72px}
+  .mode label{display:flex;gap:6px;align-items:center;cursor:pointer}
+  .bulk{background:#f5f9ff;border:1px solid #d6e4ff;border-radius:6px;padding:12px 16px;margin-bottom:16px}
+  .bulk .h{color:#1e4fa8;font-weight:700;margin-bottom:8px}
+  .rg{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .rg input{height:32px;border:1px solid #bdbdbd;border-radius:2px;padding:0 6px;background:#fff}
+  .rg input[type=date]{width:150px}
+  .rg .fx{color:#888;font-size:12px;margin-right:4px}
+  .mr .rg{flex-wrap:nowrap}
+  .rg input:disabled{background:#f2f2f2;color:#999;border-color:#ddd}
+  .rg .til{color:#888}
+  .bbtn{border:1px solid #ccc;background:#fff;border-radius:4px;padding:6px 16px;cursor:pointer}
+  .link{border:0;background:none;color:var(--blue);text-decoration:underline;cursor:pointer;padding:0 4px}
+  .msg{color:var(--red);font-size:12px;margin-top:6px}
+  .ml{border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .mr{display:flex;align-items:center;gap:12px;padding:9px 16px;border-top:1px solid #eee}
+  .mr:first-child{border-top:0;background:#fafafa;color:#888;font-size:12px}
+  .mr .n{width:170px;flex:none;display:flex;gap:8px;align-items:center}
+  .mr .p{flex:1}
+  .mr .k{width:130px;flex:none;text-align:right}
+  .mr.pv,.mr.chgd{background:var(--yellow)}
+  .mr.pv input:disabled{background:#fffbea;color:#222;border-color:#f2e2a0}
+  .mr.chgd input{border-color:#f2b705}
+  .mr.focus{box-shadow:inset 3px 0 0 var(--blue)}
+  .mr input.err{border-color:var(--red)!important;background:#fdecec!important}
+  .cov{margin-top:18px}
+  .cov .h{display:flex;gap:8px;align-items:baseline}
+  .cov .h small{color:#888}
+  .bar{position:relative;height:14px;border-radius:7px;background:var(--green);overflow:hidden;margin:10px 0 4px}
+  .bar i{position:absolute;top:0;bottom:0;background:var(--red)}
+  .ends{display:flex;justify-content:space-between;color:#888;font-size:11px}
+  .res{border-radius:4px;padding:10px 14px;margin-top:10px}
+  .res.ok{background:#eaf6ec;color:#2e7d32}
+  .res.ng{background:#fdecec;color:var(--red)}
+  .mf{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+  .mf button{padding:10px 20px;border-radius:4px;border:1px solid #ccc;background:#fff;cursor:pointer}
+  .mf .save{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+  .mf .save:disabled{opacity:.4;cursor:not-allowed}
+  .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:#2b2f36;color:#fff;padding:10px 18px;border-radius:6px;z-index:60}
+  button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+</style>
+
+<div class="switch">
+  데모 화면
+  <button data-s="ad">광고그룹 등록 · 광고 기간</button>
+  <button data-s="list" class="on">소재그룹 목록</button>
+  <span class="n">사용법: [게재 기간 관리] 버튼 클릭 → 팝업에서 수정·저장. 버튼은 광고그룹을 선택했을 때만 활성. 기존 화면은 그림만 재현, 수치는 예시값</span>
+</div>
+<div class="gnb">
+  <span>☰</span><span class="logo">MOBON</span><span class="sp"></span>
+  <span class="ic"><i></i>아이젠트</span><span class="ic"><i></i>타임보드</span><span class="ic"><i></i>비디오애드</span><span class="ic"><i></i>공지사항</span><span class="ic"><i></i>관리자 메모</span>
+  <span class="user">enp_mjjeon<br>개발지원본부_전민주</span><span class="out">Log out</span>
+</div>
+
+<!-- 화면 A: 광고그룹 등록 > 광고 기간 (기존 재현) -->
+<div id="scr-ad" class="wiz hide">
+  <div class="steps">
+    <div class="t">쇼핑 ROAS</div>
+    <div class="s"><b>1</b>캠페인 설정</div>
+    <div class="s on"><b>2</b>광고그룹</div>
+    <div class="sub">광고그룹 이름<br>광고 기간<br>광고 일정<br>광고 형태<br>예산<br>단가</div>
+    <div class="s"><b>3</b>타겟팅</div><div class="s"><b>4</b>소재그룹</div><div class="s"><b>5</b>자동생성 결과 확인</div><div class="s"><b>6</b>검토</div>
+  </div>
+  <div class="wcards">
+    <div class="wcard"><h3>광고그룹 이름</h3><div class="wbody"><div class="l"><span class="sel" style="width:320px">ROAS_121%_202610151141</span> &nbsp;<span class="lnk">22</span> / 최대 200자</div></div></div>
+    <div class="wcard"><h3>광고 기간</h3>
+      <div class="wbody">
+        <div class="l">
+          <p class="lbl">시작일시</p><span class="sel">2026년 10월 15일</span> <span class="sel sm">11:00</span>
+          <p class="lbl" style="margin-top:22px">종료일시</p>
+          <div class="rad"><i class="on"></i>없음</div>
+          <div class="rad"><i></i><span class="sel dis"></span><span class="sel sm dis"></span></div>
+        </div>
+        <div class="r">종료일시를 지정하지 않으면 광고가 계속 게재됩니다.<br><br>설정한 광고 기간은 소재그룹의 게재 기간에 자동으로 적용됩니다. 소재그룹별로 기간을 다르게 설정하려면 소재그룹 생성·수정 화면에서 광고 기간 내로 변경할 수 있습니다.</div>
+      </div>
+    </div>
+    <div class="wcard"><h3>광고 일정</h3><div class="wbody"><div class="l"><div class="rad"><i class="on"></i>전체</div><div class="rad"><i></i>평일</div><div class="rad"><i></i>주말</div><div class="rad"><i></i>수동 설정</div></div><div class="r">광고가 게재되는 시점을 제한하려면 광고 일정을 설정합니다. 그러면 광고가 이 기간 동안만 게재됩니다.</div></div></div>
+  </div>
+</div>
+
+<!-- 화면 B: 소재그룹 목록 -->
+<div id="scr-list" class="app">
+  <div><div class="rail"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  <div class="menu"><div class="box"><div class="h">캠페인</div><div class="it">캠페인</div><div class="it">광고그룹</div><div class="it on">소재그룹</div></div><div class="ex">보고서<br>에셋</div></div>
+  <div class="main">
+    <div class="filters">
+      <div class="fbox">캠페인(1개)<select disabled><option>캠페인 선택</option></select></div>
+      <div class="fbox" id="fAg">광고그룹(<span id="agCnt"></span>개)<select id="agSel"></select></div>
+      <div class="fbox">소재그룹(<span id="cgCnt"></span>개)<select disabled><option>소재그룹 선택</option></select></div>
+      <div class="fbox date">2026년 10월 01일 ~ 2026년 10월 14일 ▾</div>
+    </div>
+    <h2 class="ttl">소재그룹</h2>
+    <div class="tools">
+      <span class="pill pri">＋ 소재그룹 추가</span><span class="pill blue">필터 추가</span>
+      <button class="pill new" id="btnManage">게재 기간 관리</button>
+      <div class="r"><span class="pill">컬럼설정</span><span class="pill">다운로드</span><span class="pill">UTM 업로드 양식</span><span class="pill">UTM 대량 업로드</span></div>
+    </div>
+    <div class="tw"><table class="list"><thead><tr>
+      <th style="width:70px"><span class="cb"></span><span class="dot" style="background:#444"></span></th><th class="nm">소재그룹 명 ↑</th><th>소재그룹NO ↑</th><th>광고그룹 명 ↑</th><th>캠페인 명 ↑</th><th>상태 ↑</th><th>게재 기간 ↑</th><th>노출 비율 기준 ↑</th><th>노출수 ↑</th><th>클릭수 ↑</th><th>소진금액 ↑</th>
+    </tr></thead><tbody id="tb"></tbody></table></div>
+  </div>
+</div>
+
+<div class="dim hide" id="dim"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="소재그룹 게재 기간 관리"></div></div>
+<div class="toast hide" id="toast"></div>
+
+<script>
+// ===== 데이터 (모든 값은 예시값) — 실데이터 연결 시 이 객체만 API 응답으로 교체 =====
+const DATA = {
+  // 광고그룹 광고 기간은 기존대로 날짜 + 시간
+  adGroups: [
+    { id: 'AG1', name: '광고그룹명_데모1', campaign: '캠페인명_데모', start: '2026-04-22 11:00', end: null },
+    { id: 'AG2', name: '광고그룹명_데모2', campaign: '캠페인명_데모', start: '2026-04-27 15:00', end: '2026-11-30 23:59' }
+  ],
+  // 소재그룹 게재 기간은 날짜 단위 (시작일 00:00, 종료일 23:59 고정). end: null = 종료일 미설정
+  // ratio·지표는 기존 화면 재현용 예시값
+  creativeGroups: [
+    { no: 83536, name: '소재그룹명_데모1', ag: 'AG1', start: '2026-08-12', end: null, ratio: '100%', linked: true, thumb: '#ececec' },
+    { no: 83532, name: '소재그룹명_데모5', ag: 'AG2', start: '2026-04-27', end: '2026-10-31', ratio: '13.08%', linked: true, thumb: '#d9cfc2' },
+    { no: 83481, name: '소재그룹명_데모6', ag: 'AG2', start: '2026-05-01', end: '2026-05-31', ratio: '13.08%', linked: true, thumb: '#d9cfc2' },
+    { no: 81543, name: '소재그룹명_데모7', ag: 'AG2', start: '2026-04-27', end: '2026-11-30', ratio: '12.86%', linked: true, thumb: '#fbf5b8' },
+    { no: 81542, name: '소재그룹명_데모8', ag: 'AG2', start: '2026-04-27', end: '2026-11-30', ratio: '12.86%', linked: true, thumb: '#fbf5b8' },
+    { no: 81338, name: '소재그룹명_데모2', ag: 'AG1', start: '2026-04-22', end: null, ratio: '20.87%', linked: true, thumb: '#fbf5b8' },
+    { no: 81337, name: '소재그룹명_데모3', ag: 'AG1', start: '2026-04-25', end: '2026-04-30', ratio: '20.87%', linked: true, thumb: '#fbf5b8' },
+    { no: 80935, name: '소재그룹명_데모4', ag: 'AG1', start: '2026-04-22', end: null, ratio: '19.89%', linked: true, thumb: '#fbf5b8' }
+  ]
+};
+
+// ===== 공통 =====
+const MIN = 60000, DAY = 86400000;
+const $ = s => document.querySelector(s);
+const dayStart = d => new Date(d + 'T00:00:00').getTime();       // 시작일 00:00
+const dayEndEx = d => dayStart(d) + DAY;                          // 종료일 23:59 의 다음 분(계산용)
+const pad = n => String(n).padStart(2, '0');
+const fmt = t => { const x = new Date(t); return `${x.getFullYear()}-${pad(x.getMonth() + 1)}-${pad(x.getDate())} ${pad(x.getHours())}:${pad(x.getMinutes())}`; };
+const dateOf = s => s ? s.slice(0, 10) : null;                    // '2026-04-27 15:00' → '2026-04-27'
+const adOf = id => DATA.adGroups.find(a => a.id === id);
+const cgsOf = id => DATA.creativeGroups.filter(c => c.ag === id);
+// 소재그룹 기준 범위: 광고그룹 시작일 00:00 ~ 종료일 23:59
+const rangeOf = a => ({ start: dateOf(a.start), end: dateOf(a.end) });
+const sameAsAd = (p, a) => { const r = rangeOf(a); return p.start === r.start && p.end === r.end; };
+const startText = d => `${d} 00:00`;
+const endText = d => d ? `${d} 23:59` : '종료일 미설정';
+
+// 게재 기간 커버리지: 광고그룹 시작일 00:00 ~ 종료일 23:59 중 소재그룹이 덮지 못한 구간(gaps)과 비율
+function coverage(a, periods) {
+  const r = rangeOf(a);
+  const S = dayStart(r.start), E = r.end ? dayEndEx(r.end) : Infinity;
+  const iv = periods.filter(p => p.start)
+    .map(p => [Math.max(dayStart(p.start), S), p.end ? Math.min(dayEndEx(p.end), E) : E])
+    .filter(x => x[1] > x[0]).sort((x, y) => x[0] - y[0]);
+  const gaps = []; let cur = S;
+  for (const [s, e] of iv) { if (s > cur) gaps.push([cur, s]); cur = Math.max(cur, e); }
+  if (cur < E) gaps.push([cur, E]);
+  const ends = periods.filter(p => p.end).map(p => dayEndEx(p.end));
+  const H = r.end ? E : Math.max(S + DAY, ...ends) + 30 * DAY; // 종료일 미설정이면 표시용 범위
+  const gapLen = gaps.reduce((t, [s, e]) => t + Math.min(e, H) - Math.min(s, H), 0);
+  const pct = gaps.length ? Math.floor((1 - gapLen / (H - S)) * 1000) / 10 : 100;
+  return { S, H, gaps, pct, r };
+}
+
+// ===== 화면 전환 (데모 내부) =====
+document.querySelectorAll('.switch button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.switch button').forEach(x => x.classList.toggle('on', x === b));
+  $('#scr-ad').classList.toggle('hide', b.dataset.s !== 'ad');
+  $('#scr-list').classList.toggle('hide', b.dataset.s !== 'list');
+});
+
+// ===== 소재그룹 목록 =====
+let agFilter = ''; // 디폴트: 광고그룹 미선택
+$('#agSel').innerHTML = '<option value="">광고그룹 선택</option>' + DATA.adGroups.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+$('#agSel').value = agFilter;
+$('#agSel').onchange = e => { agFilter = e.target.value; renderList(); };
+
+function renderList() {
+  const rows = DATA.creativeGroups.filter(c => !agFilter || c.ag === agFilter);
+  $('#agCnt').textContent = DATA.adGroups.length;
+  $('#cgCnt').textContent = rows.length;
+  $('#fAg').classList.toggle('act', !!agFilter);
+  $('#btnManage').classList.toggle('off', !agFilter);
+  const linked = rows.filter(c => c.linked).length;
+  let html = `<tr class="sum"><td></td><td class="nm"><span class="lnk">전체 ⓘ</span><br>(연결 ${linked}개 / 미연결 ${rows.length - linked}개)</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="lnk">0</td><td class="lnk">0</td><td style="color:var(--red)">0</td></tr>`;
+  html += rows.map(c => {
+    const a = adOf(c.ag);
+    const tag = "";
+    return `<tr>
+      <td><span class="cb"></span><span class="dot ${c.linked ? '' : 'off'}" data-no="${c.no}" role="button" aria-label="${c.name} ON/OFF 변경" title="ON/OFF 변경"></span></td>
+      <td class="nm"><div class="nmw"><span class="th" style="background:${c.thumb}"></span><div>${c.name}<br><span class="lnk">애셋 세부정보 보기</span></div></div></td>
+      <td>${c.no}</td><td>${a.name}</td><td>${a.campaign}</td>
+      <td class="st">제한됨<br>광고그룹 중지</td>
+      <td class="per">${startText(c.start)}<br>~ ${endText(c.end)}${tag}</td>
+      <td>${c.ratio}</td><td>0</td><td>0</td><td style="color:var(--red)">0</td></tr>`;
+  }).join('');
+  $('#tb').innerHTML = html;
+}
+$('#btnManage').onclick = () => agFilter ? openModal(agFilter, null) : alert('광고그룹을 선택해주세요');
+
+// ===== 게재 기간 관리 팝업 =====
+let M = null; // { a, mode, draft, checked, bulk, focus, notice }
+function openModal(agId, focusNo) {
+  const a = adOf(agId);
+  const draft = {};
+  cgsOf(agId).forEach(c => draft[c.no] = { start: c.start, end: c.end, tag: '' });
+  M = { a, mode: focusNo ? 'each' : 'bulk', draft, checked: new Set(), bulk: rangeOf(a), focus: focusNo, notice: '' };
+  $('#dim').classList.remove('hide');
+  renderModal();
+}
+const closeModal = () => { $('#dim').classList.add('hide'); M = null; };
+
+// 오류 행: 시작일 없음 / 광고그룹 시작일 이전 / 광고그룹 종료일 이후(또는 종료일 비움) / 시작일 > 종료일
+function rowError(p, a) {
+  const r = rangeOf(a);
+  if (!p.start) return true;
+  if (r.end && (!p.end || p.end > r.end)) return true;
+  if (p.end && p.end < p.start) return true;
+  return false;
+}
+function rangeInputs(key, p, disabled, err, a) {
+  const d = disabled ? 'disabled' : '', c = err ? 'class="err"' : '';
+  const lim = (a && key !== 'bulk') ? `${p.start ? ` min="${p.start}"` : ''}${rangeOf(a).end ? ` max="${rangeOf(a).end}"` : ''}` : '';
+  return `<div class="rg">
+    <input type="date" data-key="${key}" data-f="start" value="${p.start || ''}" ${d} ${c} aria-label="시작일"><span class="fx">00:00</span>
+    <span class="til">~</span>
+    <input type="date" data-key="${key}" data-f="end" value="${p.end || ''}" ${d} ${c}${lim} aria-label="종료일"><span class="fx">23:59</span>
+  </div>`;
+}
+
+// 저장 클릭 시 유효성 검사: 오류 메시지 배열 반환 (비어 있으면 통과)
+function validateModal() {
+  const { a, draft } = M;
+  const list = cgsOf(a.id);
+  const errCnt = list.filter(c => rowError(draft[c.no], a)).length;
+  if (errCnt) return [`설정 범위를 벗어나거나 시작일이 종료일보다 늦은 소재그룹이 ${errCnt}개 있습니다.`];
+  return gapMessages(a, list.filter(c => c.linked).map(c => draft[c.no])); // OFF(미연결) 소재그룹은 커버리지 계산 제외
+}
+// 게재 기간 커버리지 검사 → 공백 구간 안내 문구 배열
+function gapMessages(a, periods) {
+  return coverage(a, periods).gaps.map(([s, e]) => e === Infinity
+    ? `${fmt(s).slice(0, 10)} 이후 게재되는 소재그룹이 없습니다.\n광고 기간이 종료일 미설정이므로 종료일 미설정 소재그룹이 1개 이상 필요합니다.`
+    : `${fmt(s).slice(0, 10)} ~ ${fmt(e - MIN).slice(0, 10)} 기간에 게재되는 소재그룹이 없습니다.\n소재그룹 기간을 조정해 광고 기간 전체를 채워주세요.`);
+}
+
+function renderModal() {
+  const { a, mode, draft, checked } = M;
+  const list = cgsOf(a.id);
+  const bulkMode = mode === 'bulk';
+
+  let rows = `<div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간</div></div>`;
+  rows += list.map(c => {
+    const p = draft[c.no], err = rowError(p, a);
+    const cls = p.tag ? (bulkMode ? 'pv' : 'chgd') : '';
+    return `<div class="mr ${cls} ${M.focus === c.no ? 'focus' : ''}">
+      <div class="n">${c.name}</div>
+      <div class="p">${rangeInputs(c.no, p, bulkMode, err, a)}</div>
+      </div>`;
+  }).join('');
+
+
+  $('#modal').innerHTML = `
+    <div class="mh"><h3>소재그룹 게재 기간 관리</h3><button class="x" data-act="close" aria-label="닫기">×</button></div>
+    <div class="info"><span>광고그룹</span>${a.name}<br><span>광고 기간</span>${a.start} ~ ${a.end || '종료일 미설정'}</div>
+    <div class="mode"><strong>설정 방식</strong>
+      <label><input type="radio" name="mode" value="bulk" ${bulkMode ? 'checked' : ''}> 일괄 적용</label>
+      <label><input type="radio" name="mode" value="each" ${!bulkMode ? 'checked' : ''}> 소재그룹별 설정</label></div>
+    ${bulkMode ? `<div class="bulk"><div class="h">전체 소재그룹에 일괄 적용</div>
+      <div class="rg">${rangeInputs('bulk', rangeOf(a), true, false).replace(/^<div class="rg">|<\/div>$/g, '')}
+      <button class="bbtn" data-act="apply">적용</button></div>
+      ${M.notice ? `<div class="msg">${M.notice}</div>` : ''}</div>` : ''}
+    <div class="ml">${rows}</div>
+    <div class="mf"><button data-act="close">취소</button><button class="save" data-act="save">저장</button></div>`;
+}
+
+$('#modal').addEventListener('change', e => {
+  const el = e.target;
+  if (el.name === 'mode') { M.mode = el.value; M.notice = ''; M.checked = new Set(); M.bulk = rangeOf(M.a); cgsOf(M.a.id).forEach(c => M.draft[c.no] = { start: c.start, end: c.end, tag: '' }); return renderModal(); } // 방식 전환 시 입력 값 초기화(저장된 값으로 복원)
+  if (el.dataset.key) {
+    const key = el.dataset.key, val = el.value || null;
+    if (key === 'bulk') M.bulk[el.dataset.f] = val;
+    else { M.draft[key][el.dataset.f] = val; M.draft[key].tag = '수정됨'; }
+    renderModal();
+  }
+});
+$('#modal').addEventListener('click', e => {
+  const act = e.target.dataset.act; if (!act) return;
+  if (act === 'close') return closeModal();
+  if (act === 'apply') {
+    cgsOf(M.a.id).forEach(c => M.draft[c.no] = { start: rangeOf(M.a).start, end: rangeOf(M.a).end, tag: '일괄 적용' });
+    M.notice = ''; return renderModal();
+  }
+  if (act === 'save') {
+    const errs = validateModal(); if (errs.length) return alert(errs.join('\n'));
+    cgsOf(M.a.id).forEach(c => { c.start = M.draft[c.no].start; c.end = M.draft[c.no].end; });
+    closeModal(); renderList();
+    const t = $('#toast'); t.textContent = '게재 기간이 저장되었습니다.'; t.classList.remove('hide');
+    setTimeout(() => t.classList.add('hide'), 2000);
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && M) closeModal(); });
+
+// 소재그룹 수동 ON/OFF: OFF 변경 시 게재 기간 커버리지 유효성 체크 (OFF 소재그룹은 계산 제외)
+const smenu = document.createElement('div'); smenu.className = 'smenu'; smenu.hidden = true;
+smenu.innerHTML = '<div data-v="on"><i style="background:var(--green)"></i>ON</div><div data-v="off"><i style="background:#e53935"></i>OFF</div>';
+document.body.appendChild(smenu);
+let smenuNo = null;
+$('#tb').addEventListener('click', e => {
+  const d = e.target.closest('.dot'); if (!d) return;
+  e.stopPropagation();
+  smenuNo = Number(d.dataset.no);
+  const r = d.getBoundingClientRect();
+  smenu.style.left = (r.left + scrollX - 10) + 'px'; smenu.style.top = (r.bottom + scrollY + 6) + 'px';
+  smenu.hidden = false;
+});
+document.addEventListener('click', e => {
+  if (smenu.hidden) return;
+  const it = e.target.closest('.smenu [data-v]');
+  smenu.hidden = true;
+  if (!it || smenuNo == null) return;
+  const c = DATA.creativeGroups.find(x => x.no === smenuNo);
+  if (it.dataset.v === 'off' && c.linked) {
+    const rest = cgsOf(c.ag).filter(x => x.linked && x !== c);
+    const errs = gapMessages(adOf(c.ag), rest);
+    if (errs.length) return alert(errs.join('\n')); // OFF 처리 불가
+  }
+  c.linked = it.dataset.v === 'on';
+  renderList();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') smenu.hidden = true; });
+
+renderList();
+</script>
+</template>
+
+<!-- ================= 탭 3. 화면설계서 (독립 페이지) ================= -->
+<template id="tpl-spec">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{--ink:#1f2328;--sub:#5b6470;--line:#e3e6ea;--blue:#1e6fe8;--red:#e5484d;--orange:#e07b00;--green:#2e9e4f}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:Pretendard,"Noto Sans KR",sans-serif;color:var(--ink);font-size:12px;background:#eef0f3}
+  .wrap{display:flex;height:100vh}
+  .left{flex:1;min-width:0;overflow:auto;padding:28px 36px 60px}
+  .right{width:440px;flex:none;overflow:auto;background:#fff;border-left:1px solid var(--line);padding:18px 20px 60px}
+  @media (max-width:1100px){.wrap{flex-direction:column;height:auto}.left,.right{overflow:visible;width:auto}.right{border-left:0;border-top:1px solid var(--line)}}
+  .cap{font-size:13px;font-weight:700;color:var(--sub);margin:28px 0 10px}
+  .cap:first-child{margin-top:0}
+  .scr{background:#fff;border:1px solid var(--line);padding:18px;position:relative}
+  .bd{position:static;margin:0 4px 0 0;vertical-align:middle;background:var(--red);color:#fff;font-size:11px;font-weight:700;min-width:22px;height:20px;padding:0 5px;display:inline-grid;place-items:center;border-radius:2px;cursor:pointer;box-shadow:0 0 0 2px #fff}
+  .bd:focus-visible{outline:2px solid var(--blue)}
+  .rel{position:relative}
+  .row{display:flex;gap:8px;align-items:center}
+  .sel{display:inline-flex;align-items:center;justify-content:space-between;border:1px solid #bdbdbd;height:36px;padding:0 10px;min-width:150px;background:#fff}
+  .sel::after{content:"▾";color:#666}
+  .sel.sm{min-width:80px}.sel.dis{background:#eee;color:#aaa;border-color:#ddd}.sel.xs{min-width:100px;height:28px;font-size:11px}.sel.xxs{min-width:64px;height:28px;font-size:11px}
+  .sel.pv{background:#fffbea;border-color:#f2e2a0}.sel.chg{background:#fffbea;border-color:#f2b705}
+  .card{border:1px solid var(--line)}
+  .card h4{margin:0;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px}
+  .cb{display:flex;gap:14px;padding:16px}
+  .cb .l{flex:1}.cb .r{width:240px;border-left:1px solid var(--line);padding-left:14px;color:#555;line-height:1.6}
+  .lbl{color:#666;margin:0 0 6px}
+  .fx{color:#888;font-size:11px}
+  .newtxt{border:1px dashed var(--red);padding:6px 8px;margin-top:8px}
+  .info .bd{width:auto;color:#fff}
+  .pill{border:1px solid #d6d6d6;border-radius:16px;padding:5px 12px;background:#fff;font-size:11px}
+  .pill.pri{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .pill.nw{border:1.5px solid var(--blue);color:var(--blue);font-weight:700}
+  .fbox{border:1px solid #bdbdbd;padding:4px 8px;font-size:10px;line-height:1.4}
+  .fbox.act{border:1.5px solid var(--blue)}
+  table.l{border-collapse:collapse;width:100%;font-size:11px}
+  .l th,.l td{border-bottom:1px solid #e6e6e6;padding:8px 6px;text-align:center;white-space:nowrap}
+  .l th{font-weight:500;color:#333}
+  .l .nm{text-align:left}
+  .tg{display:inline-block;font-size:10px;font-weight:600;border-radius:3px;padding:0 5px}
+  .tg.ind{background:#fff0dc;color:var(--orange)}.tg.same{background:#f0f0f0;color:#777}.tg.chg{background:#fff6d6;color:#b88a00}
+  .st{color:var(--orange)}
+  .lnk{color:var(--blue)}
+  .dim{background:#8c8c8c;padding:28px}
+  .modal{background:#fff;border-radius:8px;padding:22px 26px;max-width:860px;margin:0 auto}
+  .modal h5{margin:0 0 14px;font-size:15px;display:flex;justify-content:space-between}
+  .info{background:#f7f8fa;padding:10px 14px;border-radius:6px;line-height:1.9}
+  .info span{display:inline-block;width:64px;color:#888}
+  .bulk{background:#f5f9ff;border:1px solid #d6e4ff;border-radius:6px;padding:10px 14px}
+  .ml{border:1px solid var(--line);border-radius:6px}
+  .mr{display:flex;align-items:center;gap:10px;padding:7px 14px;border-top:1px solid #eee}
+  .mr:first-child{border-top:0;background:#fafafa;color:#888}
+  .mr .n{width:150px}.mr .p{flex:1}.mr .k{width:120px;text-align:right}
+  .mr.pv,.mr.chgd{background:#fffdf3}
+  .bar{height:12px;border-radius:6px;background:#43a047;margin:8px 0 4px}
+  .ok{background:#eaf6ec;color:#2e7d32;padding:8px 12px;border-radius:4px;margin-top:8px}
+  .btn{border:1px solid #ccc;background:#fff;border-radius:4px;padding:7px 16px}
+  .btn.pri{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+  .gap{height:14px}
+  /* 디스크립션 */
+  .right h2{font-size:15px;margin:0 0 12px}
+  .item{border-bottom:1px solid var(--line);padding:12px 4px;scroll-margin-top:12px}
+  .item.sub{padding-left:16px}
+  .item .ht{display:flex;gap:6px;align-items:center;font-weight:700;font-size:13px;margin-bottom:6px}
+  .item .num{background:var(--red);color:#fff;font-size:10px;padding:1px 5px;border-radius:2px}
+  .t{font-size:10px;font-weight:600;border-radius:3px;padding:1px 6px}
+  .t.old{background:#f0f0f0;color:#666}.t.chg{background:#fff0dc;color:var(--orange)}.t.new{background:#e8f0fe;color:var(--blue)}
+  .item .body{color:#333;line-height:1.65;font-size:12px}
+  .item .body div{padding-left:1.5em}
+  .item .body div.m{text-indent:-1.5em}
+  .item .body div.s{padding-left:3.3em;text-indent:-1.8em}
+  .item .body div.c2{padding-left:3.3em;color:#666}
+  .flash{animation:fl 1.6s ease}
+  @keyframes fl{0%,40%{background:#fff3a0}100%{background:transparent}}
+  @media (prefers-reduced-motion:reduce){.flash{animation:none;background:#fff3a0}}
+</style>
+
+<div class="wrap">
+<div class="left" id="left">
+
+  <div class="cap">화면 1. 광고그룹 등록 &gt; 광고 기간</div>
+  <div class="scr">
+    <div class="card rel"><span class="bd" data-t="1"></span>
+      <h4>광고 기간</h4>
+      <div class="cb">
+        <div class="l rel"><span class="bd" data-t="1-1"></span>
+          <p class="lbl">시작일시</p><div class="row"><span class="sel">2026년 10월 15일</span><span class="sel sm">11:00</span></div>
+          <p class="lbl" style="margin-top:14px">종료일시</p>
+          <div class="row" style="margin-bottom:6px">◉ 없음</div>
+          <div class="row">○ <span class="sel dis"></span><span class="sel sm dis"></span></div>
+        </div>
+        <div class="r">종료일시를 지정하지 않으면 광고가 계속 게재됩니다.
+          <div class="newtxt rel"><span class="bd" data-t="1-2"></span>설정한 광고 기간은 소재그룹의 게재 기간에 자동으로 적용됩니다. 소재그룹별로 기간을 다르게 설정하려면 소재그룹 생성·수정 화면에서 광고 기간 내로 변경할 수 있습니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cap">화면 2. 소재그룹 목록 (광고그룹 선택 상태)</div>
+  <div class="scr rel"><span class="bd" data-t="2"></span>
+    <div class="row" style="margin-bottom:12px">
+      <span class="fbox">캠페인(1개)<br>캠페인 선택</span>
+      <span class="fbox act rel">광고그룹<br>광고그룹명_데모2</span>
+      <span class="fbox">소재그룹(4개)<br>소재그룹 선택</span>
+    </div>
+    <div class="row" style="margin-bottom:12px">
+      <span class="pill pri">＋ 소재그룹 추가</span><span class="pill">필터 추가</span>
+      <span class="pill nw rel"><span class="bd" data-t="2-1"></span>게재 기간 관리</span>
+    </div>
+    <table class="l">
+      <tr><th class="nm">소재그룹 명 ↑</th><th>소재그룹NO ↑</th><th>광고그룹 명 ↑</th><th>상태 ↑</th><th class="rel"><span class="bd" data-t="2-2"></span>게재 기간 ↑</th><th>노출 비율 기준 ↑</th></tr>
+      <tr><td class="nm">전체 (연결 4개 / 미연결 0개)</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="nm"><span class="rel"><span class="bd" data-t="2-3"></span><span style="color:#43a047">●</span></span> 소재그룹명_데모5</td><td>83532</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 00:00<br>~ 2026-10-31 23:59</td><td>13.08%</td></tr>
+      <tr><td class="nm">소재그룹명_데모6</td><td>83481</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-05-01 00:00<br>~ 2026-05-31 23:59</td><td>13.08%</td></tr>
+      <tr><td class="nm">소재그룹명_데모7</td><td>81543</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 00:00<br>~ 2026-11-30 23:59</td><td>12.86%</td></tr>
+      <tr><td class="nm">소재그룹명_데모8</td><td>81542</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 00:00<br>~ 2026-11-30 23:59</td><td>12.86%</td></tr>
+    </table>
+  </div>
+
+  <div class="cap">화면 3. 게재 기간 관리 팝업 — 일괄 적용</div>
+  <div class="dim"><div class="modal rel"><span class="bd" data-t="3"></span>
+    <h5>소재그룹 게재 기간 관리 <span>×</span></h5>
+    <div class="info rel"><span class="bd" data-t="3-1"></span><span>광고그룹</span>광고그룹명_데모2<br><span>광고 기간</span>2026-04-27 15:00 ~ 2026-11-30 23:59</div>
+    <div class="gap"></div>
+    <div class="row rel"><span class="bd" data-t="3-2"></span><b style="width:64px">설정 방식</b> ◉ 일괄 적용 &nbsp; ○ 소재그룹별 설정</div>
+    <div class="gap"></div>
+    <div class="bulk rel"><span class="bd" data-t="3-3"></span><b style="color:#1e4fa8">전체 소재그룹에 일괄 적용</b>
+      <div class="row" style="margin-top:8px"><span class="sel xs dis">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs dis">2026-11-30</span><span class="fx">23:59</span><span class="btn">적용</span></div></div>
+    <div class="gap"></div>
+    <div class="ml rel"><span class="bd" data-t="3-4"></span>
+      <div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간</div></div>
+      <div class="mr pv"><div class="n">소재그룹명_데모5</div><div class="p row"><span class="sel xs pv">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs pv">2026-11-30</span><span class="fx">23:59</span></div></div>
+      <div class="mr pv"><div class="n">소재그룹명_데모6</div><div class="p row"><span class="sel xs pv">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs pv">2026-11-30</span><span class="fx">23:59</span></div></div>
+      <div class="mr pv"><div class="n">소재그룹명_데모7</div><div class="p row"><span class="sel xs pv">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs pv">2026-11-30</span><span class="fx">23:59</span></div></div>
+      <div class="mr pv"><div class="n">소재그룹명_데모8</div><div class="p row"><span class="sel xs pv">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs pv">2026-11-30</span><span class="fx">23:59</span></div></div>
+    </div>
+    <div class="gap"></div>
+    <div class="row rel" style="justify-content:flex-end"><span class="bd" data-t="3-6"></span><span class="btn">취소</span><span class="btn pri">저장</span></div>
+  </div></div>
+
+  <div class="cap">화면 3 참고. 설정 방식 = 소재그룹별 설정</div>
+  <div class="dim"><div class="modal">
+    <div class="row rel"><span class="bd" data-t="3-5"></span><b style="width:64px">설정 방식</b> ○ 일괄 적용 &nbsp; ◉ 소재그룹별 설정</div>
+    <div class="gap"></div>
+    <div class="ml">
+      <div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간</div></div>
+      <div class="mr"><div class="n">소재그룹명_데모5</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs">2026-10-31</span><span class="fx">23:59</span></div></div>
+      <div class="mr"><div class="n">소재그룹명_데모6</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="fx">00:00</span>~<span class="sel xs">2026-05-31</span><span class="fx">23:59</span></div></div>
+      <div class="mr chgd"><div class="n">소재그룹명_데모7</div><div class="p row"><span class="sel xs chg">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs chg">2026-11-25</span><span class="fx">23:59</span></div></div>
+      <div class="mr"><div class="n">소재그룹명_데모8</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs">2026-11-30</span><span class="fx">23:59</span></div></div>
+    </div>
+  </div></div>
+
+</div>
+
+<aside class="right" id="right">
+  <h2>디스크립션</h2>
+  <div id="desc"></div>
+</aside>
+</div>
+
+<script>
+// 디스크립션 (배지 data-t 와 id 가 1:1로 대응)
+const DESC = [
+  { id: '1', tag: 'old', title: '광고그룹 등록 > 광고 기간 카드', body: 'a. 광고그룹 생성·수정 화면의 광고 기간 영역.\n구조와 동작은 기존과 동일\nb. 여기서 설정한 광고 기간이 하위 소재그룹 게재 기간의 기본값\nc. 소재그룹 게재 기간은 날짜 단위이므로, \n 기본값은 광고그룹 시작일 00:00 ~ 종료일 23:59' },
+  { id: '1-1', tag: 'old', title: '시작일시 / 종료일시', body: 'a. 시작일시: 날짜 + 시간 선택\nb. 종료일시: "없음" 또는 날짜 + 시간.\n"없음"이면 목록에 "종료일 미설정"으로 표시\nc. 종료일시가 "없음"이면 소재그룹 게재 기간도 종료일 미설정으로 상속' },
+  { id: '1-2', tag: 'new', title: '소재그룹 기간 안내 문구', body: 'a. 기존 안내 문구("<i>종료일시를 지정하지 않으면 광고가 계속 게재됩니다.</i>") 아래에 노출\nb. 문구: 설정한 광고 기간은 소재그룹의 게재 기간에 자동으로 적용됩니다.\n<i>소재그룹별로 기간을 다르게 설정하려면 소재그룹 생성·수정 화면에서 광고 기간 내로 변경할 수 있습니다.</i>\nc. 스타일은 기존 안내 문구와 동일 (설계서의 빨간 점선은 표시용)' },
+  { id: '2', tag: 'old', title: '소재그룹 목록', body: 'a. 캠페인 > 소재그룹 목록 화면.\n기존 컬럼, 필터, 지표, 다운로드 동작은 유지' },
+  { id: '2-1', tag: 'new', title: '게재 기간 관리 버튼', body: 'a. 클릭 시 게재 기간 관리 팝업(3) 오픈\na-1. 광고그룹의 광고 기간 단위로 게재 기간 커버리지를 판단하므로, \n 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\na-2. 소재그룹 목록 화면에서 소재그룹을 별도로 선택해서 열지 않음\nb. 광고그룹 미선택 상태에서 클릭 시 얼럿 노출: "광고그룹을 선택해주세요" 노출\nb-1. 팝업 오픈 안됨' },
+  { id: '2-2', tag: 'new', title: '게재 기간 컬럼', body: 'a. 위치: 상태 컬럼 우측에 열 삽입\nb. 표기: 1줄 "시작일 00:00", 2줄 "~ 종료일 23:59" 또는 "~ 종료일 미설정". 광고그룹 목록 광고기간 컬럼과 같은 포맷\nc. 정렬: 시작일 기준 오름/내림차순\nd. 컬럼설정에서 노출·숨김 가능, 다운로드 파일에도 포함' },
+  { id: '2-3', tag: 'new', title: '소재그룹 수동 ON/OFF', body: 'a. 소재그룹 수동 OFF 변경 시 게재 기간 커버리지 유효성 체크\na-1. 기준 구간: 광고그룹 시작일 00:00 ~ 종료일 23:59\na-2. 소재그룹의 게재 기간이 기준 구간을 모두 충족해야 OFF 처리 가능\na-3. OFF 소재그룹은 계산에서 제외\na-4. 광고 기간이 종료일 미설정인 경우 종료일 미설정인 소재그룹이 1개 이상 있어야함\na-5. 조건 미충족 시 얼럿 "YYYY-MM-DD ~ YYYY-MM-DD 기간에 게재되는 소재그룹이 없습니다." 노출, OFF 처리 불가' },
+  { id: '3', tag: 'new', title: '게재 기간 관리 팝업', body: 'a. 광고그룹의 광고 기간 단위로 게재 기간 커버리지를 판단하므로,\n 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\nb. 닫기(×), 취소, Esc: 저장하지 않은 변경을 버리고 닫기' },
+  { id: '3-1', tag: 'new', title: '광고그룹 정보', body: 'a. 광고그룹 명, 광고 기간을 읽기 전용으로 표시\nb. 설정 범위 = 광고그룹 시작일 00:00 ~ 종료일 23:59.\n광고 기간의 시각(예: 15:00)과 관계없이 날짜 기준\nc. 광고 기간이 종료일 미설정이면 "~ 종료일 미설정"으로 표시' },
+  { id: '3-2', tag: 'new', title: '설정 방식', body: 'a. 속성: 라디오 버튼\nb. 선택지: 일괄 적용(디폴트), 소재그룹별 설정\nb-1. 일괄 적용 선택 시: 3-3\nb-2. 소재그룹별 설정 선택 시: 3-5\nc. 방식을 바꾸면 입력 중인 값 초기화 (저장된 값으로 복원)' },
+  { id: '3-3', tag: 'new', title: '일괄 적용 영역', body: 'a. 설정 방식이 일괄 적용일 때만 노출\nb. [적용] 클릭 시 전체 소재그룹의 게재 기간을 광고그룹 기간과 동일한 값으로 변경\nㄴ 입력칸에는 광고그룹 기간이 고정 표시되며 날짜 선택 불가\nc. 저장 전까지는 미리보기\nd. 광고 기간과 동일한 값이 들어가므로 게재 기간 커버리지 100%' },
+  { id: '3-4', tag: 'new', title: '소재그룹 목록', body: 'a. 광고그룹에 속한 소재그룹 전체 노출\na-1. 최초 팝업 오픈 시 기존 게재 기간 노출\nb. 일괄 적용 시: [3-3. 적용 누르면 변경됨]\nb-1. 일괄 적용 선택 시 소재그룹 전체에 일괄 적용\nb-2. 읽기 전용\nc. 날짜만 입력.\n시각은 시작일 00:00, 종료일 23:59로 고정 표시' },
+  { id: '3-5', tag: 'new', title: '소재그룹별 설정', body: 'a. 설정 방식이 소재그룹별 설정일 때 노출\nb. 게재 기간 데이트 피커\nb-1. 시작일: 별도 조건 없음\nb-2. 종료일\nㄴ 시작일보다 앞선 날짜는 선택 불가\nㄴ 광고그룹 기간의 종료일을 초과하는 날짜는 선택 불가' },
+  { id: '3-6', tag: 'new', title: '취소 / 저장 (유효성 검사)', body: 'a. [저장] 클릭 시 게재 기간 커버리지 유효성 검사\na-1. 기준 구간: 광고그룹 시작일 00:00 ~ 종료일 23:59\na-2. 소재그룹의 게재 기간이 기준 구간을 모두 충족해야 저장 가능\na-3. OFF 소재그룹은 계산에서 제외\na-4. 광고 기간이 종료일 미설정인 경우 종료일 미설정인 소재그룹이 1개 이상 있어야함\na-5. 조건 미충족 시 얼럿 \n "YYYY-MM-DD ~ YYYY-MM-DD 기간에 게재되는 소재그룹이 없습니다." 노출, 저장되지 않음\nb. 저장 시 팝업을 닫고 목록의 게재 기간 컬럼에 즉시 반영\nc. 저장 완료 토스트: "게재 기간이 저장되었습니다."' }
+];
+const TAGS = { old: '기존', chg: '변경', new: '신규' };
+
+const desc = document.getElementById('desc');
+desc.innerHTML = DESC.map(d => `<div class="item ${d.id.includes('-') ? 'sub' : ''}" id="d-${d.id}">
+  <div class="ht"><span class="num">${d.id}</span>[${d.title}]<span class="t ${d.tag}">${TAGS[d.tag]}</span></div>
+  <div class="body">${d.body.split('\n').map(l => /^ㄴ/.test(l) ? `<div class="c2">${l}</div>` : /^[a-z]-\d\. /.test(l) ? `<div class="m s">${l}</div>` : /^[a-z]\. /.test(l) ? `<div class="m">${l}</div>` : `<div>${l}</div>`).join('')}</div></div>`).join('');
+
+// 배지 번호는 data-t 에서 생성
+const badges = [...document.querySelectorAll('.bd')];
+badges.forEach(b => { b.textContent = b.dataset.t; b.tabIndex = 0; b.setAttribute('role', 'button'); });
+
+// 배지 클릭 → 디스크립션 이동 + 하이라이트
+const right = document.getElementById('right');
+function go(id) {
+  const el = document.getElementById('d-' + id); if (!el) return;
+  if (right.scrollHeight > right.clientHeight) right.scrollTo({ top: el.offsetTop - right.offsetTop - 12, behavior: 'smooth' });
+  else el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+}
+badges.forEach(b => {
+  b.onclick = () => go(b.dataset.t);
+  b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(b.dataset.t); } };
+});
+</script>
+</template>
+
+<script>
+  // 데모·화면설계서는 독립 페이지로 iframe(srcdoc)에 넣는다
+  document.getElementById('f-demo').srcdoc = document.getElementById('tpl-demo').innerHTML;
+  document.getElementById('f-spec').srcdoc = document.getElementById('tpl-spec').innerHTML;
+
+  const KEY = 'cgPeriodPackage.tab';
+  function setTab(name) {
+    document.querySelectorAll('.tabbar button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.id === 'tab-' + name));
+    try { localStorage.setItem(KEY, name); } catch (e) {}
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('.tabbar button').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => setTab(b.dataset.go));
+  let saved = 'overview';
+  try { saved = localStorage.getItem(KEY) || 'overview'; } catch (e) {}
+  setTab(['overview', 'demo', 'spec'].includes(saved) ? saved : 'overview');
+</script>
+</body>
+</html>
