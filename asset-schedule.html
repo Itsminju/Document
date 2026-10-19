@@ -58,7 +58,7 @@
 <body>
 
 <header class="tabbar">
-  <h1>소재그룹 게재 기간 등록<small>화면 기획 패키지</small></h1>
+  <h1>소재그룹 게재 기간 등록</h1>
   <nav>
     <button data-tab="overview">개요</button>
     <button data-tab="demo">데모</button>
@@ -102,16 +102,17 @@
     <table class="t">
       <tr><th style="width:44px">No</th><th style="width:150px">화면</th><th style="width:56px">구분</th><th style="width:200px">요구사항</th><th>상세</th><th style="width:72px">설계서</th></tr>
       <tr><td>1</td><td>광고그룹 등록 &gt; 광고 기간</td><td><span class="tag todo">신규</span></td><td>소재그룹 기간 안내 문구 추가</td><td>기존 안내 문구 아래에 노출.<br>스타일은 기존 문구와 동일</td><td>1-2</td></tr>
-      <tr><td>2</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>게재 기간 관리 버튼</td><td>광고그룹 미선택 시 얼럿 "광고그룹을 선택해주세요".<br>클릭 시 해당 광고그룹 기준 팝업, 설정 방식 기본값 일괄 적용</td><td>2-1</td></tr>
-      <tr><td>3</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>게재 기간 컬럼</td><td>상태 컬럼 우측에 열 삽입. "시작일 00:00 / ~ 종료일 23:59" 또는 "~ 종료일 미설정".<br>시작일 정렬, 컬럼설정·다운로드 포함</td><td>2-2</td></tr>
-      <tr><td>4</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>소재그룹 수동 OFF 시 유효성 체크</td><td>OFF 변경 시 게재 기간 커버리지 검사.<br>조건 미충족 시 얼럿, OFF 처리 불가</td><td>2-3</td></tr>
-      <tr><td>5</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>설정 방식 선택</td><td>일괄 적용(기본) / 소재그룹별 설정</td><td>3-2</td></tr>
-      <tr><td>6</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>일괄 적용</td><td>[적용] 클릭 시 전체 소재그룹의 게재 기간을 광고그룹 기간과 동일하게 변경</td><td>3-3</td></tr>
-      <tr><td>7</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>날짜 단위 입력·검증</td><td>시작일 00:00, 종료일 23:59 고정.<br>설정 범위 밖이거나 시작일 &gt; 종료일이면 저장 불가</td><td>3-4</td></tr>
-      <tr><td>8</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>게재 기간 커버리지 검증</td><td>설정 범위 전체가 채워져야(100%) 저장 가능.<br>[저장] 클릭 시 검사, 공백 구간은 얼럿으로 안내</td><td>3-6</td></tr>
-      <tr><td>9</td><td>광고그룹 등록</td><td><span class="tag keep">유지</span></td><td>광고 기간 입력 방식, 광고 일정</td><td>변경 없음</td><td>-</td></tr>
-      <tr><td>10</td><td>소재그룹 목록</td><td><span class="tag keep">유지</span></td><td>기존 컬럼·필터·지표·다운로드</td><td>변경 없음</td><td>-</td></tr>
-      <tr><td>11</td><td>공통</td><td><span class="tag keep">유지</span></td><td>광고그룹당 소재그룹 최소 1개 연결 규칙(ON/OFF)</td><td>변경 없음</td><td>-</td></tr>
+      <tr><td>2</td><td>광고그룹 목록 &gt; 광고 기간 수정 팝업</td><td><span class="tag todo">신규</span></td><td>소재그룹 기간 일괄 변경 안내 문구</td><td>기존 안내 문구 아래에 빨간 글씨로 노출.<br>"광고 기간 변경 시 소재그룹 게재 기간이 일괄 변경됩니다."</td><td>3-2</td></tr>
+      <tr><td>3</td><td>광고그룹 목록 &gt; 광고 기간 수정 팝업</td><td><span class="tag todo">변경</span></td><td>[저장] → [다음], 게재 기간 관리 팝업 연결 <span class="tag todo">보류</span></td><td>[다음] 클릭 시 게재 기간 관리 팝업 오픈.<br>새 광고 기간으로 일괄 변경한 값이 미리 채워지고(종료일 없음 소재그룹은 유지), 거기서 조정 후 [저장]하면 광고 기간과 함께 저장</td><td>3-3, 3-4</td></tr>
+      <tr><td>4</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>게재 기간 관리 버튼</td><td>광고그룹 미선택 시 얼럿 "광고그룹을 선택해주세요".<br>클릭 시 해당 광고그룹 기준 팝업 오픈</td><td>4-1</td></tr>
+      <tr><td>5</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>게재 기간 컬럼</td><td>상태 컬럼 우측에 열 삽입. "시작일 00:00 / ~ 종료일 23:59" 또는 "~ 종료일 미설정".<br>시작일 정렬, 컬럼설정·다운로드 포함</td><td>4-2</td></tr>
+      <tr><td>6</td><td>소재그룹 목록</td><td><span class="tag todo">신규</span></td><td>소재그룹 수동 OFF 시 유효성 체크</td><td>OFF 변경 시 게재 기간 커버리지 검사.<br>조건 미충족 시 얼럿, OFF 처리 불가</td><td>4-3</td></tr>
+      <tr><td>7</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>날짜 단위 입력·검증</td><td>시작일 00:00, 종료일 23:59 고정.<br>설정 범위 밖이거나 시작일 &gt; 종료일이면 저장 불가</td><td>5-2</td></tr>
+      <tr><td>8</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>게재 기간 커버리지 검증</td><td>설정 범위 전체가 채워져야(100%) 저장 가능.<br>[저장] 클릭 시 검사, 공백 구간은 얼럿으로 안내</td><td>5-4</td></tr>
+      <tr><td>9</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>종료일 없음 선택</td><td>행마다 [종료일 없음] 체크박스 노출 (광고 기간 종료일 설정 여부와 관계없음).<br>종료일 없이 계속 게재할 소재그룹을 1개 이상 선택해야 저장 가능</td><td>5-3</td></tr>
+      <tr><td>10</td><td>광고그룹 등록</td><td><span class="tag keep">유지</span></td><td>광고 기간 입력 방식, 광고 일정</td><td>변경 없음</td><td>-</td></tr>
+      <tr><td>11</td><td>소재그룹 목록</td><td><span class="tag keep">유지</span></td><td>기존 컬럼·필터·지표·다운로드</td><td>변경 없음</td><td>-</td></tr>
+      <tr><td>12</td><td>공통</td><td><span class="tag keep">유지</span></td><td>광고그룹당 소재그룹 최소 1개 연결 규칙(ON/OFF)</td><td>변경 없음</td><td>-</td></tr>
     </table>
     <div class="btns">
       <button class="btn pri" data-go="demo">데모 보기</button>
@@ -124,11 +125,10 @@
     <table class="t">
       <tr><th style="width:170px">용어</th><th>정의 / 계산식</th></tr>
       <tr><td>광고 기간</td><td>광고그룹의 시작일시 ~ 종료일시.<br>종료일시를 "없음"으로 두면 목록에 "종료일 미설정"으로 표시합니다.</td></tr>
-      <tr><td>게재 기간</td><td>소재그룹이 게재되는 기간.<br>날짜 단위로 설정하며 시작일 00:00 ~ 종료일 23:59로 고정됩니다.<br>기본값은 광고그룹 시작일 ~ 종료일입니다.</td></tr>
+      <tr><td>게재 기간</td><td>소재그룹이 게재되는 기간.<br>날짜 단위로 설정하며 시작일 00:00 ~ 종료일 23:59로 고정됩니다.<br>소재그룹을 처음 만들 때 기본값은 광고그룹 시작일 ~ 종료일 없음입니다.</td></tr>
       <tr><td>설정 범위</td><td>소재그룹 게재 기간을 설정할 수 있는 범위 = 광고그룹 시작일 00:00 ~ 종료일 23:59. 광고 기간의 시각(예: 15:00)과 관계없이 날짜 기준입니다.</td></tr>
-      <tr><td>게재 기간 커버리지</td><td>설정 범위의 모든 날짜가 소재그룹 게재 기간으로 채워진 정도(%).<br>빈 날짜 없이 100%로 채워져야 저장할 수 있습니다.<br>광고 기간이 종료일 미설정이면 종료일 미설정 소재그룹이 1개 이상 있어야 100%가 됩니다.</td></tr>
+      <tr><td>게재 기간 커버리지</td><td>설정 범위의 모든 날짜가 소재그룹 게재 기간으로 채워진 정도(%).<br>빈 날짜 없이 100%로 채워져야 저장할 수 있습니다.<br>여기에 더해, 광고 기간 종료일 설정 여부와 관계없이 종료일 없음인 ON 소재그룹이 1개 이상 있어야 합니다.</td></tr>
       <tr><td>공백 구간</td><td>설정 범위 중 어떤 소재그룹의 게재 기간에도 포함되지 않는 구간.</td></tr>
-      <tr><td>일괄 적용 / 소재그룹별 설정</td><td>게재 기간 관리 팝업의 설정 방식.<br>일괄 적용은 전체 소재그룹의 게재 기간을 광고그룹 기간과 동일하게 변경하고, 소재그룹별 설정은 행마다 직접 수정합니다.</td></tr>
     </table>
   </div>
 
@@ -154,7 +154,7 @@
       <tr><th style="width:260px">상황</th><th style="width:240px">판단</th><th>결과</th></tr>
       <tr><td>설정 범위 밖 날짜, 시작일 &gt; 종료일</td><td>행 단위 검증 (같은 날 시작·종료는 허용)</td><td>입력칸 빨간 테두리, 저장 불가</td></tr>
       <tr><td>공백 구간 있음</td><td>게재 기간 커버리지 &lt; 100%</td><td>저장 시 얼럿, 저장 불가</td></tr>
-      <tr><td>광고 기간 종료일 미설정</td><td>종료일 미설정 소재그룹 1개 이상</td><td>없으면 마지막 종료일 이후가 공백</td></tr>
+      <tr><td>종료일 없음 소재그룹 없음</td><td>종료일 없음을 선택한 ON 소재그룹 1개 이상 (광고 기간 종료일 설정 여부와 관계없음)</td><td>저장 시 얼럿, 저장 불가 / OFF 처리 불가</td></tr>
     </table>
   </div>
 
@@ -164,6 +164,15 @@
       <tr><th style="width:170px">구분</th><th>내용</th></tr>
       <tr><td>마이그레이션 조건</td><td>캠페인 상태 ON<br>광고그룹 상태 ON<br>소재그룹 게재 상태 ON</td></tr>
       <tr><td>기간 조건</td><td>광고그룹과 동일</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="no">06</span>질문해야 할 것</h2>
+    <table class="t">
+      <tr><th style="width:40px">No</th><th style="width:220px">주제</th><th>내용</th><th style="width:90px">상태</th></tr>
+      <tr><td>1</td><td>소재그룹 최소 연결과 재라이브</td><td>재라이브 상황을 위해서라도 광고그룹에는 소재그룹이 1개 이상 연결되어 있어야 함<br>→ 만약 전체 소재그룹이 OFF되면, 추후 재라이브를 진행하는 경우 어떻게 되는가?</td><td><span class="tag todo">확인 필요</span></td></tr>
+      <tr><td>2</td><td>광고그룹 기간 변경 시 소재그룹 기간</td><td>광고그룹 기간이 바뀌면 소재그룹 게재 기간을 광고그룹 기간으로 일괄 변경<br>→ 종료일 없음(상시) 소재그룹은 종료일 없음 유지, 그 외 소재그룹별로 다르게 설정한 기간은 초기화됨. 광고 기간 수정 [다음] 후 게재 기간 관리 팝업에서 조정·저장. 데모의 [광고그룹 목록 · 광고 기간 수정]에 반영</td><td><span class="tag todo">보류</span></td></tr>
     </table>
   </div>
 
@@ -267,6 +276,7 @@
   .tg.ind{background:#fff0dc;color:var(--orange)}
   .tg.same{background:#f0f0f0;color:#777}
   .tg.chg{background:#fff6d6;color:#b88a00}
+  .tg.hold{background:#ffe8e8;color:var(--red);border:1px solid #f5b5b5}
 
   /* 팝업 */
   .dim{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:40px 16px;z-index:50}
@@ -303,6 +313,9 @@
   .mr.chgd input{border-color:#f2b705}
   .mr.focus{box-shadow:inset 3px 0 0 var(--blue)}
   .mr input.err{border-color:var(--red)!important;background:#fdecec!important}
+  .noend{display:inline-flex;gap:4px;align-items:center;font-size:12px;white-space:nowrap;margin-left:4px}
+  .noend.dis{color:#999}
+  .hint{font-size:12px;color:var(--blue);margin:0 0 6px}
   .cov{margin-top:18px}
   .cov .h{display:flex;gap:8px;align-items:baseline}
   .cov .h small{color:#888}
@@ -316,6 +329,31 @@
   .mf button{padding:10px 20px;border-radius:4px;border:1px solid #ccc;background:#fff;cursor:pointer}
   .mf .save{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
   .mf .save:disabled{opacity:.4;cursor:not-allowed}
+  /* 광고그룹 목록 > 광고 기간 수정 팝업 (기존 팝업 재현 + 저장 시 소재그룹 동기화) */
+  .pen{border:0;background:none;cursor:pointer;color:#666;font-size:13px;padding:2px 4px;margin-left:4px;border-radius:4px;vertical-align:middle}
+  .pen:hover{background:#eef4ff;color:var(--blue)}
+  .apd{width:560px;max-width:100%;background:#fff;border-radius:4px;box-shadow:0 6px 24px rgba(0,0,0,.25);margin-top:120px}
+  .apd .hd{padding:16px 20px;border-bottom:1px solid var(--line);font-size:13px}
+  .apd .bd2{display:flex;gap:14px;padding:20px}
+  .apd .bd2 .l{flex:1}
+  .apd .bd2 .r{width:180px;border-left:1px solid var(--line);padding-left:12px;color:#555;font-size:11px;line-height:1.6;align-self:flex-end;min-height:90px}
+  .apd .lbl{font-size:10px;margin:0 0 8px}
+  .apd .row2{display:flex;gap:4px;align-items:center}
+  .apd input[type=date],.apd select{height:40px;border:1px solid #bdbdbd;border-radius:2px;padding:0 10px;background:#fff;font-size:11px}
+  .apd input[type=date]{width:180px}.apd select{width:96px}
+  .apd input:disabled,.apd select:disabled{background:#eee;border-color:#d6d6d6;color:#aaa}
+  .apd label.rd{display:flex;gap:8px;align-items:center;margin:8px 0;cursor:pointer;font-size:11px}
+  .apd .ft{display:flex;justify-content:flex-end;gap:6px;padding:4px 16px 14px}
+  .apd .ft button{border:0;background:none;color:var(--blue);padding:8px 14px;cursor:pointer;font-size:11px;border-radius:4px}
+  .apd .ft button:hover{background:#eef4ff}
+  .apd .err{color:var(--red);font-size:11px;margin-top:8px}
+  .cf{padding:18px 20px 6px;font-size:12px;line-height:1.7}
+  .cf .chg{background:#f7f8fa;border-radius:6px;padding:8px 12px;margin:8px 0 12px}
+  .cf table{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0 12px}
+  .cf th,.cf td{border-bottom:1px solid #eee;padding:6px 4px;text-align:left}
+  .cf th{color:#888;font-weight:500}
+  .cf .h4{font-weight:700;margin-top:4px}
+  .cf .note2{color:#888;font-size:11px}
   .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:#2b2f36;color:#fff;padding:10px 18px;border-radius:6px;z-index:60}
   button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
 </style>
@@ -323,12 +361,12 @@
 <div class="switch">
   데모 화면
   <button data-s="ad">광고그룹 등록 · 광고 기간</button>
+  <button data-s="adlist">광고그룹 목록 · 광고 기간 수정</button>
   <button data-s="list" class="on">소재그룹 목록</button>
-  <span class="n">사용법: [게재 기간 관리] 버튼 클릭 → 팝업에서 수정·저장. 버튼은 광고그룹을 선택했을 때만 활성. 기존 화면은 그림만 재현, 수치는 예시값</span>
+  <span class="n" id="howto"></span>
 </div>
 <div class="gnb">
   <span>☰</span><span class="logo">MOBON</span><span class="sp"></span>
-  <span class="ic"><i></i>아이젠트</span><span class="ic"><i></i>타임보드</span><span class="ic"><i></i>비디오애드</span><span class="ic"><i></i>공지사항</span><span class="ic"><i></i>관리자 메모</span>
   <span class="user">enp_mjjeon<br>개발지원본부_전민주</span><span class="out">Log out</span>
 </div>
 
@@ -351,7 +389,7 @@
           <div class="rad"><i class="on"></i>없음</div>
           <div class="rad"><i></i><span class="sel dis"></span><span class="sel sm dis"></span></div>
         </div>
-        <div class="r">종료일시를 지정하지 않으면 광고가 계속 게재됩니다.<br><br>설정한 광고 기간은 소재그룹의 게재 기간에 자동으로 적용됩니다. 소재그룹별로 기간을 다르게 설정하려면 소재그룹 생성·수정 화면에서 광고 기간 내로 변경할 수 있습니다.</div>
+        <div class="r">종료일시를 지정하지 않으면 광고가 계속 게재됩니다.<br><br>소재그룹을 처음 만들면 게재 기간은 광고 기간 시작일부터 종료일 없음으로 설정됩니다. 소재그룹별 게재 기간은 [소재그룹 목록 &gt; 게재 기간 관리]에서 변경할 수 있습니다.</div>
       </div>
     </div>
     <div class="wcard"><h3>광고 일정</h3><div class="wbody"><div class="l"><div class="rad"><i class="on"></i>전체</div><div class="rad"><i></i>평일</div><div class="rad"><i></i>주말</div><div class="rad"><i></i>수동 설정</div></div><div class="r">광고가 게재되는 시점을 제한하려면 광고 일정을 설정합니다. 그러면 광고가 이 기간 동안만 게재됩니다.</div></div></div>
@@ -381,6 +419,28 @@
   </div>
 </div>
 
+<!-- 화면 C: 광고그룹 목록 (기존 재현 + 광고기간 연필 버튼) -->
+<div id="scr-adlist" class="app hide">
+  <div><div class="rail"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  <div class="menu"><div class="box"><div class="h">캠페인</div><div class="it">캠페인</div><div class="it on">광고그룹</div><div class="it">소재그룹</div></div><div class="ex">보고서<br>에셋</div></div>
+  <div class="main">
+    <div class="filters">
+      <div class="fbox act">캠페인<select disabled><option>캠페인명_데모</option></select></div>
+      <div class="fbox">광고그룹<select disabled><option>광고그룹 선택</option></select></div>
+      <div class="fbox date">2026년 10월 01일 ~ 2026년 10월 14일 ▾</div>
+    </div>
+    <h2 class="ttl">광고그룹</h2>
+    <div class="tools">
+      <span class="pill pri">＋ 광고그룹 추가</span><span class="pill blue">필터 추가</span>
+      <div class="r"><span class="pill">인사이트 포함</span><span class="pill">중복클릭수 보기</span><span class="pill">컬럼설정</span><span class="pill">다운로드</span></div>
+    </div>
+    <div class="tw"><table class="list"><thead><tr>
+      <th style="width:70px"><span class="cb"></span><span class="dot" style="background:#444"></span></th><th class="nm">광고그룹 명 ↑</th><th>광고그룹NO ↑</th><th>캠페인 명 ↑</th><th>일예산 ↑</th><th>상태 ↑</th><th>광고형태 ↑</th><th>광고기간 ↑</th><th>광고일정 ↑</th><th>노출수 ↑</th><th>클릭수 ↑</th><th>소진금액 ↑</th>
+    </tr></thead><tbody id="tbAd"></tbody></table></div>
+  </div>
+</div>
+<div class="dim hide" id="dimAd"><div class="apd" id="apd" role="dialog" aria-modal="true" aria-label="광고 기간"></div></div>
+
 <div class="dim hide" id="dim"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="소재그룹 게재 기간 관리"></div></div>
 <div class="toast hide" id="toast"></div>
 
@@ -389,8 +449,8 @@
 const DATA = {
   // 광고그룹 광고 기간은 기존대로 날짜 + 시간
   adGroups: [
-    { id: 'AG1', name: '광고그룹명_데모1', campaign: '캠페인명_데모', start: '2026-04-22 11:00', end: null },
-    { id: 'AG2', name: '광고그룹명_데모2', campaign: '캠페인명_데모', start: '2026-04-27 15:00', end: '2026-11-30 23:59' }
+    { id: 'AG1', no: 20125, name: '광고그룹명_데모1', campaign: '캠페인명_데모', budget: '₩12,311', start: '2026-04-22 11:00', end: null },
+    { id: 'AG2', no: 20131, name: '광고그룹명_데모2', campaign: '캠페인명_데모', budget: '₩50,000', start: '2026-04-27 15:00', end: '2026-11-30 23:59' }
   ],
   // 소재그룹 게재 기간은 날짜 단위 (시작일 00:00, 종료일 23:59 고정). end: null = 종료일 미설정
   // ratio·지표는 기존 화면 재현용 예시값
@@ -399,7 +459,7 @@ const DATA = {
     { no: 83532, name: '소재그룹명_데모5', ag: 'AG2', start: '2026-04-27', end: '2026-10-31', ratio: '13.08%', linked: true, thumb: '#d9cfc2' },
     { no: 83481, name: '소재그룹명_데모6', ag: 'AG2', start: '2026-05-01', end: '2026-05-31', ratio: '13.08%', linked: true, thumb: '#d9cfc2' },
     { no: 81543, name: '소재그룹명_데모7', ag: 'AG2', start: '2026-04-27', end: '2026-11-30', ratio: '12.86%', linked: true, thumb: '#fbf5b8' },
-    { no: 81542, name: '소재그룹명_데모8', ag: 'AG2', start: '2026-04-27', end: '2026-11-30', ratio: '12.86%', linked: true, thumb: '#fbf5b8' },
+    { no: 81542, name: '소재그룹명_데모8', ag: 'AG2', start: '2026-04-27', end: null, ratio: '12.86%', linked: true, thumb: '#fbf5b8' },
     { no: 81338, name: '소재그룹명_데모2', ag: 'AG1', start: '2026-04-22', end: null, ratio: '20.87%', linked: true, thumb: '#fbf5b8' },
     { no: 81337, name: '소재그룹명_데모3', ag: 'AG1', start: '2026-04-25', end: '2026-04-30', ratio: '20.87%', linked: true, thumb: '#fbf5b8' },
     { no: 80935, name: '소재그룹명_데모4', ag: 'AG1', start: '2026-04-22', end: null, ratio: '19.89%', linked: true, thumb: '#fbf5b8' }
@@ -440,11 +500,18 @@ function coverage(a, periods) {
 }
 
 // ===== 화면 전환 (데모 내부) =====
-document.querySelectorAll('.switch button').forEach(b => b.onclick = () => {
-  document.querySelectorAll('.switch button').forEach(x => x.classList.toggle('on', x === b));
-  $('#scr-ad').classList.toggle('hide', b.dataset.s !== 'ad');
-  $('#scr-list').classList.toggle('hide', b.dataset.s !== 'list');
-});
+const HOWTO = {
+  ad: '기존 화면 재현 (동작 없음). 신규 안내 문구만 추가',
+  adlist: '사용법: 광고기간 옆 ✎ 클릭 → 기간 수정 후 [다음] → 게재 기간 관리 팝업에서 소재그룹 기간 조정·저장. 소재그룹 기간은 새 광고 기간으로 일괄 변경된 값이 미리 채워짐 (보류: 정책 확인 필요, 개요 06 참고)',
+  list: '사용법: [게재 기간 관리] 버튼 클릭 → 팝업에서 수정·저장. 버튼은 광고그룹을 선택했을 때만 활성. 기존 화면은 그림만 재현, 수치는 예시값'
+};
+function showScreen(s) {
+  document.querySelectorAll('.switch button').forEach(x => x.classList.toggle('on', x.dataset.s === s));
+  ['ad', 'adlist', 'list'].forEach(k => $('#scr-' + k).classList.toggle('hide', k !== s));
+  $('#howto').textContent = HOWTO[s];
+}
+document.querySelectorAll('.switch button').forEach(b => b.onclick = () => showScreen(b.dataset.s));
+$('#howto').textContent = HOWTO.list;
 
 // ===== 소재그룹 목록 =====
 let agFilter = ''; // 디폴트: 광고그룹 미선택
@@ -462,7 +529,8 @@ function renderList() {
   let html = `<tr class="sum"><td></td><td class="nm"><span class="lnk">전체 ⓘ</span><br>(연결 ${linked}개 / 미연결 ${rows.length - linked}개)</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="lnk">0</td><td class="lnk">0</td><td style="color:var(--red)">0</td></tr>`;
   html += rows.map(c => {
     const a = adOf(c.ag);
-    const tag = "";
+    // 광고그룹 광고 기간 변경으로 조정된 소재그룹 표시
+    const tag = c.adj ? '<br><span class="tg chg">광고 기간 변경으로 일괄 변경</span>' : '';
     return `<tr>
       <td><span class="cb"></span><span class="dot ${c.linked ? '' : 'off'}" data-no="${c.no}" role="button" aria-label="${c.name} ON/OFF 변경" title="ON/OFF 변경"></span></td>
       <td class="nm"><div class="nmw"><span class="th" style="background:${c.thumb}"></span><div>${c.name}<br><span class="lnk">애셋 세부정보 보기</span></div></div></td>
@@ -476,12 +544,15 @@ function renderList() {
 $('#btnManage').onclick = () => agFilter ? openModal(agFilter, null) : alert('광고그룹을 선택해주세요');
 
 // ===== 게재 기간 관리 팝업 =====
-let M = null; // { a, mode, draft, checked, bulk, focus, notice }
-function openModal(agId, focusNo) {
-  const a = adOf(agId);
+let M = null; // { a, draft, focus }
+// pend: 광고 기간 수정 팝업에서 [다음]으로 넘어온 경우 { start, end, prev } — 새 광고 기간 기준으로 검사하고, 일괄 변경 값을 미리 채움
+function openModal(agId, focusNo, pend) {
+  const src = adOf(agId);
+  const a = pend ? { ...src, start: pend.start, end: pend.end } : src;
   const draft = {};
   cgsOf(agId).forEach(c => draft[c.no] = { start: c.start, end: c.end, tag: '' });
-  M = { a, mode: focusNo ? 'each' : 'bulk', draft, checked: new Set(), bulk: rangeOf(a), focus: focusNo, notice: '' };
+  if (pend) planSync(src, dateOf(pend.start), dateOf(pend.end)).forEach(x => draft[x.c.no] = { start: x.s, end: x.e, tag: '일괄 변경' });
+  M = { a, src, draft, focus: focusNo, pend };
   $('#dim').classList.remove('hide');
   renderModal();
 }
@@ -491,7 +562,7 @@ const closeModal = () => { $('#dim').classList.add('hide'); M = null; };
 function rowError(p, a) {
   const r = rangeOf(a);
   if (!p.start) return true;
-  if (r.end && (!p.end || p.end > r.end)) return true;
+  if (r.end && p.end && p.end > r.end) return true; // 종료일 없음 = 광고그룹 운영 기간과 관계없이 항상 ON (상시 소재그룹)
   if (p.end && p.end < p.start) return true;
   return false;
 }
@@ -505,13 +576,27 @@ function rangeInputs(key, p, disabled, err, a) {
   </div>`;
 }
 
+// 종료일 없음 체크박스를 붙인 게재 기간 입력 (체크 시 종료일 입력칸 비활성)
+function noEndInputs(key, p, disabled, err, a) {
+  let h = rangeInputs(key, p, disabled, err, a);
+  if (!p.end) h = h.replace('data-f="end" value=""', 'data-f="end" value="" disabled');
+  return h.replace(/<\/div>$/, `<label class="noend ${disabled ? 'dis' : ''}"><input type="checkbox" data-noend="${key}" ${p.end ? '' : 'checked'} ${disabled ? 'disabled' : ''}> 종료일 없음</label></div>`);
+}
+
 // 저장 클릭 시 유효성 검사: 오류 메시지 배열 반환 (비어 있으면 통과)
 function validateModal() {
   const { a, draft } = M;
   const list = cgsOf(a.id);
   const errCnt = list.filter(c => rowError(draft[c.no], a)).length;
   if (errCnt) return [`설정 범위를 벗어나거나 시작일이 종료일보다 늦은 소재그룹이 ${errCnt}개 있습니다.`];
-  return gapMessages(a, list.filter(c => c.linked).map(c => draft[c.no])); // OFF(미연결) 소재그룹은 커버리지 계산 제외
+  const errs = [];
+  // 1) 광고 기간 내 소재그룹이 비는 날이 없는지 (OFF(미연결) 소재그룹은 커버리지 계산 제외)
+  const on = list.filter(c => c.linked).map(c => draft[c.no]);
+  // 마지막 종료일 이후 공백은 2)와 같은 원인이라 2) 문구로만 안내
+  errs.push(...gapMessages(a, on).filter(m => !m.includes('이후 게재되는')));
+  // 2) 종료일 없음 소재그룹(ON)이 1개 이상인지 — 광고 기간 종료일 설정 여부와 관계없음
+  if (!on.some(p => !p.end)) errs.push('종료일 없이 계속 게재할 소재그룹을 1개 이상 선택해주세요.');
+  return errs.length ? [errs.join('\n\n')] : [];
 }
 // 게재 기간 커버리지 검사 → 공백 구간 안내 문구 배열
 function gapMessages(a, periods) {
@@ -521,57 +606,52 @@ function gapMessages(a, periods) {
 }
 
 function renderModal() {
-  const { a, mode, draft, checked } = M;
+  const { a, draft } = M;
   const list = cgsOf(a.id);
-  const bulkMode = mode === 'bulk';
 
   let rows = `<div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간</div></div>`;
   rows += list.map(c => {
     const p = draft[c.no], err = rowError(p, a);
-    const cls = p.tag ? (bulkMode ? 'pv' : 'chgd') : '';
+    const cls = p.tag ? 'chgd' : '';
     return `<div class="mr ${cls} ${M.focus === c.no ? 'focus' : ''}">
       <div class="n">${c.name}</div>
-      <div class="p">${rangeInputs(c.no, p, bulkMode, err, a)}</div>
+      <div class="p">${noEndInputs(c.no, p, false, err, a)}</div>
       </div>`;
   }).join('');
 
 
   $('#modal').innerHTML = `
     <div class="mh"><h3>소재그룹 게재 기간 관리</h3><button class="x" data-act="close" aria-label="닫기">×</button></div>
-    <div class="info"><span>광고그룹</span>${a.name}<br><span>광고 기간</span>${a.start} ~ ${a.end || '종료일 미설정'}</div>
-    <div class="mode"><strong>설정 방식</strong>
-      <label><input type="radio" name="mode" value="bulk" ${bulkMode ? 'checked' : ''}> 일괄 적용</label>
-      <label><input type="radio" name="mode" value="each" ${!bulkMode ? 'checked' : ''}> 소재그룹별 설정</label></div>
-    ${bulkMode ? `<div class="bulk"><div class="h">전체 소재그룹에 일괄 적용</div>
-      <div class="rg">${rangeInputs('bulk', rangeOf(a), true, false).replace(/^<div class="rg">|<\/div>$/g, '')}
-      <button class="bbtn" data-act="apply">적용</button></div>
-      ${M.notice ? `<div class="msg">${M.notice}</div>` : ''}</div>` : ''}
+    <div class="info"><span>광고그룹</span>${a.name}<br><span>광고 기간</span>${a.start} ~ ${a.end || '종료일 미설정'}${M.pend ? `<br><span>변경 전</span><i style="color:#888;font-style:normal">${M.pend.prev}</i>` : ''}</div>
+    <div style="height:16px"></div>
+    <p class="hint">종료일 없이 계속 게재할 소재그룹을 1개 이상 선택해야 합니다.</p>
     <div class="ml">${rows}</div>
-    <div class="mf"><button data-act="close">취소</button><button class="save" data-act="save">저장</button></div>`;
+    <div class="mf">${M.pend ? '<button data-act="prev">이전</button>' : '<button data-act="close">취소</button>'}<button class="save" data-act="save">저장</button></div>`;
 }
 
 $('#modal').addEventListener('change', e => {
   const el = e.target;
-  if (el.name === 'mode') { M.mode = el.value; M.notice = ''; M.checked = new Set(); M.bulk = rangeOf(M.a); cgsOf(M.a.id).forEach(c => M.draft[c.no] = { start: c.start, end: c.end, tag: '' }); return renderModal(); } // 방식 전환 시 입력 값 초기화(저장된 값으로 복원)
+  if (el.dataset.noend) { // 종료일 없음 체크 → 종료일 비움, 해제 → 시작일로 채운 뒤 수정
+    const d = M.draft[el.dataset.noend]; d.end = el.checked ? null : (d.start || null); d.tag = '수정됨';
+    return renderModal();
+  }
   if (el.dataset.key) {
     const key = el.dataset.key, val = el.value || null;
-    if (key === 'bulk') M.bulk[el.dataset.f] = val;
-    else { M.draft[key][el.dataset.f] = val; M.draft[key].tag = '수정됨'; }
+    M.draft[key][el.dataset.f] = val; M.draft[key].tag = '수정됨';
     renderModal();
   }
 });
 $('#modal').addEventListener('click', e => {
   const act = e.target.dataset.act; if (!act) return;
   if (act === 'close') return closeModal();
-  if (act === 'apply') {
-    cgsOf(M.a.id).forEach(c => M.draft[c.no] = { start: rangeOf(M.a).start, end: rangeOf(M.a).end, tag: '일괄 적용' });
-    M.notice = ''; return renderModal();
-  }
+  if (act === 'prev') { closeModal(); $('#dimAd').classList.remove('hide'); return renderAdPeriod(); } // 광고 기간 팝업으로 돌아감 (입력값 유지)
   if (act === 'save') {
     const errs = validateModal(); if (errs.length) return alert(errs.join('\n'));
-    cgsOf(M.a.id).forEach(c => { c.start = M.draft[c.no].start; c.end = M.draft[c.no].end; });
+    const pend = M.pend;
+    cgsOf(M.a.id).forEach(c => { c.start = M.draft[c.no].start; c.end = M.draft[c.no].end; c.adj = !!pend && M.draft[c.no].tag === '일괄 변경'; });
+    if (pend) { M.src.start = pend.start; M.src.end = pend.end; AP = null; renderAdList(); } // 광고 기간과 소재그룹 게재 기간을 함께 저장
     closeModal(); renderList();
-    const t = $('#toast'); t.textContent = '게재 기간이 저장되었습니다.'; t.classList.remove('hide');
+    const t = $('#toast'); t.textContent = pend ? '광고 기간과 소재그룹 게재 기간이 저장되었습니다.' : '게재 기간이 저장되었습니다.'; t.classList.remove('hide');
     setTimeout(() => t.classList.add('hide'), 2000);
   }
 });
@@ -598,7 +678,7 @@ document.addEventListener('click', e => {
   const c = DATA.creativeGroups.find(x => x.no === smenuNo);
   if (it.dataset.v === 'off' && c.linked) {
     const rest = cgsOf(c.ag).filter(x => x.linked && x !== c);
-    const errs = gapMessages(adOf(c.ag), rest);
+    const errs = rest.some(x => !x.end) ? gapMessages(adOf(c.ag), rest) : ['종료일 없이 계속 게재하는 소재그룹이 1개 이상 ON 상태여야 합니다.'];
     if (errs.length) return alert(errs.join('\n')); // OFF 처리 불가
   }
   c.linked = it.dataset.v === 'on';
@@ -606,6 +686,81 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') smenu.hidden = true; });
 
+// ===== 광고그룹 목록 =====
+function renderAdList() {
+  let html = `<tr class="sum"><td></td><td class="nm"><span class="lnk">전체 ⓘ</span><br>(라이브 ${DATA.adGroups.length}개 / 중지 0개)</td><td></td><td></td><td class="lnk">₩62,311</td><td></td><td></td><td></td><td></td><td>0</td><td>0</td><td style="color:var(--red)">0</td></tr>`;
+  html += DATA.adGroups.map(a => `<tr>
+    <td><span class="cb"></span><span class="dot"></span></td>
+    <td class="nm"><span class="lnk" style="text-decoration:underline">${a.name}</span></td>
+    <td>${a.no}</td><td class="lnk">${a.campaign}</td><td class="lnk">${a.budget}<br><span style="color:#555">자동분배</span></td>
+    <td class="st">제한됨<br>잔액 부족</td><td class="lnk">기본</td>
+    <td class="per"><span class="lnk" style="text-decoration:underline">${a.start}<br>~ ${a.end || '종료일 미설정'}</span><button class="pen" data-ag="${a.id}" aria-label="${a.name} 광고 기간 수정" title="광고 기간 수정">✎</button></td>
+    <td class="lnk">전체</td><td>0</td><td>0</td><td style="color:var(--red)">0</td></tr>`).join('');
+  $('#tbAd').innerHTML = html;
+}
+$('#tbAd').addEventListener('click', e => { const b = e.target.closest('.pen'); if (b) openAdPeriod(b.dataset.ag); });
+
+// ===== 광고 기간 수정 팝업 =====
+// [다음] 클릭 시 게재 기간 관리 팝업을 열어 소재그룹 게재 기간을 새 광고 기간 기준으로 설정한 뒤 함께 저장
+// 팝업에는 새 광고 기간(시작일 00:00 ~ 종료일 23:59)으로 일괄 변경한 값이 미리 채워짐 (종료일 없음 소재그룹은 유지)
+let AP = null; // { a, sd, st, endOn, ed, et, step, plan, err }
+const hours = sel => Array.from({ length: 24 }, (_, h) => `${pad(h)}:00`).concat('23:59')
+  .map(v => `<option ${v === sel ? 'selected' : ''}>${v}</option>`).join('');
+function openAdPeriod(agId) {
+  const a = adOf(agId);
+  AP = { a, sd: dateOf(a.start), st: a.start.slice(11), endOn: !!a.end, ed: dateOf(a.end) || '', et: a.end ? a.end.slice(11) : '23:59', step: 'edit', plan: null, err: '' };
+  $('#dimAd').classList.remove('hide');
+  renderAdPeriod();
+}
+const closeAdPeriod = () => { $('#dimAd').classList.add('hide'); AP = null; };
+
+// 일괄 변경으로 기간이 실제로 바뀌는 소재그룹 목록
+// 종료일 없음(상시) 소재그룹은 시작일만 맞추고 종료일 없음 유지
+const planSync = (a, nS, nE) => cgsOf(a.id).map(c => ({ c, s: nS, e: c.end ? nE : null })).filter(x => x.c.start !== x.s || x.c.end !== x.e);
+const per = (s, e) => `${s} ~ ${e || '종료일 미설정'}`;
+
+function renderAdPeriod() {
+  const { a } = AP;
+  if (AP.step === 'edit') {
+    $('#apd').innerHTML = `
+      <div class="hd">광고 기간</div>
+      <div class="bd2"><div class="l">
+        <p class="lbl">시작일시</p>
+        <div class="row2"><input type="date" data-f="sd" value="${AP.sd}" aria-label="시작일"><select data-f="st" aria-label="시작 시각">${hours(AP.st)}</select></div>
+        <p class="lbl" style="margin-top:20px">종료일시</p>
+        <label class="rd"><input type="radio" name="endOn" value="0" ${AP.endOn ? '' : 'checked'}> 없음</label>
+        <div class="row2"><input type="radio" name="endOn" value="1" ${AP.endOn ? 'checked' : ''} aria-label="종료일시 지정">
+          <input type="date" data-f="ed" value="${AP.ed}" min="${AP.sd}" ${AP.endOn ? '' : 'disabled'} aria-label="종료일">
+          <select data-f="et" ${AP.endOn ? '' : 'disabled'} aria-label="종료 시각">${hours(AP.et)}</select></div>
+        ${AP.err ? `<div class="err">${AP.err}</div>` : ''}
+      </div>
+      <div class="r">종료일시를 지정하지 않으면 광고가 계속 게재됩니다.<br><span style="color:var(--red)">광고 기간 변경 시 소재그룹 게재 기간이 일괄 변경됩니다.</span></div></div>
+      <div class="ft"><button data-act="close">취소</button><button data-act="next">다음</button></div>`;
+    return;
+  }
+}
+
+$('#apd').addEventListener('change', e => {
+  const el = e.target;
+  if (el.name === 'endOn') { AP.endOn = el.value === '1'; if (AP.endOn && !AP.ed) AP.ed = AP.sd; }
+  else if (el.dataset.f) AP[el.dataset.f] = el.value;
+  AP.err = ''; renderAdPeriod();
+});
+$('#apd').addEventListener('click', e => {
+  const act = e.target.dataset.act; if (!act) return;
+  if (act === 'close') return closeAdPeriod();
+  const nStart = `${AP.sd} ${AP.st}`, nEnd = AP.endOn ? `${AP.ed} ${AP.et}` : null;
+  if (act === 'next') {
+    if (!AP.sd || (AP.endOn && !AP.ed)) { AP.err = '날짜를 입력해주세요.'; return renderAdPeriod(); }
+    if (nEnd && nEnd <= nStart) { AP.err = '종료일시는 시작일시 이후여야 합니다.'; return renderAdPeriod(); }
+    // 다음: 광고 기간은 아직 저장하지 않고, 게재 기간 관리 팝업에서 소재그룹 기간을 설정한 뒤 함께 저장
+    $('#dimAd').classList.add('hide');
+    return openModal(AP.a.id, null, { start: nStart, end: nEnd, prev: per(AP.a.start, AP.a.end) });
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && AP) closeAdPeriod(); });
+
+renderAdList();
 renderList();
 </script>
 </template>
@@ -618,7 +773,22 @@ renderList();
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:Pretendard,"Noto Sans KR",sans-serif;color:var(--ink);font-size:12px;background:#eef0f3}
-  .wrap{display:flex;height:100vh}
+  .ptabs{display:flex;gap:6px;align-items:center;background:#2b2f36;color:#cfd3d8;padding:8px 16px;font-size:12px;height:38px}
+  .ptabs button{background:#3b414b;color:#fff;border:0;border-radius:4px;padding:5px 10px;cursor:pointer;font:inherit}
+  .ptabs button.on{background:var(--blue)}
+  .ptabs button:focus-visible{outline:2px solid #fff;outline-offset:1px}
+  .wrap{display:flex;height:calc(100vh - 38px)}
+  .pg[hidden],.item[hidden]{display:none}
+  .hold{display:inline-block;font-size:10px;font-weight:700;border-radius:3px;padding:0 5px;background:#ffe8e8;color:var(--red);border:1px solid #f5b5b5;vertical-align:middle}
+  .red{color:var(--red)}
+  .apd{background:#fff;border-radius:4px;max-width:620px;margin:0 auto}
+  .apd .hd{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px}
+  .apd .ft{display:flex;justify-content:flex-end;gap:18px;padding:4px 18px 14px;color:var(--blue)}
+  .cft{font-size:12px;line-height:1.7;padding:14px 16px}
+  .cft .chg{background:#f7f8fa;border-radius:6px;padding:8px 12px;margin-bottom:10px}
+  .cft table{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0 10px}
+  .cft th,.cft td{border-bottom:1px solid #eee;padding:5px 4px;text-align:left}
+  .cft th{color:#888;font-weight:500}
   .left{flex:1;min-width:0;overflow:auto;padding:28px 36px 60px}
   .right{width:440px;flex:none;overflow:auto;background:#fff;border-left:1px solid var(--line);padding:18px 20px 60px}
   @media (max-width:1100px){.wrap{flex-direction:column;height:auto}.left,.right{overflow:visible;width:auto}.right{border-left:0;border-top:1px solid var(--line)}}
@@ -688,9 +858,16 @@ renderList();
   @media (prefers-reduced-motion:reduce){.flash{animation:none;background:#fff3a0}}
 </style>
 
+<div class="ptabs" role="tablist">
+  화면설계서
+  <button data-pg="ad" role="tab">광고그룹 등록 · 광고 기간</button>
+  <button data-pg="adlist" role="tab">광고그룹 목록 · 광고 기간 수정</button>
+  <button data-pg="list" role="tab">소재그룹 목록</button>
+</div>
 <div class="wrap">
 <div class="left" id="left">
 
+<div class="pg" data-pg="ad">
   <div class="cap">화면 1. 광고그룹 등록 &gt; 광고 기간</div>
   <div class="scr">
     <div class="card rel"><span class="bd" data-t="1"></span>
@@ -703,14 +880,68 @@ renderList();
           <div class="row">○ <span class="sel dis"></span><span class="sel sm dis"></span></div>
         </div>
         <div class="r">종료일시를 지정하지 않으면 광고가 계속 게재됩니다.
-          <div class="newtxt rel"><span class="bd" data-t="1-2"></span>설정한 광고 기간은 소재그룹의 게재 기간에 자동으로 적용됩니다. 소재그룹별로 기간을 다르게 설정하려면 소재그룹 생성·수정 화면에서 광고 기간 내로 변경할 수 있습니다.</div>
+          <div class="newtxt rel"><span class="bd" data-t="1-2"></span>소재그룹을 처음 만들면 게재 기간은 광고 기간 시작일부터 종료일 없음으로 설정됩니다. 소재그룹별 게재 기간은 [소재그룹 목록 &gt; 게재 기간 관리]에서 변경할 수 있습니다.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="cap">화면 2. 소재그룹 목록 (광고그룹 선택 상태)</div>
+</div>
+
+<div class="pg" data-pg="adlist">
+  <div class="cap">화면 2. 광고그룹 목록</div>
   <div class="scr rel"><span class="bd" data-t="2"></span>
+    <div class="row" style="margin-bottom:12px">
+      <span class="fbox act">캠페인<br>캠페인명_데모</span>
+      <span class="fbox">광고그룹<br>광고그룹 선택</span>
+    </div>
+    <div class="row" style="margin-bottom:12px"><span class="pill pri">＋ 광고그룹 추가</span><span class="pill">필터 추가</span></div>
+    <table class="l">
+      <tr><th class="nm">광고그룹 명 ↑</th><th>광고그룹NO ↑</th><th>캠페인 명 ↑</th><th>상태 ↑</th><th>광고기간 ↑</th><th>광고일정 ↑</th></tr>
+      <tr><td class="nm">전체 (라이브 2개 / 중지 0개)</td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="nm lnk">광고그룹명_데모1</td><td>20125</td><td class="lnk">캠페인명_데모</td><td class="st">제한됨</td><td><span class="lnk">2026-04-22 11:00<br>~ 종료일 미설정</span> <span class="rel"><span class="bd" data-t="2-1"></span>✎</span></td><td class="lnk">전체</td></tr>
+      <tr><td class="nm lnk">광고그룹명_데모2</td><td>20131</td><td class="lnk">캠페인명_데모</td><td class="st">제한됨</td><td><span class="lnk">2026-04-27 15:00<br>~ 2026-11-30 23:59</span> ✎</td><td class="lnk">전체</td></tr>
+    </table>
+  </div>
+
+  <div class="cap">화면 3. 광고 기간 수정 팝업</div>
+  <div class="dim"><div class="apd rel"><span class="bd" data-t="3" style="margin:10px 0 0 10px"></span>
+    <div class="hd">광고 기간</div>
+    <div class="cb">
+      <div class="l rel"><span class="bd" data-t="3-1"></span>
+        <p class="lbl">시작일시</p><div class="row"><span class="sel">2026-04-27</span><span class="sel sm">15:00</span></div>
+        <p class="lbl" style="margin-top:14px">종료일시</p>
+        <div class="row" style="margin-bottom:6px">○ 없음</div>
+        <div class="row">◉ <span class="sel">2026-11-30</span><span class="sel sm">23:59</span></div>
+      </div>
+      <div class="r">종료일시를 지정하지 않으면 광고가 계속 게재됩니다.
+        <div class="newtxt rel red"><span class="bd" data-t="3-2"></span>광고 기간 변경 시 소재그룹 게재 기간이 일괄 변경됩니다.</div>
+      </div>
+    </div>
+    <div class="ft rel"><span class="bd" data-t="3-3"></span><span>취소</span><span>다음</span></div>
+  </div></div>
+
+  <div class="cap">화면 3 참고. [다음] → 게재 기간 관리 팝업 (화면 5와 같은 팝업)</div>
+  <div class="dim"><div class="modal rel"><span class="bd" data-t="3-4"></span>
+    <h5>소재그룹 게재 기간 관리 <span>×</span></h5>
+    <div class="info"><span>광고그룹</span>광고그룹명_데모2<br><span>광고 기간</span>2026-04-27 15:00 ~ 2026-12-31 23:59<br><span>변경 전</span><i style="color:#888;font-style:normal">2026-04-27 15:00 ~ 2026-11-30 23:59</i></div>
+    <div class="gap"></div>
+    <div class="row"><span style="color:#1e4fa8">종료일 없이 계속 게재할 소재그룹을 1개 이상 선택해야 합니다.</span></div>
+    <div class="ml">
+      <div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간</div></div>
+      <div class="mr chgd"><div class="n">소재그룹명_데모5</div><div class="p row"><span class="sel xs chg">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs chg">2026-12-31</span><span class="fx">23:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr chgd"><div class="n">소재그룹명_데모6</div><div class="p row"><span class="sel xs chg">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs chg">2026-12-31</span><span class="fx">23:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr chgd"><div class="n">소재그룹명_데모7</div><div class="p row"><span class="sel xs chg">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs chg">2026-12-31</span><span class="fx">23:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n">소재그룹명_데모8</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs dis">연도-월-일</span><span class="fx">23:59</span> ☑ 종료일 없음</div></div>
+    </div>
+    <div class="gap"></div>
+    <div class="row" style="justify-content:flex-end"><span class="btn">이전</span><span class="btn pri">저장</span></div>
+  </div></div>
+</div>
+
+<div class="pg" data-pg="list">
+  <div class="cap">화면 4. 소재그룹 목록 (광고그룹 선택 상태)</div>
+  <div class="scr rel"><span class="bd" data-t="4"></span>
     <div class="row" style="margin-bottom:12px">
       <span class="fbox">캠페인(1개)<br>캠페인 선택</span>
       <span class="fbox act rel">광고그룹<br>광고그룹명_데모2</span>
@@ -718,51 +949,35 @@ renderList();
     </div>
     <div class="row" style="margin-bottom:12px">
       <span class="pill pri">＋ 소재그룹 추가</span><span class="pill">필터 추가</span>
-      <span class="pill nw rel"><span class="bd" data-t="2-1"></span>게재 기간 관리</span>
+      <span class="pill nw rel"><span class="bd" data-t="4-1"></span>게재 기간 관리</span>
     </div>
     <table class="l">
-      <tr><th class="nm">소재그룹 명 ↑</th><th>소재그룹NO ↑</th><th>광고그룹 명 ↑</th><th>상태 ↑</th><th class="rel"><span class="bd" data-t="2-2"></span>게재 기간 ↑</th><th>노출 비율 기준 ↑</th></tr>
+      <tr><th class="nm">소재그룹 명 ↑</th><th>소재그룹NO ↑</th><th>광고그룹 명 ↑</th><th>상태 ↑</th><th class="rel"><span class="bd" data-t="4-2"></span>게재 기간 ↑</th><th>노출 비율 기준 ↑</th></tr>
       <tr><td class="nm">전체 (연결 4개 / 미연결 0개)</td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td class="nm"><span class="rel"><span class="bd" data-t="2-3"></span><span style="color:#43a047">●</span></span> 소재그룹명_데모5</td><td>83532</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 00:00<br>~ 2026-10-31 23:59</td><td>13.08%</td></tr>
+      <tr><td class="nm"><span class="rel"><span class="bd" data-t="4-3"></span><span style="color:#43a047">●</span></span> 소재그룹명_데모5</td><td>83532</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 00:00<br>~ 2026-10-31 23:59</td><td>13.08%</td></tr>
       <tr><td class="nm">소재그룹명_데모6</td><td>83481</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-05-01 00:00<br>~ 2026-05-31 23:59</td><td>13.08%</td></tr>
       <tr><td class="nm">소재그룹명_데모7</td><td>81543</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 00:00<br>~ 2026-11-30 23:59</td><td>12.86%</td></tr>
-      <tr><td class="nm">소재그룹명_데모8</td><td>81542</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 00:00<br>~ 2026-11-30 23:59</td><td>12.86%</td></tr>
+      <tr><td class="nm">소재그룹명_데모8</td><td>81542</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 00:00<br>~ 종료일 미설정</td><td>12.86%</td></tr>
     </table>
   </div>
 
-  <div class="cap">화면 3. 게재 기간 관리 팝업 — 일괄 적용</div>
-  <div class="dim"><div class="modal rel"><span class="bd" data-t="3"></span>
+  <div class="cap">화면 5. 게재 기간 관리 팝업</div>
+  <div class="dim"><div class="modal rel"><span class="bd" data-t="5"></span>
     <h5>소재그룹 게재 기간 관리 <span>×</span></h5>
-    <div class="info rel"><span class="bd" data-t="3-1"></span><span>광고그룹</span>광고그룹명_데모2<br><span>광고 기간</span>2026-04-27 15:00 ~ 2026-11-30 23:59</div>
+    <div class="info rel"><span class="bd" data-t="5-1"></span><span>광고그룹</span>광고그룹명_데모2<br><span>광고 기간</span>2026-04-27 15:00 ~ 2026-11-30 23:59</div>
     <div class="gap"></div>
-    <div class="row rel"><span class="bd" data-t="3-2"></span><b style="width:64px">설정 방식</b> ◉ 일괄 적용 &nbsp; ○ 소재그룹별 설정</div>
-    <div class="gap"></div>
-    <div class="bulk rel"><span class="bd" data-t="3-3"></span><b style="color:#1e4fa8">전체 소재그룹에 일괄 적용</b>
-      <div class="row" style="margin-top:8px"><span class="sel xs dis">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs dis">2026-11-30</span><span class="fx">23:59</span><span class="btn">적용</span></div></div>
-    <div class="gap"></div>
-    <div class="ml rel"><span class="bd" data-t="3-4"></span>
+    <div class="row rel"><span class="bd" data-t="5-3"></span><span style="color:#1e4fa8">종료일 없이 계속 게재할 소재그룹을 1개 이상 선택해야 합니다.</span></div>
+    <div class="ml rel"><span class="bd" data-t="5-2"></span>
       <div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간</div></div>
-      <div class="mr pv"><div class="n">소재그룹명_데모5</div><div class="p row"><span class="sel xs pv">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs pv">2026-11-30</span><span class="fx">23:59</span></div></div>
-      <div class="mr pv"><div class="n">소재그룹명_데모6</div><div class="p row"><span class="sel xs pv">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs pv">2026-11-30</span><span class="fx">23:59</span></div></div>
-      <div class="mr pv"><div class="n">소재그룹명_데모7</div><div class="p row"><span class="sel xs pv">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs pv">2026-11-30</span><span class="fx">23:59</span></div></div>
-      <div class="mr pv"><div class="n">소재그룹명_데모8</div><div class="p row"><span class="sel xs pv">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs pv">2026-11-30</span><span class="fx">23:59</span></div></div>
+      <div class="mr"><div class="n">소재그룹명_데모5</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs">2026-10-31</span><span class="fx">23:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n">소재그룹명_데모6</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="fx">00:00</span>~<span class="sel xs">2026-05-31</span><span class="fx">23:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr chgd"><div class="n">소재그룹명_데모7</div><div class="p row"><span class="sel xs chg">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs chg">2026-11-25</span><span class="fx">23:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n">소재그룹명_데모8</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs dis">연도-월-일</span><span class="fx">23:59</span> ☑ 종료일 없음</div></div>
     </div>
     <div class="gap"></div>
-    <div class="row rel" style="justify-content:flex-end"><span class="bd" data-t="3-6"></span><span class="btn">취소</span><span class="btn pri">저장</span></div>
+    <div class="row rel" style="justify-content:flex-end"><span class="bd" data-t="5-4"></span><span class="btn">취소</span><span class="btn pri">저장</span></div>
   </div></div>
-
-  <div class="cap">화면 3 참고. 설정 방식 = 소재그룹별 설정</div>
-  <div class="dim"><div class="modal">
-    <div class="row rel"><span class="bd" data-t="3-5"></span><b style="width:64px">설정 방식</b> ○ 일괄 적용 &nbsp; ◉ 소재그룹별 설정</div>
-    <div class="gap"></div>
-    <div class="ml">
-      <div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간</div></div>
-      <div class="mr"><div class="n">소재그룹명_데모5</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs">2026-10-31</span><span class="fx">23:59</span></div></div>
-      <div class="mr"><div class="n">소재그룹명_데모6</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="fx">00:00</span>~<span class="sel xs">2026-05-31</span><span class="fx">23:59</span></div></div>
-      <div class="mr chgd"><div class="n">소재그룹명_데모7</div><div class="p row"><span class="sel xs chg">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs chg">2026-11-25</span><span class="fx">23:59</span></div></div>
-      <div class="mr"><div class="n">소재그룹명_데모8</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="fx">00:00</span>~<span class="sel xs">2026-11-30</span><span class="fx">23:59</span></div></div>
-    </div>
-  </div></div>
+</div>
 
 </div>
 
@@ -775,26 +990,31 @@ renderList();
 <script>
 // 디스크립션 (배지 data-t 와 id 가 1:1로 대응)
 const DESC = [
-  { id: '1', tag: 'old', title: '광고그룹 등록 > 광고 기간 카드', body: 'a. 광고그룹 생성·수정 화면의 광고 기간 영역.\n구조와 동작은 기존과 동일\nb. 여기서 설정한 광고 기간이 하위 소재그룹 게재 기간의 기본값\nc. 소재그룹 게재 기간은 날짜 단위이므로, \n 기본값은 광고그룹 시작일 00:00 ~ 종료일 23:59' },
+  { id: '1', tag: 'old', title: '광고그룹 등록 > 광고 기간 카드', body: 'a. 광고그룹 생성·수정 화면의 광고 기간 영역.\n구조와 동작은 기존과 동일\nb. 소재그룹을 처음 만들 때 게재 기간 기본값 = 광고그룹 시작일 00:00 ~ 종료일 없음\nc. 광고 기간 종료일 설정 여부와 관계없이 종료일은 없음으로 생성' },
   { id: '1-1', tag: 'old', title: '시작일시 / 종료일시', body: 'a. 시작일시: 날짜 + 시간 선택\nb. 종료일시: "없음" 또는 날짜 + 시간.\n"없음"이면 목록에 "종료일 미설정"으로 표시\nc. 종료일시가 "없음"이면 소재그룹 게재 기간도 종료일 미설정으로 상속' },
-  { id: '1-2', tag: 'new', title: '소재그룹 기간 안내 문구', body: 'a. 기존 안내 문구("<i>종료일시를 지정하지 않으면 광고가 계속 게재됩니다.</i>") 아래에 노출\nb. 문구: 설정한 광고 기간은 소재그룹의 게재 기간에 자동으로 적용됩니다.\n<i>소재그룹별로 기간을 다르게 설정하려면 소재그룹 생성·수정 화면에서 광고 기간 내로 변경할 수 있습니다.</i>\nc. 스타일은 기존 안내 문구와 동일 (설계서의 빨간 점선은 표시용)' },
-  { id: '2', tag: 'old', title: '소재그룹 목록', body: 'a. 캠페인 > 소재그룹 목록 화면.\n기존 컬럼, 필터, 지표, 다운로드 동작은 유지' },
-  { id: '2-1', tag: 'new', title: '게재 기간 관리 버튼', body: 'a. 클릭 시 게재 기간 관리 팝업(3) 오픈\na-1. 광고그룹의 광고 기간 단위로 게재 기간 커버리지를 판단하므로, \n 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\na-2. 소재그룹 목록 화면에서 소재그룹을 별도로 선택해서 열지 않음\nb. 광고그룹 미선택 상태에서 클릭 시 얼럿 노출: "광고그룹을 선택해주세요" 노출\nb-1. 팝업 오픈 안됨' },
-  { id: '2-2', tag: 'new', title: '게재 기간 컬럼', body: 'a. 위치: 상태 컬럼 우측에 열 삽입\nb. 표기: 1줄 "시작일 00:00", 2줄 "~ 종료일 23:59" 또는 "~ 종료일 미설정". 광고그룹 목록 광고기간 컬럼과 같은 포맷\nc. 정렬: 시작일 기준 오름/내림차순\nd. 컬럼설정에서 노출·숨김 가능, 다운로드 파일에도 포함' },
-  { id: '2-3', tag: 'new', title: '소재그룹 수동 ON/OFF', body: 'a. 소재그룹 수동 OFF 변경 시 게재 기간 커버리지 유효성 체크\na-1. 기준 구간: 광고그룹 시작일 00:00 ~ 종료일 23:59\na-2. 소재그룹의 게재 기간이 기준 구간을 모두 충족해야 OFF 처리 가능\na-3. OFF 소재그룹은 계산에서 제외\na-4. 광고 기간이 종료일 미설정인 경우 종료일 미설정인 소재그룹이 1개 이상 있어야함\na-5. 조건 미충족 시 얼럿 "YYYY-MM-DD ~ YYYY-MM-DD 기간에 게재되는 소재그룹이 없습니다." 노출, OFF 처리 불가' },
-  { id: '3', tag: 'new', title: '게재 기간 관리 팝업', body: 'a. 광고그룹의 광고 기간 단위로 게재 기간 커버리지를 판단하므로,\n 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\nb. 닫기(×), 취소, Esc: 저장하지 않은 변경을 버리고 닫기' },
-  { id: '3-1', tag: 'new', title: '광고그룹 정보', body: 'a. 광고그룹 명, 광고 기간을 읽기 전용으로 표시\nb. 설정 범위 = 광고그룹 시작일 00:00 ~ 종료일 23:59.\n광고 기간의 시각(예: 15:00)과 관계없이 날짜 기준\nc. 광고 기간이 종료일 미설정이면 "~ 종료일 미설정"으로 표시' },
-  { id: '3-2', tag: 'new', title: '설정 방식', body: 'a. 속성: 라디오 버튼\nb. 선택지: 일괄 적용(디폴트), 소재그룹별 설정\nb-1. 일괄 적용 선택 시: 3-3\nb-2. 소재그룹별 설정 선택 시: 3-5\nc. 방식을 바꾸면 입력 중인 값 초기화 (저장된 값으로 복원)' },
-  { id: '3-3', tag: 'new', title: '일괄 적용 영역', body: 'a. 설정 방식이 일괄 적용일 때만 노출\nb. [적용] 클릭 시 전체 소재그룹의 게재 기간을 광고그룹 기간과 동일한 값으로 변경\nㄴ 입력칸에는 광고그룹 기간이 고정 표시되며 날짜 선택 불가\nc. 저장 전까지는 미리보기\nd. 광고 기간과 동일한 값이 들어가므로 게재 기간 커버리지 100%' },
-  { id: '3-4', tag: 'new', title: '소재그룹 목록', body: 'a. 광고그룹에 속한 소재그룹 전체 노출\na-1. 최초 팝업 오픈 시 기존 게재 기간 노출\nb. 일괄 적용 시: [3-3. 적용 누르면 변경됨]\nb-1. 일괄 적용 선택 시 소재그룹 전체에 일괄 적용\nb-2. 읽기 전용\nc. 날짜만 입력.\n시각은 시작일 00:00, 종료일 23:59로 고정 표시' },
-  { id: '3-5', tag: 'new', title: '소재그룹별 설정', body: 'a. 설정 방식이 소재그룹별 설정일 때 노출\nb. 게재 기간 데이트 피커\nb-1. 시작일: 별도 조건 없음\nb-2. 종료일\nㄴ 시작일보다 앞선 날짜는 선택 불가\nㄴ 광고그룹 기간의 종료일을 초과하는 날짜는 선택 불가' },
-  { id: '3-6', tag: 'new', title: '취소 / 저장 (유효성 검사)', body: 'a. [저장] 클릭 시 게재 기간 커버리지 유효성 검사\na-1. 기준 구간: 광고그룹 시작일 00:00 ~ 종료일 23:59\na-2. 소재그룹의 게재 기간이 기준 구간을 모두 충족해야 저장 가능\na-3. OFF 소재그룹은 계산에서 제외\na-4. 광고 기간이 종료일 미설정인 경우 종료일 미설정인 소재그룹이 1개 이상 있어야함\na-5. 조건 미충족 시 얼럿 \n "YYYY-MM-DD ~ YYYY-MM-DD 기간에 게재되는 소재그룹이 없습니다." 노출, 저장되지 않음\nb. 저장 시 팝업을 닫고 목록의 게재 기간 컬럼에 즉시 반영\nc. 저장 완료 토스트: "게재 기간이 저장되었습니다."' }
+  { id: '1-2', tag: 'new', title: '소재그룹 기간 안내 문구', body: 'a. 기존 안내 문구("<i>종료일시를 지정하지 않으면 광고가 계속 게재됩니다.</i>") 아래에 노출\nb. 문구: 소재그룹을 처음 만들면 게재 기간은 광고 기간 시작일부터 종료일 없음으로 설정됩니다.\n<i>소재그룹별 게재 기간은 [소재그룹 목록 > 게재 기간 관리]에서 변경할 수 있습니다.</i>\nc. 스타일은 기존 안내 문구와 동일 (설계서의 빨간 점선은 표시용)' },
+  { id: '2', tag: 'old', title: '광고그룹 목록', body: 'a. 캠페인 > 광고그룹 목록 화면.\n기존 컬럼, 필터, 지표, 다운로드 동작은 유지' },
+  { id: '2-1', tag: 'old', title: '광고 기간 수정 버튼(✎)', body: 'a. 광고기간 컬럼 우측 연필 아이콘\nb. 클릭 시 광고 기간 수정 팝업(3) 오픈' },
+  { id: '3', tag: 'old', title: '광고 기간 수정 팝업', body: 'a. 기존 팝업. 입력 구조와 동작은 기존과 동일\nb. 취소: 저장하지 않고 닫기' },
+  { id: '3-1', tag: 'old', title: '시작일시 / 종료일시', body: 'a. 시작일시: 날짜 + 시간 선택\nb. 종료일시: "없음" 또는 날짜 + 시간\nc. 종료일시는 시작일시 이후여야 저장 가능' },
+  { id: '3-2', tag: 'new', title: '소재그룹 기간 일괄 변경 안내 문구', body: 'a. 기존 안내 문구("<i>종료일시를 지정하지 않으면 광고가 계속 게재됩니다.</i>") 아래에 노출\nb. 문구: 광고 기간 변경 시 소재그룹 게재 기간이 일괄 변경됩니다.\nc. 스타일: 빨간 글씨' },
+  { id: '3-3', tag: 'chg', hold: true, title: '다음', body: 'a. 기존 [저장] 버튼을 [다음]으로 변경\nb. 클릭 시 광고 기간 입력값 검사 (날짜 미입력, 종료일시 ≤ 시작일시면 오류 문구)\nc. 통과하면 광고 기간 팝업을 닫고 게재 기간 관리 팝업(3-4) 오픈\nc-1. 이 시점에는 광고 기간을 저장하지 않음. 게재 기간 관리 팝업의 [저장]에서 함께 저장' },
+  { id: '3-4', tag: 'new', title: '게재 기간 관리 팝업 (광고 기간 수정에서 진입)', body: 'a. 화면 5와 같은 팝업. 새 광고 기간을 기준으로 검사\nb. 광고 기간에 새 기간 표시, 아래 줄에 변경 전 기간을 회색으로 표시\nc. 소재그룹 게재 기간을 새 광고 기간으로 일괄 변경한 값이 미리 채워짐 (노란 배경)\nc-1. 종료일 없음 소재그룹은 시작일만 바꾸고 종료일 없음 유지\nd. 하단 버튼: [이전] [저장]\nd-1. 이전: 광고 기간 팝업으로 돌아감 (입력값 유지)\nd-2. 저장 시 체크 (새 광고 기간 기준, OFF 소재그룹 제외)\n① 광고 기간 내 소재그룹이 비는 날이 없는지 → 없으면 "YYYY-MM-DD ~ YYYY-MM-DD 기간에 게재되는 소재그룹이 없습니다."\n② 종료일 없음 소재그룹이 1개 이상인지 → 없으면 "종료일 없이 계속 게재할 소재그룹을 1개 이상 선택해주세요."\nㄴ 둘 다 걸리면 한 얼럿에 함께 노출, 저장되지 않음\nd-3. 둘 다 통과하면 광고 기간과 소재그룹 게재 기간을 함께 저장\ne. 저장 완료 토스트: "광고 기간과 소재그룹 게재 기간이 저장되었습니다."' },
+  { id: '4', tag: 'old', title: '소재그룹 목록', body: 'a. 캠페인 > 소재그룹 목록 화면.\n기존 컬럼, 필터, 지표, 다운로드 동작은 유지' },
+  { id: '4-1', tag: 'new', title: '게재 기간 관리 버튼', body: 'a. 클릭 시 게재 기간 관리 팝업(5) 오픈\na-1. 광고그룹의 광고 기간 단위로 게재 기간 커버리지를 판단하므로, \n 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\na-2. 소재그룹 목록 화면에서 소재그룹을 별도로 선택해서 열지 않음\nb. 광고그룹 미선택 상태에서 클릭 시 얼럿 노출: "광고그룹을 선택해주세요" 노출\nb-1. 팝업 오픈 안됨' },
+  { id: '4-2', tag: 'new', title: '게재 기간 컬럼', body: 'a. 위치: 상태 컬럼 우측에 열 삽입\nb. 표기: 1줄 "시작일 00:00", 2줄 "~ 종료일 23:59" 또는 "~ 종료일 미설정". 광고그룹 목록 광고기간 컬럼과 같은 포맷\nc. 정렬: 시작일 기준 오름/내림차순\nd. 컬럼설정에서 노출·숨김 가능, 다운로드 파일에도 포함' },
+  { id: '4-3', tag: 'new', title: '소재그룹 수동 ON/OFF', body: 'a. 소재그룹 수동 OFF 변경 시 게재 기간 커버리지 유효성 체크\na-1. 기준 구간: 광고그룹 시작일 00:00 ~ 종료일 23:59\na-2. 소재그룹의 게재 기간이 기준 구간을 모두 충족해야 OFF 처리 가능\na-3. OFF 소재그룹은 계산에서 제외\na-4. 광고 기간 종료일 설정 여부와 관계없이 종료일 없음인 ON 소재그룹이 1개 이상 남아 있어야 함.\n없으면 얼럿 "종료일 없이 계속 게재하는 소재그룹이 1개 이상 ON 상태여야 합니다." 노출, OFF 처리 불가\na-5. 조건 미충족 시 얼럿 "YYYY-MM-DD ~ YYYY-MM-DD 기간에 게재되는 소재그룹이 없습니다." 노출, OFF 처리 불가' },
+  { id: '5', tag: 'new', title: '게재 기간 관리 팝업', body: 'a. 광고그룹의 광고 기간 단위로 게재 기간 커버리지를 판단하므로,\n 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\nb. 닫기(×), 취소, Esc: 저장하지 않은 변경을 버리고 닫기' },
+  { id: '5-1', tag: 'new', title: '광고그룹 정보', body: 'a. 광고그룹 명, 광고 기간을 읽기 전용으로 표시\nb. 설정 범위 = 광고그룹 시작일 00:00 ~ 종료일 23:59.\n광고 기간의 시각(예: 15:00)과 관계없이 날짜 기준\nc. 광고 기간이 종료일 미설정이면 "~ 종료일 미설정"으로 표시' },
+  { id: '5-2', tag: 'new', title: '소재그룹 목록', body: 'a. 광고그룹에 속한 소재그룹 전체 노출\na-1. 최초 팝업 오픈 시 기존 게재 기간 노출\nb. 행마다 게재 기간을 직접 수정 (데이트 피커)\nb-1. 시작일: 별도 조건 없음\nb-2. 종료일\nㄴ 시작일보다 앞선 날짜는 선택 불가\nㄴ 광고그룹 기간의 종료일을 초과하는 날짜는 선택 불가\nc. 날짜만 입력.\n시각은 시작일 00:00, 종료일 23:59로 고정 표시\nd. 수정한 행은 노란 배경으로 표시\ne. 행마다 [종료일 없음] 체크박스 노출 (5-3)' },
+  { id: '5-3', tag: 'new', title: '종료일 없음 선택', body: 'a. 광고 기간 종료일 설정 여부와 관계없이 항상 노출\nb. 목록 위 안내: 종료일 없이 계속 게재할 소재그룹을 1개 이상 선택해야 합니다.\nc. 소재그룹 행마다 종료일 입력칸 오른쪽에 [종료일 없음] 체크박스\nc-1. 체크 시 종료일 입력칸 비활성, 게재 기간 = 시작일 ~ 종료일 미설정\nㄴ 의미: 광고그룹 운영 기간과 관계없이 항상 ON 상태로 둘 소재그룹(상시 소재그룹)을 고르는 것.\n광고그룹에는 소재그룹이 무조건 1개 이상 ON이어야 하므로 필요\nc-2. 해제 시 종료일 입력칸 활성 (시작일로 채워짐)\nd. ON 소재그룹 중 1개 이상 체크해야 저장 가능 (5-4 a-4)' },
+  { id: '5-4', tag: 'new', title: '취소 / 저장 (유효성 검사)', body: 'a. [저장] 클릭 시 아래 2가지를 체크 (OFF 소재그룹은 제외)\na-1. 광고 기간 내 소재그룹이 비는 날이 없는지\nㄴ 기준 구간: 광고그룹 시작일 00:00 ~ 종료일 23:59\nㄴ 미충족 시 "YYYY-MM-DD ~ YYYY-MM-DD 기간에 게재되는 소재그룹이 없습니다."\na-2. 종료일 없음 소재그룹이 1개 이상인지 (광고 기간 종료일 설정 여부와 관계없음)\nㄴ 미충족 시 "종료일 없이 계속 게재할 소재그룹을 1개 이상 선택해주세요."\na-3. 둘 다 걸리면 한 얼럿에 함께 노출, 저장되지 않음\na-4. 그 전에 행 단위 오류(설정 범위 밖, 시작일 > 종료일)가 있으면 먼저 얼럿\nb. 저장 시 팝업을 닫고 목록의 게재 기간 컬럼에 즉시 반영\nc. 저장 완료 토스트: "게재 기간이 저장되었습니다."' }
 ];
 const TAGS = { old: '기존', chg: '변경', new: '신규' };
 
 const desc = document.getElementById('desc');
 desc.innerHTML = DESC.map(d => `<div class="item ${d.id.includes('-') ? 'sub' : ''}" id="d-${d.id}">
-  <div class="ht"><span class="num">${d.id}</span>[${d.title}]<span class="t ${d.tag}">${TAGS[d.tag]}</span></div>
+  <div class="ht"><span class="num">${d.id}</span>[${d.title}]<span class="t ${d.tag}">${TAGS[d.tag]}</span>${d.hold ? '<span class="hold">보류</span>' : ''}</div>
   <div class="body">${d.body.split('\n').map(l => /^ㄴ/.test(l) ? `<div class="c2">${l}</div>` : /^[a-z]-\d\. /.test(l) ? `<div class="m s">${l}</div>` : /^[a-z]\. /.test(l) ? `<div class="m">${l}</div>` : `<div>${l}</div>`).join('')}</div></div>`).join('');
 
 // 배지 번호는 data-t 에서 생성
@@ -813,6 +1033,17 @@ badges.forEach(b => {
   b.onclick = () => go(b.dataset.t);
   b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(b.dataset.t); } };
 });
+
+// 탭: 화면 번호는 탭을 넘어 연속 (1 | 2·3 | 4·5)
+const PG = { 1: 'ad', 2: 'adlist', 3: 'adlist', 4: 'list', 5: 'list' };
+function showPg(pg) {
+  document.querySelectorAll('.ptabs button').forEach(b => { b.classList.toggle('on', b.dataset.pg === pg); b.setAttribute('aria-selected', b.dataset.pg === pg); });
+  document.querySelectorAll('.pg').forEach(el => el.hidden = el.dataset.pg !== pg);
+  DESC.forEach(d => document.getElementById('d-' + d.id).hidden = PG[d.id.split('-')[0]] !== pg);
+  document.getElementById('left').scrollTop = 0; right.scrollTop = 0;
+}
+document.querySelectorAll('.ptabs button').forEach(b => b.onclick = () => showPg(b.dataset.pg));
+showPg('ad');
 </script>
 </template>
 
