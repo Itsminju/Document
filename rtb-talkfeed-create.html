@@ -223,6 +223,19 @@
   #tabSpec .item.flash { animation: specFlash 1.4s ease; }
   @keyframes specFlash { 0%, 40% { background: #fff3a3; } 20%, 60% { background: #fff; } 80% { background: #fff3a3; } 100% { background: #fff; } }
   @media (prefers-reduced-motion: reduce) { #tabSpec .item.flash { animation: none; background: #fff3a3; } }
+  /* 수정 이력 버튼 + 레이어 팝업 */
+  #specMock { position: relative; }
+  #btnHistory { position: absolute; top: 18px; right: 28px; z-index: 5; border: 1px solid #2fb38a; background: #fff; color: #1e8a68; border-radius: 3px; padding: 5px 14px; font: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; }
+  #btnHistory:hover { background: #effaf5; }
+  #historyModal { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; padding: 16px; }
+  #historyModal .hBox { width: 100%; max-width: 720px; max-height: 80vh; display: flex; flex-direction: column; background: #fff; border-radius: 6px; box-shadow: 0 8px 28px rgba(0,0,0,.2); }
+  #historyModal .hHead { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e5e5; font-size: 14px; font-weight: 700; }
+  #historyModal .hClose { border: 0; background: none; font-size: 16px; color: #666; cursor: pointer; }
+  #historyModal .hBody { overflow: auto; padding: 16px 20px 20px; }
+  #historyModal table { width: 100%; border-collapse: collapse; }
+  #historyModal th, #historyModal td { border-bottom: 1px solid #e5e5e5; padding: 10px 12px; font-size: 12px; text-align: left; vertical-align: top; line-height: 1.6; }
+  #historyModal th { background: #f3f4f6; font-weight: 700; white-space: nowrap; }
+  #historyModal td:nth-child(-n+2) { white-space: nowrap; }
   @media (max-width: 900px) {
     #tabSpec { flex-direction: column; height: auto; }
     #specMock { overflow-x: auto; padding: 16px; }
@@ -668,7 +681,7 @@
 
 <!-- ===== 탭: 화면설계서 ===== -->
 <div id="tabSpec" class="hidden">
-<main id="specMock"><div class="canvas">
+<main id="specMock"><button type="button" id="btnHistory">수정 이력</button><div class="canvas">
   <h2 class="pageTitle">이미지 검수 &gt; 채팅리스트/피드(AI)</h2>
 
   <!-- 1. 상단 현황 / 2. 검색 조건 (화면 탭과 동일 배치) -->
@@ -982,14 +995,27 @@ g. 비고
   <section class="item sub" id="d-7-2"><h3><span class="num">7-2</span>[생성 제외 카테고리]</h3><pre class="body">a. 소재를 생성하지 않는 카테고리를 카테고리 분류 체계(대분류 > 중분류 > 소분류) 그대로 노출
 b. 컬럼: 대분류 / 중분류 / 소분류 (가운데 정렬)
 c. 행 단위: 대분류·중분류 조합 1행, 소분류는 쉼표로 나열 (총 24행)
-d. 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록 (한쪽 변경 시 동일하게 반영 필요)
-e. 수정 이력
-   e-1. 2026-10-14 수정: 제외 카테고리 추가 확인에 따른 조정
-   e-2. 2026-10-20 수정: 컬럼을 구분 / 소카테고리 → 대분류 / 중분류 / 소분류로 변경 (24행). H01~H05 추가, 배달의 민족 구분 삭제(B코드는 기타 > 인물로 이동). 자동 반려 조건 '송출 불가 카테고리' 기본 등록값도 함께 변경</pre></section>
+d. 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록 (한쪽 변경 시 동일하게 반영 필요)</pre></section>
 
   <section class="item sub" id="d-7-3"><h3><span class="num">7-3</span>[생성 제외 광고주]</h3><pre class="body">a. 소재 생성에서 제외된 광고주 목록 노출
 b. 컬럼: 광고주ID / 광고주명</pre></section>
 </aside>
+</div>
+
+<!-- 수정 이력 팝업 (최신 이력을 맨 위에 추가) -->
+<div id="historyModal" class="hidden" role="dialog" aria-modal="true" aria-label="수정 이력">
+  <div class="hBox">
+    <div class="hHead"><span>수정 이력</span><button type="button" class="hClose" aria-label="닫기">✕</button></div>
+    <div class="hBody">
+      <table>
+        <thead><tr><th>수정일</th><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>26.10.20</td><td>7-2 생성 제외 카테고리</td><td>컬럼을 구분 / 소카테고리 → 대분류 / 중분류 / 소분류로 변경 (24행). H01~H05 추가, 배달의 민족 구분 삭제(B코드는 기타 &gt; 인물로 이동). 자동 반려 조건 '송출 불가 카테고리' 기본 등록값도 함께 변경</td></tr>
+          <tr><td>26.10.14</td><td>7-2 생성 제외 카테고리</td><td>제외 카테고리 추가 확인에 따른 조정</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1049,6 +1075,16 @@ b. 컬럼: 광고주ID / 광고주명</pre></section>
       modal.querySelectorAll('.gcTabs button').forEach(b => b.classList.toggle('on', b === btn));
       ['gcList', 'gcCat', 'gcAdv'].forEach(id => document.getElementById(id).classList.toggle('hidden', id !== btn.dataset.gc));
     }));
+  })();
+
+  // 수정 이력 팝업
+  (function () {
+    const modal = document.getElementById('historyModal');
+    const close = () => modal.classList.add('hidden');
+    document.getElementById('btnHistory').addEventListener('click', () => modal.classList.remove('hidden'));
+    modal.querySelector('.hClose').addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   })();
 
   document.getElementById('allCheck').addEventListener('change', e => {
