@@ -83,13 +83,32 @@
     margin-top: 4px;
     word-break: break-all;
   }
+  .search {
+    display: block;
+    width: 100%;
+    margin: 0 0 24px;
+    padding: 12px 14px;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .search:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  .empty {
+    color: var(--muted);
+    padding: 20px 0;
+    margin: 0;
+  }
 </style>
 </head>
 <body>
 <main>
   <h1>RTB 문서 모음</h1>
   <p class="intro">보고 싶은 문서를 눌러 여세요.</p>
-  <ul>
+  <input type="search" class="search" id="search" placeholder="문서 제목 검색" aria-label="문서 제목 검색" autocomplete="off">
+  <ul id="doc-list">
     <li>
       <a href="rtb-feed-auto-reject.html">
         <span class="title">카카오 톡피드 자동반려</span>
@@ -150,13 +169,34 @@
       </a>
     </li>
      <li>
-      <a href="asset-schedule.html">
+      <a href="auto-asset-delete.html">
         <span class="title">자동생성 이미지 소재 삭제 정책 </span>
         <span class="desc">2026년 10월 19일 버전</span>
         <span class="url">https://itsminju.github.io/Document/auto-asset-delete</span>
       </a>
     </li>
   </ul>
+  <p class="empty" id="empty" hidden>검색 결과가 없습니다.</p>
 </main>
+<script>
+  (function () {
+    var input = document.getElementById('search');
+    var items = document.querySelectorAll('#doc-list li');
+    var empty = document.getElementById('empty');
+    // 공백 무시 + 대소문자 무시
+    function norm(s) { return s.replace(/\s+/g, '').toLowerCase(); }
+    input.addEventListener('input', function () {
+      var q = norm(input.value);
+      var shown = 0;
+      items.forEach(function (li) {
+        var title = norm(li.querySelector('.title').textContent);
+        var match = title.indexOf(q) !== -1;
+        li.hidden = !match;
+        if (match) shown++;
+      });
+      empty.hidden = shown !== 0;
+    });
+  })();
+</script>
 </body>
 </html>

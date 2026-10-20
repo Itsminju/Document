@@ -158,7 +158,8 @@
   #genCondModal .gcTag.blu, .gcMock .gcTag.blu { background: #e6f0fd; border-color: #4a90e2; color: #2c63b3; }
   #genCondModal .gcCatTbl, .gcMock .gcCatTbl { border: 1px solid #e3e0d8; }
   #genCondModal .gcCatTbl th, .gcMock .gcCatTbl th { background: #f5f3ee; font-size: 12.5px; font-weight: 500; padding: 11px 14px; border-bottom: 1px solid #e3e0d8; }
-  #genCondModal .gcCatTbl th:first-child, #genCondModal .gcCatTbl td:first-child, .gcMock .gcCatTbl th:first-child, #genCondModal .gcCatTbl td:first-child { width: 150px; border-right: 1px solid #e3e0d8; }
+  #genCondModal .gcCatTbl th, #genCondModal .gcCatTbl td, .gcMock .gcCatTbl th, .gcMock .gcCatTbl td { text-align: center; vertical-align: middle; }
+  #genCondModal .gcCatTbl th:nth-child(-n+2), #genCondModal .gcCatTbl td:nth-child(-n+2), .gcMock .gcCatTbl th:nth-child(-n+2), .gcMock .gcCatTbl td:nth-child(-n+2) { width: 130px; border-right: 1px solid #e3e0d8; }
   #genCondModal .gcCatTbl td, .gcMock .gcCatTbl td { font-size: 12.5px; padding: 11px 14px; line-height: 1.6; border-bottom: 1px solid #e3e0d8; }
   .gcMock .gcBox { max-width: none; box-shadow: none; }
   .gcMock .gcTabs .gcT { flex: 1; position: relative; text-align: center; padding: 11px 0; font-size: 12px; color: #666; border-bottom: 2px solid transparent; }
@@ -623,21 +624,32 @@
     </div>
     <div id="gcCat" class="gcPane hidden">
       <table class="gcCatTbl">
-        <thead><tr><th>구분</th><th>소카테고리</th></tr></thead>
+        <thead><tr><th>대분류</th><th>중분류</th><th>소분류</th></tr></thead>
         <tbody>
-          <tr><td>성인·의료</td><td>성기능개선, 산부인과(성인), 비뇨기과(성인), 성형외과(성인), 성인기타</td></tr>
-          <tr><td>성인 콘텐츠·용품</td><td>성인웹툰, 성인용품, 성인방송, 섹시글램</td></tr>
-          <tr><td>담배</td><td>전자담배/금연용품</td></tr>
-          <tr><td>금융·투자</td><td>가상화폐/블록체인, 제3금융권대출, 증시, 펀드, 신용평가/조사기관</td></tr>
-          <tr><td>사행·운세</td><td>복권/로또, 스포츠토토, 카드/카지노, 타로/사주</td></tr>
-          <tr><td>의료</td><td>일반병원, 종합병원, 요양병원, 산부인과, 비뇨기과, 성형외과, 피부과, 안과, 치과, 한의원, 척추질환</td></tr>
-          <tr><td>건강식품</td><td>건강식품, 비타민, 헬스보충제, 한방다이어트</td></tr>
-          <tr><td>의류</td><td>남성언더웨어, 여성언더웨어, 비치웨어, 레플리카</td></tr>
-          <tr><td>인물·공인</td><td>정치인, 기타공인, 기업, 스포츠인, 연예인/인플루언서</td></tr>
-          <tr><td>콘텐츠·방송</td><td>웹툰일반, 청소년웹툰, P2P/웹하드, 일반방송</td></tr>
-          <tr><td>생활·서비스</td><td>취업포털, 중고차매매</td></tr>
-          <tr><td>송출 방식</td><td>워터폴, RTB</td></tr>
-          <tr><td>배달의 민족</td><td>B30, B31, B32, B33, B34, B35, B36, B37, B38, B39, B40, B41, B42, B43, B44, B45, B46, B47, B48, B49, B50, B51, B52, B53, B54, B55, B56, B57, B58, B59, B60, B61, B62, B63, B64, B65, B66, B67, B68, B69, B70, B71, B72, B73, B74, B75, B76, B77, H01, H02, H03, H04, H05</td></tr>
+          <tr><td>건강</td><td>건강식품</td><td>건강식품, 비타민, 헬스보충제</td></tr>
+          <tr><td>건강</td><td>일반병원</td><td>종합병원, 일반병원</td></tr>
+          <tr><td>금융</td><td>대출</td><td>제3금융권대출</td></tr>
+          <tr><td>금융</td><td>증권</td><td>증시, 펀드</td></tr>
+          <tr><td>금융</td><td>복권/기금</td><td>복권/로또, 스포츠토토</td></tr>
+          <tr><td>콘텐츠서비스</td><td>운세</td><td>타로/사주</td></tr>
+          <tr><td>기타</td><td>성인서비스</td><td>성기능개선, 산부인과(성인), 비뇨기과(성인), 성형외과(성인), 성인기타, 성인웹툰, 전자담배/금연용품, 성인용품, 성인방송</td></tr>
+          <tr><td>결혼/육아/출산</td><td>출산</td><td>산부인과</td></tr>
+          <tr><td>건강</td><td>전문병원</td><td>안과, 척추질환, 비뇨기과, 치과, 한의원, 요양병원</td></tr>
+          <tr><td>뷰티</td><td>성형/뷰티</td><td>피부과, 성형외과</td></tr>
+          <tr><td>패션</td><td>남성패션</td><td>남성언더웨어</td></tr>
+          <tr><td>패션</td><td>여성패션</td><td>여성언더웨어, 비치웨어, 섹시글램</td></tr>
+          <tr><td>패션</td><td>멀티/레플리카</td><td>레플리카</td></tr>
+          <tr><td>뷰티</td><td>다이어트</td><td>한방다이어트</td></tr>
+          <tr><td>취업교육</td><td>취업</td><td>취업포털</td></tr>
+          <tr><td>자동차</td><td>신차/중고차</td><td>중고차매매</td></tr>
+          <tr><td>콘텐츠서비스</td><td>음원영상서비스</td><td>P2P/웹하드, 일반방송</td></tr>
+          <tr><td>기타</td><td>인물</td><td>정치인, 기타공인, 스포츠인, 연예인/인플루언서, B30, B31, B32, B33, B34, B35, B36, B37, B38, B39, B40, H01, H02, H03, H04, H05, B41, B42, B43, B44, B45, B46, B47, B48, B49, B50, B51, B52, B53, B54, B55, B56, B57, B58, B59, B60, B61, B62, B63, B64, B65, B66, B67, B68, B69, B70, B71, B72, B73, B74, B75, B76, b77</td></tr>
+          <tr><td>콘텐츠서비스</td><td>웹툰</td><td>웹툰일반, 청소년웹툰</td></tr>
+          <tr><td>게임/IT</td><td>게임</td><td>카드/카지노</td></tr>
+          <tr><td>금융</td><td>금융</td><td>신용평가/조사기관</td></tr>
+          <tr><td>금융</td><td>가상화폐</td><td>가상화폐/블록체인</td></tr>
+          <tr><td>애드익스체인지</td><td>수신연동</td><td>워터폴, RTB</td></tr>
+          <tr><td>기타</td><td>단체</td><td>기업</td></tr>
         </tbody>
       </table>
     </div>
@@ -809,21 +821,32 @@
       </div>
       <div class="gcPane">
         <table class="gcCatTbl">
-          <thead><tr><th>구분</th><th>소카테고리</th></tr></thead>
+          <thead><tr><th>대분류</th><th>중분류</th><th>소분류</th></tr></thead>
           <tbody>
-            <tr><td>성인·의료</td><td>성기능개선, 산부인과(성인), 비뇨기과(성인), 성형외과(성인), 성인기타</td></tr>
-            <tr><td>성인 콘텐츠·용품</td><td>성인웹툰, 성인용품, 성인방송, 섹시글램</td></tr>
-            <tr><td>담배</td><td>전자담배/금연용품</td></tr>
-            <tr><td>금융·투자</td><td>가상화폐/블록체인, 제3금융권대출, 증시, 펀드, 신용평가/조사기관</td></tr>
-            <tr><td>사행·운세</td><td>복권/로또, 스포츠토토, 카드/카지노, 타로/사주</td></tr>
-            <tr><td>의료</td><td>일반병원, 종합병원, 요양병원, 산부인과, 비뇨기과, 성형외과, 피부과, 안과, 치과, 한의원, 척추질환</td></tr>
-            <tr><td>건강식품</td><td>건강식품, 비타민, 헬스보충제, 한방다이어트</td></tr>
-            <tr><td>의류</td><td>남성언더웨어, 여성언더웨어, 비치웨어, 레플리카</td></tr>
-            <tr><td>인물·공인</td><td>정치인, 기타공인, 기업, 스포츠인, 연예인/인플루언서</td></tr>
-            <tr><td>콘텐츠·방송</td><td>웹툰일반, 청소년웹툰, P2P/웹하드, 일반방송</td></tr>
-            <tr><td>생활·서비스</td><td>취업포털, 중고차매매</td></tr>
-            <tr><td>송출 방식</td><td>워터폴, RTB</td></tr>
-            <tr><td>배달의 민족</td><td>B30, B31, B32, B33, B34, B35, B36, B37, B38, B39, B40, B41, B42, B43, B44, B45, B46, B47, B48, B49, B50, B51, B52, B53, B54, B55, B56, B57, B58, B59, B60, B61, B62, B63, B64, B65, B66, B67, B68, B69, B70, B71, B72, B73, B74, B75, B76, B77, H01, H02, H03, H04, H05</td></tr>
+            <tr><td>건강</td><td>건강식품</td><td>건강식품, 비타민, 헬스보충제</td></tr>
+            <tr><td>건강</td><td>일반병원</td><td>종합병원, 일반병원</td></tr>
+            <tr><td>금융</td><td>대출</td><td>제3금융권대출</td></tr>
+            <tr><td>금융</td><td>증권</td><td>증시, 펀드</td></tr>
+            <tr><td>금융</td><td>복권/기금</td><td>복권/로또, 스포츠토토</td></tr>
+            <tr><td>콘텐츠서비스</td><td>운세</td><td>타로/사주</td></tr>
+            <tr><td>기타</td><td>성인서비스</td><td>성기능개선, 산부인과(성인), 비뇨기과(성인), 성형외과(성인), 성인기타, 성인웹툰, 전자담배/금연용품, 성인용품, 성인방송</td></tr>
+            <tr><td>결혼/육아/출산</td><td>출산</td><td>산부인과</td></tr>
+            <tr><td>건강</td><td>전문병원</td><td>안과, 척추질환, 비뇨기과, 치과, 한의원, 요양병원</td></tr>
+            <tr><td>뷰티</td><td>성형/뷰티</td><td>피부과, 성형외과</td></tr>
+            <tr><td>패션</td><td>남성패션</td><td>남성언더웨어</td></tr>
+            <tr><td>패션</td><td>여성패션</td><td>여성언더웨어, 비치웨어, 섹시글램</td></tr>
+            <tr><td>패션</td><td>멀티/레플리카</td><td>레플리카</td></tr>
+            <tr><td>뷰티</td><td>다이어트</td><td>한방다이어트</td></tr>
+            <tr><td>취업교육</td><td>취업</td><td>취업포털</td></tr>
+            <tr><td>자동차</td><td>신차/중고차</td><td>중고차매매</td></tr>
+            <tr><td>콘텐츠서비스</td><td>음원영상서비스</td><td>P2P/웹하드, 일반방송</td></tr>
+            <tr><td>기타</td><td>인물</td><td>정치인, 기타공인, 스포츠인, 연예인/인플루언서, B30, B31, B32, B33, B34, B35, B36, B37, B38, B39, B40, H01, H02, H03, H04, H05, B41, B42, B43, B44, B45, B46, B47, B48, B49, B50, B51, B52, B53, B54, B55, B56, B57, B58, B59, B60, B61, B62, B63, B64, B65, B66, B67, B68, B69, B70, B71, B72, B73, B74, B75, B76, b77</td></tr>
+            <tr><td>콘텐츠서비스</td><td>웹툰</td><td>웹툰일반, 청소년웹툰</td></tr>
+            <tr><td>게임/IT</td><td>게임</td><td>카드/카지노</td></tr>
+            <tr><td>금융</td><td>금융</td><td>신용평가/조사기관</td></tr>
+            <tr><td>금융</td><td>가상화폐</td><td>가상화폐/블록체인</td></tr>
+            <tr><td>애드익스체인지</td><td>수신연동</td><td>워터폴, RTB</td></tr>
+            <tr><td>기타</td><td>단체</td><td>기업</td></tr>
           </tbody>
         </table>
       </div>
@@ -956,12 +979,13 @@ g. 비고
    g-1. 신규 광고주: 새로 등록된 광고주
    g-2. 해당 없는 경우 '—' 노출</pre></section>
 
-  <section class="item sub" id="d-7-2"><h3><span class="num">7-2</span>[생성 제외 카테고리]</h3><pre class="body">a. 소재를 생성하지 않는 카테고리를 구분별로 노출
-b. 컬럼: 구분 / 소카테고리
-c. 구분: 성인·의료 / 성인 콘텐츠·용품 / 담배 / 금융·투자 / 사행·운세 / 의료 / 건강식품 / 의류 / 인물·공인 / 콘텐츠·방송 / 생활·서비스 / 송출 방식 / 배달의 민족
+  <section class="item sub" id="d-7-2"><h3><span class="num">7-2</span>[생성 제외 카테고리]</h3><pre class="body">a. 소재를 생성하지 않는 카테고리를 카테고리 분류 체계(대분류 > 중분류 > 소분류) 그대로 노출
+b. 컬럼: 대분류 / 중분류 / 소분류 (가운데 정렬)
+c. 행 단위: 대분류·중분류 조합 1행, 소분류는 쉼표로 나열 (총 24행)
 d. 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록 (한쪽 변경 시 동일하게 반영 필요)
 e. 수정 이력
-   e-1. 2026-10-14 수정: 제외 카테고리 추가 확인에 따른 조정</pre></section>
+   e-1. 2026-10-14 수정: 제외 카테고리 추가 확인에 따른 조정
+   e-2. 2026-10-20 수정: 컬럼을 구분 / 소카테고리 → 대분류 / 중분류 / 소분류로 변경 (24행). H01~H05 추가, 배달의 민족 구분 삭제(B코드는 기타 > 인물로 이동). 자동 반려 조건 '송출 불가 카테고리' 기본 등록값도 함께 변경</pre></section>
 
   <section class="item sub" id="d-7-3"><h3><span class="num">7-3</span>[생성 제외 광고주]</h3><pre class="body">a. 소재 생성에서 제외된 광고주 목록 노출
 b. 컬럼: 광고주ID / 광고주명</pre></section>
