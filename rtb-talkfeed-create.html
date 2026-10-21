@@ -625,12 +625,12 @@
         </div>
       </div>
       <table>
-        <thead><tr><th>순번</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>최근 생성일</th><th>다음 생성 예정일</th><th>비고</th></tr></thead>
+        <thead><tr><th>순번</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>최근 생성일</th><th>다음 생성 예정일</th></tr></thead>
         <tbody>
-          <tr><td>1</td><td>adv_a</td><td>광고주 A</td><td>쇼핑</td><td>2026-10-01</td><td>2026-11-02</td><td>—</td></tr>
-          <tr><td>2</td><td>adv_b</td><td>광고주 B</td><td>성인용품</td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td>3</td><td>adv_c</td><td>광고주 C</td><td>쇼핑</td><td>2026-09-15</td><td>—</td><td>—</td></tr>
-          <tr><td>4</td><td>adv_d</td><td>광고주 D</td><td>패션</td><td>—</td><td>2026-10-08</td><td><span class="gcTag blu">신규 광고주</span></td></tr>
+          <tr><td>1</td><td>adv_a</td><td>광고주 A</td><td>쇼핑</td><td>2026-10-01</td><td>2026-11-02</td></tr>
+          <tr><td>2</td><td>adv_b</td><td>광고주 B</td><td>성인용품</td><td>—</td><td>—</td></tr>
+          <tr><td>3</td><td>adv_c</td><td>광고주 C</td><td>쇼핑</td><td>2026-09-15</td><td>—</td></tr>
+          <tr><td>4</td><td>adv_d</td><td>광고주 D</td><td>패션</td><td>—</td><td>2026-10-08</td></tr>
         </tbody>
       </table>
       <p class="gcNote">※ 생성 제외 카테고리는 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록</p>
@@ -813,12 +813,12 @@
           <div class="gcRight"><span class="gcPer" style="padding:4px 8px">100개씩 보기 ▾</span><span class="btn grn">▤ 엑셀</span></div>
         </div>
         <table>
-          <thead><tr><th>순번</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>최근 생성일</th><th>다음 생성 예정일</th><th>비고</th></tr></thead>
+          <thead><tr><th>순번</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>최근 생성일</th><th>다음 생성 예정일</th></tr></thead>
           <tbody>
-            <tr><td>1</td><td>adv_a</td><td>광고주 A</td><td>쇼핑</td><td>2026-10-01</td><td>2026-11-02</td><td>—</td></tr>
-            <tr><td>2</td><td>adv_b</td><td>광고주 B</td><td>성인용품</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr><td>3</td><td>adv_c</td><td>광고주 C</td><td>쇼핑</td><td>2026-09-15</td><td>—</td><td>—</td></tr>
-            <tr><td>4</td><td>adv_d</td><td>광고주 D</td><td>패션</td><td>—</td><td>2026-10-08</td><td><span class="gcTag blu">신규 광고주</span></td></tr>
+            <tr><td>1</td><td>adv_a</td><td>광고주 A</td><td>쇼핑</td><td>2026-10-01</td><td>2026-11-02</td></tr>
+            <tr><td>2</td><td>adv_b</td><td>광고주 B</td><td>성인용품</td><td>—</td><td>—</td></tr>
+            <tr><td>3</td><td>adv_c</td><td>광고주 C</td><td>쇼핑</td><td>2026-09-15</td><td>—</td></tr>
+            <tr><td>4</td><td>adv_d</td><td>광고주 D</td><td>패션</td><td>—</td><td>2026-10-08</td></tr>
           </tbody>
         </table>
         <p class="gcNote">※ 생성 제외 카테고리는 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록</p>
@@ -986,11 +986,9 @@ d. 보기 개수: 100개 / 250개 / 500개씩 보기
    d-1. 기본값 100개, 변경 시 즉시 재조회
 e. [엑셀]: 현재 조회된 테이블 그대로 엑셀로 데이터 다운
    e-1. <span class="tbd">파일명: YYYYMMDD_talkfeed_clientlist</span>
-f. 컬럼: 순번 / 광고주ID / 광고주명 / 카테고리 / 최근 생성일 / 다음 생성 예정일 / 비고
-   f-1. 최근 생성일 · 다음 생성 예정일이 없는 경우 '—' 노출
-g. 비고
-   g-1. 신규 광고주: 새로 등록된 광고주
-   g-2. 해당 없는 경우 '—' 노출</pre></section>
+   e-2. <span class="tbd">엑셀 파일 내 빈 값은 빈 값으로 유지함</span>
+f. 컬럼: 순번 / 광고주ID / 광고주명 / 카테고리 / 최근 생성일 / 다음 생성 예정일 <span class="tbd">(비고 컬럼 삭제)</span>
+   f-1. 최근 생성일 · 다음 생성 예정일이 없는 경우 '—' 노출</pre></section>
 
   <section class="item sub" id="d-7-2"><h3><span class="num">7-2</span>[생성 제외 카테고리]</h3><pre class="body">a. 소재를 생성하지 않는 카테고리를 카테고리 분류 체계(대분류 > 중분류 > 소분류) 그대로 노출
 b. 컬럼: 대분류 / 중분류 / 소분류 (가운데 정렬)
@@ -1010,6 +1008,8 @@ b. 컬럼: 광고주ID / 광고주명</pre></section>
       <table>
         <thead><tr><th>수정일</th><th>항목</th><th>내용</th></tr></thead>
         <tbody>
+          <tr><td>26.10.21</td><td>7-1 광고주 리스트 (생성 순서)</td><td>엑셀 다운로드 시 빈 값은 빈 값으로 유지</td></tr>
+          <tr><td>26.10.21</td><td>7-1 광고주 리스트 (생성 순서)</td><td>테이블 비고 컬럼 삭제 (신규 광고주 표시 포함)</td></tr>
           <tr><td>26.10.21</td><td>7-1 광고주 리스트 (생성 순서)</td><td>엑셀 다운로드 파일명 규칙 추가: YYYYMMDD_talkfeed_clientlist</td></tr>
           <tr><td>26.10.20</td><td>7-2 생성 제외 카테고리</td><td>컬럼을 구분 / 소카테고리 → 대분류 / 중분류 / 소분류로 변경 (24행). H01~H05 추가, 배달의 민족 구분 삭제(B코드는 기타 &gt; 인물로 이동). 자동 반려 조건 '송출 불가 카테고리' 기본 등록값도 함께 변경</td></tr>
           <tr><td>26.10.14</td><td>7-2 생성 제외 카테고리</td><td>제외 카테고리 추가 확인에 따른 조정</td></tr>
