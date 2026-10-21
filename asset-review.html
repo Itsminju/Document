@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>소재 심사 팝업 개선 (3개 메뉴) — 화면 기획 패키지</title>
+<title>소재 심사(승인) 요청 배치 설정</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Pretendard,"Noto Sans KR",sans-serif;font-size:13px;color:#1f2937;background:#f3f4f6}
@@ -37,7 +37,7 @@ ul{margin:0;padding-left:18px;line-height:1.8}
 .done li::marker{color:#16a34a}.todo li::marker{color:#e5484d}
 @media(max-width:800px){.kpis,.two{grid-template-columns:1fr 1fr}}
 </style></head><body>
-<div class="bar"><h1>소재 심사 팝업 개선</h1><button data-t="ov">개요</button><button data-t="demo">데모</button><button data-t="spec">화면설계서</button></div>
+<div class="bar"><h1>소재 심사(승인) 요청 배치 설정</h1><button data-t="ov">개요</button><button data-t="demo">데모</button><button data-t="spec">화면설계서</button></div>
 
 <section id="ov"><div class="ov">
 
@@ -51,71 +51,50 @@ ul{margin:0;padding-left:18px;line-height:1.8}
 
  <div class="card"><h2><span>02</span>개발 범위</h2>
   <ul>
-   <li>[심사 요청] 버튼 추가<ul>
-    <li>위치: 비즈보드 (상품) · 채팅리스트/피드 · 채팅리스트/피드(AI)</li>
-    <li>클릭 시: 소재 심사 팝업 (심사 요청 / 예약 내역 탭)</li>
-    <li>특정 광고주에 지정 개수만큼 소재 심사 우선권 부여</li></ul></li>
-   <li>광고주 단위로 심사 요청 취소 가능</li>
-   <li>채팅리스트 두 메뉴는 팝업 설정과 예약 내역 공유</li>
-   <li>타입별 심사 요청 총 발송 개수 GUI 수정 가능</li>
-   <li>심사 요청 팝업 최상단에 배치 ON/OFF 토글 추가<ul><li>비즈보드 (상품) · 채팅리스트/피드 따로 적용, [저장] 시 반영</li></ul></li>
+   <li>[소재 심사] 버튼 추가: 비즈보드 (상품) · 채팅리스트/피드 · 채팅리스트/피드(AI)</li>
+   <li>소재 심사 팝업 (심사 요청 / 예약 내역 탭)
+    <ul><li>지정 광고주에 지정 개수만큼 심사 우선권 부여</li><li>배치 ON/OFF 토글</li><li>광고주 단위 발송 취소</li></ul></li>
+   <li>비즈보드 · 채팅리스트 설정 별도, 채팅리스트 두 메뉴는 팝업 · 예약 내역 공유</li>
   </ul>
   <div class="btns"><button data-go="demo">데모 보기 →</button><button data-go="spec">화면설계서 보기 →</button></div>
  </div>
 
  <div class="card"><h2><span>03</span>용어 정의</h2>
   <table>
-   <tr><th>용어</th><th>정의</th><th>계산식 / 값</th></tr>
-   <tr><td>지정 광고주 발송 개수 합계</td><td>심사 요청 탭에서 입력한 광고주별 발송 개수의 합</td><td>Σ 광고주별 발송 개수</td></tr>
-   <tr><td>총 발송 개수</td><td>요청 1건에서 심사 대상으로 보낼 전체 개수</td><td>기본값·최대값: 비즈보드 4,000개 / 채팅리스트 1,500개<br>최소값: 발송 개수 합계</td></tr>
-   <tr><td>남은 수량</td><td>한 행에 입력할 수 있는 최대 발송 개수</td><td>총 발송 개수 − 다른 행 발송 개수 합계</td></tr>
-   <tr><td>자동 채움</td><td>합계가 총 발송 개수에 못 미칠 때 부족분을 정해진 순서로 채움</td><td>비즈보드: 총 발송 개수 − 합계 → 그 외 소재 최신 생성순<br>채팅리스트: 총 발송 개수 − 합계 → 채팅리스트/피드 소재 전체 → 그 외 AI 소재 최신 생성순</td></tr>
-   <tr><td>심사 우선순위</td><td>채팅리스트용 팝업의 채움 순서</td><td>1 지정 광고주 소재 → 2 채팅리스트/피드 소재 전체 → 3 그 외 AI 소재</td></tr>
-   <tr><td>발송 예정일</td><td>스케줄러가 일괄 발송하는 날짜</td><td>주말·공휴일 제외 평일, 지난 날짜 불가</td></tr>
+   <tr><th>용어</th><th>정의</th><th>값</th></tr>
+   <tr><td>총 발송 개수</td><td>요청 1건의 심사 대상 전체 개수</td><td>숫자 입력, 필수, 제한 없음</td></tr>
+   <tr><td>지정 광고주 발송 개수 합계</td><td>입력한 광고주별 발송 개수의 합</td><td>총 발송 개수 초과 시 저장 불가</td></tr>
+   <tr><td>자동 채움</td><td>총 발송 개수 − 합계를 후순위 소재로 채움</td><td>최신순</td></tr>
    <tr><td>예약 건</td><td>예약 내역의 1행</td><td>광고주 1명 = 1건</td></tr>
-   <tr><td>상태값</td><td>예약 건의 처리 상태 (화면에 상태 컬럼 없음)</td><td><span class="st s1">예약됨</span> <span class="st s4">취소됨</span></td></tr>
-   <tr><td>취소 마감</td><td>발송 취소 버튼이 활성인 마지막 시점</td><td>발송 예정일 전날 (당일 취소 불가)</td></tr>
+   <tr><td>취소 마감</td><td>[발송 취소] 가능 시점</td><td>발송 예정일 전날까지</td></tr>
   </table>
  </div>
 
  <div class="card"><h2><span>04</span>핵심 로직 / 분류 구조</h2>
-  <div class="flow"><div>메뉴에서 [소재 심사]</div><i>→</i><div>메뉴 그룹 판별</div><i>→</i><div>총 발송 개수 입력</div><i>→</i><div>광고주 ID · 발송 개수 입력</div><i>→</i><div>입력 단계에서 합계 ≤ 총 발송 개수 제한</div><i>→</i><div>발송 예정일 검증</div><i>→</i><div>광고주별 예약 건 생성 (예약됨)</div><i>→</i><div>예정 시각 스케줄러 발송 + 자동 채움</div></div>
+  <div class="flow"><div>[소재 심사]</div><i>→</i><div>배치 ON/OFF</div><i>→</i><div>총 발송 개수 · 지정 광고주 · 발송 예정일 입력</div><i>→</i><div>[저장] 유효성 체크 · 컨펌</div><i>→</i><div>예약 건 생성</div><i>→</i><div>발송 예정일에 발송 + 자동 채움</div></div>
   <table>
-   <tr><th>메뉴 그룹</th><th>대상 메뉴</th><th>총 발송 개수</th><th>채움 순서</th><th>예약 내역</th></tr>
-   <tr><td>비즈보드용</td><td>비즈보드 (상품)</td><td>최대 4,000개</td><td>1 지정 광고주 소재 → 2 그 외 소재 (최신 생성순)</td><td>정의 없음</td></tr>
-   <tr><td>채팅리스트용</td><td>채팅리스트/피드 · 채팅리스트/피드(AI)</td><td>최대 1,500개</td><td>1 지정 광고주 소재 → 2 채팅리스트/피드 소재 전체 → 3 그 외 AI 소재</td><td>두 메뉴 건 함께</td></tr>
-  </table>
-  <table style="margin-top:10px">
-   <tr><th>상태</th><th>바뀌는 시점</th><th>화면 반영</th><th>화면설계서</th></tr>
-   <tr><td><span class="st s1">예약됨</span></td><td>[저장] 시 광고주별 예약 건 생성</td><td>발송 예정일 전날까지 [발송 취소] 활성</td><td>비즈보드 8 · 10-1</td></tr>
-   <tr><td><span class="st s4">취소됨</span></td><td>[발송 취소] 확인 시</td><td>[발송 취소] 비활성</td><td>비즈보드 10 · 10-1</td></tr>
+   <tr><th>구분</th><th>대상 메뉴</th><th>채움 순서</th><th>예약 내역</th></tr>
+   <tr><td>비즈보드용</td><td>비즈보드 (상품)</td><td>1 지정 광고주 소재 → 2 그 외 소재 (최신순)</td><td>비즈보드 건만</td></tr>
+   <tr><td>채팅리스트용</td><td>채팅리스트/피드 · 채팅리스트/피드(AI)</td><td>1 지정 광고주 소재 → 2 채팅리스트/피드 소재 전체 → 3 그 외 AI 소재 (최신순)</td><td>두 메뉴 건 함께</td></tr>
   </table>
  </div>
 
  <div class="card"><h2><span>05</span>결정 사항과 남은 일</h2>
   <div class="two">
    <div><h3>확정</h3><ul class="done">
-    <li>심사 요청 · 예약 내역을 팝업 1개의 탭으로 통합, 기본 탭은 심사 요청</li>
-    <li>[소재 심사] 버튼 메뉴: 비즈보드 (상품) · 채팅리스트/피드 · 채팅리스트/피드(AI)</li>
     <li>버튼 위치: 비즈보드 [재생성요청] 오른쪽, 채팅리스트 [반려] 오른쪽</li>
-    <li>비즈보드: 총 발송 개수 최대 4,000개, 지정 광고주 우선 + 그 외 최신 생성순 채움</li>
-    <li>채팅리스트: 총 발송 개수 최대 1,500개, 지정 광고주 소재 몫 우선 보장 → 채팅리스트/피드 소재 → 그 외 AI 최신 생성순</li>
-    <li>채팅리스트 두 메뉴는 같은 팝업 · 같은 예약 내역 공유</li>
-    <li>즉시 발송 없음, 평일 예약 발송만 가능 (날짜만 지정)</li>
-    <li>공휴일 데이터: 최고관리자에서 관리</li>
-    <li>합계 영역은 발송 개수 합계만 표시</li>
-    <li>요청별 총 발송 개수 입력 가능 (기본값 = 최대값)</li>
-    <li>지정 광고주 발송 개수 합계가 총 발송 개수를 초과하면 안내 문구 노출, 저장 불가</li>
-    <li>예약 내역: 광고주 단위 행, 상세 화면 없음, 기본 조회 기간 당일</li>
-    <li>컬럼: 광고주 ID | 광고주명 | 발송 개수 | 발송 예정일 | 발송 취소</li>
-    <li>발송 취소 컬럼은 버튼만 노출</li>
+    <li>배치 OFF 시 입력 불가 (최근 총 발송 개수만 표시), [저장] 시 반영</li>
+    <li>총 발송 개수 제한 없음, 지정 광고주 합계 초과 시 저장 불가</li>
+    <li>광고주 행은 [+ 광고주 추가]로 추가, 미지정 시 최신순으로 채움</li>
+    <li>발송 예정일: 평일만, 지난 날짜 불가</li>
+    <li>예약 내역 컬럼: 광고주 ID | 광고주명 | 발송 개수 | 발송 예정일 | 발송 취소</li>
+    <li>발송 취소: 발송 예정일 전날까지, 컨펌 후 취소</li>
    </ul></div>
    <div><h3>남은 일</h3><ul class="todo">
-    <li>광고주 추가 가능 행 수 상한</li>
+    <li>기능 사용 가능 계정 (권한 범위) 정의</li>
    </ul></div>
   </div>
  </div>
-
 </div></section>
 <section id="demo"><iframe title="데모" srcdoc="&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;ko&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
