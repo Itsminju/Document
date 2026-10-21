@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>소재 심사 팝업 개선 (3개 메뉴) — 화면 기획 패키지</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Pretendard,"Noto Sans KR",sans-serif;font-size:13px;color:#1f2937;background:#f3f4f6}
+.bar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:flex-end;gap:28px;padding:0 24px;height:52px}
+.bar h1{font-size:15px;margin:0 12px 16px 0}
+.bar button{background:none;border:0;border-bottom:3px solid transparent;padding:0 2px 13px;font:inherit;font-size:14px;color:#6b7280;cursor:pointer}
+.bar button.on{color:#2563eb;border-color:#2563eb;font-weight:700}
+section{display:none}section.on{display:block}
+iframe{width:100%;height:calc(100vh - 52px);border:0;display:block;background:#fff}
+.ov{max-width:1080px;margin:0 auto;padding:24px;display:grid;gap:16px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:18px 20px}
+.card h2{font-size:14px;margin:0 0 12px;display:flex;gap:8px;align-items:center}
+.card h2 span{color:#2563eb;font-weight:800}
+p{margin:0;line-height:1.7;color:#374151}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{border:1px solid #e5e7eb;border-radius:6px;padding:12px 14px}
+.kpi b{display:block;font-size:24px;color:#111827}.kpi small{color:#6b7280;line-height:1.5;display:block;margin-top:4px}
+.kpi.blue b{color:#2563eb}.kpi.orange b{color:#d97706}
+.ex{font-size:11px;color:#d97706}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border:1px solid #e5e7eb;padding:7px 10px;text-align:left;vertical-align:top;line-height:1.6}
+th{background:#f9fafb;color:#4b5563;white-space:nowrap}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.two h3{font-size:12px;margin:0 0 6px;color:#4b5563}
+ul{margin:0;padding-left:18px;line-height:1.8}
+.btns{margin-top:12px;display:flex;gap:8px}
+.btns button{border:1px solid #2563eb;color:#2563eb;background:#fff;border-radius:4px;padding:6px 14px;font:inherit;cursor:pointer}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px}
+.flow div{background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;padding:6px 10px;font-size:12px}
+.flow i{color:#9ca3af;font-style:normal}
+.st{font-size:11px;padding:1px 7px;border-radius:9px;font-weight:700;white-space:nowrap}
+.s1{background:#dcfce7;color:#15803d}.s2{background:#dbeafe;color:#1d4ed8}.s3{background:#fee2e2;color:#b91c1c}.s4{background:#f3f4f6;color:#6b7280}
+.done li::marker{color:#16a34a}.todo li::marker{color:#e5484d}
+@media(max-width:800px){.kpis,.two{grid-template-columns:1fr 1fr}}
+</style></head><body>
+<div class="bar"><h1>소재 심사 팝업 개선</h1><button data-t="ov">개요</button><button data-t="demo">데모</button><button data-t="spec">화면설계서</button></div>
+
+<section id="ov"><div class="ov">
+
+ <div class="card"><h2><span>01</span>배경과 목적</h2>
+  <ul>
+    <li>기존 소재 심사는 배치 조건만으로 동작</li>
+    <li>매일 정해진 시간에 최신순으로 정해진 건수만 심사 대상으로 선정</li>
+    <li>특정 광고주를 먼저 심사받게 할 방법 없음</li>
+  </ul>
+ </div>
+
+ <div class="card"><h2><span>02</span>개발 범위</h2>
+  <ul>
+   <li>[심사 요청] 버튼 추가<ul>
+    <li>위치: 비즈보드 (상품) · 채팅리스트/피드 · 채팅리스트/피드(AI)</li>
+    <li>클릭 시: 소재 심사 팝업 (심사 요청 / 예약 내역 탭)</li>
+    <li>특정 광고주에 지정 개수만큼 소재 심사 우선권 부여</li></ul></li>
+   <li>광고주 단위로 심사 요청 취소 가능</li>
+   <li>채팅리스트 두 메뉴는 팝업 설정과 예약 내역 공유</li>
+   <li>타입별 심사 요청 총 발송 개수 GUI 수정 가능</li>
+  </ul>
+  <div class="btns"><button data-go="demo">데모 보기 →</button><button data-go="spec">화면설계서 보기 →</button></div>
+ </div>
+
+ <div class="card"><h2><span>03</span>용어 정의</h2>
+  <table>
+   <tr><th>용어</th><th>정의</th><th>계산식 / 값</th></tr>
+   <tr><td>발송 개수 합계</td><td>심사 요청 탭에서 입력한 광고주별 발송 개수의 합</td><td>Σ 광고주별 발송 개수</td></tr>
+   <tr><td>총 발송 개수</td><td>요청 1건에서 심사 대상으로 보낼 전체 개수</td><td>기본값·최대값: 비즈보드 4,000개 / 채팅리스트 1,500개<br>최소값: 발송 개수 합계</td></tr>
+   <tr><td>남은 수량</td><td>한 행에 입력할 수 있는 최대 발송 개수</td><td>총 발송 개수 − 다른 행 발송 개수 합계</td></tr>
+   <tr><td>자동 채움</td><td>합계가 총 발송 개수에 못 미칠 때 부족분을 정해진 순서로 채움</td><td>비즈보드: 총 발송 개수 − 합계 → 그 외 소재 최신 생성순<br>채팅리스트: 총 발송 개수 − 합계 → 채팅리스트/피드 소재 전체 → 그 외 AI 소재 최신 생성순</td></tr>
+   <tr><td>심사 우선순위</td><td>채팅리스트용 팝업의 채움 순서</td><td>1 지정 광고주 AI 소재 → 2 채팅리스트/피드 소재 전체 → 3 그 외 AI 소재 (최신 생성순)</td></tr>
+   <tr><td>발송 예정일</td><td>스케줄러가 일괄 발송하는 날짜</td><td>주말·공휴일 제외 평일, 지난 날짜 불가</td></tr>
+   <tr><td>예약 건</td><td>예약 내역의 1행</td><td>광고주 1명 = 1건</td></tr>
+   <tr><td>상태값</td><td>예약 건의 처리 상태 (화면에 상태 컬럼 없음)</td><td><span class="st s1">예약됨</span> <span class="st s4">취소됨</span></td></tr>
+   <tr><td>취소 마감</td><td>발송 취소 버튼이 활성인 마지막 시점</td><td>발송 예정 시각 − 30분</td></tr>
+  </table>
+ </div>
+
+ <div class="card"><h2><span>04</span>핵심 로직 / 분류 구조</h2>
+  <div class="flow"><div>메뉴에서 [소재 심사]</div><i>→</i><div>메뉴 그룹 판별</div><i>→</i><div>총 발송 개수 입력</div><i>→</i><div>광고주 ID · 발송 개수 입력</div><i>→</i><div>입력 단계에서 합계 ≤ 총 발송 개수 제한</div><i>→</i><div>발송 예정일 검증</div><i>→</i><div>광고주별 예약 건 생성 (예약됨)</div><i>→</i><div>예정 시각 스케줄러 발송 + 자동 채움</div></div>
+  <table>
+   <tr><th>메뉴 그룹</th><th>대상 메뉴</th><th>총 발송 개수</th><th>채움 순서</th><th>예약 내역</th></tr>
+   <tr><td>비즈보드용</td><td>비즈보드 (상품)</td><td>최대 4,000개</td><td>1 지정 광고주 소재 → 2 그 외 소재 (최신 생성순)</td><td>정의 없음</td></tr>
+   <tr><td>채팅리스트용</td><td>채팅리스트/피드 · 채팅리스트/피드(AI)</td><td>최대 1,500개</td><td>1 지정 광고주 AI 소재 → 2 채팅리스트/피드 소재 전체 → 3 그 외 AI 소재 (최신 생성순)</td><td>두 메뉴 건 함께</td></tr>
+  </table>
+  <table style="margin-top:10px">
+   <tr><th>상태</th><th>바뀌는 시점</th><th>화면 반영</th><th>화면설계서</th></tr>
+   <tr><td><span class="st s1">예약됨</span></td><td>[저장] 시 광고주별 예약 건 생성</td><td>발송 예정 시각 30분 전까지 [발송 취소] 활성</td><td>9 · 12-1</td></tr>
+   <tr><td><span class="st s4">취소됨</span></td><td>[발송 취소] 확인 시</td><td>취소자 / 취소 일시 표시, [발송 취소] 비활성</td><td>12 · 12-1</td></tr>
+  </table>
+ </div>
+
+ <div class="card"><h2><span>05</span>결정 사항과 남은 일</h2>
+  <div class="two">
+   <div><h3>확정</h3><ul class="done">
+    <li>심사 요청 · 예약 내역을 팝업 1개의 탭으로 통합, 기본 탭은 심사 요청</li>
+    <li>[소재 심사] 버튼 메뉴: 비즈보드 (상품) · 채팅리스트/피드 · 채팅리스트/피드(AI)</li>
+    <li>버튼 위치: 비즈보드 [+ 광고 생성] 오른쪽, 채팅리스트 [반려] 오른쪽</li>
+    <li>비즈보드: 총 발송 개수 최대 4,000개, 지정 광고주 우선 + 그 외 최신 생성순 채움</li>
+    <li>채팅리스트: 총 발송 개수 최대 1,500개, 지정 광고주 AI 소재 몫 우선 보장 → 채팅리스트/피드 소재 → 그 외 AI 최신 생성순</li>
+    <li>채팅리스트 두 메뉴는 같은 팝업 · 같은 예약 내역 공유</li>
+    <li>즉시 발송 없음, 평일 예약 발송만 가능 (날짜만 지정)</li>
+    <li>공휴일 데이터: 최고관리자에서 관리</li>
+    <li>합계 영역은 발송 개수 합계만 표시</li>
+    <li>요청별 총 발송 개수 입력 가능 (기본값 = 최대값)</li>
+    <li>발송 개수 합계는 입력 단계에서 총 발송 개수 이하로 제한</li>
+    <li>예약 내역: 광고주 단위 행, 상세 화면 없음, 기본 조회 기간 당일</li>
+    <li>컬럼: 광고주 | 발송 개수 | 발송 예정 일시 | 요청자 / 요청 일시 | 취소자 / 취소 일시 | 발송 취소</li>
+    <li>발송 취소 컬럼은 버튼만 노출</li>
+   </ul></div>
+   <div><h3>남은 일</h3><ul class="todo">
+    <li>취소 마감 30분 확정</li>
+    <li>광고주 추가 가능 행 수 상한</li>
+   </ul></div>
+  </div>
+ </div>
+
+</div></section>
+<section id="demo"><iframe title="데모" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;데모&lt;/title&gt;
+&lt;style&gt;
+*{box-sizing:border-box}
+body{margin:0;font-family:Pretendard,&quot;Noto Sans KR&quot;,sans-serif;font-size:13px;color:#333;background:#f5f5f5}
+button{font-family:inherit;cursor:pointer}
+.top{height:56px;background:#fff;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.logo{font-size:24px;font-weight:800;letter-spacing:1px}.logo b{color:#4cb895}
+.top .r{display:flex;gap:16px;align-items:center}.ads{color:#2d6cdf;font-weight:800;font-size:18px}
+.wrap{display:flex;min-height:calc(100vh - 56px)}
+.side{width:200px;background:#fff;border-right:1px solid #e5e5e5;flex-shrink:0}
+.side h3{margin:0;padding:14px;font-size:16px;border-bottom:1px solid #eee}
+.side div{padding:11px 14px;border-bottom:1px solid #f0f0f0}
+.side .on{background:#4cb895;color:#fff;font-weight:700}
+.side .sub{padding:7px 26px;border:0;font-size:12px;color:#666;background:#f7f7f7}
+.side .sub.nav{cursor:pointer;text-decoration:underline dotted #bbb}.side .sub.cur{color:#4cb895;font-weight:700;text-decoration:none}
+.main{flex:1;padding:16px 20px;min-width:0}
+.crumb{font-size:16px;font-weight:700;padding-bottom:10px;border-bottom:1px solid #ddd;margin-bottom:14px}
+.static{pointer-events:none}
+.flt{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.box{border:1px solid #ccc;background:#fff;padding:5px 10px;border-radius:2px;color:#555}
+.gbtn{background:#4cb895;color:#fff;border:0;border-radius:2px;padding:6px 14px}
+.stat{float:right;border-collapse:collapse;background:#fff;font-size:12px;margin-top:-6px}
+.stat td,.stat th{border:1px solid #ddd;padding:5px 12px;text-align:center}
+.rbtn{clear:both;float:right;margin-top:8px}
+.panel{clear:both;background:#fff;border:1px solid #e5e5e5;padding:14px;margin-top:14px;overflow-x:auto}
+.acts{display:flex;gap:8px;margin-bottom:10px}
+.acts span,.acts button{border:0;border-radius:2px;color:#fff;padding:5px 12px;font-size:12px}
+.list{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
+.list th{background:#f2f2f2;padding:8px;text-align:center}.list td{border-bottom:1px solid #eee;padding:10px 8px;text-align:center}
+.ban{display:inline-flex;justify-content:space-between;width:240px;background:#f2f2f2;padding:8px;text-align:left}
+.ban i{width:44px;height:44px;background:#ddd;display:block}
+.tag{background:#f5c518;color:#fff;padding:3px 10px;border-radius:2px}
+.new-btn{background:#3b81c4;outline:2px dashed #e5484d;outline-offset:2px}
+.hint{position:fixed;right:16px;bottom:16px;background:#1f2937;color:#fff;padding:8px 12px;border-radius:6px;font-size:12px;opacity:.88;max-width:360px;line-height:1.5}
+.dim{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-start;justify-content:center;padding:40px 12px;overflow:auto;z-index:10}
+.dim.show{display:flex}
+.modal{width:860px;max-width:100%;background:#fff;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.mh{background:#4cb895;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font-size:16px;font-weight:700}
+.mh button{background:none;border:0;color:#fff;font-size:20px}
+.tabs{display:flex;padding:0 20px;border-bottom:1px solid #e6e6e6}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:12px 16px 10px;font-size:13px;color:#888}
+.tabs button.on{color:#4cb895;border-color:#4cb895;font-weight:700}
+.mb{padding:20px;display:flex;flex-direction:column;gap:10px}
+.desc{color:#666;font-size:12px;line-height:1.6}
+.prio{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#f0f7ff;border:1px solid #cce0f5;border-radius:4px;padding:10px 12px;font-size:12px}
+.prio b{margin-right:4px}.prio span{background:#fff;border:1px solid #ccc;border-radius:12px;padding:3px 10px}
+.prio span.on{border-color:#4cb895;color:#4cb895;font-weight:700}.prio i{color:#888;font-style:normal}
+.lbl{font-weight:700;color:#222;font-size:12px}.lbl em{color:#ee6e6e;font-style:normal}
+.row{display:flex;gap:8px}
+.row input{height:32px;border:1px solid #ccc;border-radius:2px;padding:0 10px;font-size:12px;font-family:inherit}
+.row .id{flex:1}.row .cnt{width:120px}
+.del{width:32px;height:32px;border:1px solid #ccc;background:#fff;border-radius:2px;color:#888}
+.add{height:32px;border:1px dashed #4cb895;background:#f2f9f6;color:#4cb895;border-radius:2px;font-weight:500}
+.sum{display:flex;justify-content:space-between;background:#f7f7f7;padding:10px 12px;border-radius:4px;font-weight:700}
+.sum.over{color:#d93636}
+.dt input,.dt select{height:32px;border:1px solid #ccc;border-radius:2px;padding:0 8px;font-family:inherit;font-size:12px}
+.note{font-size:11px;color:#888;line-height:1.6}.note .red{color:#e5484d;font-weight:700}
+.err{color:#d93636;font-size:12px;white-space:pre-wrap}
+.mf{display:flex;justify-content:flex-end;gap:8px;padding:6px 20px 16px}.mf.c{justify-content:center}
+.btn{height:32px;padding:0 20px;border:1px solid #ccc;background:#fff;border-radius:2px}
+.btn.g{background:#4cb895;border-color:#4cb895;color:#fff}
+hr{border:0;border-top:1px solid #eee;margin:4px 0}
+.hf{display:flex;gap:8px;align-items:center}
+.cntline{text-align:right;color:#888;font-size:12px}.cntline b{color:#222}
+table.res{width:100%;border-collapse:collapse;font-size:12px;border:1px solid #e6e6e6}
+.res th{background:#f7f7f7;padding:11px 10px;text-align:center}.res th:first-child,.res td:first-child{text-align:left}
+.res td{border-top:1px solid #e6e6e6;padding:8px 10px;text-align:center;height:48px}
+.res td.n{text-align:right}.res .t{font-weight:500;color:#222}
+.res small{display:block;color:#aaa;font-size:11px}
+.cbtn{border:1px solid #ee6e6e;color:#ee6e6e;background:#fff;border-radius:2px;padding:3px 10px;font-size:11px}
+.cbtn:disabled{border-color:#e0e0e0;background:#f5f5f5;color:#bbb;cursor:default}
+.pg{display:flex;justify-content:center;gap:4px}
+.pg button{width:28px;height:28px;border:1px solid #e6e6e6;background:#fff;border-radius:2px}.pg button.on{background:#4cb895;color:#fff;border-color:#4cb895}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:4px;display:none;z-index:20}
+.ex{color:#e08a1e;font-size:11px}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;div class=&quot;top static&quot;&gt;&lt;div class=&quot;logo&quot;&gt;&lt;b&gt;M&lt;/b&gt;OBSENSE&lt;/div&gt;&lt;div class=&quot;r&quot;&gt;&lt;span class=&quot;ads&quot;&gt;ADSAVE&lt;/span&gt;&lt;span&gt;개발지원본부_전민주님&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;wrap&quot;&gt;
+ &lt;div class=&quot;side&quot;&gt;&lt;h3&gt;매체 센터&lt;/h3&gt;&lt;div&gt;개요&lt;/div&gt;&lt;div&gt;지면 등록&lt;/div&gt;&lt;div&gt;지면 심사&lt;/div&gt;&lt;div&gt;보고서&lt;/div&gt;&lt;div&gt;MY 대행매체 관리&lt;/div&gt;&lt;div&gt;정산 관리&lt;/div&gt;&lt;div&gt;CPS 관리&lt;/div&gt;&lt;div&gt;공지사항&lt;/div&gt;&lt;div&gt;사용자 관리&lt;/div&gt;&lt;div class=&quot;on&quot;&gt;이미지 검수&lt;/div&gt;
+  &lt;div class=&quot;sub nav&quot; data-menu=&quot;biz&quot;&gt;비즈보드 (상품)&lt;/div&gt;&lt;div class=&quot;sub&quot;&gt;비즈보드 / 네이티브&lt;/div&gt;&lt;div class=&quot;sub nav&quot; data-menu=&quot;chat&quot;&gt;채팅리스트 / 피드&lt;/div&gt;&lt;div class=&quot;sub nav&quot; data-menu=&quot;chatai&quot;&gt;채팅리스트 / 피드(AI)&lt;/div&gt;
+  &lt;div&gt;지면 관리&lt;/div&gt;&lt;div&gt;시스템 관리&lt;/div&gt;&lt;/div&gt;
+ &lt;div class=&quot;main&quot; id=&quot;screen&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;hint&quot;&gt;왼쪽 메뉴의 비즈보드 (상품) · 채팅리스트 / 피드 · 채팅리스트 / 피드(AI)로 화면 전환&lt;br&gt;빨간 점선 [소재 심사] 버튼만 동작 · 나머지는 기존 화면 재현(동작 없음)&lt;/div&gt;
+
+&lt;div class=&quot;dim&quot; id=&quot;dim&quot;&gt;&lt;div class=&quot;modal&quot;&gt;
+ &lt;div class=&quot;mh&quot;&gt;&lt;span id=&quot;mTitle&quot;&gt;소재 심사&lt;/span&gt;&lt;button id=&quot;xBtn&quot;&gt;✕&lt;/button&gt;&lt;/div&gt;
+ &lt;div class=&quot;tabs&quot;&gt;&lt;button data-tab=&quot;req&quot; class=&quot;on&quot;&gt;심사 요청&lt;/button&gt;&lt;button data-tab=&quot;his&quot;&gt;예약 내역&lt;/button&gt;&lt;/div&gt;
+ &lt;div id=&quot;tab-req&quot;&gt;
+  &lt;div class=&quot;mb&quot;&gt;
+   &lt;div class=&quot;desc&quot; id=&quot;mDesc&quot;&gt;&lt;/div&gt;
+   &lt;div class=&quot;prio&quot; id=&quot;mPrio&quot;&gt;&lt;/div&gt;
+   &lt;div class=&quot;lbl&quot;&gt;총 발송 개수 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;
+   &lt;div class=&quot;row&quot; style=&quot;align-items:center&quot;&gt;&lt;input id=&quot;totIn&quot; inputmode=&quot;numeric&quot; style=&quot;width:140px;text-align:right&quot;&gt;&lt;span style=&quot;color:#888;font-size:12px&quot; id=&quot;totHelp&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+   &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;lbl id&quot; id=&quot;idLbl&quot;&gt;광고주 ID &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;&lt;div class=&quot;lbl cnt&quot;&gt;발송 개수 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;&lt;div style=&quot;width:32px&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+   &lt;div id=&quot;rows&quot; style=&quot;display:flex;flex-direction:column;gap:8px&quot;&gt;&lt;/div&gt;
+   &lt;button class=&quot;add&quot; id=&quot;addBtn&quot;&gt;+ 광고주 추가&lt;/button&gt;
+   &lt;div class=&quot;sum&quot; id=&quot;sumBox&quot;&gt;&lt;span&gt;발송 개수 합계&lt;/span&gt;&lt;span id=&quot;sumVal&quot;&gt;0개&lt;/span&gt;&lt;/div&gt;
+   &lt;div class=&quot;err&quot; id=&quot;capHint&quot; style=&quot;font-size:11px;margin-top:-4px&quot;&gt;&lt;/div&gt;
+   &lt;hr&gt;
+   &lt;div class=&quot;lbl&quot;&gt;발송 예정일 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;
+   &lt;div class=&quot;row dt&quot;&gt;&lt;input type=&quot;date&quot; id=&quot;dDate&quot; style=&quot;width:220px&quot;&gt;&lt;/div&gt;
+   &lt;div class=&quot;note&quot;&gt;&lt;div class=&quot;red&quot;&gt;· 주말·공휴일을 제외한 평일로만 설정할 수 있습니다.&lt;/div&gt;&lt;div&gt;· 지정한 날짜에 스케줄러가 일괄 발송하며, 지난 날짜는 선택할 수 없습니다.&lt;/div&gt;
+    &lt;div class=&quot;ex&quot;&gt;※ 데모 기준 시각 &lt;span id=&quot;nowTxt&quot;&gt;&lt;/span&gt; · 공휴일은 예시값&lt;/div&gt;&lt;/div&gt;
+   &lt;div class=&quot;err&quot; id=&quot;err&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;mf&quot;&gt;&lt;button class=&quot;btn&quot; id=&quot;cancelBtn&quot;&gt;취소&lt;/button&gt;&lt;button class=&quot;btn g&quot; id=&quot;saveBtn&quot;&gt;저장&lt;/button&gt;&lt;/div&gt;
+ &lt;/div&gt;
+ &lt;div id=&quot;tab-his&quot; style=&quot;display:none&quot;&gt;
+  &lt;div class=&quot;mb&quot;&gt;
+   &lt;div class=&quot;hf&quot;&gt;&lt;span class=&quot;lbl&quot;&gt;발송 예정일&lt;/span&gt;&lt;input type=&quot;date&quot; id=&quot;fFrom&quot; class=&quot;box&quot;&gt; ~ &lt;input type=&quot;date&quot; id=&quot;fTo&quot; class=&quot;box&quot;&gt;&lt;button class=&quot;gbtn&quot; id=&quot;qBtn&quot;&gt;조회&lt;/button&gt;&lt;/div&gt;
+   &lt;div class=&quot;cntline&quot;&gt;총 &lt;b id=&quot;cnt&quot;&gt;0&lt;/b&gt; 건 · 광고주 기준&lt;/div&gt;
+   &lt;table class=&quot;res&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;광고주&lt;/th&gt;&lt;th&gt;발송 개수&lt;/th&gt;&lt;th&gt;발송 예정 일시&lt;/th&gt;&lt;th&gt;요청자 / 요청 일시&lt;/th&gt;&lt;th&gt;취소자 / 취소 일시&lt;/th&gt;&lt;th&gt;발송 취소&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody id=&quot;tbody&quot;&gt;&lt;/tbody&gt;&lt;/table&gt;
+   &lt;div class=&quot;pg&quot; id=&quot;pg&quot;&gt;&lt;/div&gt;
+   &lt;div class=&quot;note&quot;&gt;· 발송 예정 일시 순으로 정렬되며, 기본 조회 기간은 당일입니다.&lt;br&gt;· 발송 취소는 광고주 단위로 가능하며, 발송 예정 시각 &lt;span class=&quot;v-cut&quot;&gt;&lt;/span&gt;분 전까지 할 수 있습니다. 이미 발송·취소된 건은 버튼이 비활성화됩니다.&lt;br&gt;&lt;span id=&quot;hisScope&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;mf c&quot;&gt;&lt;button class=&quot;btn&quot; id=&quot;closeBtn&quot;&gt;닫기&lt;/button&gt;&lt;/div&gt;
+ &lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;toast&quot; id=&quot;toast&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+// ===== 데이터: 이 객체만 API 응답으로 교체 (전부 예시값) =====
+const DATA = {
+  now: &quot;2026-10-20T10:00&quot;,            // 데모 기준 시각 (예시)
+  currentUser: &quot;jeon.minju&quot;,          // 로그인 계정 (예시)
+  cancelCutoffMin: 30,                // 취소 마감: 발송 예정 시각 N분 전 (가정)
+  batchTime: &quot;07:00&quot;,                 // 기존 배치 시간 (예약 건의 발송 시각으로 사용)
+  holidays: [&quot;2026-10-05&quot;, &quot;2026-10-09&quot;, &quot;2026-12-25&quot;], // 공휴일 (예시)
+  pageSize: 10,
+  // 메뉴 → 심사 그룹. 같은 그룹은 같은 팝업 설정·예약 내역을 공유
+  menus: {
+    biz:    { label: &quot;비즈보드 (상품)&quot;,        crumb: &quot;이미지 검수 &gt; 상품화 이미지&quot;,       group: &quot;biz&quot; },
+    chat:   { label: &quot;채팅리스트 / 피드&quot;,      crumb: &quot;이미지 검수 &gt; 채팅리스트/피드&quot;,     group: &quot;chat&quot; },
+    chatai: { label: &quot;채팅리스트 / 피드(AI)&quot;,  crumb: &quot;이미지 검수 &gt; 채팅리스트/피드(AI)&quot;, group: &quot;chat&quot; }
+  },
+  groups: {
+    biz:  { title: &quot;소재 심사&quot;, total: 4000, idLabel: &quot;광고주 ID&quot;,
+            priority: [&quot;지정 광고주 소재&quot;, &quot;그 외 소재 (최신 생성순)&quot;] },
+    chat: { title: &quot;소재 심사 · 채팅리스트/피드&quot;, total: 1500, idLabel: &quot;광고주 ID (AI 소재)&quot;,
+            priority: [&quot;지정 광고주 AI 소재&quot;, &quot;채팅리스트/피드 소재 전체&quot;, &quot;그 외 AI 소재 (최신 생성순)&quot;] }
+  },
+  reservations: [ // 광고주 1명 = 1건
+    { group: &quot;biz&quot;,  adv: &quot;bluemarket01&quot;, count: 2500, sendAt: &quot;2026-10-20T09:00&quot;, status: &quot;발송 완료&quot;, reqBy: &quot;park.jihoon&quot;, reqAt: &quot;2026-10-19T10:05&quot;, cancelBy: null, cancelAt: null },
+    { group: &quot;biz&quot;,  adv: &quot;greenshop&quot;,    count: 500,  sendAt: &quot;2026-10-20T09:00&quot;, status: &quot;발송 실패&quot;, reqBy: &quot;jeon.minju&quot;,  reqAt: &quot;2026-10-19T17:40&quot;, cancelBy: null, cancelAt: null },
+    { group: &quot;biz&quot;,  adv: &quot;sunnyday&quot;,     count: 400,  sendAt: &quot;2026-10-20T09:00&quot;, status: &quot;발송 완료&quot;, reqBy: &quot;jeon.minju&quot;,  reqAt: &quot;2026-10-19T17:40&quot;, cancelBy: null, cancelAt: null },
+    { group: &quot;biz&quot;,  adv: &quot;rosemong123&quot;,  count: 800,  sendAt: &quot;2026-10-20T11:00&quot;, status: &quot;예약됨&quot;,   reqBy: &quot;jeon.minju&quot;,  reqAt: &quot;2026-10-19T14:32&quot;, cancelBy: null, cancelAt: null },
+    { group: &quot;biz&quot;,  adv: &quot;bluemarket01&quot;, count: 600,  sendAt: &quot;2026-10-20T11:00&quot;, status: &quot;예약됨&quot;,   reqBy: &quot;jeon.minju&quot;,  reqAt: &quot;2026-10-19T14:32&quot;, cancelBy: null, cancelAt: null },
+    { group: &quot;biz&quot;,  adv: &quot;greenshop&quot;,    count: 400,  sendAt: &quot;2026-10-20T11:00&quot;, status: &quot;취소됨&quot;,   reqBy: &quot;jeon.minju&quot;,  reqAt: &quot;2026-10-19T14:32&quot;, cancelBy: &quot;kim.sohee&quot;, cancelAt: &quot;2026-10-19T16:10&quot; },
+    { group: &quot;chat&quot;, adv: &quot;dcollect&quot;,      count: 300, sendAt: &quot;2026-10-20T09:00&quot;, status: &quot;발송 완료&quot;, reqBy: &quot;park.jihoon&quot;, reqAt: &quot;2026-10-19T11:20&quot;, cancelBy: null, cancelAt: null },
+    { group: &quot;chat&quot;, adv: &quot;jull&quot;,          count: 500, sendAt: &quot;2026-10-20T11:00&quot;, status: &quot;예약됨&quot;,   reqBy: &quot;jeon.minju&quot;,  reqAt: &quot;2026-10-19T15:00&quot;, cancelBy: null, cancelAt: null },
+    { group: &quot;chat&quot;, adv: &quot;gmarketappcps&quot;, count: 400, sendAt: &quot;2026-10-20T11:00&quot;, status: &quot;예약됨&quot;,   reqBy: &quot;jeon.minju&quot;,  reqAt: &quot;2026-10-19T15:00&quot;, cancelBy: null, cancelAt: null }
+  ]
+};
+// ===============================================================
+
+const $ = id =&gt; document.getElementById(id);
+const fmt = n =&gt; n.toLocaleString(&quot;ko-KR&quot;);
+const dt = s =&gt; s.replace(&quot;T&quot;, &quot; &quot;);
+const today = DATA.now.slice(0, 10);
+const NOW = new Date(DATA.now);
+let menu = &quot;biz&quot;, G = DATA.groups.biz, page = 1;
+document.querySelectorAll(&quot;.v-cut&quot;).forEach(e =&gt; e.textContent = DATA.cancelCutoffMin);
+$(&quot;nowTxt&quot;).textContent = dt(DATA.now);
+
+// ---- 기존 화면 재현 (그림만, 동작 없음) ----
+const radios = (opts, on) =&gt; opts.map(o =&gt; (o === on ? &quot;● &quot; : &quot;○ &quot;) + o).join(&quot;&amp;nbsp;&amp;nbsp;&quot;);
+const statTbl = (a, b) =&gt; `&lt;table class=&quot;stat&quot;&gt;&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;전체&lt;/th&gt;&lt;th&gt;대기&lt;/th&gt;&lt;th&gt;승인&lt;/th&gt;&lt;th&gt;모비온 반려&lt;/th&gt;&lt;th&gt;카카오 반려&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;이미지 수&lt;/td&gt;${a.map(v=&gt;`&lt;td&gt;${v}&lt;/td&gt;`).join(&quot;&quot;)}&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;광고주 수&lt;/td&gt;${b.map(v=&gt;`&lt;td&gt;${v}&lt;/td&gt;`).join(&quot;&quot;)}&lt;/tr&gt;&lt;/table&gt;`;
+const head = cols =&gt; `&lt;tr&gt;${cols.map(c=&gt;`&lt;th&gt;${c}&lt;/th&gt;`).join(&quot;&quot;)}&lt;/tr&gt;`;
+const reviewBtn = &#x27;&lt;button class=&quot;new-btn&quot; id=&quot;openBtn&quot;&gt;소재 심사&lt;/button&gt;&#x27;;
+const SCREENS = {
+  biz: () =&gt; `&lt;div class=&quot;static&quot;&gt;${statTbl([&quot;1,931&quot;,&quot;1,931&quot;,0,0,0],[46,46,0,0,0])}
+    &lt;div class=&quot;flt&quot; style=&quot;margin-top:30px&quot;&gt;&lt;span class=&quot;box&quot;&gt;생성일 ▾&lt;/span&gt;&lt;span class=&quot;box&quot;&gt;2026-10-19 ~ 2026-10-19&lt;/span&gt;&lt;span class=&quot;gbtn&quot;&gt;검색&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;flt&quot;&gt;&lt;span class=&quot;gbtn&quot;&gt;승인상태&lt;/span&gt;${radios([&quot;전체&quot;,&quot;대기&quot;,&quot;검수 완료&quot;,&quot;내부승인&quot;,&quot;승인&quot;,&quot;모비온 반려&quot;,&quot;카카오 반려&quot;],&quot;대기&quot;)}&lt;/div&gt;&lt;/div&gt;
+   &lt;div class=&quot;panel&quot;&gt;&lt;div class=&quot;acts&quot;&gt;&lt;span class=&quot;static&quot; style=&quot;background:#a8e2cf&quot;&gt;내부승인&lt;/span&gt;&lt;span class=&quot;static&quot; style=&quot;background:#ee6e6e&quot;&gt;반려&lt;/span&gt;&lt;span class=&quot;static&quot; style=&quot;background:#8d93d8&quot;&gt;재생성요청&lt;/span&gt;&lt;span class=&quot;static&quot; style=&quot;background:#f2994a&quot;&gt;+ 광고 생성&lt;/span&gt;${reviewBtn}&lt;/div&gt;
+    &lt;table class=&quot;list static&quot;&gt;${head([&quot;NO&quot;,&quot;승인상태&quot;,&quot;광고주ID&quot;,&quot;광고주명&quot;,&quot;카테고리&quot;,&quot;배너이미지&quot;,&quot;생성일자&quot;,&quot;반려사유&quot;])}
+     ${[[&quot;42&quot;,&quot;rosemong123&quot;,&quot;슈퍼더블_로즈몽&quot;,&quot;사랑스런 데일리룩의 정석&quot;,&quot;로즈몽 쇼핑하기&quot;,&quot;04:42:07&quot;],[&quot;43&quot;,&quot;dcollect&quot;,&quot;엠싱크_디콜렉트&quot;,&quot;숲몰이 제안하는 스타일링&quot;,&quot;숲몰 구매하기&quot;,&quot;04:33:33&quot;],[&quot;44&quot;,&quot;jull&quot;,&quot;직_JULL-LOG&quot;,&quot;감각적인 디자이너 브랜드&quot;,&quot;JULL-LOG 구매하기&quot;,&quot;04:27:21&quot;]]
+       .map(r=&gt;`&lt;tr&gt;&lt;td&gt;${r[0]}&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;tag&quot;&gt;대기&lt;/span&gt;&lt;/td&gt;&lt;td&gt;${r[1]}&lt;/td&gt;&lt;td&gt;${r[2]}&lt;/td&gt;&lt;td&gt;패션&amp;gt;여성패션&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;ban&quot;&gt;&lt;span&gt;&lt;b&gt;${r[3]}&lt;/b&gt;&lt;br&gt;&lt;small&gt;${r[4]}&lt;/small&gt;&lt;/span&gt;&lt;i&gt;&lt;/i&gt;&lt;/span&gt;&lt;/td&gt;&lt;td&gt;2026-10-19 ${r[5]}&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;box&quot; style=&quot;display:inline-block;width:140px&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;`).join(&quot;&quot;)}&lt;/table&gt;&lt;/div&gt;`,
+  chat: () =&gt; `&lt;div class=&quot;static&quot;&gt;${statTbl([0,0,0,0,0],[0,0,0,0,0])}
+    &lt;div class=&quot;flt&quot; style=&quot;margin-top:30px&quot;&gt;&lt;span class=&quot;gbtn&quot;&gt;기간 기준&lt;/span&gt;&lt;span class=&quot;box&quot;&gt;생성일 ▾&lt;/span&gt;&lt;span class=&quot;box&quot;&gt;2026-10-20 ~ 2026-10-20&lt;/span&gt;&lt;span class=&quot;gbtn&quot;&gt;검색&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;flt&quot;&gt;&lt;span class=&quot;gbtn&quot;&gt;승인상태&lt;/span&gt;${radios([&quot;전체&quot;,&quot;대기&quot;,&quot;내부승인&quot;,&quot;승인&quot;,&quot;모비온 반려&quot;,&quot;카카오 반려&quot;],&quot;대기&quot;)}&lt;/div&gt;
+    &lt;span class=&quot;gbtn rbtn&quot;&gt;자동 반려 조건&lt;/span&gt;&lt;/div&gt;
+   &lt;div class=&quot;panel&quot;&gt;&lt;div class=&quot;acts&quot;&gt;&lt;span class=&quot;static&quot; style=&quot;background:#a8e2cf&quot;&gt;내부승인&lt;/span&gt;&lt;span class=&quot;static&quot; style=&quot;background:#ee6e6e&quot;&gt;반려&lt;/span&gt;${reviewBtn}&lt;/div&gt;
+    &lt;div class=&quot;flt static&quot;&gt;&lt;span class=&quot;gbtn&quot;&gt;컬럼 설정&lt;/span&gt;&lt;span class=&quot;box&quot; style=&quot;width:160px&quot;&gt;검색어를 입력하세요.&lt;/span&gt;&lt;span class=&quot;gbtn&quot;&gt;검색&lt;/span&gt;&lt;span style=&quot;flex:1&quot;&gt;&lt;/span&gt;&lt;span class=&quot;box&quot;&gt;100개씩 보기 ▾&lt;/span&gt;&lt;span class=&quot;gbtn&quot;&gt;엑셀&lt;/span&gt;&lt;/div&gt;
+    &lt;table class=&quot;list static&quot;&gt;${head([&quot;NO&quot;,&quot;승인상태&quot;,&quot;광고주ID&quot;,&quot;광고주명&quot;,&quot;카테고리&quot;,&quot;소재그룹명&quot;,&quot;사이트명&quot;,&quot;프로필 로고&quot;,&quot;배너이미지&quot;,&quot;소재 광고문구&quot;,&quot;랜딩URL&quot;,&quot;CTA 정보&quot;,&quot;생성일자&quot;,&quot;최종업데이트일&quot;])}&lt;tr&gt;&lt;td colspan=&quot;14&quot;&gt;조회된 데이터가 없습니다.&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;`,
+  chatai: () =&gt; `&lt;div class=&quot;static&quot;&gt;${statTbl([0,0,0,0,0],[0,0,0,0,0])}
+    &lt;div class=&quot;flt&quot; style=&quot;margin-top:30px&quot;&gt;&lt;span class=&quot;box&quot;&gt;생성일 ▾&lt;/span&gt;&lt;span class=&quot;box&quot;&gt;2026-10-20 ~ 2026-10-20&lt;/span&gt;&lt;span class=&quot;gbtn&quot;&gt;검색&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;flt&quot;&gt;&lt;span class=&quot;gbtn&quot;&gt;승인상태&lt;/span&gt;${radios([&quot;전체&quot;,&quot;대기&quot;,&quot;내부승인&quot;,&quot;승인&quot;,&quot;모비온 반려&quot;,&quot;카카오 반려&quot;],&quot;대기&quot;)}&lt;/div&gt;
+    &lt;span class=&quot;gbtn rbtn&quot;&gt;생성 조건&lt;/span&gt;&lt;/div&gt;
+   &lt;div class=&quot;panel&quot;&gt;&lt;div class=&quot;acts&quot;&gt;&lt;span class=&quot;static&quot; style=&quot;background:#a8e2cf&quot;&gt;내부승인&lt;/span&gt;&lt;span class=&quot;static&quot; style=&quot;background:#ee6e6e&quot;&gt;반려&lt;/span&gt;${reviewBtn}&lt;/div&gt;
+    &lt;div class=&quot;flt static&quot;&gt;&lt;span class=&quot;gbtn&quot;&gt;컬럼 설정&lt;/span&gt;&lt;span class=&quot;box&quot; style=&quot;width:160px&quot;&gt;광고주명 혹은 ID 입력&lt;/span&gt;&lt;span class=&quot;gbtn&quot;&gt;검색&lt;/span&gt;&lt;span style=&quot;flex:1&quot;&gt;&lt;/span&gt;☑ 광고주수 1개씩 보기 &lt;span class=&quot;box&quot;&gt;100개씩 보기 ▾&lt;/span&gt;&lt;span class=&quot;gbtn&quot;&gt;엑셀&lt;/span&gt;&lt;/div&gt;
+    &lt;table class=&quot;list static&quot;&gt;${head([&quot;NO&quot;,&quot;승인상태&quot;,&quot;광고주ID&quot;,&quot;광고주명&quot;,&quot;카테고리&quot;,&quot;사이트명&quot;,&quot;프로필 로고&quot;,&quot;배너이미지&quot;,&quot;소재 광고문구&quot;,&quot;랜딩URL&quot;,&quot;생성일자&quot;,&quot;최종업데이트일&quot;,&quot;반려사유&quot;])}&lt;tr&gt;&lt;td colspan=&quot;13&quot;&gt;조회된 데이터가 없습니다.&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;`
+};
+function showMenu(m){
+  menu = m; G = DATA.groups[DATA.menus[m].group];
+  document.querySelectorAll(&quot;.side .nav&quot;).forEach(e =&gt; e.classList.toggle(&quot;cur&quot;, e.dataset.menu === m));
+  $(&quot;screen&quot;).innerHTML = `&lt;div class=&quot;crumb&quot;&gt;${DATA.menus[m].crumb}&lt;/div&gt;` + SCREENS[m]();
+  $(&quot;openBtn&quot;).onclick = () =&gt; { setupModal(); resetForm(); openModal(&quot;req&quot;); };
+}
+document.querySelectorAll(&quot;.side .nav&quot;).forEach(e =&gt; e.onclick = () =&gt; showMenu(e.dataset.menu));
+
+// ---- 팝업 ----
+function toast(msg){ const t=$(&quot;toast&quot;); t.textContent=msg; t.style.display=&quot;block&quot;; clearTimeout(t._h); t._h=setTimeout(()=&gt;t.style.display=&quot;none&quot;,2200); }
+function setupModal(){
+  $(&quot;mTitle&quot;).textContent = G.title;
+  $(&quot;idLbl&quot;).innerHTML = G.idLabel + &quot; &lt;em&gt;*&lt;/em&gt;&quot;;
+  const tot = fmt(G.total);
+  $(&quot;mDesc&quot;).innerHTML = G.priority.length &gt; 2
+    ? &quot;총 발송 개수 중 입력한 광고주의 AI 소재를 먼저 발송하고, 남은 수량은 아래 순서대로 채웁니다.&quot;
+    : &quot;총 발송 개수 중 입력한 광고주의 소재를 우선 발송하고, 나머지는 최근 생성된 소재 순으로 채웁니다.&quot;;
+  $(&quot;totHelp&quot;).textContent = `개 (최대 ${tot}개, 기본값 ${tot}개)`;
+  $(&quot;mPrio&quot;).style.display = G.priority.length &gt; 2 ? &quot;&quot; : &quot;none&quot;;
+  $(&quot;mPrio&quot;).innerHTML = &quot;&lt;b&gt;심사 우선순위&lt;/b&gt;&quot; + G.priority.map((p,i)=&gt;`&lt;span class=&quot;${i===0?&quot;on&quot;:&quot;&quot;}&quot;&gt;${i+1} ${p}&lt;/span&gt;`).join(&quot;&lt;i&gt;→&lt;/i&gt;&quot;);
+  const names = Object.values(DATA.menus).filter(x=&gt;DATA.groups[x.group]===G).map(x=&gt;x.label);
+  $(&quot;hisScope&quot;).textContent = names.length &gt; 1 ? `· ${names.join(&quot; · &quot;)} 메뉴의 예약 내역을 함께 표시합니다.` : `· ${names[0]} 메뉴의 예약 내역만 표시합니다.`;
+}
+function openModal(tab){ $(&quot;dim&quot;).classList.add(&quot;show&quot;); setTab(tab||&quot;req&quot;); }
+function closeModal(){ $(&quot;dim&quot;).classList.remove(&quot;show&quot;); }
+function setTab(tab){
+  document.querySelectorAll(&quot;.tabs button&quot;).forEach(b=&gt;b.classList.toggle(&quot;on&quot;, b.dataset.tab===tab));
+  $(&quot;tab-req&quot;).style.display = tab===&quot;req&quot; ? &quot;&quot; : &quot;none&quot;;
+  $(&quot;tab-his&quot;).style.display = tab===&quot;his&quot; ? &quot;&quot; : &quot;none&quot;;
+  if (tab===&quot;his&quot;) renderHis();
+}
+$(&quot;xBtn&quot;).onclick = closeModal; $(&quot;cancelBtn&quot;).onclick = closeModal; $(&quot;closeBtn&quot;).onclick = closeModal;
+document.querySelectorAll(&quot;.tabs button&quot;).forEach(b =&gt; b.onclick = () =&gt; setTab(b.dataset.tab));
+
+// ---- 심사 요청 탭 ----
+// 총 발송 개수: 기본값·최대값 = 메뉴 그룹 상한(G.total)
+const curTotal = () =&gt; Number($(&quot;totIn&quot;).value || 0);
+$(&quot;totIn&quot;).oninput = e =&gt; {
+  e.target.value = e.target.value.replace(/[^0-9]/g,&quot;&quot;);
+  if (Number(e.target.value) &gt; G.total) { e.target.value = G.total; $(&quot;capHint&quot;).textContent = `· 총 발송 개수는 최대 ${fmt(G.total)}개로 맞췄습니다`; }
+  else $(&quot;capHint&quot;).textContent = &quot;&quot;;
+};
+$(&quot;totIn&quot;).onblur = e =&gt; { // 합계보다 작으면 합계로 보정
+  const s = calcSum();
+  if (curTotal() &lt; s) { e.target.value = s; $(&quot;capHint&quot;).textContent = `· 총 발송 개수는 발송 개수 합계(${fmt(s)}개)보다 작을 수 없어 맞췄습니다`; }
+  calcSum();
+};
+function addRow(){
+  const r=document.createElement(&quot;div&quot;); r.className=&quot;row&quot;;
+  r.innerHTML=&#x27;&lt;input class=&quot;id&quot; placeholder=&quot;광고주 ID 입력 (예: rosemong123)&quot;&gt;&lt;input class=&quot;cnt&quot; inputmode=&quot;numeric&quot; placeholder=&quot;숫자 입력&quot;&gt;&lt;button class=&quot;del&quot; title=&quot;삭제&quot;&gt;✕&lt;/button&gt;&#x27;;
+  r.querySelector(&quot;.cnt&quot;).oninput = e =&gt; {
+    // 입력 단계에서 상한 제한: 이 행 최대값 = 상한 − 다른 행 합계
+    e.target.value = e.target.value.replace(/[^0-9]/g,&quot;&quot;);
+    const others = readRows().reduce((a,x)=&gt;a+x.count,0) - Number(e.target.value||0);
+    const max = Math.max(0, curTotal() - others);
+    if (Number(e.target.value) &gt; max) {
+      e.target.value = max || &quot;&quot;;
+      $(&quot;capHint&quot;).textContent = `· 합계는 총 발송 개수(${fmt(curTotal())}개)를 넘을 수 없어 ${fmt(max)}개로 맞췄습니다`;
+    } else $(&quot;capHint&quot;).textContent = &quot;&quot;;
+    calcSum();
+  };
+  r.querySelector(&quot;.del&quot;).onclick = () =&gt; { r.remove(); refreshDel(); calcSum(); };
+  $(&quot;rows&quot;).appendChild(r); refreshDel();
+}
+function refreshDel(){ const rs=$(&quot;rows&quot;).children; for(const r of rs) r.querySelector(&quot;.del&quot;).style.visibility = rs.length&gt;1 ? &quot;visible&quot;:&quot;hidden&quot;; }
+function readRows(){ return [...$(&quot;rows&quot;).children].map(r=&gt;({adv:r.querySelector(&quot;.id&quot;).value.trim(), count:Number(r.querySelector(&quot;.cnt&quot;).value||0)})); }
+function calcSum(){
+  const s = readRows().reduce((a,r)=&gt;a+r.count,0);
+  $(&quot;sumVal&quot;).textContent = fmt(s)+&quot;개&quot;;
+  $(&quot;sumBox&quot;).classList.toggle(&quot;over&quot;, s &gt; curTotal());
+  return s;
+}
+function resetForm(){
+  $(&quot;totIn&quot;).value = G.total; $(&quot;rows&quot;).innerHTML=&quot;&quot;; addRow(); calcSum(); $(&quot;err&quot;).textContent=&quot;&quot;; $(&quot;capHint&quot;).textContent=&quot;&quot;;
+  $(&quot;dDate&quot;).value=&quot;&quot;; $(&quot;dDate&quot;).min=today;
+}
+$(&quot;addBtn&quot;).onclick = addRow;
+function validate(){
+  const rows=readRows(), errs=[];
+  if (rows.some(r=&gt;!r.adv)) errs.push(&quot;광고주 ID를 입력해 주세요&quot;);
+  if (rows.some(r=&gt;r.count&lt;1)) errs.push(&quot;발송 개수를 1개 이상 입력해 주세요&quot;);
+  const ids=rows.map(r=&gt;r.adv).filter(Boolean);
+  if (new Set(ids).size!==ids.length) errs.push(&quot;같은 광고주 ID가 중복 입력되었습니다&quot;);
+  if (curTotal() &lt; 1) errs.push(&quot;총 발송 개수를 입력해 주세요&quot;);
+  if (calcSum() &gt; curTotal()) errs.push(`발송 개수 합계가 총 발송 개수(${fmt(curTotal())}개)를 넘습니다`); // 입력 단계에서 막히므로 안전장치
+  const d=$(&quot;dDate&quot;).value, t=DATA.batchTime;
+  if (!d) errs.push(&quot;발송 예정일을 선택해 주세요&quot;);
+  else {
+    const day=new Date(d+&quot;T00:00&quot;).getDay();
+    if (day===0||day===6) errs.push(&quot;주말은 선택할 수 없습니다&quot;);
+    if (DATA.holidays.includes(d)) errs.push(&quot;공휴일은 선택할 수 없습니다&quot;);
+    if (d &lt; today) errs.push(&quot;지난 날짜는 선택할 수 없습니다&quot;);
+  }
+  return {rows, errs, sendAt: d+&quot;T&quot;+t};
+}
+$(&quot;saveBtn&quot;).onclick = () =&gt; {
+  const v=validate();
+  if (v.errs.length){ $(&quot;err&quot;).textContent=&quot;· &quot;+v.errs.join(&quot;\n· &quot;); return; }
+  const grp=DATA.menus[menu].group;
+  v.rows.forEach(r=&gt;DATA.reservations.push({group:grp,adv:r.adv,count:r.count,sendAt:v.sendAt,status:&quot;예약됨&quot;,reqBy:DATA.currentUser,reqAt:DATA.now,cancelBy:null,cancelAt:null}));
+  toast(`${v.rows.length}개 광고주 예약 완료 · ${dt(v.sendAt)}`);
+  $(&quot;fFrom&quot;).value=$(&quot;fTo&quot;).value=v.sendAt.slice(0,10); page=1; setTab(&quot;his&quot;);
+};
+
+// ---- 예약 내역 탭 ----
+$(&quot;fFrom&quot;).value=$(&quot;fTo&quot;).value=today;
+$(&quot;qBtn&quot;).onclick = () =&gt; { page=1; renderHis(); };
+function canCancel(r){ return r.status===&quot;예약됨&quot; &amp;&amp; (new Date(r.sendAt) - NOW) &gt;= DATA.cancelCutoffMin*60000; }
+function filtered(){
+  const f=$(&quot;fFrom&quot;).value, t=$(&quot;fTo&quot;).value, grp=DATA.menus[menu].group;
+  return DATA.reservations.filter(r=&gt;r.group===grp &amp;&amp; r.sendAt.slice(0,10)&gt;=f &amp;&amp; r.sendAt.slice(0,10)&lt;=t).sort((a,b)=&gt;a.sendAt.localeCompare(b.sendAt));
+}
+function renderHis(){
+  const list=filtered(), pages=Math.max(1,Math.ceil(list.length/DATA.pageSize));
+  if(page&gt;pages) page=pages;
+  $(&quot;cnt&quot;).textContent=fmt(list.length);
+  $(&quot;tbody&quot;).innerHTML = list.slice((page-1)*DATA.pageSize, page*DATA.pageSize).map(r=&gt;{
+    const i=DATA.reservations.indexOf(r);
+    return `&lt;tr&gt;&lt;td&gt;${r.adv}&lt;/td&gt;&lt;td class=&quot;n&quot;&gt;${fmt(r.count)}&lt;/td&gt;&lt;td class=&quot;t&quot;&gt;${dt(r.sendAt)}&lt;/td&gt;
+      &lt;td style=&quot;text-align:left&quot;&gt;${r.reqBy}&lt;small&gt;${dt(r.reqAt)}&lt;/small&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align:${r.cancelBy?&quot;left&quot;:&quot;center&quot;}&quot;&gt;${r.cancelBy?`${r.cancelBy}&lt;small&gt;${dt(r.cancelAt)}&lt;/small&gt;`:&#x27;&lt;span style=&quot;color:#aaa&quot;&gt;-&lt;/span&gt;&#x27;}&lt;/td&gt;
+      &lt;td&gt;&lt;button class=&quot;cbtn&quot; data-i=&quot;${i}&quot; ${canCancel(r)?&quot;&quot;:&quot;disabled&quot;}&gt;발송 취소&lt;/button&gt;&lt;/td&gt;&lt;/tr&gt;`;
+  }).join(&quot;&quot;) || &#x27;&lt;tr&gt;&lt;td colspan=&quot;6&quot; style=&quot;text-align:center;color:#aaa&quot;&gt;조회 기간에 예약 내역이 없습니다&lt;/td&gt;&lt;/tr&gt;&#x27;;
+  document.querySelectorAll(&quot;.cbtn:not(:disabled)&quot;).forEach(b=&gt;b.onclick=()=&gt;{
+    const r=DATA.reservations[b.dataset.i];
+    if(!confirm(`${r.adv} ${fmt(r.count)}개 (${dt(r.sendAt)}) 발송을 취소할까요?`)) return;
+    r.status=&quot;취소됨&quot;; r.cancelBy=DATA.currentUser; r.cancelAt=DATA.now; renderHis(); toast(&quot;발송 취소 완료&quot;);
+  });
+  $(&quot;pg&quot;).innerHTML = Array.from({length:pages},(_,k)=&gt;`&lt;button class=&quot;${k+1===page?&quot;on&quot;:&quot;&quot;}&quot;&gt;${k+1}&lt;/button&gt;`).join(&quot;&quot;);
+  [...$(&quot;pg&quot;).children].forEach((b,k)=&gt;b.onclick=()=&gt;{page=k+1;renderHis();});
+}
+showMenu(&quot;biz&quot;);
+&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;
+"></iframe></section>
+<section id="spec"><iframe title="화면설계서" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;화면설계서&lt;/title&gt;
+&lt;style&gt;
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Pretendard,&quot;Noto Sans KR&quot;,sans-serif;font-size:12px;color:#333;background:#eef0f3;display:flex}
+.left{flex:1;overflow:auto;padding:28px 32px}
+.right{width:440px;flex-shrink:0;background:#fff;border-left:1px solid #e3e5e8;overflow-y:auto}
+@media (max-width:900px){body{flex-direction:column;height:auto}.right{width:100%;border-left:0;border-top:1px solid #e3e5e8}}
+h2{font-size:13px;color:#555;margin:0 0 10px}
+.scr{background:#fff;border:1px solid #dfe2e6;border-radius:6px;padding:18px;margin-bottom:34px}
+.mk{position:relative}
+.badge{position:absolute;top:-9px;left:-9px;z-index:9999;background:#e5484d;color:#fff;font-size:11px;font-weight:700;min-width:20px;height:18px;padding:0 4px;display:flex;align-items:center;justify-content:center;border-radius:2px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.badge.r{left:auto;right:-9px}
+/* 목업 공통 */
+.acts{display:flex;gap:8px}
+.acts span{color:#fff;border-radius:2px;padding:5px 12px}
+.modal{width:760px;max-width:100%;border:1px solid #ddd;border-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.12);background:#fff}
+.mh{background:#4cb895;color:#fff;display:flex;justify-content:space-between;padding:12px 18px;font-size:15px;font-weight:700;border-radius:4px 4px 0 0}
+.tabs{display:flex;gap:4px;padding:0 18px;border-bottom:1px solid #e6e6e6}
+.tabs span{padding:10px 14px 8px;color:#888}.tabs .on{color:#4cb895;border-bottom:2px solid #4cb895;font-weight:700}
+.mb{padding:18px;display:flex;flex-direction:column;gap:12px}
+.desc0{color:#666;line-height:1.6}
+.lbl{font-weight:700;color:#222}.lbl em{color:#ee6e6e;font-style:normal}
+.row{display:flex;gap:8px}
+.in{height:30px;border:1px solid #ccc;border-radius:2px;padding:0 10px;display:flex;align-items:center;color:#aaa;flex:1}
+.in.c{flex:0 0 120px}
+.del{width:30px;height:30px;border:1px solid #ccc;border-radius:2px;display:flex;align-items:center;justify-content:center;color:#888}
+.add{height:30px;border:1px dashed #4cb895;background:#f2f9f6;color:#4cb895;display:flex;align-items:center;justify-content:center;border-radius:2px}
+.sum{display:flex;justify-content:space-between;background:#f7f7f7;padding:9px 12px;font-weight:700;border-radius:4px}
+.note{font-size:11px;color:#888;line-height:1.6}.note b{color:#e5484d}
+.mf{display:flex;justify-content:flex-end;gap:8px;padding:0 18px 14px}
+.btn{border:1px solid #ccc;border-radius:2px;padding:5px 18px;background:#fff}.btn.g{background:#4cb895;color:#fff;border-color:#4cb895}
+.gbtn{background:#4cb895;color:#fff;border-radius:2px;padding:5px 14px}
+table{width:100%;border-collapse:collapse;border:1px solid #e6e6e6}
+th{background:#f7f7f7;padding:8px}td{border-top:1px solid #e6e6e6;padding:7px 8px;text-align:center}
+td small{display:block;color:#aaa}
+.cb{border:1px solid #ee6e6e;color:#ee6e6e;padding:2px 8px;border-radius:2px;font-size:11px;display:inline-block}
+.cb.off{border-color:#e0e0e0;background:#f5f5f5;color:#bbb}
+.pg{display:flex;gap:4px;justify-content:center}.pg span{width:24px;height:24px;border:1px solid #e6e6e6;display:flex;align-items:center;justify-content:center}.pg .on{background:#4cb895;color:#fff}
+/* 디스크립션 */
+.chk{position:sticky;top:0;background:#f8fafc;border-bottom:1px solid #e3e5e8;padding:12px 18px;z-index:2;font-size:12px;line-height:1.7}
+.chk .ok{color:#16a34a;font-weight:700}.chk .ng{color:#e5484d;font-weight:700}
+.desc{padding:6px 18px 40px}
+.item{padding:14px 10px;border-bottom:1px solid #f0f1f3;border-radius:4px}
+.item h4{margin:0 0 6px;font-size:13px;display:flex;align-items:center;gap:6px}
+.item h4 .no{background:#e5484d;color:#fff;font-size:11px;padding:1px 5px;border-radius:2px}
+.tg{font-size:10px;padding:1px 6px;border-radius:9px;font-weight:700}
+.tg.new{background:#e7f0ff;color:#2563eb}.tg.chg{background:#fff1e0;color:#d97706}.tg.old{background:#eef0f2;color:#6b7280}
+.l1{padding-left:1.4em;text-indent:-1.4em;white-space:pre-wrap;line-height:1.7;margin-top:2px}
+.l2{padding-left:2.6em;text-indent:-1.0em;white-space:pre-wrap;line-height:1.7;color:#555}
+.copy{margin:3px 0 3px 1.6em;padding:6px 8px;background:#f6f7f9;border-left:3px solid #cbd5e1;color:#555;white-space:pre-wrap;font-size:11px}
+@keyframes fl{0%,100%{background:transparent}25%,75%{background:#fff3a3}}
+.flash{animation:fl 1.4s ease}
+
+.scr2{background:#fff;border:1px solid #dfe2e6;border-radius:6px;margin-bottom:34px}
+.scr2 .ttl{padding:10px 16px;border-bottom:1px solid #eee;font-weight:700;font-size:13px}
+.scr2 .bd{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.fl{display:flex;gap:6px;align-items:center;color:#666;flex-wrap:wrap}.fl .bx{border:1px solid #ccc;padding:3px 8px;border-radius:2px;background:#fff}
+.lh{display:flex;background:#f2f2f2;padding:7px 8px;gap:14px;color:#555;font-weight:700;white-space:nowrap;overflow:hidden}
+.prio{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:#f0f7ff;border:1px solid #cce0f5;border-radius:4px;padding:9px 12px}
+.prio span{background:#fff;border:1px solid #ccc;border-radius:12px;padding:2px 9px}.prio span.on{border-color:#4cb895;color:#4cb895;font-weight:700}
+.sub{font-size:11px;color:#888}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;div class=&quot;left&quot;&gt;
+&lt;h2&gt;A. 이미지 검수 &gt; 상품화 이미지 (비즈보드 (상품)) — 기존 화면 + 버튼 추가&lt;/h2&gt;
+ &lt;div class=&quot;scr2&quot;&gt;&lt;div class=&quot;ttl&quot;&gt;이미지 검수 &gt; 상품화 이미지 (비즈보드 (상품))&lt;/div&gt;&lt;div class=&quot;bd&quot;&gt;
+  &lt;div class=&quot;fl&quot;&gt;&lt;span class=&quot;bx&quot;&gt;생성일 ▾&lt;/span&gt;&lt;span class=&quot;bx&quot;&gt;2026-10-19 ~ 2026-10-19&lt;/span&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;검색&lt;/span&gt;&lt;span style=&quot;flex:1&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;fl&quot;&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;승인상태&lt;/span&gt;○ 전체 ● 대기 ○ 내부승인 ○ 승인 ○ 모비온 반려 ○ 카카오 반려&lt;/div&gt;
+  &lt;div class=&quot;acts&quot;&gt;&lt;span style=&quot;background:#a8e2cf&quot;&gt;내부승인&lt;/span&gt;&lt;span style=&quot;background:#ee6e6e&quot;&gt;반려&lt;/span&gt;&lt;span style=&quot;background:#8d93d8&quot;&gt;재생성요청&lt;/span&gt;&lt;span style=&quot;background:#f2994a&quot;&gt;+ 광고 생성&lt;/span&gt;&lt;span class=&quot;mk&quot; style=&quot;background:#3b81c4&quot;&gt;소재 심사&lt;i class=&quot;badge&quot; data-no=&quot;1&quot;&gt;1&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;lh&quot;&gt;&lt;span&gt;NO&lt;/span&gt;&lt;span&gt;승인상태&lt;/span&gt;&lt;span&gt;광고주ID&lt;/span&gt;&lt;span&gt;광고주명&lt;/span&gt;&lt;span&gt;카테고리&lt;/span&gt;&lt;span&gt;랜딩URL&lt;/span&gt;&lt;span&gt;배너이미지&lt;/span&gt;&lt;span&gt;배너 수정&lt;/span&gt;&lt;span&gt;생성일자&lt;/span&gt;&lt;span&gt;반려사유&lt;/span&gt;&lt;/div&gt;
+ &lt;/div&gt;&lt;/div&gt;&lt;h2&gt;B. 이미지 검수 &gt; 채팅리스트/피드 — 기존 화면 + 버튼 추가&lt;/h2&gt;
+ &lt;div class=&quot;scr2&quot;&gt;&lt;div class=&quot;ttl&quot;&gt;이미지 검수 &gt; 채팅리스트/피드&lt;/div&gt;&lt;div class=&quot;bd&quot;&gt;
+  &lt;div class=&quot;fl&quot;&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;기간 기준&lt;/span&gt;&lt;span class=&quot;bx&quot;&gt;생성일 ▾&lt;/span&gt;&lt;span class=&quot;bx&quot;&gt;2026-10-20 ~ 2026-10-20&lt;/span&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;검색&lt;/span&gt;&lt;span style=&quot;flex:1&quot;&gt;&lt;/span&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;자동 반려 조건&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;fl&quot;&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;승인상태&lt;/span&gt;○ 전체 ● 대기 ○ 내부승인 ○ 승인 ○ 모비온 반려 ○ 카카오 반려&lt;/div&gt;
+  &lt;div class=&quot;acts&quot;&gt;&lt;span style=&quot;background:#a8e2cf&quot;&gt;내부승인&lt;/span&gt;&lt;span style=&quot;background:#ee6e6e&quot;&gt;반려&lt;/span&gt;&lt;span class=&quot;mk&quot; style=&quot;background:#3b81c4&quot;&gt;소재 심사&lt;i class=&quot;badge&quot; data-no=&quot;2&quot;&gt;2&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;lh&quot;&gt;&lt;span&gt;NO&lt;/span&gt;&lt;span&gt;승인상태&lt;/span&gt;&lt;span&gt;광고주ID&lt;/span&gt;&lt;span&gt;광고주명&lt;/span&gt;&lt;span&gt;카테고리&lt;/span&gt;&lt;span&gt;소재그룹명&lt;/span&gt;&lt;span&gt;사이트명&lt;/span&gt;&lt;span&gt;프로필 로고&lt;/span&gt;&lt;span&gt;배너이미지&lt;/span&gt;&lt;span&gt;소재 광고문구&lt;/span&gt;&lt;span&gt;CTA 정보&lt;/span&gt;&lt;/div&gt;
+ &lt;/div&gt;&lt;/div&gt;&lt;h2&gt;C. 이미지 검수 &gt; 채팅리스트/피드(AI) — 기존 화면 + 버튼 추가&lt;/h2&gt;
+ &lt;div class=&quot;scr2&quot;&gt;&lt;div class=&quot;ttl&quot;&gt;이미지 검수 &gt; 채팅리스트/피드(AI)&lt;/div&gt;&lt;div class=&quot;bd&quot;&gt;
+  &lt;div class=&quot;fl&quot;&gt;&lt;span class=&quot;bx&quot;&gt;생성일 ▾&lt;/span&gt;&lt;span class=&quot;bx&quot;&gt;2026-10-20 ~ 2026-10-20&lt;/span&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;검색&lt;/span&gt;&lt;span style=&quot;flex:1&quot;&gt;&lt;/span&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;생성 조건&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;fl&quot;&gt;&lt;span style=&quot;background:#4cb895;color:#fff;padding:3px 10px;border-radius:2px&quot;&gt;승인상태&lt;/span&gt;○ 전체 ● 대기 ○ 내부승인 ○ 승인 ○ 모비온 반려 ○ 카카오 반려&lt;/div&gt;
+  &lt;div class=&quot;acts&quot;&gt;&lt;span style=&quot;background:#a8e2cf&quot;&gt;내부승인&lt;/span&gt;&lt;span style=&quot;background:#ee6e6e&quot;&gt;반려&lt;/span&gt;&lt;span class=&quot;mk&quot; style=&quot;background:#3b81c4&quot;&gt;소재 심사&lt;i class=&quot;badge&quot; data-no=&quot;3&quot;&gt;3&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;lh&quot;&gt;&lt;span&gt;NO&lt;/span&gt;&lt;span&gt;승인상태&lt;/span&gt;&lt;span&gt;광고주ID&lt;/span&gt;&lt;span&gt;광고주명&lt;/span&gt;&lt;span&gt;카테고리&lt;/span&gt;&lt;span&gt;사이트명&lt;/span&gt;&lt;span&gt;프로필 로고&lt;/span&gt;&lt;span&gt;배너이미지&lt;/span&gt;&lt;span&gt;소재 광고문구&lt;/span&gt;&lt;span&gt;랜딩URL&lt;/span&gt;&lt;span&gt;반려사유&lt;/span&gt;&lt;/div&gt;
+ &lt;/div&gt;&lt;/div&gt;&lt;h2&gt;D. 소재 심사 팝업 — 심사 요청 탭 (비즈보드 (상품))&lt;/h2&gt;
+ &lt;div class=&quot;scr&quot;&gt;&lt;div class=&quot;modal mk&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;4&quot;&gt;4&lt;/i&gt;
+  &lt;div class=&quot;mh&quot;&gt;&lt;span class=&quot;mk&quot;&gt;소재 심사&lt;/span&gt;&lt;span&gt;✕&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;tabs&quot;&gt;&lt;span class=&quot;mk on&quot;&gt;심사 요청&lt;i class=&quot;badge&quot; data-no=&quot;4-1&quot;&gt;4-1&lt;/i&gt;&lt;/span&gt;&lt;span class=&quot;mk&quot;&gt;예약 내역&lt;i class=&quot;badge&quot; data-no=&quot;4-2&quot;&gt;4-2&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;mb&quot;&gt;
+   &lt;div class=&quot;desc0 mk&quot;&gt;총 발송 개수 중 입력한 광고주의 소재를 우선 발송하고, 나머지는 최근 생성된 소재 순으로 채웁니다.&lt;i class=&quot;badge&quot; data-no=&quot;5&quot;&gt;5&lt;/i&gt;&lt;/div&gt;
+   &lt;div class=&quot;mk&quot; style=&quot;display:flex;flex-direction:column;gap:6px&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;6&quot;&gt;6&lt;/i&gt;&lt;div class=&quot;lbl&quot;&gt;총 발송 개수 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;&lt;div class=&quot;row&quot; style=&quot;align-items:center&quot;&gt;&lt;div class=&quot;in&quot; style=&quot;flex:0 0 140px;justify-content:flex-end;color:#222&quot;&gt;4,000&lt;/div&gt;&lt;span style=&quot;color:#888&quot;&gt;개 (최대 4,000개, 기본값 4,000개)&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+   
+   &lt;div class=&quot;mk&quot; style=&quot;display:flex;flex-direction:column;gap:8px&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;7&quot;&gt;7&lt;/i&gt;
+    &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;lbl mk&quot; style=&quot;flex:1&quot;&gt;&lt;span class=&quot;mk&quot;&gt;광고주 ID&lt;/span&gt; &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;&lt;div class=&quot;lbl&quot; style=&quot;flex:0 0 120px&quot;&gt;발송 개수 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;&lt;div style=&quot;width:30px&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;in&quot;&gt;광고주 ID 입력 (예: rosemong123)&lt;/div&gt;&lt;div class=&quot;in c&quot;&gt;숫자 입력&lt;/div&gt;&lt;div class=&quot;del mk&quot;&gt;✕&lt;i class=&quot;badge r&quot; data-no=&quot;7-1&quot;&gt;7-1&lt;/i&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;in&quot;&gt;광고주 ID 입력 (예: rosemong123)&lt;/div&gt;&lt;div class=&quot;in c&quot;&gt;숫자 입력&lt;/div&gt;&lt;div class=&quot;del&quot;&gt;✕&lt;/div&gt;&lt;/div&gt;
+   &lt;/div&gt;
+   &lt;div class=&quot;add mk&quot;&gt;+ 광고주 추가&lt;i class=&quot;badge&quot; data-no=&quot;7-2&quot;&gt;7-2&lt;/i&gt;&lt;/div&gt;
+   &lt;div class=&quot;sum mk&quot;&gt;&lt;span&gt;발송 개수 합계&lt;/span&gt;&lt;span&gt;0개&lt;/span&gt;&lt;i class=&quot;badge&quot; data-no=&quot;7-3&quot;&gt;7-3&lt;/i&gt;&lt;/div&gt;
+   &lt;div class=&quot;mk&quot; style=&quot;display:flex;flex-direction:column;gap:8px&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;8&quot;&gt;8&lt;/i&gt;
+    &lt;div class=&quot;lbl&quot;&gt;발송 예정일 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;in&quot; style=&quot;flex:0 0 220px&quot;&gt;YYYY-MM-DD 📅&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;note&quot;&gt;&lt;b&gt;· 주말·공휴일을 제외한 평일로만 설정할 수 있습니다.&lt;/b&gt;&lt;br&gt;· 지정한 날짜에 스케줄러가 일괄 발송하며, 지난 날짜는 선택할 수 없습니다.&lt;/div&gt;
+   &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;mf&quot;&gt;&lt;span class=&quot;btn&quot;&gt;취소&lt;/span&gt;&lt;span class=&quot;btn g mk&quot;&gt;저장&lt;i class=&quot;badge&quot; data-no=&quot;9&quot;&gt;9&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+ &lt;/div&gt;&lt;/div&gt;&lt;h2&gt;E. 소재 심사 팝업 — 심사 요청 탭 (채팅리스트/피드 · 채팅리스트/피드(AI))&lt;/h2&gt;
+ &lt;div class=&quot;scr&quot;&gt;&lt;div class=&quot;modal mk&quot;&gt;
+  &lt;div class=&quot;mh&quot;&gt;&lt;span class=&quot;mk&quot;&gt;소재 심사 · 채팅리스트/피드&lt;i class=&quot;badge r&quot; data-no=&quot;10&quot;&gt;10&lt;/i&gt;&lt;/span&gt;&lt;span&gt;✕&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;tabs&quot;&gt;&lt;span class=&quot;mk on&quot;&gt;심사 요청&lt;/span&gt;&lt;span class=&quot;mk&quot;&gt;예약 내역&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;mb&quot;&gt;
+   &lt;div class=&quot;desc0 mk&quot;&gt;총 발송 개수 중 입력한 광고주의 AI 소재를 먼저 발송하고, 남은 수량은 아래 순서대로 채웁니다.&lt;i class=&quot;badge&quot; data-no=&quot;10-1&quot;&gt;10-1&lt;/i&gt;&lt;/div&gt;
+   &lt;div class=&quot;prio mk&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;10-2&quot;&gt;10-2&lt;/i&gt;&lt;b&gt;심사 우선순위&lt;/b&gt;&lt;span class=&quot;on&quot;&gt;1 지정 광고주 AI 소재&lt;/span&gt;→&lt;span&gt;2 채팅리스트/피드 소재 전체&lt;/span&gt;→&lt;span&gt;3 그 외 AI 소재 (최신 생성순)&lt;/span&gt;&lt;/div&gt;
+   &lt;div class=&quot;mk&quot; style=&quot;display:flex;flex-direction:column;gap:6px&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;10-3&quot;&gt;10-3&lt;/i&gt;&lt;div class=&quot;lbl&quot;&gt;총 발송 개수 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;&lt;div class=&quot;row&quot; style=&quot;align-items:center&quot;&gt;&lt;div class=&quot;in&quot; style=&quot;flex:0 0 140px;justify-content:flex-end;color:#222&quot;&gt;1,500&lt;/div&gt;&lt;span style=&quot;color:#888&quot;&gt;개 (최대 1,500개, 기본값 1,500개)&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;
+   &lt;div class=&quot;mk&quot; style=&quot;display:flex;flex-direction:column;gap:8px&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;lbl mk&quot; style=&quot;flex:1&quot;&gt;&lt;span class=&quot;mk&quot;&gt;광고주 ID (AI 소재)&lt;i class=&quot;badge r&quot; data-no=&quot;10-4&quot;&gt;10-4&lt;/i&gt;&lt;/span&gt; &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;&lt;div class=&quot;lbl&quot; style=&quot;flex:0 0 120px&quot;&gt;발송 개수 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;&lt;div style=&quot;width:30px&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;in&quot;&gt;광고주 ID 입력 (예: rosemong123)&lt;/div&gt;&lt;div class=&quot;in c&quot;&gt;숫자 입력&lt;/div&gt;&lt;div class=&quot;del mk&quot;&gt;✕&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;in&quot;&gt;광고주 ID 입력 (예: rosemong123)&lt;/div&gt;&lt;div class=&quot;in c&quot;&gt;숫자 입력&lt;/div&gt;&lt;div class=&quot;del&quot;&gt;✕&lt;/div&gt;&lt;/div&gt;
+   &lt;/div&gt;
+   &lt;div class=&quot;add mk&quot;&gt;+ 광고주 추가&lt;/div&gt;
+   &lt;div class=&quot;sum mk&quot;&gt;&lt;span&gt;발송 개수 합계&lt;/span&gt;&lt;span&gt;0개&lt;/span&gt;&lt;i class=&quot;badge&quot; data-no=&quot;10-5&quot;&gt;10-5&lt;/i&gt;&lt;/div&gt;
+   &lt;div class=&quot;mk&quot; style=&quot;display:flex;flex-direction:column;gap:8px&quot;&gt;
+    &lt;div class=&quot;lbl&quot;&gt;발송 예정일 &lt;em&gt;*&lt;/em&gt;&lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;&lt;div class=&quot;in&quot; style=&quot;flex:0 0 220px&quot;&gt;YYYY-MM-DD 📅&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;note&quot;&gt;&lt;b&gt;· 주말·공휴일을 제외한 평일로만 설정할 수 있습니다.&lt;/b&gt;&lt;br&gt;· 지정한 날짜에 스케줄러가 일괄 발송하며, 지난 날짜는 선택할 수 없습니다.&lt;/div&gt;
+   &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;mf&quot;&gt;&lt;span class=&quot;btn&quot;&gt;취소&lt;/span&gt;&lt;span class=&quot;btn g mk&quot;&gt;저장&lt;/span&gt;&lt;/div&gt;
+ &lt;/div&gt;&lt;/div&gt;&lt;h2&gt;F. 소재 심사 팝업 — 예약 내역 탭 (비즈보드 (상품))&lt;/h2&gt;
+ &lt;div class=&quot;scr&quot;&gt;&lt;div class=&quot;modal&quot;&gt;
+  &lt;div class=&quot;mh&quot;&gt;소재 심사&lt;span&gt;✕&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;tabs&quot;&gt;&lt;span&gt;심사 요청&lt;/span&gt;&lt;span class=&quot;on&quot;&gt;예약 내역&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;mb&quot;&gt;
+   &lt;div class=&quot;row mk&quot; style=&quot;align-items:center&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;11&quot;&gt;11&lt;/i&gt;&lt;span class=&quot;lbl&quot;&gt;발송 예정일&lt;/span&gt;&lt;div class=&quot;in&quot; style=&quot;flex:0 0 130px;color:#333&quot;&gt;2026-10-20&lt;/div&gt;~&lt;div class=&quot;in&quot; style=&quot;flex:0 0 130px;color:#333&quot;&gt;2026-10-20&lt;/div&gt;&lt;span class=&quot;gbtn&quot;&gt;조회&lt;/span&gt;&lt;/div&gt;
+   &lt;div style=&quot;text-align:right;color:#888&quot;&gt;&lt;span class=&quot;mk&quot;&gt;총 &lt;b style=&quot;color:#222&quot;&gt;6&lt;/b&gt; 건 · 광고주 기준&lt;i class=&quot;badge&quot; data-no=&quot;11-1&quot;&gt;11-1&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+   &lt;div class=&quot;mk&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;12&quot;&gt;12&lt;/i&gt;&lt;table&gt;
+    &lt;tr&gt;&lt;th style=&quot;text-align:left&quot;&gt;광고주&lt;/th&gt;&lt;th&gt;발송 개수&lt;/th&gt;&lt;th&gt;발송 예정 일시&lt;/th&gt;&lt;th&gt;요청자 / 요청 일시&lt;/th&gt;&lt;th&gt;취소자 / 취소 일시&lt;/th&gt;&lt;th&gt;발송 취소&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;bluemarket01&lt;/td&gt;&lt;td&gt;2,500&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 09:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;park.jihoon&lt;small&gt;2026-10-19 10:05&lt;/small&gt;&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb off&quot;&gt;발송 취소&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;greenshop&lt;/td&gt;&lt;td&gt;500&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 09:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;jeon.minju&lt;small&gt;2026-10-19 17:40&lt;/small&gt;&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb off&quot;&gt;발송 취소&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;sunnyday&lt;/td&gt;&lt;td&gt;400&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 09:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;jeon.minju&lt;small&gt;2026-10-19 17:40&lt;/small&gt;&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb off&quot;&gt;발송 취소&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;rosemong123&lt;/td&gt;&lt;td&gt;800&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 11:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;jeon.minju&lt;small&gt;2026-10-19 14:32&lt;/small&gt;&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb mk&quot;&gt;발송 취소&lt;i class=&quot;badge r&quot; data-no=&quot;12-1&quot;&gt;12-1&lt;/i&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;bluemarket01&lt;/td&gt;&lt;td&gt;600&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 11:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;jeon.minju&lt;small&gt;2026-10-19 14:32&lt;/small&gt;&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb&quot;&gt;발송 취소&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;greenshop&lt;/td&gt;&lt;td&gt;400&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 11:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;jeon.minju&lt;small&gt;2026-10-19 14:32&lt;/small&gt;&lt;/td&gt;&lt;td&gt;kim.sohee&lt;small&gt;2026-10-19 16:10&lt;/small&gt;&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb off&quot;&gt;발송 취소&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+   &lt;/table&gt;&lt;/div&gt;
+   &lt;div class=&quot;pg mk&quot; style=&quot;align-self:center&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;12-2&quot;&gt;12-2&lt;/i&gt;&lt;span&gt;‹&lt;/span&gt;&lt;span class=&quot;on&quot;&gt;1&lt;/span&gt;&lt;span&gt;›&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;mf&quot; style=&quot;justify-content:center&quot;&gt;&lt;span class=&quot;btn mk&quot;&gt;닫기&lt;i class=&quot;badge&quot; data-no=&quot;13&quot;&gt;13&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;
+ &lt;/div&gt;&lt;/div&gt;&lt;h2&gt;G. 소재 심사 팝업 — 예약 내역 탭 (채팅리스트/피드 · 채팅리스트/피드(AI))&lt;/h2&gt;
+ &lt;div class=&quot;scr&quot;&gt;&lt;div class=&quot;modal&quot;&gt;
+  &lt;div class=&quot;mh&quot;&gt;소재 심사 · 채팅리스트/피드&lt;span&gt;✕&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;tabs&quot;&gt;&lt;span&gt;심사 요청&lt;/span&gt;&lt;span class=&quot;on&quot;&gt;예약 내역&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;mb&quot;&gt;
+   &lt;div class=&quot;row mk&quot; style=&quot;align-items:center&quot;&gt;&lt;span class=&quot;lbl&quot;&gt;발송 예정일&lt;/span&gt;&lt;div class=&quot;in&quot; style=&quot;flex:0 0 130px;color:#333&quot;&gt;2026-10-20&lt;/div&gt;~&lt;div class=&quot;in&quot; style=&quot;flex:0 0 130px;color:#333&quot;&gt;2026-10-20&lt;/div&gt;&lt;span class=&quot;gbtn&quot;&gt;조회&lt;/span&gt;&lt;/div&gt;
+   &lt;div style=&quot;text-align:right;color:#888&quot;&gt;&lt;span class=&quot;mk&quot;&gt;총 &lt;b style=&quot;color:#222&quot;&gt;3&lt;/b&gt; 건 · 광고주 기준&lt;/span&gt;&lt;/div&gt;
+   &lt;div class=&quot;mk&quot;&gt;&lt;i class=&quot;badge&quot; data-no=&quot;14&quot;&gt;14&lt;/i&gt;&lt;table&gt;
+    &lt;tr&gt;&lt;th style=&quot;text-align:left&quot;&gt;광고주&lt;/th&gt;&lt;th&gt;발송 개수&lt;/th&gt;&lt;th&gt;발송 예정 일시&lt;/th&gt;&lt;th&gt;요청자 / 요청 일시&lt;/th&gt;&lt;th&gt;취소자 / 취소 일시&lt;/th&gt;&lt;th&gt;발송 취소&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;dcollect&lt;/td&gt;&lt;td&gt;300&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 09:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;park.jihoon&lt;small&gt;2026-10-19 11:20&lt;/small&gt;&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb off&quot;&gt;발송 취소&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;jull&lt;/td&gt;&lt;td&gt;500&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 11:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;jeon.minju&lt;small&gt;2026-10-19 15:00&lt;/small&gt;&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb&quot;&gt;발송 취소&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left&quot;&gt;gmarketappcps&lt;/td&gt;&lt;td&gt;400&lt;/td&gt;&lt;td&gt;&lt;b&gt;2026-10-20 11:00&lt;/b&gt;&lt;/td&gt;&lt;td&gt;jeon.minju&lt;small&gt;2026-10-19 15:00&lt;/small&gt;&lt;/td&gt;&lt;td&gt;-&lt;/td&gt;&lt;td&gt;&lt;span class=&quot;cb&quot;&gt;발송 취소&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+   &lt;/table&gt;&lt;/div&gt;
+   &lt;div class=&quot;pg&quot; style=&quot;align-self:center&quot;&gt;&lt;span&gt;‹&lt;/span&gt;&lt;span class=&quot;on&quot;&gt;1&lt;/span&gt;&lt;span&gt;›&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;mf&quot; style=&quot;justify-content:center&quot;&gt;&lt;span class=&quot;btn&quot;&gt;닫기&lt;/span&gt;&lt;/div&gt;
+ &lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;right&quot;&gt;
+ &lt;div class=&quot;chk&quot; id=&quot;chk&quot;&gt;검증 중…&lt;/div&gt;
+ &lt;div class=&quot;desc&quot; id=&quot;desc&quot;&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-1&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;1&lt;/span&gt;[소재 심사 버튼 · 비즈보드 (상품)]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 액션 버튼 영역 맨 오른쪽에 위치&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 위치: [+ 광고 생성] 버튼 오른쪽&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 클릭 시 비즈보드용 소재 심사 팝업 노출&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 총 발송 개수 기본값·최대값: 4,000개&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 목록 체크 선택 여부와 무관하게 사용 가능&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 내부승인·반려·재생성요청은 체크한 행 대상 버튼임&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-2&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;2&lt;/span&gt;[소재 심사 버튼 · 채팅리스트/피드]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 액션 버튼 영역 맨 오른쪽에 위치&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 위치: [반려] 버튼 오른쪽&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 클릭 시 채팅리스트용 소재 심사 팝업 노출&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 총 발송 개수 기본값·최대값: 1,500개&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 목록 체크 선택 여부와 무관하게 사용 가능&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-3&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;3&lt;/span&gt;[소재 심사 버튼 · 채팅리스트/피드(AI)]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 액션 버튼 영역 맨 오른쪽에 위치&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 위치: [반려] 버튼 오른쪽&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 클릭 시 채팅리스트용 소재 심사 팝업 노출&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 채팅리스트/피드 메뉴와 같은 팝업&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 두 메뉴는 소재 생성 주체만 다르고 같은 소재 유형임&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-4&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;4&lt;/span&gt;[소재 심사 팝업]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 심사 요청 · 예약 내역 2개 탭으로 구성&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 메뉴 그룹별로 팝업 설정 분리&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 비즈보드 (상품) → 비즈보드용 팝업&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 채팅리스트/피드 · 채팅리스트/피드(AI) → 채팅리스트용 팝업&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 팝업 폭 860px 고정&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 탭 전환 시 팝업 크기 변경 없음&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;d. 우측 상단 ✕ 클릭 시 팝업 닫힘&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-4-1&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;4-1&lt;/span&gt;[심사 요청 탭]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 클릭 시 심사 요청 입력 화면으로 전환&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 팝업 최초 진입 시 기본 선택 탭&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-4-2&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;4-2&lt;/span&gt;[예약 내역 탭]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 클릭 시 예약 내역 화면으로 전환&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 전환 시 조회 기간 기본값으로 목록 조회&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 기본값: 당일&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-5&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;5&lt;/span&gt;[안내 문구 · 비즈보드 (상품)]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 안내 문구 노출&lt;/div&gt;&lt;div class=&quot;copy&quot;&gt;총 발송 개수 중 입력한 광고주의 소재를 우선 발송하고, 나머지는 최근 생성된 소재 순으로 채웁니다.&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 기존 배치 조건: 매일 오전 7시, 검수 대상 4,000건, 최신순 선정&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 지정 광고주에 지정 개수만큼 심사 우선권 부여 목적&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-6&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;6&lt;/span&gt;[총 발송 개수 · 비즈보드 (상품)]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 숫자만 입력 가능, 필수&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 기본값: 4,000개&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 최대값: 4,000개&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 4,000개 초과 입력 시 → 4,000개로 자동 보정&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;d. 발송 개수 합계보다 작은 값 입력 시 → 발송 개수 합계로 자동 보정&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 보정 시점: 입력란 포커스 해제 시&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;e. 입력란 오른쪽에 최대값·기본값 안내 노출&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-7&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;7&lt;/span&gt;[광고주 ID · 발송 개수 입력 세트]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 광고주 ID와 발송 개수를 한 행에 가로 배치&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 컬럼 라벨은 첫 행 위에 1회만 노출&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 광고주 ID: 텍스트 입력, 필수&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 미입력 상태로 저장 시 → 오류 노출, 저장 불가&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 같은 요청 안에서 동일 광고주 ID 중복 시 → 오류 노출, 저장 불가&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;d. 발송 개수: 숫자만 입력 가능, 필수&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 최소값: 1개&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 최대값: 남은 수량 (총 발송 개수 − 다른 행 합계)&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 광고주 실제 소재 수보다 큰 값 입력 시 → 부족분은 자동 채움 대상&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;e. 팝업 진입 시 기본 1행 노출&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 두 팝업 공통 구성&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-7-1&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;7-1&lt;/span&gt;[행 삭제 버튼]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 클릭 시 해당 행 삭제&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 행이 1개일 때 → 삭제 버튼 숨김&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 삭제 시 발송 개수 합계 즉시 재계산&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-7-2&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;7-2&lt;/span&gt;[+ 광고주 추가]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 클릭 시 입력 세트 1행을 목록 맨 아래에 추가&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 추가 가능 행 수 상한 미정&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-7-3&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;7-3&lt;/span&gt;[발송 개수 합계 · 비즈보드 (상품)]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 입력한 발송 개수의 합계 실시간 표시&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 계산식: Σ 광고주별 발송 개수&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 합계는 총 발송 개수를 넘을 수 없음&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 발송 개수 입력 단계에서 제한&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 남은 수량 초과 입력 시 → 남은 수량으로 자동 보정&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 보정 시 → 합계 하단에 빨간 안내 문구 노출&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 합계가 총 발송 개수 미만 시 → 부족분 자동 채움&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 자동 채움 개수 = 총 발송 개수 − 발송 개수 합계&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 채움 순서: 그 외 소재 최신 생성순&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 자동 채움 개수는 화면에 표시하지 않음&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-8&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;8&lt;/span&gt;[발송 예정일]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 날짜만 입력, 필수&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 시간 선택 없음&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 즉시 발송 옵션 없음&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 모든 요청은 예약 발송으로 처리됨&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 주말·공휴일 선택 불가&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 공휴일 데이터: 최고관리자에서 관리&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 지난 날짜 선택 불가&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 지난 날짜 선택 후 저장 시 → 오류 노출, 저장 불가&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;d. 입력란 하단 안내 문구 2줄 노출&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 1번째 줄은 빨간색 강조&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 두 팝업 공통 구성&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-9&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;9&lt;/span&gt;[저장 버튼]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 클릭 시 입력값 검증&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 검증 실패 시 → 오류 메시지 노출, 저장 불가&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 검증 통과 시 → 광고주별 예약 건 생성&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 생성된 예약 건 상태: 예약됨&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 저장 완료 시 예약 내역 탭으로 자동 전환&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 조회 기간: 저장한 발송 예정일&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;d. [취소] 클릭 시 팝업 닫힘&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 두 팝업 공통 동작&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-10&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;10&lt;/span&gt;[팝업 제목 · 채팅리스트용]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 제목: 소재 심사 · 채팅리스트/피드&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 채팅리스트/피드 · 채팅리스트/피드(AI) 메뉴 모두 같은 제목 사용&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 이 외 구성은 비즈보드용 팝업과 동일 (6 ~ 9 참고)&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-10-1&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;10-1&lt;/span&gt;[안내 문구 · 채팅리스트용]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 채팅리스트용 문구 노출&lt;/div&gt;&lt;div class=&quot;copy&quot;&gt;총 발송 개수 중 입력한 광고주의 AI 소재를 먼저 발송하고, 남은 수량은 아래 순서대로 채웁니다.&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-10-2&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;10-2&lt;/span&gt;[심사 우선순위]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 안내 문구 아래에 3단계 우선순위 표시&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 1순위: 지정 광고주 AI 소재&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 2순위: 채팅리스트/피드 소재 전체&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 3순위: 그 외 AI 소재 (최신 생성순)&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 1순위 칩 초록색 강조&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 입력 영역이 1순위에 해당함을 표시&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 지정 광고주 몫을 먼저 보장&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 남은 수량 = 총 발송 개수 − 발송 개수 합계&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 남은 수량 → 2순위부터 순서대로 채움&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 2순위 소재가 남은 수량보다 많을 때 처리 기준 확정 필요&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-10-3&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;10-3&lt;/span&gt;[총 발송 개수 · 채팅리스트용]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 기본값: 1,500개&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 최대값: 1,500개&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 입력·보정 규칙은 비즈보드용과 동일 (6 참고)&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-10-4&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;10-4&lt;/span&gt;[광고주 ID 라벨 · 채팅리스트용]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 라벨: 광고주 ID (AI 소재)&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 입력한 광고주는 AI 소재 기준으로 발송&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-10-5&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;10-5&lt;/span&gt;[발송 개수 합계 · 채팅리스트용]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 표시 방식은 비즈보드용과 동일&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 합계 상한: 총 발송 개수&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 제한 방식은 비즈보드용과 동일 (7-3 참고)&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-11&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;11&lt;/span&gt;[발송 예정일 조회]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 시작일 ~ 종료일 기간 선택&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 기본값: 당일&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. [조회] 클릭 시 기간 안의 예약 건 조회&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 정렬: 발송 예정 일시 오름차순&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-11-1&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;11-1&lt;/span&gt;[총 건수]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 조회 결과 건수 표시&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 기준: 광고주 단위 행 수&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 예시: 비즈보드 (상품) 총 6건&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-12&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;12&lt;/span&gt;[예약 내역 테이블]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 광고주 1명 = 1행&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 요청 1건에 광고주 3명 → 3행 생성&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 컬럼 순서: 광고주 | 발송 개수 | 발송 예정 일시 | 요청자 / 요청 일시 | 취소자 / 취소 일시 | 발송 취소&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 요청자·취소자: 계정과 일시를 2줄로 표시&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;d. 취소자 / 취소 일시: 취소된 행에만 표시&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 그 외 행 → &quot;-&quot; 표시&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;e. 상태 컬럼 없음&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 내부 상태값: 예약됨 / 발송 완료 / 발송 실패 / 취소됨&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 상세 화면 없음&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-12-1&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;12-1&lt;/span&gt;[발송 취소 버튼]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 광고주 단위로 취소&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 컬럼에는 버튼만 노출&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 활성 조건: 예약됨 상태 &amp;amp; 발송 예정 시각 30분 전까지&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 조건 충족 시 → 빨간 테두리 버튼 활성&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 그 외 → 회색 비활성 버튼&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;d. 클릭 시 취소 확인 얼럿 노출&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 확인 시 → 상태 취소됨으로 변경&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 확인 시 → 취소자·취소 일시 기록&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;※ 30분 기준은 가정값, 확정 필요&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-12-2&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;12-2&lt;/span&gt;[페이지네이션]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 페이지당 10건 (예시값)&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-13&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;13&lt;/span&gt;[닫기 버튼]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 클릭 시 팝업 닫힘&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;item&quot; id=&quot;d-14&quot;&gt;&lt;h4&gt;&lt;span class=&quot;no&quot;&gt;14&lt;/span&gt;[예약 내역 범위 · 채팅리스트용]&lt;span class=&quot;tg new&quot;&gt;신규&lt;/span&gt;&lt;/h4&gt;&lt;div class=&quot;l1&quot;&gt;a. 채팅리스트/피드 · 채팅리스트/피드(AI) 예약 건을 한 목록에 표시&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;b. 비즈보드 (상품) 예약 건은 표시하지 않음&lt;/div&gt;&lt;div class=&quot;l1&quot;&gt;c. 조회·테이블·발송 취소 동작은 비즈보드용과 동일 (11 ~ 13 참고)&lt;/div&gt;&lt;div class=&quot;l2&quot;&gt;- 예시: 채팅리스트 총 3건&lt;/div&gt;&lt;/div&gt;
+ &lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+// 배지 클릭 → 해당 설명 항목으로 스크롤 + 하이라이트
+document.querySelectorAll(&quot;.badge&quot;).forEach(b =&gt; b.onclick = () =&gt; {
+  const el = document.getElementById(&quot;d-&quot; + b.dataset.no);
+  if (!el) return;
+  el.scrollIntoView({behavior: &quot;smooth&quot;, block: &quot;start&quot;});
+  el.classList.remove(&quot;flash&quot;); void el.offsetWidth; el.classList.add(&quot;flash&quot;);
+});
+// 검증: 배지 ↔ 항목 매핑 + 문체
+(function(){
+  const badges = [...document.querySelectorAll(&quot;.badge&quot;)].map(b =&gt; b.dataset.no);
+  const items = [...document.querySelectorAll(&quot;.desc .item&quot;)].map(i =&gt; i.id.replace(/^d-/, &quot;&quot;));
+  const dupB = badges.filter((v,i) =&gt; badges.indexOf(v) !== i);
+  const dupI = items.filter((v,i) =&gt; items.indexOf(v) !== i);
+  const broken = badges.filter(n =&gt; !items.includes(n)).concat(items.filter(n =&gt; !badges.includes(n)));
+  const lines = [...document.querySelectorAll(&quot;.desc .l1, .desc .l2&quot;)].map(e =&gt; e.textContent.trim());
+  const endBad = lines.filter(l =&gt; /(합니다|한다|해요|됩니다|입니다|하며|하고|하면서|이며)$/.test(l));
+  const dot = lines.filter(l =&gt; /\.$/.test(l));
+  const two = lines.filter(l =&gt; /[^0-9a-z]\.\s|다\.\s/.test(l.replace(/^[a-z]\.\s/, &quot;&quot;)));
+  const style = endBad.length + dot.length + two.length;
+  const s = (ok, t) =&gt; `&lt;span class=&quot;${ok ? &quot;ok&quot; : &quot;ng&quot;}&quot;&gt;${t}&lt;/span&gt;`;
+  document.getElementById(&quot;chk&quot;).innerHTML =
+    `&lt;b&gt;검증 결과&lt;/b&gt;&lt;br&gt;배지 ${badges.length}개 · 설명 항목 ${items.length}개 · ` +
+    s(!broken.length, `끊긴 링크 ${broken.length}건`) + &quot; · &quot; + s(!(dupB.length + dupI.length), `중복 id ${dupB.length + dupI.length}건`) + &quot;&lt;br&gt;&quot; +
+    `문체 검사 ${lines.length}줄 · ` + s(!endBad.length, `서술형 어미 ${endBad.length}`) + &quot; · &quot; + s(!dot.length, `마침표 ${dot.length}`) + &quot; · &quot; + s(!two.length, `한 줄 두 문장 ${two.length}`) +
+    ` → 잔존 ${style}건 (작성 후 재검사 수정 0건)`;
+})();
+&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;"></iframe></section>
+
+<script>
+function show(t){
+  document.querySelectorAll(".bar button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("on", s.id === t));
+  try { localStorage.setItem("spec-pkg-tab", t); } catch (e) {}
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll(".bar button").forEach(b => b.onclick = () => show(b.dataset.t));
+document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => show(b.dataset.go));
+let last = "ov";
+try { last = localStorage.getItem("spec-pkg-tab") || "ov"; } catch (e) {}
+show(["ov","demo","spec"].includes(last) ? last : "ov");
+</script>
+</body></html>
