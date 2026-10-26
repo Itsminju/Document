@@ -140,6 +140,22 @@ body{margin:0;background:var(--bg);color:var(--ink);
   border-bottom:2px solid transparent;margin-bottom:-1px}
 .ptab.on{color:var(--blue);border-bottom-color:var(--blue)}
 .pg{display:none}
+/* 수정 이력 버튼 + 레이어 팝업 */
+.ptabs .hbtn{margin:8px 0 8px auto;align-self:center;border:1px solid var(--red);background:#fff;color:var(--red);border-radius:4px;padding:5px 14px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.ptabs .hbtn:hover{background:var(--red-bg)}
+#historyModal{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:16px}
+#historyModal.hidden{display:none}
+#historyModal .hBox{width:100%;max-width:760px;max-height:80vh;display:flex;flex-direction:column;background:#fff;border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.2)}
+#historyModal .hHead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
+#historyModal .hClose{border:0;background:none;font-size:16px;color:#666;cursor:pointer}
+#historyModal .hBody{overflow:auto;padding:16px 20px 20px}
+#historyModal table{width:100%;border-collapse:collapse}
+#historyModal th,#historyModal td{border-bottom:1px solid var(--line);padding:10px 12px;font-size:12px;text-align:left;vertical-align:top;line-height:1.6}
+#historyModal th{background:#F7F8FA;font-weight:700;white-space:nowrap}
+#historyModal td:nth-child(-n+3){white-space:nowrap}
+#historyModal .hgo{color:var(--blue);text-decoration:underline;cursor:pointer}
+@keyframes bping{0%,100%{box-shadow:none}20%,60%{box-shadow:0 0 0 6px rgba(217,48,37,.35)}}
+.bdg.ping{animation:bping 1.4s ease}
 .pg.on{display:contents}
 .pg-spec{display:none}
 .pg-spec.on{display:block}
@@ -224,6 +240,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
   <div class="ptab on" data-pg="spec">개요</div>
   <div class="ptab" data-pg="reject">모비센스_반려조건설정</div>
   <div class="ptab" data-pg="link">광센_소재그룹 설정</div>
+  <button type="button" class="hbtn" id="btnHistory">수정 이력</button>
 </div>
 
 <div class="pg-spec on" data-pg="spec">
@@ -635,6 +652,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
           <div class="cnt2">
             <div class="crumb">이미지 검수 &gt; 채팅리스트/피드</div>
 
+            <div class="rel" style="text-align:right;font-size:11px;color:var(--red);margin-bottom:4px"><span class="bdg tl" data-t="25" style="left:auto;right:272px;top:-4px">25</span>* 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</div>
             <table class="stat">
               <tr><th></th><th>전체</th><th>대기</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr>
               <tr><td class="sh">이미지 수</td><td>73</td><td>11</td><td>0</td><td>43</td><td>0</td></tr>
@@ -681,12 +699,12 @@ body{margin:0;background:var(--bg);color:var(--ink);
             </div>
 
             <table class="lst">
-              <tr><th>NO</th><th>승인상태</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>소재그룹명</th><th>사이트명</th><th>프로필 로고</th><th>소재 광고문구</th><th>랜딩URL</th><th>CTA 정보</th><th>생성일자</th><th>최종업데이트일</th><th class="rel"><span class="bdg tl" data-t="3" style="top:-15px;left:-6px">3</span>반려사유</th><th>비고</th></tr>
-              <tr><td>1</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_2안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
-              <tr><td>2</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_1안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
-              <tr><td>3</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_260902</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
-              <tr><td>4</td><td><span class="st">대기</span></td><td>cdhthank2026</td><td>바르게</td><td>비지니스&gt;마케팅</td><td>최초_테스트</td><td>생활비연구소</td><td class="im">로고</td><td>생활비연구소 테스트</td><td class="lk">https://mediabigpi.com/lifecare</td><td>더알아보기</td><td>2026-09-14 16:08:47</td><td>2026-09-14 16:08:47</td><td>-</td><td>-</td></tr>
-              <tr><td>5</td><td><span class="st">대기</span></td><td>livecom</td><td>이비엠그룹_라이브커머스코리아</td><td>비지니스&gt;마케팅</td><td>제스파</td><td>라이브커머스</td><td class="im">로고</td><td>네이버쇼핑라이브</td><td class="lk">https://view.shoppinglive.naver.com/li…</td><td>바로가기</td><td>2026-09-14 15:12:41</td><td>2026-09-14 15:12:41</td><td>-</td><td>-</td></tr>
+              <tr><th>NO</th><th>승인상태</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>소재그룹명</th><th>사이트명</th><th>프로필 로고</th><th>소재 카피 문구_2</th><th class="rel"><span class="bdg tl" data-t="24" style="top:-15px;left:-6px">24</span><span style="color:var(--red)">소재 카피 문구_4</span></th><th>랜딩URL</th><th>CTA 정보</th><th>생성일자</th><th>최종업데이트일</th><th class="rel"><span class="bdg tl" data-t="3" style="top:-15px;left:-6px">3</span>반려사유</th><th>비고</th></tr>
+              <tr><td>1</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_2안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>샤브보트R 가맹 상담 신청하고 창업 혜택 받아보세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>2</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_1안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>샤브보트R 가맹 상담 신청하고 창업 혜택 받아보세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>3</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_260902</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>소자본 샤브샤브 창업, 샤브보트R와 함께 시작하세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>4</td><td><span class="st">대기</span></td><td>cdhthank2026</td><td>바르게</td><td>비지니스&gt;마케팅</td><td>최초_테스트</td><td>생활비연구소</td><td class="im">로고</td><td>생활비연구소 테스트</td><td>생활비 줄이는 방법, 생활비연구소에서 확인하세요.</td><td class="lk">https://mediabigpi.com/lifecare</td><td>더알아보기</td><td>2026-09-14 16:08:47</td><td>2026-09-14 16:08:47</td><td>-</td><td>-</td></tr>
+              <tr><td>5</td><td><span class="st">대기</span></td><td>livecom</td><td>이비엠그룹_라이브커머스코리아</td><td>비지니스&gt;마케팅</td><td>제스파</td><td>라이브커머스</td><td class="im">로고</td><td>네이버쇼핑라이브</td><td>네이버 쇼핑라이브 특가를 지금 바로 만나보세요.</td><td class="lk">https://view.shoppinglive.naver.com/li…</td><td>바로가기</td><td>2026-09-14 15:12:41</td><td>2026-09-14 15:12:41</td><td>-</td><td>-</td></tr>
             </table>
 
           </div>
@@ -945,8 +963,21 @@ d. 복수 사유 검출 시
    d-1. 리스트에는 대표 1건 + 외 N건으로 요약
    d-2. 상세에서 전체 사유 노출
 e. 전체 사유 목록은 <a class="secref" data-sec="s7">개요 &gt; 07. 반려 사유</a> 참조</p></div>
+  <div class="item lv3" id="d24"><span class="no">24</span><span class="ttl">소재 카피 문구_4 컬럼<span class="tag o">신규 컬럼</span></span>
+    <p class="dsc">a. 컬럼 추가
+   a-1. 위치: 소재 카피 문구_2 컬럼 오른쪽
+   a-2. 기존 소재 광고문구 컬럼명은 소재 카피 문구_2로 변경
+b. reviewData _ description의 값
+c. 광고주의 라이브된 소재그룹 광고 카피 (4)
+<span style="color:var(--red)">d. 수정 이력
+   d-1. 2026-10-26 수정: 소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</span></p></div>
+  <div class="item lv3" id="d25"><span class="no">25</span><span class="ttl">테이블 조회 조건 안내 문구<span class="tag o">신규</span></span>
+    <p class="dsc">a. 테이블 조회 조건 info - text 추가
+<span class="copy-like" style="color:var(--red)">   * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</span>
+<span style="color:var(--red)">b. 수정 이력
+   b-1. 2026-10-26 수정: 테이블 조회 조건 안내 문구 추가</span></p></div>
   <div class="h">자동 반려 조건 팝업 — 송출 불가 카테고리 (4~10)</div>
-  <div class="item lv2" id="d4"><span class="no">4</span><span class="ttl">자동 반려 조건 팝업</span>
+<div class="item lv2" id="d4"><span class="no">4</span><span class="ttl">자동 반려 조건 팝업</span>
     <p class="dsc">a. 3개 탭으로 구성 → <a class="ref" data-t="5">[5]</a>
 b. 하단 바로 적용 / 저장 버튼은 전 탭 공통 → <a class="ref" data-t="9">[9]</a>, <a class="ref" data-t="10">[10]</a>
 c. 우측 상단 X 클릭 시 저장하지 않고 닫기
@@ -1125,6 +1156,44 @@ document.querySelectorAll(".secref").forEach(function(a){
 var miss=[...document.querySelectorAll('.bdg')].filter(b=>!document.getElementById('d'+b.dataset.t));
 console.log(miss.length?'broken links: '+miss.map(b=>b.dataset.t):'all badge links OK');
 switchPage('spec');
+</script>
+<!-- 수정 이력 팝업 (최신 이력을 맨 위에 추가) -->
+<div id="historyModal" class="hidden" role="dialog" aria-modal="true" aria-label="수정 이력">
+  <div class="hBox">
+    <div class="hHead"><span>수정 이력</span><button type="button" class="hClose" aria-label="닫기">✕</button></div>
+    <div class="hBody">
+      <table>
+        <thead><tr><th>수정일</th><th>화면</th><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="25">25 테이블 조회 조건 안내 문구</td><td>집계 표 위에 안내 문구 추가: * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</td></tr>
+          <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="24">24 소재 카피 문구_4 컬럼</td><td>소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</td></tr>
+          <tr><td>26.10.20</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="8">8 등록 카테고리 목록</td><td>생성 제외 카테고리 표(대분류 / 중분류 / 소분류)로 기본 등록값 일괄 변경. 빗썸·보험상조 제외, 전자담배/금연용품(성인) → 전자담배/금연용품</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const modal = document.getElementById('historyModal');
+  const close = () => modal.classList.add('hidden');
+  document.getElementById('btnHistory').addEventListener('click', () => modal.classList.remove('hidden'));
+  modal.querySelector('.hClose').addEventListener('click', close);
+  // 항목 클릭 → 해당 화면 탭으로 전환 후 배지 위치로 이동 + 디스크립션도 함께 이동
+  modal.querySelectorAll('.hgo').forEach(td => td.addEventListener('click', () => {
+    const b = document.querySelector('.bdg[data-t="' + td.dataset.t + '"]'); if (!b) return;
+    close();
+    const pg = b.closest('.pg'); if (pg) switchPage(pg.dataset.pg);
+    requestAnimationFrame(() => {
+      b.scrollIntoView({behavior: 'smooth', block: 'center'});
+      b.classList.remove('ping'); void b.offsetWidth; b.classList.add('ping');
+      const el = document.getElementById('d' + td.dataset.t);
+      if (el) setTimeout(() => { el.scrollIntoView({behavior: 'smooth', block: 'center'}); el.classList.remove('hl'); void el.offsetWidth; el.classList.add('hl'); }, 400);
+    });
+  }));
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
 </script>
 </body>
 </html>
