@@ -132,6 +132,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
 .tag.o{background:var(--orange-bg);color:var(--orange)}
 .tag.g{background:var(--green-bg);color:var(--green)}
 .tag.b{background:var(--blue-bg);color:var(--blue)}
+.tag.k{background:#F1F2F4;color:var(--muted)}
 
 /* page tabs */
 .ptabs{display:flex;gap:2px;background:var(--card);padding:0 24px;border-bottom:1px solid var(--line);
@@ -239,7 +240,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
 <div class="ptabs">
   <div class="ptab on" data-pg="spec">개요</div>
   <div class="ptab" data-pg="reject">모비센스_반려조건설정</div>
-  <div class="ptab" data-pg="link">광센_소재그룹 설정</div>
+  <div class="ptab" data-pg="link">광센_소재그룹 설정 <span class="tag r">연기</span></div>
   <button type="button" class="hbtn" id="btnHistory">수정 이력</button>
 </div>
 
@@ -349,7 +350,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
     <table class="tbl">
       <thead><tr><th style="width:44px">No</th><th style="width:110px">위치</th><th style="width:220px">대상</th><th>내용</th></tr></thead>
       <tbody>
-        <tr><td><span class="no">1</span></td><td>광고주센터</td><td>소재그룹 설정 토글</td><td>화면 변경 없음. 자동 반려 조건에 따라 <b>토글 상태가 자동 전환</b>되는 동작만 신규</td></tr>
+        <tr><td><span class="no">1</span></td><td>광고주센터</td><td>소재그룹 설정 토글 <span class="tag r">연기</span></td><td><b style="color:var(--red)">Vue.js 개발 완료 후 반영</b> (광센_소재그룹 설정 탭 22~23 전체).<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입<br>화면 변경 없음. 자동 반려 조건에 따라 <b>토글 상태가 자동 전환</b>되는 동작만 신규</td></tr>
         <tr><td><span class="no">2</span></td><td>모비센스</td><td>검수 리스트 우측 상단</td><td><code>자동 반려 조건</code> 버튼 추가</td></tr>
         <tr><td><span class="no">3</span></td><td>모비센스</td><td>자동 반려 조건 팝업</td><td>3탭 구성 — 송출 불가 카테고리 / 송출 불가 광고주 / 사용 불가 표현</td></tr>
         <tr><td><span class="no">4</span></td><td>모비센스</td><td>자동 반려 배치</td><td><b>일배치 — 매일 10시 1회 실행</b>. 검수 리스트에 등재된 소재를 건별로 <b>기본 검증 → 반려 판정 LLM API 호출</b> 순으로 처리하고, 반려 대상을 <b>일괄 모비온 반려</b>로 갱신</td></tr>
@@ -858,7 +859,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
   <div class="pg" data-pg="link">
 
   <div class="blk">
-    <h3>연동 — 소재그룹 설정 <span style="color:var(--muted);font-weight:600">(22~23)</span></h3>
+    <h3>연동 — 소재그룹 설정 <span style="color:var(--muted);font-weight:600">(22~23)</span><span class="tag r">Vue.js 개발 완료 후 반영</span></h3>
     <div class="rel">
       <span class="bdg tl" data-t="22">22</span>
       <div class="con" style="padding:20px 22px;background:#F5F6F8">
@@ -1098,9 +1099,11 @@ e. 등록 필요 표현
   </div><!-- /grp-desc reject -->
 
   <div class="grp-desc" data-pg="link">
-  <div class="h">연동 — 소재그룹 설정 (22~23)</div>
+  <div class="h">연동 — 소재그룹 설정 (22~23)<span class="tag r">Vue.js 개발 완료 후 반영</span></div>
   <div class="item lv2" id="d22"><span class="no">22</span><span class="ttl">소재그룹 설정<span class="tag g">기존 화면</span></span>
-    <p class="dsc">a. 화면 구성 변경 없음
+    <p class="dsc">※ 광센_소재그룹 설정 탭(22~23) 전체 연기: <b style="color:var(--red)">Vue.js 개발 완료 후 반영</b>
+* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입
+a. 화면 구성 변경 없음
    a-1. 조건에 따른 토글 상태 제어만 신규 개발 대상
 b. 조건 등록 또는 삭제 시 대상 소재그룹 재판정 → 토글 상태 갱신
 c. 조건 해제 시 이미 반려 처리된 소재는 복원하지 않음</p></div>
@@ -1165,6 +1168,7 @@ switchPage('spec');
       <table>
         <thead><tr><th>수정일</th><th>화면</th><th>항목</th><th>내용</th></tr></thead>
         <tbody>
+          <tr><td>26.11.02</td><td>광센_소재그룹 설정</td><td class="hgo" data-t="22">22~23 소재그룹 설정</td><td>탭 전체 연기: Vue.js 개발 완료 후 반영<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입</td></tr>
           <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="25">25 테이블 조회 조건 안내 문구</td><td>집계 표 위에 안내 문구 추가: * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</td></tr>
           <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="24">24 소재 카피 문구_4 컬럼</td><td>소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</td></tr>
           <tr><td>26.10.20</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="8">8 등록 카테고리 목록</td><td>생성 제외 카테고리 표(대분류 / 중분류 / 소분류)로 기본 등록값 일괄 변경. 빗썸·보험상조 제외, 전자담배/금연용품(성인) → 전자담배/금연용품</td></tr>
