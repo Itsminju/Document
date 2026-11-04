@@ -133,6 +133,27 @@ body{margin:0;background:var(--bg);color:var(--ink);
 .tag.g{background:var(--green-bg);color:var(--green)}
 .tag.b{background:var(--blue-bg);color:var(--blue)}
 .tag.k{background:#F1F2F4;color:var(--muted)}
+/* 반려 사유 팝업 mock */
+.rjp{width:400px;max-width:100%;margin:6px auto;border:1px solid var(--line);border-radius:6px;padding:18px 22px 20px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.rjp .t{font-size:14px;font-weight:700;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.rjp .g{text-align:center;font-size:12.5px;font-weight:700;margin:14px 0 12px}
+.rjp .dd{border:1px solid #2BC48A;border-radius:3px;padding:8px 10px;font-size:12.5px;color:var(--faint);display:flex;justify-content:space-between}
+.rjp .dl{border:1px solid var(--line2);border-top:none;font-size:11.5px;color:#374151}
+.rjp .dl div{padding:5px 10px}
+.rjp .dl div.etc{border-top:1px solid var(--line)}
+.rjp .ta{border:1px solid #6B7280;height:64px;padding:8px 10px;font-size:12px;color:var(--faint)}
+.rjp .ct{text-align:right;font-size:11px;color:var(--faint);margin-top:3px}
+.rjp .er{text-align:center;font-size:12px;color:var(--red);font-weight:600;margin-top:14px}
+.rjp .bt{display:flex;justify-content:center;gap:8px;margin-top:16px}
+.rjp .bt .btn{border-radius:3px;padding:5px 12px}
+.btn.gr{background:#D1D5DB;border-color:#D1D5DB;color:#fff}
+/* 반려 사유 검색 드롭박스 mock */
+.rsd{position:absolute;top:calc(100% + 4px);left:0;width:210px;z-index:20;background:#fff;border:1px solid var(--line2);border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:11.5px;color:#374151}
+.rsd .q{margin:8px;border:1px solid #2BC48A;border-radius:4px;padding:5px 8px;color:#111}
+.rsd .q::before{content:"⌕ ";color:var(--faint)}
+.rsd div.o{padding:5px 10px}
+.rsd div.o.on{background:#EAF8F2;font-weight:700}
+.rsd b{color:var(--red)}
 
 /* page tabs */
 .ptabs{display:flex;gap:2px;background:var(--card);padding:0 24px;border-bottom:1px solid var(--line);
@@ -355,6 +376,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
         <tr><td><span class="no">3</span></td><td>모비센스</td><td>자동 반려 조건 팝업</td><td>3탭 구성 — 송출 불가 카테고리 / 송출 불가 광고주 / 사용 불가 표현</td></tr>
         <tr><td><span class="no">4</span></td><td>모비센스</td><td>자동 반려 배치</td><td><b>일배치 — 매일 10시 1회 실행</b>. 검수 리스트에 등재된 소재를 건별로 <b>기본 검증 → 반려 판정 LLM API 호출</b> 순으로 처리하고, 반려 대상을 <b>일괄 모비온 반려</b>로 갱신</td></tr>
         <tr><td><span class="no">5</span></td><td>모비센스</td><td>반려 판정 LLM API</td><td>사이트명 · 소재 광고문구를 기준으로 소재의 <b>반려 여부를 판정</b>하는 API. 배치가 소재 단위로 호출하며, 판정 결과(반려/통과 및 사유)를 반환 <br>판정 조건은 <b>06. LLM 판정 조건</b> 참조</td></tr>
+        <tr><td><span class="no">6</span></td><td>모비센스</td><td>반려 사유 팝업</td><td>[반려] 클릭 시 반려 사유(15개 중 1개, 기타는 직접 입력 100자) 선택 후 반려 처리. 수동 · 자동 반려 사유 관계는 08 참조</td></tr>
       </tbody>
     </table>
   </section>
@@ -614,6 +636,49 @@ body{margin:0;background:var(--bg);color:var(--ink);
     </table>
   </section>
 
+  <section id="s8">
+    <h2><span class="num">08</span> 반려 사유 팝업 (수동 반려)</h2>
+    <div class="sec-title">수동 반려 사유와 자동 반려 사유의 관계</div>
+    <p class="note">운영자가 [반려] 버튼으로 직접 반려할 때 고르는 사유 15개(26~30)와, 배치가 자동으로 기재하는 반려 사유(07)는 서로 다른 목록이다. 겹치거나 비슷한 사유가 있어 아래처럼 정리한다.</p>
+
+    <h3>8.1 <span class="sub">사유 대응표</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:200px">수동 반려 사유 (팝업)</th><th style="width:250px">자동 반려 사유 (07)</th><th>관계</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>송출 불가 광고주</td><td>광고주 검증 - 송출 불가 광고주</td><td>같은 사유. 수동 · 자동 둘 다 발생</td></tr>
+        <tr><td>2</td><td>의미없는 여백 사용 (빈화면)</td><td>이미지 검증 - 빈 이미지</td><td>유사. 같은 사유로 볼지 확인 필요</td></tr>
+        <tr><td>3</td><td>텍스트 가독성 저하</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>4</td><td>과도한 확대/잘림</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>5</td><td>편집·조합 이미지</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>6</td><td>의미없는 실선 사용</td><td>이미지 검증 - 외곽 테두리</td><td>유사. 프레임처럼 보이는 테두리와 같은 사유로 볼지 확인 필요</td></tr>
+        <tr><td>7</td><td>광고목적 불분명</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>8</td><td>일상생활 이미지 사용</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>9</td><td>해상도/비율 문제</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>10</td><td>흐림/모자이크</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>11</td><td>선정성</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>12</td><td>상품 구매 불가·접속 오류</td><td>랜딩 URL - 연결 화면 접속 오류</td><td>유사. 같은 사유로 볼지 확인 필요</td></tr>
+        <tr><td>13</td><td>제한업종</td><td>-</td><td>수동 전용. 송출 불가 카테고리와 경계 확인 필요</td></tr>
+        <tr><td>14</td><td>송출 불가 카테고리</td><td>- (자동 반려 대상 아님)</td><td>자동은 반려가 아니라 카카오 송출 OFF로 처리 (03). 수동 반려 사유와 처리 방식이 다름</td></tr>
+        <tr><td>15</td><td>기타 (직접 입력)</td><td>-</td><td>자유 입력 100자. 코드 · 통계 집계 방식 미정</td></tr>
+      </tbody>
+    </table>
+    <p class="note">자동 반려 사유 중 텍스트 검증(수식어, 최상급 표현 등 12종), 필수 항목 누락, 확장자 오류, 배경 투명은 수동 목록에 대응하는 사유가 없다.</p>
+
+    <h3>8.2 <span class="sub">엉켜 있는 부분</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:180px">주제</th><th>내용</th><th style="width:90px">상태</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>사유 목록이 2개</td><td>수동 15개와 자동(07) 목록의 명칭 · 분류가 다름. 같은 사유가 다른 이름으로 쌓이면 반려 사유 통계가 나뉨<br>→ 하나의 사유 코드 체계로 묶을지, 수동 · 자동 코드를 따로 둘지</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>2</td><td>서브 사유 코드</td><td>27번 "각 항목은 서브 사유 코드와 연결"의 코드 값 · 정의가 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>3</td><td>반려사유 컬럼 표기</td><td>3번 컬럼 표기 형식은 자동 기준 <code>{검증 단계} - {상세 사유} (검출 표현)</code>. 수동 반려 사유를 같은 형식으로 쓸지(검증 단계를 무엇으로 둘지), 사유명만 쓸지</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>4</td><td>송출 불가 카테고리</td><td>자동은 반려가 아닌 송출 OFF(03), 소재그룹 토글 연동(22~23)은 Vue.js 개발 후로 연기, 그 전에는 해당 광고주를 송출 불가 광고주로 인입. 수동 반려 사유에도 같은 이름이 있어 세 가지 처리가 섞여 있음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>5</td><td>기타 (직접 입력)</td><td>자유 입력값의 코드와 통계 집계 방식</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>6</td><td>확인 버튼 이미지 처리 (30)</td><td>통계 반영 후 이미지 보관(O) / 삭제(X)를 무엇으로 정하는지 기준 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>7</td><td>반려 사유 검색 목록 (31)</td><td>7.2 사유 목록 + 8.1 수동 반려 사유와 동일하게 노출로 결정 (송출 불가 광고주는 1개로 합침). 1번에서 같은 사유로 묶이는 항목이 생기면 검색 목록도 함께 정리</td><td><span class="pill on">확정</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <footer>카카오 소재 자동 반려 조건 설정 · 화면기능정의서 · v5</footer>
 
   </div>
@@ -685,11 +750,20 @@ body{margin:0;background:var(--bg);color:var(--ink);
             </div>
 
             <div class="row" style="margin-bottom:8px">
-              <span class="btn g2">내부승인</span><span class="btn r2">반려</span>
+              <span class="btn g2">내부승인</span><span class="rel"><span class="bdg tr" data-t="26">26</span><span class="btn r2">반려</span></span>
             </div>
             <div class="row" style="justify-content:space-between;margin-bottom:10px">
               <span class="row">
                 <span class="btn g">컬럼 설정</span>
+                <span class="rel">
+                  <span class="bdg tl" data-t="31">31</span>
+                  <span class="inp" style="width:150px;display:inline-block;color:#111">반려 사유 전체 ▾</span>
+                  <div class="rsd">
+                    <div class="q">확대</div>
+                    <div class="o on">반려 사유 전체</div>
+                    <div class="o">과도한 <b>확대</b>/잘림</div>
+                  </div>
+                </span>
                 <span class="inp" style="width:170px">검색어를 입력하세요.</span>
                 <span class="btn g">검색</span>
               </span>
@@ -710,6 +784,24 @@ body{margin:0;background:var(--bg);color:var(--ink);
 
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>반려 사유 팝업 <span style="color:var(--muted);font-weight:600">(26~30)</span></h3>
+    <div class="rel rjp">
+      <span class="bdg tl" data-t="26">26</span>
+      <div class="t">검수 상태 변경</div>
+      <div class="g">반려 사유를 선택해주세요</div>
+      <div class="rel"><span class="bdg tl" data-t="27">27</span><div class="dd"><span>반려 사유 선택</span><span style="color:#374151">▾</span></div></div>
+      <div class="dl"><div>송출 불가 광고주</div><div>의미없는 여백 사용 (빈화면)</div><div>텍스트 가독성 저하</div><div>과도한 확대/잘림</div><div>편집·조합 이미지</div><div>의미없는 실선 사용</div><div>광고목적 불분명</div><div>일상생활 이미지 사용</div><div>해상도/비율 문제</div><div>흐림/모자이크</div><div>선정성</div><div>상품 구매 불가·접속 오류</div><div>제한업종</div><div>송출 불가 카테고리</div><div class="etc">기타 (직접 입력)</div></div>
+      <div class="rel" style="margin-top:16px"><span class="bdg tl" data-t="28">28</span><div class="ta">반려 사유를 입력해주세요 (최대 100자)</div></div>
+      <div class="ct">0 / 100</div>
+      <div class="er">사유를 작성해주세요.</div>
+      <div class="bt" style="margin-top:8px">
+        <span class="rel"><span class="bdg tl" data-t="29">29</span><span class="btn gr">취소</span></span>
+        <span class="rel"><span class="bdg tl" data-t="30">30</span><span class="btn g">확인</span></span>
       </div>
     </div>
   </div>
@@ -977,6 +1069,55 @@ c. 광고주의 라이브된 소재그룹 광고 카피 (4)
 <span class="copy-like" style="color:var(--red)">   * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</span>
 <span style="color:var(--red)">b. 수정 이력
    b-1. 2026-10-26 수정: 테이블 조회 조건 안내 문구 추가</span></p></div>
+  <div class="item lv3" id="d31"><span class="no">31</span><span class="ttl">반려 사유 검색 드롭박스<span class="tag b">신규</span></span>
+    <p class="dsc">a. 위치 : [컬럼 설정] 오른쪽, 검색어 입력칸 왼쪽
+b. 드롭박스, 1개 선택
+   b-1. 기본값 : 반려 사유 전체
+   b-2. 목록 : <a class="secref" data-sec="s7">개요 &gt; 7.2 사유 목록</a> + <a class="secref" data-sec="s8">개요 &gt; 8.1 사유 대응표</a>와 동일
+    ㄴ 수동 반려 : 8.1 수동 반려 사유 15개 (반려 사유 팝업 <a class="ref" data-t="27">[27]</a>과 동일)
+    ㄴ 자동 반려 : 7.2 사유 목록 19개, "{검증 단계} - {상세 사유}"로 표기 (예: 텍스트 검증 - 수식어)
+    ㄴ 두 목록에 모두 있는 "송출 불가 광고주"는 1개로 합쳐 노출
+    ㄴ 수동 · 자동 구분 표시 없이 하나의 목록으로 노출
+c. 드롭리스트 상단에 검색 입력칸 제공
+   c-1. 입력한 글자가 포함된 사유만 목록에 노출 (입력 즉시 반영)
+   c-2. 일치하는 글자는 붉은 글씨로 표시
+   c-3. 결과가 없으면 "검색 결과가 없습니다." 노출
+d. 사유 선택 후 [검색] 클릭 시 반려사유 컬럼이 선택한 사유인 소재만 조회
+   d-1. 검색어 · 승인상태 · 기간 조건과 함께 적용 (AND)
+   d-2. 자동 반려 사유는 검출 표현(괄호)과 관계없이 사유 기준으로 조회
+    ㄴ 예: 텍스트 검증 - 수식어 선택 시 (프리미엄), (최고급) 등 모두 조회</p></div>
+  <div class="h">반려 사유 팝업 (26~30)</div>
+  <div class="item lv2" id="d26"><span class="no">26</span><span class="ttl">반려 사유 팝업<span class="tag b">신규</span></span>
+    <p class="dsc">a. [반려] 클릭 시 노출
+b. 팝업 제목: 검수 상태 변경
+c. 안내 문구: 반려 사유를 선택해주세요</p></div>
+  <div class="item lv3" id="d27"><span class="no">27</span><span class="ttl">반려 사유 드롭리스트<span class="tag b">신규</span></span>
+    <p class="dsc">a. 반려 사유 15개 중 1개 선택
+   a-1. 기본값: 미선택 (반려 사유 선택)
+   a-2. 첫 항목: 송출 불가 광고주
+   a-3. 마지막 항목: 기타 (직접 입력)
+b. 각 항목은 서브 사유 코드와 연결
+※ 자동 반려 사유와의 관계는 <a class="secref" data-sec="s8">개요 &gt; 08. 반려 사유 팝업</a> 참고</p></div>
+  <div class="item lv3" id="d28"><span class="no">28</span><span class="ttl">기타 입력칸<span class="tag b">신규</span></span>
+    <p class="dsc">a. 기타 선택 시에만 노출
+b. 최대 100자 입력 가능
+   b-1. 100자 초과 입력 불가
+   b-2. 입력 글자 수 실시간 표시</p></div>
+  <div class="item lv3" id="d29"><span class="no">29</span><span class="ttl">취소<span class="tag g">기존</span></span>
+    <p class="dsc">a. 클릭 시 팝업 닫힘
+b. 선택한 사유와 입력 내용 초기화</p></div>
+  <div class="item lv3" id="d30"><span class="no">30</span><span class="ttl">확인<span class="tag o">변경</span></span>
+    <p class="dsc">a. 버튼은 비활성화하지 않음. 클릭 시 아래 조건이면 얼럿 텍스트 제공, 반려 처리하지 않음
+   a-1. 사유 미선택 → 얼럿 텍스트 제공 "사유를 선택해주세요."
+   a-2. 기타 선택 + 입력 없음 → 얼럿 텍스트 제공 "사유를 작성해주세요."
+    ㄴ 텍스트 위치 : [취소] · [확인] 버튼 위 (붉은 글씨)
+b. 클릭 시 선택 소재 반려 처리
+   b-1. BIZ_STATE_CODE → 99
+   b-2. 반려 사유 코드 저장
+c. 반려 사유 통계 반영 후 이미지 처리
+   c-1. O → 반려 기록에 이미지 보관
+   c-2. X → 이미지 즉시 삭제
+※ 통계 반영 전 이미지 삭제 불가</p></div>
   <div class="h">자동 반려 조건 팝업 — 송출 불가 카테고리 (4~10)</div>
 <div class="item lv2" id="d4"><span class="no">4</span><span class="ttl">자동 반려 조건 팝업</span>
     <p class="dsc">a. 3개 탭으로 구성 → <a class="ref" data-t="5">[5]</a>
@@ -1168,6 +1309,8 @@ switchPage('spec');
       <table>
         <thead><tr><th>수정일</th><th>화면</th><th>항목</th><th>내용</th></tr></thead>
         <tbody>
+          <tr><td>26.11.04</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="31">31 반려 사유 검색 드롭박스</td><td>검색 영역에 반려 사유 드롭박스 추가. 드롭리스트 안에서 사유 검색 가능<br>목록은 7.2 사유 목록 + 8.1 수동 반려 사유와 동일</td></tr>
+          <tr><td>26.11.04</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="26">26~30 반려 사유 팝업</td><td>[반려] 클릭 시 반려 사유 팝업 추가: 반려 사유 드롭리스트(15개), 기타 입력칸(100자), 취소, 확인(30)<br>[확인]은 비활성화하지 않고 클릭 시 버튼 위에 얼럿 텍스트 제공 (사유를 선택해주세요. / 사유를 작성해주세요.)<br>개요 08 반려 사유 팝업(수동 · 자동 반려 사유 관계, 확인 필요 사항) 추가</td></tr>
           <tr><td>26.11.02</td><td>광센_소재그룹 설정</td><td class="hgo" data-t="22">22~23 소재그룹 설정</td><td>탭 전체 연기: Vue.js 개발 완료 후 반영<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입</td></tr>
           <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="25">25 테이블 조회 조건 안내 문구</td><td>집계 표 위에 안내 문구 추가: * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</td></tr>
           <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="24">24 소재 카피 문구_4 컬럼</td><td>소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</td></tr>

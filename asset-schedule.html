@@ -117,8 +117,9 @@
       <tr><td>9</td><td>게재 기간 관리 팝업</td><td><span class="tag todo">신규</span></td><td>소재 이미지 노출</td><td>소재그룹 명 왼쪽에 소재 이미지(썸네일) 노출.<br>마우스 오버 시 크게 보기</td><td>5-2</td></tr>
       <tr><td>10</td><td>광고그룹 등록 · 광고 기간 수정 팝업</td><td><span class="tag todo">변경</span></td><td>광고 기간 시 선택 목록</td><td>00~23만 제공 (23:59 선택지 삭제). 시작 HH:00, 종료 HH:59 (23 선택 = 23:59까지)</td><td>1-1, 3-1</td></tr>
       <tr><td>11</td><td>광고그룹 등록</td><td><span class="tag keep">유지</span></td><td>광고 일정</td><td>변경 없음</td><td>-</td></tr>
-      <tr><td>12</td><td>소재그룹 목록</td><td><span class="tag keep">유지</span></td><td>기존 컬럼·필터·지표·다운로드, 수동 ON/OFF</td><td>변경 없음 (게재 기간 관련 체크 없음)</td><td>-</td></tr>
+      <tr><td>12</td><td>소재그룹 목록</td><td><span class="tag keep">유지</span></td><td>기존 컬럼·필터·지표·다운로드</td><td>변경 없음</td><td>-</td></tr>
       <tr><td>13</td><td>공통</td><td><span class="tag keep">유지</span></td><td>광고그룹당 소재그룹 최소 1개 연결 규칙(ON/OFF)</td><td>변경 없음</td><td>-</td></tr>
+      <tr><td>14</td><td>소재그룹 목록</td><td><span class="tag todo">변경</span></td><td>ON → OFF 시 게재 기간 체크</td><td>게재 기간이 미래(현재 &lt; 시작일시)인 소재그룹은 OFF 불가.<br>얼럿 "게재 기간이 시작되지 않은 소재그룹은 OFF 할 수 없습니다."<br>OFF → ON은 체크 없음</td><td>4-3</td></tr>
     </table>
     <div class="btns">
       <button class="btn pri" data-go="demo">데모 보기</button>
@@ -215,7 +216,7 @@
       <tr><td>21</td><td>OFF이면서 게재기간 만료</td><td>상태 컬럼에 무엇을 먼저 보여줄지 미정</td><td><span class="tag todo">확인 필요 Q3</span></td></tr>
       <tr><td>22</td><td>광고그룹의 소재그룹이 모두 만료</td><td>광고그룹은 ON인데 노출할 소재 없음. 광고그룹 상태 표시 미정</td><td><span class="tag todo">확인 필요 Q4</span></td></tr>
       <tr class="grp"><td colspan="4">④ 수동 ON/OFF</td></tr>
-      <tr><td>23</td><td>수동 OFF</td><td>게재 기간 관련 체크 없음. 기존 최소 1개 연결 규칙만 적용</td><td><span class="tag ok">확정</span></td></tr>
+      <tr><td>23</td><td>수동 OFF (ON → OFF)</td><td>게재 기간이 미래(현재 &lt; 시작일시)면 얼럿 후 OFF 불가.<br>게재 중·만료·종료일 없음(시작 지남)은 OFF 가능. 기존 최소 1개 연결 규칙도 함께 적용</td><td><span class="tag ok">확정</span></td></tr>
       <tr><td>24</td><td>만료된 소재그룹을 수동 ON</td><td>ON은 되지만 만료 상태라 노출 안 됨. 다시 노출하려면 종료일시 수정 필요</td><td><span class="tag ok">확정</span></td></tr>
     </table>
   </div>
@@ -276,6 +277,7 @@
       <tr><td>8</td><td>2026-11-02</td><td>확인 필요 사항</td><td>06 제목을 "질문해야 할 것" → "확인 필요 사항"으로 변경<br>회의 내용 반영: 확정 내역 5건, 추가 논의 필요 3건, 기획 확인 필요 Q1~Q6</td><td>06</td></tr>
       <tr><td>9</td><td>2026-11-02</td><td>소재 이미지 노출</td><td>게재 기간 관리 팝업의 소재그룹 명 왼쪽에 소재 이미지(썸네일) 노출<br>마우스 오버 시 썸네일 오른쪽에 크게 보기 (200×200)</td><td>02-9 / 데모 / 5-2</td></tr>
       <tr><td>10</td><td>2026-11-02</td><td>소재그룹 생성 시 기본 게재 기간</td><td>광고 시작일시 ~ 종료일 없음 → 광고 기간과 동일하게 변경<br>광고 기간 카드 안내 문구 변경: "소재그룹 생성 시 소재그룹의 게재 기간은 광고 기간과 동일하게 설정됩니다. 소재그룹별 게재 기간은 [소재그룹 목록 &gt; 게재 기간 관리]에서 변경할 수 있습니다."</td><td>03 게재 기간, 04 ① / 데모 / 1, 1-2</td></tr>
+      <tr><td>11</td><td>2026-11-03</td><td>ON → OFF 시 게재 기간 체크</td><td>게재 기간이 미래(현재 &lt; 시작일시)인 소재그룹은 OFF 불가, 얼럿 노출<br>기존 "수동 ON/OFF 게재 기간 체크 없음" 내용 변경</td><td>02-12·14, 04 케이스 23 / 데모 / 4-3</td></tr>
     </table>
   </div>
 
@@ -566,7 +568,7 @@ const DATA = {
   // ratio·지표는 기존 화면 재현용 예시값
   creativeGroups: [
     // edited: 게재 기간 수정 이력 여부 (이력 없음 = 광고 기간 변경 시 따라감)
-    { no: 83536, name: '소재그룹명_데모1', ag: 'AG1', start: '2026-08-12 09:00', end: null, edited: true, ratio: '100%', linked: true, thumb: '#ececec' },
+    { no: 83536, name: '소재그룹명_데모1', ag: 'AG1', start: '2026-12-01 09:00', end: null, edited: true, ratio: '100%', linked: true, thumb: '#ececec' },
     { no: 83532, name: '소재그룹명_데모5', ag: 'AG2', start: '2026-04-27 15:00', end: '2026-10-31 23:59', edited: true, ratio: '13.08%', linked: true, thumb: '#d9cfc2' },
     { no: 83481, name: '소재그룹명_데모6', ag: 'AG2', start: '2026-05-01 09:00', end: '2026-05-31 18:59', edited: true, ratio: '13.08%', linked: true, thumb: '#d9cfc2' },
     { no: 81543, name: '소재그룹명_데모7', ag: 'AG2', start: '2026-04-27 15:00', end: '2026-11-30 23:59', edited: false, ratio: '12.86%', linked: true, thumb: '#fbf5b8' },
@@ -755,6 +757,8 @@ document.addEventListener('click', e => {
   smenu.hidden = true;
   if (!it || smenuNo == null) return;
   const c = DATA.creativeGroups.find(x => x.no === smenuNo);
+  // 게재 기간이 미래(시작일시 전)인 소재그룹은 ON → OFF 불가
+  if (it.dataset.v === 'off' && c.linked && ts(c.start) > Date.now()) return alert('게재 기간이 시작되지 않은 소재그룹은 OFF 할 수 없습니다.');
   c.linked = it.dataset.v === 'on';
   renderList();
 });
@@ -1027,7 +1031,7 @@ renderList();
     <table class="l">
       <tr><th class="nm">소재그룹 명 ↑</th><th>소재그룹NO ↑</th><th>광고그룹 명 ↑</th><th>상태 ↑</th><th class="rel"><span class="bd" data-t="4-2"></span>게재 기간 ↑</th><th>노출 비율 기준 ↑</th></tr>
       <tr><td class="nm">전체 (연결 4개 / 미연결 0개)</td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td class="nm"><span style="color:#43a047">●</span> 소재그룹명_데모5</td><td>83532</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 15:00<br>~ 2026-10-31 23:59</td><td>13.08%</td></tr>
+      <tr><td class="nm rel"><span class="bd" data-t="4-3"></span><span style="color:#43a047">●</span> 소재그룹명_데모5</td><td>83532</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 15:00<br>~ 2026-10-31 23:59</td><td>13.08%</td></tr>
       <tr><td class="nm">소재그룹명_데모6</td><td>83481</td><td>광고그룹명_데모2</td><td class="st exp rel"><span class="bd" data-t="4-4"></span>게재기간 만료</td><td>2026-05-01 09:00<br>~ 2026-05-31 18:59</td><td>13.08%</td></tr>
       <tr><td class="nm">소재그룹명_데모7</td><td>81543</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 15:00<br>~ 2026-11-30 23:59</td><td>12.86%</td></tr>
       <tr><td class="nm">소재그룹명_데모8</td><td>81542</td><td>광고그룹명_데모2</td><td class="st">제한됨</td><td>2026-04-27 15:00<br>~ 종료일 미설정</td><td>12.86%</td></tr>
@@ -1075,6 +1079,7 @@ const DESC = [
   { id: '4', tag: 'old', title: '소재그룹 목록', body: 'a. 캠페인 > 소재그룹 목록 화면.\n기존 컬럼, 필터, 지표, 다운로드 동작은 유지' },
   { id: '4-1', tag: 'new', title: '게재 기간 관리 버튼', body: 'a. 클릭 시 게재 기간 관리 팝업(5) 오픈\na-1. 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\na-2. 소재그룹 목록 화면에서 소재그룹을 별도로 선택해서 열지 않음\nb. 광고그룹 미선택 상태에서 클릭 시 얼럿 노출: "광고그룹을 선택해주세요" 노출\nb-1. 팝업 오픈 안됨' },
   { id: '4-2', tag: 'new', title: '게재 기간 컬럼', body: 'a. 위치: 상태 컬럼 우측에 열 삽입\nb. 표기: 1줄 "시작일시", 2줄 "~ 종료일시" 또는 "~ 종료일 미설정". 광고그룹 목록 광고기간 컬럼과 같은 포맷 (예: 2026-04-27 15:00 / ~ 2026-10-31 23:59)\nc. 정렬: 시작일시 기준 오름/내림차순\nd. 컬럼설정에서 노출·숨김 가능, 다운로드 파일에도 포함' },
+  { id: '4-3', tag: 'chg', title: 'ON/OFF 변경: 게재 기간 체크', body: 'a. ON → OFF 변경 시 게재 기간 체크\nb. 게재 기간이 미래(현재 < 시작일시)면 OFF 불가\nㄴ 얼럿: "게재 기간이 시작되지 않은 소재그룹은 OFF 할 수 없습니다."\nㄴ 상태는 ON 유지\nc. 게재 중, 게재기간 만료, 시작일시가 지난 종료일 없음 소재그룹은 기존대로 OFF 가능\nd. OFF → ON 변경은 게재 기간 체크 없음\ne. 기존 광고그룹당 최소 1개 연결 규칙은 그대로 적용' },
   { id: '4-4', tag: 'new', title: '상태: 게재기간 만료', body: 'a. 종료일시가 지난 소재그룹은 상태 컬럼에 "게재기간 만료" 표시\nb. 종료일시가 지나도 자동 OFF 하지 않음. ON/OFF 상태는 그대로 유지\nc. 종료일 없음 소재그룹은 만료되지 않음\nd. 상태별 텍스트 컬러\nㄴ 제한됨: 주황 (기존)\nㄴ 게재기간 만료: 회색 (#8A929C)' },
   { id: '5', tag: 'new', title: '게재 기간 관리 팝업', body: 'a. 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\nb. 닫기(×), 취소, Esc: 저장하지 않은 변경을 버리고 닫기' },
   { id: '5-1', tag: 'new', title: '광고그룹 정보', body: 'a. 광고그룹 명, 광고 기간을 읽기 전용으로 표시\nb. 광고 기간이 종료일 미설정이면 "~ 종료일 미설정"으로 표시' },
