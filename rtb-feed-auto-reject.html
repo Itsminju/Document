@@ -371,7 +371,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
     <table class="tbl">
       <thead><tr><th style="width:44px">No</th><th style="width:110px">위치</th><th style="width:220px">대상</th><th>내용</th></tr></thead>
       <tbody>
-        <tr><td><span class="no">1</span></td><td>광고주센터</td><td>소재그룹 설정 토글 <span class="tag r">연기</span></td><td><b style="color:var(--red)">Vue.js 개발 완료 후 반영</b> (광센_소재그룹 설정 탭 22~23 전체).<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입<br>화면 변경 없음. 자동 반려 조건에 따라 <b>토글 상태가 자동 전환</b>되는 동작만 신규</td></tr>
+        <tr><td><span class="no">1</span></td><td>광고주센터</td><td>소재그룹 설정 토글 <span class="tag r">연기</span></td><td><b style="color:var(--red)">Vue.js 개발 완료 후 반영</b> (광센_소재그룹 설정 탭 30~31 전체).<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입<br>화면 변경 없음. 자동 반려 조건에 따라 <b>토글 상태가 자동 전환</b>되는 동작만 신규</td></tr>
         <tr><td><span class="no">2</span></td><td>모비센스</td><td>검수 리스트 우측 상단</td><td><code>자동 반려 조건</code> 버튼 추가</td></tr>
         <tr><td><span class="no">3</span></td><td>모비센스</td><td>자동 반려 조건 팝업</td><td>3탭 구성 — 송출 불가 카테고리 / 송출 불가 광고주 / 사용 불가 표현</td></tr>
         <tr><td><span class="no">4</span></td><td>모비센스</td><td>자동 반려 배치</td><td><b>일배치 — 매일 10시 1회 실행</b>. 검수 리스트에 등재된 소재를 건별로 <b>기본 검증 → 반려 판정 LLM API 호출</b> 순으로 처리하고, 반려 대상을 <b>일괄 모비온 반려</b>로 갱신</td></tr>
@@ -639,7 +639,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
   <section id="s8">
     <h2><span class="num">08</span> 반려 사유 팝업 (수동 반려)</h2>
     <div class="sec-title">수동 반려 사유와 자동 반려 사유의 관계</div>
-    <p class="note">운영자가 [반려] 버튼으로 직접 반려할 때 고르는 사유 15개(26~30)와, 배치가 자동으로 기재하는 반려 사유(07)는 서로 다른 목록이다. 겹치거나 비슷한 사유가 있어 아래처럼 정리한다.</p>
+    <p class="note">운영자가 [반려] 버튼으로 직접 반려할 때 고르는 사유 15개(7~11)와, 배치가 자동으로 기재하는 반려 사유(07)는 서로 다른 목록이다. 겹치거나 비슷한 사유가 있어 아래처럼 정리한다.</p>
 
     <h3>8.1 <span class="sub">사유 대응표</span></h3>
     <table class="tbl">
@@ -669,12 +669,12 @@ body{margin:0;background:var(--bg);color:var(--ink);
       <thead><tr><th style="width:44px">No</th><th style="width:180px">주제</th><th>내용</th><th style="width:90px">상태</th></tr></thead>
       <tbody>
         <tr><td>1</td><td>사유 목록이 2개</td><td>수동 15개와 자동(07) 목록의 명칭 · 분류가 다름. 같은 사유가 다른 이름으로 쌓이면 반려 사유 통계가 나뉨<br>→ 하나의 사유 코드 체계로 묶을지, 수동 · 자동 코드를 따로 둘지</td><td><span class="pill off">확인 필요</span></td></tr>
-        <tr><td>2</td><td>서브 사유 코드</td><td>27번 "각 항목은 서브 사유 코드와 연결"의 코드 값 · 정의가 없음</td><td><span class="pill off">확인 필요</span></td></tr>
-        <tr><td>3</td><td>반려사유 컬럼 표기</td><td>3번 컬럼 표기 형식은 자동 기준 <code>{검증 단계} - {상세 사유} (검출 표현)</code>. 수동 반려 사유를 같은 형식으로 쓸지(검증 단계를 무엇으로 둘지), 사유명만 쓸지</td><td><span class="pill off">확인 필요</span></td></tr>
-        <tr><td>4</td><td>송출 불가 카테고리</td><td>자동은 반려가 아닌 송출 OFF(03), 소재그룹 토글 연동(22~23)은 Vue.js 개발 후로 연기, 그 전에는 해당 광고주를 송출 불가 광고주로 인입. 수동 반려 사유에도 같은 이름이 있어 세 가지 처리가 섞여 있음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>2</td><td>서브 사유 코드</td><td>8번 "각 항목은 서브 사유 코드와 연결"의 코드 값 · 정의가 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>3</td><td>반려사유 컬럼 표기</td><td>4번 컬럼 표기 형식은 자동 기준 <code>{검증 단계} - {상세 사유} (검출 표현)</code>. 수동 반려 사유를 같은 형식으로 쓸지(검증 단계를 무엇으로 둘지), 사유명만 쓸지</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>4</td><td>송출 불가 카테고리</td><td>자동은 반려가 아닌 송출 OFF(03), 소재그룹 토글 연동(30~31)은 Vue.js 개발 후로 연기, 그 전에는 해당 광고주를 송출 불가 광고주로 인입. 수동 반려 사유에도 같은 이름이 있어 세 가지 처리가 섞여 있음</td><td><span class="pill off">확인 필요</span></td></tr>
         <tr><td>5</td><td>기타 (직접 입력)</td><td>자유 입력값의 코드와 통계 집계 방식</td><td><span class="pill off">확인 필요</span></td></tr>
-        <tr><td>6</td><td>확인 버튼 이미지 처리 (30)</td><td>통계 반영 후 이미지 보관(O) / 삭제(X)를 무엇으로 정하는지 기준 없음</td><td><span class="pill off">확인 필요</span></td></tr>
-        <tr><td>7</td><td>반려 사유 검색 목록 (31)</td><td>7.2 사유 목록 + 8.1 수동 반려 사유와 동일하게 노출로 결정 (송출 불가 광고주는 1개로 합침). 1번에서 같은 사유로 묶이는 항목이 생기면 검색 목록도 함께 정리</td><td><span class="pill on">확정</span></td></tr>
+        <tr><td>6</td><td>확인 버튼 이미지 처리 (11)</td><td>통계 반영 후 이미지 보관(O) / 삭제(X)를 무엇으로 정하는지 기준 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>7</td><td>반려 사유 검색 목록 (3)</td><td>7.2 사유 목록 + 8.1 수동 반려 사유와 동일하게 노출로 결정 (송출 불가 광고주는 1개로 합침). 1번에서 같은 사유로 묶이는 항목이 생기면 검색 목록도 함께 정리</td><td><span class="pill on">확정</span></td></tr>
       </tbody>
     </table>
   </section>
@@ -691,7 +691,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
   <div class="pg" data-pg="reject">
 
   <div class="blk" style="padding:0;overflow:hidden">
-    <h3 style="padding:16px 18px 0;margin:0 0 12px">화면위치 : 이미지 검수 &gt; 채팅리스트/피드 <span style="color:var(--muted);font-weight:600">(1~2)</span></h3>
+    <h3 style="padding:16px 18px 0;margin:0 0 12px">화면위치 : 이미지 검수 &gt; 채팅리스트/피드 <span style="color:var(--muted);font-weight:600">(1~6)</span></h3>
     <div class="rel" style="margin:0 14px 14px">
       <div class="con">
 
@@ -718,7 +718,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
           <div class="cnt2">
             <div class="crumb">이미지 검수 &gt; 채팅리스트/피드</div>
 
-            <div class="rel" style="text-align:right;font-size:11px;color:var(--red);margin-bottom:4px"><span class="bdg tl" data-t="25" style="left:auto;right:272px;top:-4px">25</span>* 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</div>
+            <div class="rel" style="text-align:right;font-size:11px;color:var(--red);margin-bottom:4px"><span class="bdg tl" data-t="6" style="left:auto;right:272px;top:-4px">6</span>* 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</div>
             <table class="stat">
               <tr><th></th><th>전체</th><th>대기</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr>
               <tr><td class="sh">이미지 수</td><td>73</td><td>11</td><td>0</td><td>43</td><td>0</td></tr>
@@ -750,13 +750,13 @@ body{margin:0;background:var(--bg);color:var(--ink);
             </div>
 
             <div class="row" style="margin-bottom:8px">
-              <span class="btn g2">내부승인</span><span class="rel"><span class="bdg tr" data-t="26">26</span><span class="btn r2">반려</span></span>
+              <span class="btn g2">내부승인</span><span class="rel"><span class="bdg tr" data-t="7">7</span><span class="btn r2">반려</span></span>
             </div>
             <div class="row" style="justify-content:space-between;margin-bottom:10px">
               <span class="row">
                 <span class="btn g">컬럼 설정</span>
                 <span class="rel">
-                  <span class="bdg tl" data-t="31">31</span>
+                  <span class="bdg tl" data-t="3">3</span>
                   <span class="inp" style="width:150px;display:inline-block;color:#111">반려 사유 전체 ▾</span>
                   <div class="rsd">
                     <div class="q">확대</div>
@@ -774,7 +774,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
             </div>
 
             <table class="lst">
-              <tr><th>NO</th><th>승인상태</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>소재그룹명</th><th>사이트명</th><th>프로필 로고</th><th>소재 카피 문구_2</th><th class="rel"><span class="bdg tl" data-t="24" style="top:-15px;left:-6px">24</span><span style="color:var(--red)">소재 카피 문구_4</span></th><th>랜딩URL</th><th>CTA 정보</th><th>생성일자</th><th>최종업데이트일</th><th class="rel"><span class="bdg tl" data-t="3" style="top:-15px;left:-6px">3</span>반려사유</th><th>비고</th></tr>
+              <tr><th>NO</th><th>승인상태</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>소재그룹명</th><th>사이트명</th><th>프로필 로고</th><th>소재 카피 문구_2</th><th class="rel"><span class="bdg tl" data-t="5" style="top:-15px;left:-6px">5</span><span style="color:var(--red)">소재 카피 문구_4</span></th><th>랜딩URL</th><th>CTA 정보</th><th>생성일자</th><th>최종업데이트일</th><th class="rel"><span class="bdg tl" data-t="4" style="top:-15px;left:-6px">4</span>반려사유</th><th>비고</th></tr>
               <tr><td>1</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_2안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>샤브보트R 가맹 상담 신청하고 창업 혜택 받아보세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
               <tr><td>2</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_1안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>샤브보트R 가맹 상담 신청하고 창업 혜택 받아보세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
               <tr><td>3</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_260902</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>소자본 샤브샤브 창업, 샤브보트R와 함께 시작하세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
@@ -789,29 +789,29 @@ body{margin:0;background:var(--bg);color:var(--ink);
   </div>
 
   <div class="blk">
-    <h3>반려 사유 팝업 <span style="color:var(--muted);font-weight:600">(26~30)</span></h3>
+    <h3>반려 사유 팝업 <span style="color:var(--muted);font-weight:600">(7~11)</span></h3>
     <div class="rel rjp">
-      <span class="bdg tl" data-t="26">26</span>
+      <span class="bdg tl" data-t="7">7</span>
       <div class="t">검수 상태 변경</div>
       <div class="g">반려 사유를 선택해주세요</div>
-      <div class="rel"><span class="bdg tl" data-t="27">27</span><div class="dd"><span>반려 사유 선택</span><span style="color:#374151">▾</span></div></div>
+      <div class="rel"><span class="bdg tl" data-t="8">8</span><div class="dd"><span>반려 사유 선택</span><span style="color:#374151">▾</span></div></div>
       <div class="dl"><div>송출 불가 광고주</div><div>의미없는 여백 사용 (빈화면)</div><div>텍스트 가독성 저하</div><div>과도한 확대/잘림</div><div>편집·조합 이미지</div><div>의미없는 실선 사용</div><div>광고목적 불분명</div><div>일상생활 이미지 사용</div><div>해상도/비율 문제</div><div>흐림/모자이크</div><div>선정성</div><div>상품 구매 불가·접속 오류</div><div>제한업종</div><div>송출 불가 카테고리</div><div class="etc">기타 (직접 입력)</div></div>
-      <div class="rel" style="margin-top:16px"><span class="bdg tl" data-t="28">28</span><div class="ta">반려 사유를 입력해주세요 (최대 100자)</div></div>
+      <div class="rel" style="margin-top:16px"><span class="bdg tl" data-t="9">9</span><div class="ta">반려 사유를 입력해주세요 (최대 100자)</div></div>
       <div class="ct">0 / 100</div>
       <div class="er">사유를 작성해주세요.</div>
       <div class="bt" style="margin-top:8px">
-        <span class="rel"><span class="bdg tl" data-t="29">29</span><span class="btn gr">취소</span></span>
-        <span class="rel"><span class="bdg tl" data-t="30">30</span><span class="btn g">확인</span></span>
+        <span class="rel"><span class="bdg tl" data-t="10">10</span><span class="btn gr">취소</span></span>
+        <span class="rel"><span class="bdg tl" data-t="11">11</span><span class="btn g">확인</span></span>
       </div>
     </div>
   </div>
 
   <div class="blk">
-    <h3>자동 반려 조건 팝업 — 송출 불가 카테고리 <span style="color:var(--muted);font-weight:600">(4~10)</span></h3>
+    <h3>자동 반려 조건 팝업 — 송출 불가 카테고리 <span style="color:var(--muted);font-weight:600">(12~18)</span></h3>
     <div class="rel">
-      <span class="bdg tl" data-t="4">4</span>
+      <span class="bdg tl" data-t="12">12</span>
       <div class="rel">
-        <span class="bdg tr" data-t="5">5</span>
+        <span class="bdg tr" data-t="13">13</span>
         <div class="tabs">
           <div class="on">송출 불가 카테고리</div><div>송출 불가 광고주</div><div>사용 불가 표현</div>
         </div>
@@ -821,33 +821,33 @@ body{margin:0;background:var(--bg);color:var(--ink);
           <p class="lbl">카테고리 선택 <br></p>
           <div class="row">
             <span class="rel" style="flex:1">
-              <span class="bdg tl" data-t="6">6</span>
+              <span class="bdg tl" data-t="14">14</span>
               <span class="inp" style="display:block">카테고리를 선택하세요 ▾</span>
             </span>
             <span class="rel">
-              <span class="bdg tr" data-t="7">7</span>
+              <span class="bdg tr" data-t="15">15</span>
               <span class="btn">추가</span>
             </span>
           </div>
           <div class="rel" style="margin-top:14px">
-            <span class="bdg tl" data-t="8">8</span>
+            <span class="bdg tl" data-t="16">16</span>
             <div class="chips" style="margin-top:0">
 <span class="chip">건강식품<i>×</i></span><span class="chip">비타민<i>×</i></span><span class="chip">헬스보충제<i>×</i></span><span class="chip">종합병원<i>×</i></span><span class="chip">일반병원<i>×</i></span><span class="chip">제3금융권대출<i>×</i></span><span class="chip">증시<i>×</i></span><span class="chip">펀드<i>×</i></span><span class="chip">복권/로또<i>×</i></span><span class="chip">스포츠토토<i>×</i></span><span class="chip">타로/사주<i>×</i></span><span class="chip">성기능개선<i>×</i></span><span class="chip">산부인과(성인)<i>×</i></span><span class="chip">비뇨기과(성인)<i>×</i></span><span class="chip">성형외과(성인)<i>×</i></span><span class="chip">성인기타<i>×</i></span><span class="chip" style="color:var(--muted)">… 외 88개</span>
             </div>
           </div>
         </div>
         <div class="foot">
-          <span class="rel"><span class="bdg tl" data-t="9">9</span><span class="btn">바로 적용</span></span>
-          <span class="rel"><span class="bdg tr" data-t="10">10</span><span class="btn p">저장</span></span>
+          <span class="rel"><span class="bdg tl" data-t="17">17</span><span class="btn">바로 적용</span></span>
+          <span class="rel"><span class="bdg tr" data-t="18">18</span><span class="btn p">저장</span></span>
         </div>
       </div>
     </div>
   </div>
 
   <div class="blk">
-    <h3>자동 반려 조건 팝업 — 송출 불가 광고주 <span style="color:var(--muted);font-weight:600">(11~15)</span></h3>
+    <h3>자동 반려 조건 팝업 — 송출 불가 광고주 <span style="color:var(--muted);font-weight:600">(19~23)</span></h3>
     <div class="rel">
-      <span class="bdg tl" data-t="11">11</span>
+      <span class="bdg tl" data-t="19">19</span>
       <div class="tabs">
         <div>송출 불가 카테고리</div><div class="on">송출 불가 광고주</div><div>사용 불가 표현</div>
       </div>
@@ -856,17 +856,17 @@ body{margin:0;background:var(--bg);color:var(--ink);
           <p class="lbl">광고주 검색</p>
           <div class="row">
             <span class="rel" style="flex:1">
-              <span class="bdg tl" data-t="12">12</span>
+              <span class="bdg tl" data-t="20">20</span>
               <span class="inp" style="display:block">광고주 ID 또는 광고주명 입력 <span style="float:right;color:#9CA3AF">×</span></span>
             </span>
             <span class="rel">
-              <span class="bdg tr" data-t="13">13</span>
+              <span class="bdg tr" data-t="21">21</span>
               <span class="btn">검색</span>
             </span>
           </div>
         </div>
         <div class="rel" style="margin-top:24px">
-          <span class="bdg tl" data-t="14" style="top:-20px">14</span>
+          <span class="bdg tl" data-t="22" style="top:-20px">22</span>
           <p class="lbl">검색 결과</p>
           <table class="tbl">
             <tr><th style="width:120px">광고주 ID</th><th>광고주명</th><th style="width:80px">추가</th></tr>
@@ -875,7 +875,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
           </table>
         </div>
         <div class="rel" style="margin-top:24px">
-          <span class="bdg tl" data-t="15" style="top:-20px">15</span>
+          <span class="bdg tl" data-t="23" style="top:-20px">23</span>
           <p class="lbl">등록 목록</p>
           <table class="tbl">
             <tr><th style="width:120px">광고주 ID</th><th>광고주명</th><th style="width:80px">삭제</th></tr>
@@ -893,9 +893,9 @@ body{margin:0;background:var(--bg);color:var(--ink);
   </div>
 
   <div class="blk">
-    <h3>자동 반려 조건 팝업 — 사용 불가 표현 <span style="color:var(--muted);font-weight:600">(16~21)</span></h3>
+    <h3>자동 반려 조건 팝업 — 사용 불가 표현 <span style="color:var(--muted);font-weight:600">(24~29)</span></h3>
     <div class="rel">
-      <span class="bdg tl" data-t="16">16</span>
+      <span class="bdg tl" data-t="24">24</span>
       <div class="tabs">
         <div>송출 불가 카테고리</div><div>송출 불가 광고주</div><div class="on">사용 불가 표현</div>
       </div>
@@ -904,22 +904,22 @@ body{margin:0;background:var(--bg);color:var(--ink);
           <p class="lbl">표현 등록</p>
           <div class="row">
             <span class="rel">
-              <span class="bdg tl" data-t="17">17</span>
+              <span class="bdg tl" data-t="25">25</span>
               <span class="inp" style="display:block;width:180px">카카오 서비스 명칭 변형 ▾</span>
             </span>
             <span class="rel" style="flex:1">
-              <span class="bdg tl" data-t="18">18</span>
+              <span class="bdg tl" data-t="26">26</span>
               <span class="inp" style="display:block">반려 처리할 표현을 입력하세요</span>
             </span>
             <span class="rel">
-              <span class="bdg tr" data-t="19">19</span>
+              <span class="bdg tr" data-t="27">27</span>
               <span class="btn">추가</span>
             </span>
           </div>
         </div>
         <div class="rel" style="margin-top:20px">
           <div class="rel" style="margin-top:4px">
-            <span class="bdg tl" data-t="20" style="top:-20px">20</span>
+            <span class="bdg tl" data-t="28" style="top:-20px">28</span>
             <p class="lbl">등록된 표현 찾기</p>
             <div class="row">
               <span class="inp" style="flex:1">검색어를 입력하세요.</span>
@@ -927,7 +927,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
             </div>
           </div>
           <div class="rel" style="margin-top:24px">
-            <span class="bdg tl" data-t="21" style="top:-20px">21</span>
+            <span class="bdg tl" data-t="29" style="top:-20px">29</span>
             <p class="lbl">등록 표현 <b style="color:var(--ink)">5</b></p>
             <div>
               <span class="grp">카카오 서비스 명칭 변형</span><span class="cnt">6</span>
@@ -951,9 +951,9 @@ body{margin:0;background:var(--bg);color:var(--ink);
   <div class="pg" data-pg="link">
 
   <div class="blk">
-    <h3>연동 — 소재그룹 설정 <span style="color:var(--muted);font-weight:600">(22~23)</span><span class="tag r">Vue.js 개발 완료 후 반영</span></h3>
+    <h3>연동 — 소재그룹 설정 <span style="color:var(--muted);font-weight:600">(30~31)</span><span class="tag r">Vue.js 개발 완료 후 반영</span></h3>
     <div class="rel">
-      <span class="bdg tl" data-t="22">22</span>
+      <span class="bdg tl" data-t="30">30</span>
       <div class="con" style="padding:20px 22px;background:#F5F6F8">
 
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
@@ -963,7 +963,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
           </div>
           <div class="sg-tgls rel">
             <span class="rel">
-              <span class="bdg tl" data-t="23" style="left:-14px">23</span>
+              <span class="bdg tl" data-t="31" style="left:-14px">31</span>
               <span class="dis"><span class="t">카카오 송출 <span class="tg off"></span></span></span>
             </span>
             <span class="rel">
@@ -1029,7 +1029,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
 <div class="right">
 
   <div class="grp-desc" data-pg="reject">
-  <div class="h">진입점 — 이미지 검수 &gt; 채팅리스트/피드 (1~3)</div>
+  <div class="h">진입점 — 이미지 검수 &gt; 채팅리스트/피드 (1~6)</div>
   <div class="h sub">검색 · 필터 영역</div>
   <div class="item lv3" id="d1"><span class="no">1</span><span class="ttl">기간 검색 기준 선택<span class="tag b">신규</span></span>
     <p class="dsc">a. 기간 검색의 날짜 기준을 선택
@@ -1038,43 +1038,18 @@ b. 드롭다운
    b-2. 디폴트 : 생성일</p></div>
   <div class="item lv3" id="d2"><span class="no">2</span><span class="ttl">자동 반려 조건 버튼<span class="tag b">신규</span></span>
     <p class="dsc">a. 승인상태 필터 우측에 위치
-b. 클릭 시 자동 반려 조건 팝업 오픈 → <a class="ref" data-t="4">[4]</a>
+b. 클릭 시 자동 반려 조건 팝업 오픈 → <a class="ref" data-t="12">[12]</a>
    b-1. 기본 진입 탭 : 송출 불가 카테고리
 c. 노출 권한
    c-1. 파트장 이상에게만 노출
    c-2. 권한 구분 : 생성 · 삭제 2종</p></div>
 
-  <div class="h sub">검수 리스트 영역</div>
-  <div class="item lv3" id="d3"><span class="no">3</span><span class="ttl">반려사유 컬럼<span class="tag g">기존 컬럼</span></span>
-    <p class="dsc">a. 컬럼 자체는 기존 화면에 존재. 화면 변경 없음
-b. 자동 반려로 처리된 소재의 반려 사유를 기입
-   b-1. 자동으로 반려 처리 시 반려 처리 규칙에 맞게 반려 사유 기재
-c. 표기 형식 : {검증 단계} - {상세 사유} (검출 표현)
-   c-1. 예) 텍스트 검증 - 수식어 (프리미엄)
-   c-2. 검출 표현을 특정할 수 있는 경우에만 괄호 병기
-d. 복수 사유 검출 시
-   d-1. 리스트에는 대표 1건 + 외 N건으로 요약
-   d-2. 상세에서 전체 사유 노출
-e. 전체 사유 목록은 <a class="secref" data-sec="s7">개요 &gt; 07. 반려 사유</a> 참조</p></div>
-  <div class="item lv3" id="d24"><span class="no">24</span><span class="ttl">소재 카피 문구_4 컬럼<span class="tag o">신규 컬럼</span></span>
-    <p class="dsc">a. 컬럼 추가
-   a-1. 위치: 소재 카피 문구_2 컬럼 오른쪽
-   a-2. 기존 소재 광고문구 컬럼명은 소재 카피 문구_2로 변경
-b. reviewData _ description의 값
-c. 광고주의 라이브된 소재그룹 광고 카피 (4)
-<span style="color:var(--red)">d. 수정 이력
-   d-1. 2026-10-26 수정: 소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</span></p></div>
-  <div class="item lv3" id="d25"><span class="no">25</span><span class="ttl">테이블 조회 조건 안내 문구<span class="tag o">신규</span></span>
-    <p class="dsc">a. 테이블 조회 조건 info - text 추가
-<span class="copy-like" style="color:var(--red)">   * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</span>
-<span style="color:var(--red)">b. 수정 이력
-   b-1. 2026-10-26 수정: 테이블 조회 조건 안내 문구 추가</span></p></div>
-  <div class="item lv3" id="d31"><span class="no">31</span><span class="ttl">반려 사유 검색 드롭박스<span class="tag b">신규</span></span>
+  <div class="item lv3" id="d3"><span class="no">3</span><span class="ttl">반려 사유 검색 드롭박스<span class="tag b">신규</span></span>
     <p class="dsc">a. 위치 : [컬럼 설정] 오른쪽, 검색어 입력칸 왼쪽
 b. 드롭박스, 1개 선택
    b-1. 기본값 : 반려 사유 전체
    b-2. 목록 : <a class="secref" data-sec="s7">개요 &gt; 7.2 사유 목록</a> + <a class="secref" data-sec="s8">개요 &gt; 8.1 사유 대응표</a>와 동일
-    ㄴ 수동 반려 : 8.1 수동 반려 사유 15개 (반려 사유 팝업 <a class="ref" data-t="27">[27]</a>과 동일)
+    ㄴ 수동 반려 : 8.1 수동 반려 사유 15개 (반려 사유 팝업 <a class="ref" data-t="8">[8]</a>과 동일)
     ㄴ 자동 반려 : 7.2 사유 목록 19개, "{검증 단계} - {상세 사유}"로 표기 (예: 텍스트 검증 - 수식어)
     ㄴ 두 목록에 모두 있는 "송출 불가 광고주"는 1개로 합쳐 노출
     ㄴ 수동 · 자동 구분 표시 없이 하나의 목록으로 노출
@@ -1086,27 +1061,53 @@ d. 사유 선택 후 [검색] 클릭 시 반려사유 컬럼이 선택한 사유
    d-1. 검색어 · 승인상태 · 기간 조건과 함께 적용 (AND)
    d-2. 자동 반려 사유는 검출 표현(괄호)과 관계없이 사유 기준으로 조회
     ㄴ 예: 텍스트 검증 - 수식어 선택 시 (프리미엄), (최고급) 등 모두 조회</p></div>
-  <div class="h">반려 사유 팝업 (26~30)</div>
-  <div class="item lv2" id="d26"><span class="no">26</span><span class="ttl">반려 사유 팝업<span class="tag b">신규</span></span>
+
+  <div class="h sub">검수 리스트 영역</div>
+  <div class="item lv3" id="d4"><span class="no">4</span><span class="ttl">반려사유 컬럼<span class="tag g">기존 컬럼</span></span>
+    <p class="dsc">a. 컬럼 자체는 기존 화면에 존재. 화면 변경 없음
+b. 자동 반려로 처리된 소재의 반려 사유를 기입
+   b-1. 자동으로 반려 처리 시 반려 처리 규칙에 맞게 반려 사유 기재
+c. 표기 형식 : {검증 단계} - {상세 사유} (검출 표현)
+   c-1. 예) 텍스트 검증 - 수식어 (프리미엄)
+   c-2. 검출 표현을 특정할 수 있는 경우에만 괄호 병기
+d. 복수 사유 검출 시
+   d-1. 리스트에는 대표 1건 + 외 N건으로 요약
+   d-2. 상세에서 전체 사유 노출
+e. 전체 사유 목록은 <a class="secref" data-sec="s7">개요 &gt; 07. 반려 사유</a> 참조</p></div>
+  <div class="item lv3" id="d5"><span class="no">5</span><span class="ttl">소재 카피 문구_4 컬럼<span class="tag o">신규 컬럼</span></span>
+    <p class="dsc">a. 컬럼 추가
+   a-1. 위치: 소재 카피 문구_2 컬럼 오른쪽
+   a-2. 기존 소재 광고문구 컬럼명은 소재 카피 문구_2로 변경
+b. reviewData _ description의 값
+c. 광고주의 라이브된 소재그룹 광고 카피 (4)
+<span style="color:var(--red)">d. 수정 이력
+   d-1. 2026-10-26 수정: 소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</span></p></div>
+  <div class="item lv3" id="d6"><span class="no">6</span><span class="ttl">테이블 조회 조건 안내 문구<span class="tag o">신규</span></span>
+    <p class="dsc">a. 테이블 조회 조건 info - text 추가
+<span class="copy-like" style="color:var(--red)">   * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</span>
+<span style="color:var(--red)">b. 수정 이력
+   b-1. 2026-10-26 수정: 테이블 조회 조건 안내 문구 추가</span></p></div>
+  <div class="h">반려 사유 팝업 (7~11)</div>
+  <div class="item lv2" id="d7"><span class="no">7</span><span class="ttl">반려 사유 팝업<span class="tag b">신규</span></span>
     <p class="dsc">a. [반려] 클릭 시 노출
 b. 팝업 제목: 검수 상태 변경
 c. 안내 문구: 반려 사유를 선택해주세요</p></div>
-  <div class="item lv3" id="d27"><span class="no">27</span><span class="ttl">반려 사유 드롭리스트<span class="tag b">신규</span></span>
+  <div class="item lv3" id="d8"><span class="no">8</span><span class="ttl">반려 사유 드롭리스트<span class="tag b">신규</span></span>
     <p class="dsc">a. 반려 사유 15개 중 1개 선택
    a-1. 기본값: 미선택 (반려 사유 선택)
    a-2. 첫 항목: 송출 불가 광고주
    a-3. 마지막 항목: 기타 (직접 입력)
 b. 각 항목은 서브 사유 코드와 연결
 ※ 자동 반려 사유와의 관계는 <a class="secref" data-sec="s8">개요 &gt; 08. 반려 사유 팝업</a> 참고</p></div>
-  <div class="item lv3" id="d28"><span class="no">28</span><span class="ttl">기타 입력칸<span class="tag b">신규</span></span>
+  <div class="item lv3" id="d9"><span class="no">9</span><span class="ttl">기타 입력칸<span class="tag b">신규</span></span>
     <p class="dsc">a. 기타 선택 시에만 노출
 b. 최대 100자 입력 가능
    b-1. 100자 초과 입력 불가
    b-2. 입력 글자 수 실시간 표시</p></div>
-  <div class="item lv3" id="d29"><span class="no">29</span><span class="ttl">취소<span class="tag g">기존</span></span>
+  <div class="item lv3" id="d10"><span class="no">10</span><span class="ttl">취소<span class="tag g">기존</span></span>
     <p class="dsc">a. 클릭 시 팝업 닫힘
 b. 선택한 사유와 입력 내용 초기화</p></div>
-  <div class="item lv3" id="d30"><span class="no">30</span><span class="ttl">확인<span class="tag o">변경</span></span>
+  <div class="item lv3" id="d11"><span class="no">11</span><span class="ttl">확인<span class="tag o">변경</span></span>
     <p class="dsc">a. 버튼은 비활성화하지 않음. 클릭 시 아래 조건이면 얼럿 텍스트 제공, 반려 처리하지 않음
    a-1. 사유 미선택 → 얼럿 텍스트 제공 "사유를 선택해주세요."
    a-2. 기타 선택 + 입력 없음 → 얼럿 텍스트 제공 "사유를 작성해주세요."
@@ -1118,32 +1119,32 @@ c. 반려 사유 통계 반영 후 이미지 처리
    c-1. O → 반려 기록에 이미지 보관
    c-2. X → 이미지 즉시 삭제
 ※ 통계 반영 전 이미지 삭제 불가</p></div>
-  <div class="h">자동 반려 조건 팝업 — 송출 불가 카테고리 (4~10)</div>
-<div class="item lv2" id="d4"><span class="no">4</span><span class="ttl">자동 반려 조건 팝업</span>
-    <p class="dsc">a. 3개 탭으로 구성 → <a class="ref" data-t="5">[5]</a>
-b. 하단 바로 적용 / 저장 버튼은 전 탭 공통 → <a class="ref" data-t="9">[9]</a>, <a class="ref" data-t="10">[10]</a>
+  <div class="h">자동 반려 조건 팝업 — 송출 불가 카테고리 (12~18)</div>
+<div class="item lv2" id="d12"><span class="no">12</span><span class="ttl">자동 반려 조건 팝업</span>
+    <p class="dsc">a. 3개 탭으로 구성 → <a class="ref" data-t="13">[13]</a>
+b. 하단 바로 적용 / 저장 버튼은 전 탭 공통 → <a class="ref" data-t="17">[17]</a>, <a class="ref" data-t="18">[18]</a>
 c. 우측 상단 X 클릭 시 저장하지 않고 닫기
 d. 팝업 진입자는 전체 내용 열람 가능, 읽기 전용 등급 없음
    d-1. 등록 · 삭제는 각 권한 보유자만 가능 : 팀장 이상</p></div>
-  <div class="item lv2" id="d5"><span class="no">5</span><span class="ttl">자동 반려 조건_ 탭 구성</span>
+  <div class="item lv2" id="d13"><span class="no">13</span><span class="ttl">자동 반려 조건_ 탭 구성</span>
     <p class="dsc">a. 3개 탭
-   a-1. 송출 불가 카테고리→ <a class="ref" data-t="6">[6]</a>
-   a-2. 송출 불가 광고주 → <a class="ref" data-t="11">[11]</a>
-   a-3. 사용 불가 표현 → <a class="ref" data-t="16">[16]</a>
+   a-1. 송출 불가 카테고리→ <a class="ref" data-t="14">[14]</a>
+   a-2. 송출 불가 광고주 → <a class="ref" data-t="19">[19]</a>
+   a-3. 사용 불가 표현 → <a class="ref" data-t="24">[24]</a>
 b. 탭 전환 시 입력 중인 값 유지</p></div>
-  <div class="h sub">카테고리 등록 영역 (6~8)</div>
-  <div class="item lv3" id="d6"><span class="no">6</span><span class="ttl">카테고리 선택 드롭다운</span>
+  <div class="h sub">카테고리 등록 영역 (14~16)</div>
+  <div class="item lv3" id="d14"><span class="no">14</span><span class="ttl">카테고리 선택 드롭다운</span>
     <p class="dsc">a. 광고주 카테고리 정보 드롭다운으로 표시 
       a-1.광고주>계정설정>카테고리>3depth 정보 사용
       a-2.검색 기능 제공 필요
-b. 이미 등록된 카테고리는 드롭리스트에 노출되지 않음   → <a class="ref" data-t="8">[8]</a>
+b. 이미 등록된 카테고리는 드롭리스트에 노출되지 않음   → <a class="ref" data-t="16">[16]</a>
 c. 광고주센터 &gt; 계정설정의 카테고리 조건과 동일한 목록 사용</p></div>
-  <div class="item lv3" id="d7"><span class="no">7</span><span class="ttl">추가 버튼</span>
-    <p class="dsc">a. 선택된 카테고리를 등록 목록에 칩으로 추가 → <a class="ref" data-t="8">[8]</a>
+  <div class="item lv3" id="d15"><span class="no">15</span><span class="ttl">추가 버튼</span>
+    <p class="dsc">a. 선택된 카테고리를 등록 목록에 칩으로 추가 → <a class="ref" data-t="16">[16]</a>
 b. 미선택 상태에서 클릭 시
    b-1. 안내 문구 노출
    b-2. 추가하지 않음</p></div>
-  <div class="item lv3" id="d8"><span class="no">8</span><span class="ttl">등록 카테고리 목록<span class="tag o">소분류 104개 기본</span></span>
+  <div class="item lv3" id="d16"><span class="no">16</span><span class="ttl">등록 카테고리 목록<span class="tag o">소분류 104개 기본</span></span>
     <p class="dsc">a. 등록된 카테고리를 칩 형태로 나열
 b. 칩 우측 × 클릭 시 송출 불가 카테고리에서 제외
 c. 생성 · 삭제 권한자 상이
@@ -1152,45 +1153,45 @@ c. 생성 · 삭제 권한자 상이
 d. 기본 등록값: 생성 제외 카테고리와 같은 목록 (대분류 / 중분류 / 소분류, 24행 · 소분류 104개)
    d-1. 칩은 소분류 단위로 등록
    d-2. 전체 목록은 5.1 기본 등록 카테고리 표 참고
-e. 해당 카테고리 광고주의 소재그룹은 카카오 송출 토글 OFF로 생성 → <a class="ref" data-t="23">[23]</a>
+e. 해당 카테고리 광고주의 소재그룹은 카카오 송출 토글 OFF로 생성 → <a class="ref" data-t="31">[31]</a>
    e-1. 소재는 생성되나 검수 리스트에 미등재
 f. <b>비즈보드(상품) 이미지 소재 생성 시 제외하는 광고주 카테고리와 동일</b>
    f-1. 본 조건을 수정하는 경우 비즈보드 이미지 소재 생성 조건도 함께 수정 필요
 g. 수정 이력
    g-1. 2026-10-20 수정: 생성 제외 카테고리 표(대분류 / 중분류 / 소분류)로 기본 등록값 일괄 변경. 기존 16종 중 빗썸·보험상조 제외, 전자담배/금연용품(성인) → 전자담배/금연용품</p></div>
-  <div class="h sub">하단 공통 버튼 (9~10)</div>
-  <div class="item lv3" id="d9"><span class="no">9</span><span class="ttl">바로 적용<span class="tag g">전 탭 공통</span></span>
+  <div class="h sub">하단 공통 버튼 (17~18)</div>
+  <div class="item lv3" id="d17"><span class="no">17</span><span class="ttl">바로 적용<span class="tag g">전 탭 공통</span></span>
     <p class="dsc">a. 3개 탭 모두 동일하게 노출
 b. 설정값 저장 + 등록된 소재 검증 후 반려처리 
   b-1. 상태 : 대기인 소재에 대해 검증 후 반려 진행 </p></div>
-  <div class="item lv3" id="d10"><span class="no">10</span><span class="ttl">저장<span class="tag g">전 탭 공통</span></span>
+  <div class="item lv3" id="d18"><span class="no">18</span><span class="ttl">저장<span class="tag g">전 탭 공통</span></span>
     <p class="dsc">a. 3개 탭 모두 동일하게 노출
 b. 설정값만 저장, 다음 배치부터 반영</p></div>
-  <div class="h">자동 반려 조건 팝업 — 송출 불가 광고주 (11~15)</div>
-  <div class="item lv2" id="d11"><span class="no">11</span><span class="ttl">송출 불가 광고주 탭</span>
+  <div class="h">자동 반려 조건 팝업 — 송출 불가 광고주 (19~23)</div>
+  <div class="item lv2" id="d19"><span class="no">19</span><span class="ttl">송출 불가 광고주 탭</span>
     <p class="dsc">a. 광고주 계정 단위로 반려 대상 관리
 b. 해당 광고주 소재의 처리 흐름
    b-1. 검수 리스트에 등재
    b-2. 배치를 통해 "모비온 반려" 처리</p></div>
-  <div class="h sub">광고주 검색 영역 (12~13)</div>
-  <div class="item lv3" id="d12"><span class="no">12</span><span class="ttl">검색 입력</span>
+  <div class="h sub">광고주 검색 영역 (20~21)</div>
+  <div class="item lv3" id="d20"><span class="no">20</span><span class="ttl">검색 입력</span>
     <p class="dsc">a. 인풋박스, 텍스트 포함 검색
    a-1. 대상 : 광고주 ID, 광고주명
 b. 우측 × 클릭 시 입력값 초기화</p></div>
-  <div class="item lv3" id="d13"><span class="no">13</span><span class="ttl">검색 버튼</span>
+  <div class="item lv3" id="d21"><span class="no">21</span><span class="ttl">검색 버튼</span>
     <p class="dsc">a. 클릭 시점에 검
-b. 결과는 검색 결과 목록에 노출 → <a class="ref" data-t="14">[14]</a></p></div>
-  <div class="h sub">목록 영역 (14~15)</div>
-  <div class="item lv3" id="d14"><span class="no">14</span><span class="ttl">검색 결과 · 추가<span class="tag b">신규</span></span>
-    <p class="dsc">a. 행 우측 <code>추가</code> 버튼 클릭 시 등록 목록에 추가 → <a class="ref" data-t="15">[15]</a>
+b. 결과는 검색 결과 목록에 노출 → <a class="ref" data-t="22">[22]</a></p></div>
+  <div class="h sub">목록 영역 (22~23)</div>
+  <div class="item lv3" id="d22"><span class="no">22</span><span class="ttl">검색 결과 · 추가<span class="tag b">신규</span></span>
+    <p class="dsc">a. 행 우측 <code>추가</code> 버튼 클릭 시 등록 목록에 추가 → <a class="ref" data-t="23">[23]</a>
 b. 이미 등록된 광고주 : 버튼 disable </p></div>
-  <div class="item lv3" id="d15"><span class="no">15</span><span class="ttl">등록 광고주 목록</span>
+  <div class="item lv3" id="d23"><span class="no">23</span><span class="ttl">등록 광고주 목록</span>
     <p class="dsc">a. 이미 제외 대상으로 포함된 광고주 계정 노출
 b. 행 우측 <code>삭제</code> 버튼 클릭 시 개별 삭제
 c. 예시 등록값 : livecom, rentmall, zipbanchan, coupangls</p></div>
 
-  <div class="h">자동 반려 조건 팝업 — 사용 불가 표현 (16~21)</div>
-  <div class="item lv2" id="d16"><span class="no">16</span><span class="ttl">사용 불가 표현 탭</span>
+  <div class="h">자동 반려 조건 팝업 — 사용 불가 표현 (24~29)</div>
+  <div class="item lv2" id="d24"><span class="no">24</span><span class="ttl">사용 불가 표현 탭</span>
     <p class="dsc">a. 등록 표현 정의
    a-1. LLM의 판정 보조
    a-2. 등록된 표현은 무조건 반려 
@@ -1205,26 +1206,26 @@ d. 별도 등록하지 않으나, 텍스트 검수 조건 (참고사항)
    d-1. 도메인 주소 : 사이트명, 소재 광고문구에 도메인 주소 포함 
    d-2. 띄어쓰기·오탈자
    d-3. 유효기간 종료</p></div>
-  <div class="h sub">표현 등록 영역 (17~19)</div>
-  <div class="item lv3" id="d17"><span class="no">17</span><span class="ttl">테마 선택<span class="tag o">9종 고정</span></span>
+  <div class="h sub">표현 등록 영역 (25~27)</div>
+  <div class="item lv3" id="d25"><span class="no">25</span><span class="ttl">테마 선택<span class="tag o">9종 고정</span></span>
     <p class="dsc">a. 등록 시 필수 선택
 b. 테마 > 드롭다운 리스트 
    b-1. 카카오 서비스 명칭 변형, 수식어, 기능성 표시 표현, 최상급 표현, 사실 확인 필요 문구, 사회정서 침해, 의약품·의료기기 효능, 전후비교 표현, 운영자 추가 </p></div>
-  <div class="item lv3" id="d18"><span class="no">18</span><span class="ttl">표현 입력</span>
+  <div class="item lv3" id="d26"><span class="no">26</span><span class="ttl">표현 입력</span>
     <p class="dsc">a. 쉼표 또는 줄바꿈 구분으로 다건 동시 등록
-b. 입력된 표현은 선택된 테마로 일괄 귀속 → <a class="ref" data-t="17">[17]</a></p></div>
-  <div class="item lv3" id="d19"><span class="no">19</span><span class="ttl">추가 버튼</span>
-    <p class="dsc">a. 입력 표현을 등록 목록에 추가 → <a class="ref" data-t="21">[21]</a>
+b. 입력된 표현은 선택된 테마로 일괄 귀속 → <a class="ref" data-t="25">[25]</a></p></div>
+  <div class="item lv3" id="d27"><span class="no">27</span><span class="ttl">추가 버튼</span>
+    <p class="dsc">a. 입력 표현을 등록 목록에 추가 → <a class="ref" data-t="29">[29]</a>
 b. 추가 차단 조건
    b-1. 정규화 기준 동일 표현이 이미 있는 경우 — 차단 후 안내
    b-2. 테마 미선택 또는 입력값 없음</p></div>
-  <div class="h sub">목록 영역 (20~21)</div>
-  <div class="item lv3" id="d20"><span class="no">20</span><span class="ttl">등록된 표현 찾기</span>
+  <div class="h sub">목록 영역 (28~29)</div>
+  <div class="item lv3" id="d28"><span class="no">28</span><span class="ttl">등록된 표현 찾기</span>
     <p class="dsc">a. 등록된 표현을 검색하는 입력창
 b. 검색 버튼 클릭 시점에 최종 검색
-c. 일치하는 표현만 목록에 노출 → <a class="ref" data-t="21">[21]</a>
+c. 일치하는 표현만 목록에 노출 → <a class="ref" data-t="29">[29]</a>
    c-1. 용도 : 중복 확인 및 삭제</p></div>
-  <div class="item lv3" id="d21"><span class="no">21</span><span class="ttl">테마별 등록 목록</span>
+  <div class="item lv3" id="d29"><span class="no">29</span><span class="ttl">테마별 등록 목록</span>
     <p class="dsc">a. 상단에 전체 등록 표현 수(총 건수) 표시
 b. 테마 그룹 헤더 + 칩으로 나열
    b-1. 그룹별 건수 표기
@@ -1240,17 +1241,17 @@ e. 등록 필요 표현
   </div><!-- /grp-desc reject -->
 
   <div class="grp-desc" data-pg="link">
-  <div class="h">연동 — 소재그룹 설정 (22~23)<span class="tag r">Vue.js 개발 완료 후 반영</span></div>
-  <div class="item lv2" id="d22"><span class="no">22</span><span class="ttl">소재그룹 설정<span class="tag g">기존 화면</span></span>
-    <p class="dsc">※ 광센_소재그룹 설정 탭(22~23) 전체 연기: <b style="color:var(--red)">Vue.js 개발 완료 후 반영</b>
+  <div class="h">연동 — 소재그룹 설정 (30~31)<span class="tag r">Vue.js 개발 완료 후 반영</span></div>
+  <div class="item lv2" id="d30"><span class="no">30</span><span class="ttl">소재그룹 설정<span class="tag g">기존 화면</span></span>
+    <p class="dsc">※ 광센_소재그룹 설정 탭(30~31) 전체 연기: <b style="color:var(--red)">Vue.js 개발 완료 후 반영</b>
 * 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입
 a. 화면 구성 변경 없음
    a-1. 조건에 따른 토글 상태 제어만 신규 개발 대상
 b. 조건 등록 또는 삭제 시 대상 소재그룹 재판정 → 토글 상태 갱신
 c. 조건 해제 시 이미 반려 처리된 소재는 복원하지 않음</p></div>
-  <div class="h sub">상단 토글 영역 (23)</div>
-  <div class="item lv3" id="d23"><span class="no">23</span><span class="ttl">카카오 송출 토글<span class="tag r">disable</span></span>
-    <p class="dsc">a. 송출 불가 카테고리 해당 시 → <a class="ref" data-t="8">[8]</a>
+  <div class="h sub">상단 토글 영역 (31)</div>
+  <div class="item lv3" id="d31"><span class="no">31</span><span class="ttl">카카오 송출 토글<span class="tag r">disable</span></span>
+    <p class="dsc">a. 송출 불가 카테고리 해당 시 → <a class="ref" data-t="16">[16]</a>
    a-1. 토글 OFF로 전환
    a-2. disable 처리, 운영자 변경 불가
 b. 그 외 조건은 수정 없음</p></div>
@@ -1309,12 +1310,13 @@ switchPage('spec');
       <table>
         <thead><tr><th>수정일</th><th>화면</th><th>항목</th><th>내용</th></tr></thead>
         <tbody>
-          <tr><td>26.11.04</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="31">31 반려 사유 검색 드롭박스</td><td>검색 영역에 반려 사유 드롭박스 추가. 드롭리스트 안에서 사유 검색 가능<br>목록은 7.2 사유 목록 + 8.1 수동 반려 사유와 동일</td></tr>
-          <tr><td>26.11.04</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="26">26~30 반려 사유 팝업</td><td>[반려] 클릭 시 반려 사유 팝업 추가: 반려 사유 드롭리스트(15개), 기타 입력칸(100자), 취소, 확인(30)<br>[확인]은 비활성화하지 않고 클릭 시 버튼 위에 얼럿 텍스트 제공 (사유를 선택해주세요. / 사유를 작성해주세요.)<br>개요 08 반려 사유 팝업(수동 · 자동 반려 사유 관계, 확인 필요 사항) 추가</td></tr>
-          <tr><td>26.11.02</td><td>광센_소재그룹 설정</td><td class="hgo" data-t="22">22~23 소재그룹 설정</td><td>탭 전체 연기: Vue.js 개발 완료 후 반영<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입</td></tr>
-          <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="25">25 테이블 조회 조건 안내 문구</td><td>집계 표 위에 안내 문구 추가: * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</td></tr>
-          <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="24">24 소재 카피 문구_4 컬럼</td><td>소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</td></tr>
-          <tr><td>26.10.20</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="8">8 등록 카테고리 목록</td><td>생성 제외 카테고리 표(대분류 / 중분류 / 소분류)로 기본 등록값 일괄 변경. 빗썸·보험상조 제외, 전자담배/금연용품(성인) → 전자담배/금연용품</td></tr>
+          <tr><td>26.11.04</td><td>전체</td><td class="hgo" data-t="1">넘버링 정리</td><td>화면 순서대로 1~31 재정리. 진입점 1~6 / 반려 사유 팝업 7~11 / 자동 반려 조건 팝업 12~29 / 소재그룹 설정 30~31<br>(이전 번호 → 새 번호: 31→3, 3→4, 24→5, 25→6, 26~30→7~11, 4~21→12~29, 22~23→30~31)</td></tr>
+          <tr><td>26.11.04</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="3">3 반려 사유 검색 드롭박스</td><td>검색 영역에 반려 사유 드롭박스 추가. 드롭리스트 안에서 사유 검색 가능<br>목록은 7.2 사유 목록 + 8.1 수동 반려 사유와 동일</td></tr>
+          <tr><td>26.11.04</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="7">7~11 반려 사유 팝업</td><td>[반려] 클릭 시 반려 사유 팝업 추가: 반려 사유 드롭리스트(15개), 기타 입력칸(100자), 취소, 확인(30)<br>[확인]은 비활성화하지 않고 클릭 시 버튼 위에 얼럿 텍스트 제공 (사유를 선택해주세요. / 사유를 작성해주세요.)<br>개요 08 반려 사유 팝업(수동 · 자동 반려 사유 관계, 확인 필요 사항) 추가</td></tr>
+          <tr><td>26.11.02</td><td>광센_소재그룹 설정</td><td class="hgo" data-t="30">30~31 소재그룹 설정</td><td>탭 전체 연기: Vue.js 개발 완료 후 반영<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입</td></tr>
+          <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="6">6 테이블 조회 조건 안내 문구</td><td>집계 표 위에 안내 문구 추가: * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</td></tr>
+          <tr><td>26.10.26</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="5">5 소재 카피 문구_4 컬럼</td><td>소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</td></tr>
+          <tr><td>26.10.20</td><td>모비센스_반려조건설정</td><td class="hgo" data-t="16">16 등록 카테고리 목록</td><td>생성 제외 카테고리 표(대분류 / 중분류 / 소분류)로 기본 등록값 일괄 변경. 빗썸·보험상조 제외, 전자담배/금연용품(성인) → 전자담배/금연용품</td></tr>
         </tbody>
       </table>
     </div>
