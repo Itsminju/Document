@@ -367,8 +367,7 @@
       <tr class="chg"><td>28</td><td>2026-11-12</td><td>수정한 입력칸 표시 삭제</td><td>게재 기간 관리 팝업에서 직접 수정한 입력칸의 노란 테두리 삭제 (수정한 행 · 입력칸 별도 강조 없음)</td><td>데모 / 화면설계서 5, 5-4</td></tr>
       <tr class="chg"><td>29</td><td>2026-11-12</td><td>남은 확인 반영</td><td>설정 N 소재그룹은 광고 기간이 바뀌면 종료일 없음이어도 광고 종료일을 따름 (케이스 12 변경, 04 ② 흐름도의 "종료일 없음?" 분기 삭제)<br>화면설계서 4-3 c-1: "오늘이 게재 기간 시작일 이후인 경우 (이미 시작됨)"<br>[초기화] 후 저장 시 설정 N, [저장] 시 시작일이 빈 행은 얼럿 · 저장 불가 (기존 내용 확인)</td><td>02-3, 03, 04 ② · 케이스 12, 06 확정 22 / 데모 / 화면설계서 3-4, 4-3</td></tr>
       <tr class="chg"><td>30</td><td>2026-11-12</td><td>광고 일정 변경 확인창</td><td>화면설계서 화면 1 광고 일정 카드에 "수동 설정" 선택 시 요일 및 시간대 수정 영역(1-3) 추가 (기존 화면 재현)<br>[완료] · 평일 · 주말 변경 저장 시 노출되지 않게 되는 소재그룹이 있으면 확인창(1-4)<br>개요 02-15 설계서 열 "미반영" → 1-3, 1-4</td><td>02-15 / 화면설계서 1</td></tr>
-      <tr class="chg"><td>31</td><td>2026-11-12</td><td>광고 일정 변경 경고만</td><td>광고 일정 변경 시 소재그룹별 겹침 검사(컨펌)를 하지 않고 경고 얼럿만 노출<br>문구: "소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!", 버튼 [확인]<br>노출되지 않게 된 소재그룹은 목록 상태 컬럼 ⚠ 문구로 확인</td><td>02-15, 04 ④ · 케이스 31, 06 확정 18 / 화면설계서 1-3, 1-4</td></tr>
-      <tr class="chg"><td>3</td><td>2026-11-12</td><td>소재 노출량 수정 탭</td><td>결정 필요 탭 → 소재 노출량 수정 탭으로 이름 변경, 소재 노출량 내용만 남김<br>결정 항목 요약(01)과 GitHub 결정 저장 기능 삭제<br>"소재 노출량 계산 방안" → "소재 노출량 수정 방안"<br>06의 결정 필요 항목 안내 삭제</td><td>04 ⑤, 06 / 소재 노출량 수정 탭</td></tr>
+      <tr class="chg"><td>31</td><td>2026-11-12</td><td>광고 일정 변경 경고만</td><td>광고 일정 변경 시 소재그룹별 겹침 검사(컨펌)를 하지 않고 경고 얼럿만 노출<br>문구: "소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!", 버튼 [확인]<br>노출되지 않게 된 소재그룹은 목록 상태 컬럼 ⚠ 문구로 확인</td><td>02-15, 04 ④ · 케이스 31, 06 확정 18 / 화면설계서 1-3, 1-4</td></tr>      <tr class="chg"><td>3</td><td>2026-11-12</td><td>소재 노출량 수정 탭</td><td>결정 필요 탭 → 소재 노출량 수정 탭으로 이름 변경, 소재 노출량 내용만 남김<br>결정 항목 요약(01)과 GitHub 결정 저장 기능 삭제<br>"소재 노출량 계산 방안" → "소재 노출량 수정 방안"<br>06의 결정 필요 항목 안내 삭제</td><td>04 ⑤, 06 / 소재 노출량 수정 탭</td></tr>
     </table>
   </div>
 
@@ -1382,7 +1381,10 @@ renderList();
   .item{border-bottom:1px solid var(--line);padding:12px 4px;scroll-margin-top:12px}
   .item.sub{padding-left:16px}
   .item .ht{display:flex;gap:6px;align-items:center;font-weight:700;font-size:13px;margin-bottom:6px}
-  .item .num{background:var(--red);color:#fff;font-size:10px;padding:1px 5px;border-radius:2px}
+  .item .num{background:var(--red);color:#fff;font-size:10px;padding:1px 5px;border-radius:2px;cursor:pointer}
+  .item .num:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+  .bd.ping{animation:bping 1.4s ease}
+  @keyframes bping{0%,100%{box-shadow:0 0 0 2px #fff}20%,60%{box-shadow:0 0 0 2px #fff,0 0 0 7px rgba(229,72,77,.35)}}
   .t{font-size:10px;font-weight:600;border-radius:3px;padding:1px 6px}
   .t.old{background:#f0f0f0;color:#666}.t.chg{background:#fff0dc;color:var(--orange)}.t.new{background:#e8f0fe;color:var(--blue)}
   .item .body{color:#333;line-height:1.65;font-size:12px}
@@ -1640,6 +1642,20 @@ function go(id) {
 badges.forEach(b => {
   b.onclick = () => go(b.dataset.t);
   b.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(b.dataset.t); } };
+});
+
+// 디스크립션 번호 클릭 → 왼쪽 화면의 해당 배지 위치로 스크롤 + 배지 깜빡임
+const left = document.getElementById('left');
+function goBadge(id) {
+  const b = document.querySelector(`.bd[data-t="${id}"]`); if (!b) return;
+  if (left.scrollHeight > left.clientHeight) left.scrollTo({ top: b.getBoundingClientRect().top - left.getBoundingClientRect().top + left.scrollTop - 80, behavior: 'smooth' });
+  else b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  b.classList.remove('ping'); void b.offsetWidth; b.classList.add('ping');
+}
+document.querySelectorAll('#desc .item .num').forEach(n => {
+  n.tabIndex = 0; n.setAttribute('role', 'button'); n.title = '왼쪽 화면에서 보기';
+  n.onclick = () => goBadge(n.textContent);
+  n.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goBadge(n.textContent); } };
 });
 
 // 탭: 화면 번호는 탭을 넘어 연속 (1 | 2·3 | 4·5·6)
