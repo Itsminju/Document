@@ -1,0 +1,2318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[카카오]_톡피드_소재 생성·자동반려</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --bg:#F5F6F8; --card:#fff; --ink:#1B1D21; --muted:#6B7280; --faint:#9CA3AF;
+  --line:#E5E7EB; --line2:#D1D5DB;
+  --blue:#1F5FD0; --blue-bg:#EAF1FD;
+  --red:#D93025; --red-bg:#FDECEA;
+  --orange:#C2660B; --orange-bg:#FDF1E3;
+  --green:#1E7C45; --green-bg:#E9F6EE;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Pretendard","맑은 고딕",system-ui,sans-serif;font-size:14px;line-height:1.6}
+.top{background:var(--card);border-bottom:1px solid var(--line);padding:16px 24px;
+  display:flex;align-items:baseline;gap:14px;position:sticky;top:0;z-index:50}
+.top h1{font-size:17px;font-weight:700;margin:0}
+.top span{font-size:12.5px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 440px;height:calc(100vh - 57px)}
+.left{overflow-y:auto;padding:24px}
+.right{overflow-y:auto;border-left:1px solid var(--line);background:var(--card);padding:24px}
+
+.blk{position:relative;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:18px;margin-bottom:22px}
+.blk>h3{margin:0 0 14px;font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.02em}
+.rel{position:relative}
+
+.bdg{position:absolute;z-index:999;background:var(--red);color:#fff;
+  font-size:11px;font-weight:700;line-height:1;padding:3px 5px;border-radius:3px;
+  cursor:pointer;border:1px solid #fff;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bdg:hover{background:#B0221A}
+.tl{top:-9px;left:-9px} .tr{top:-9px;right:-9px}
+
+/* mock ui */
+.bar{display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#FAFBFC}
+.btn{display:inline-block;border:1px solid var(--line2);background:#fff;border-radius:6px;
+  padding:6px 12px;font-size:12.5px;color:var(--ink)}
+.btn.p{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.sm{padding:3px 10px;font-size:11.5px}
+.btn.done{color:#9CA3AF;background:#F3F4F6;border-color:var(--line);cursor:default}
+.inp{border:1px solid var(--line2);border-radius:6px;padding:7px 10px;font-size:12.5px;
+  color:var(--faint);background:#fff}
+.tabs{display:flex;border:1px solid var(--line);border-radius:8px 8px 0 0;overflow:hidden}
+.tabs div{flex:1;text-align:center;padding:10px;font-size:12.5px;color:var(--muted);
+  border-right:1px solid var(--line);background:#FAFBFC}
+.tabs div:last-child{border-right:none}
+.tabs div.on{background:#fff;color:var(--ink);font-weight:700}
+.body{border:1px solid var(--line);border-top:none;border-radius:0 0 8px 8px;padding:16px}
+.row{display:flex;gap:8px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{border:1px solid var(--line2);border-radius:999px;padding:4px 10px;font-size:12px}
+.chip i{color:var(--faint);font-style:normal;margin-left:5px}
+.lbl{font-size:12px;color:var(--muted);margin:0 0 6px}
+.grp{font-size:11.5px;font-weight:700;color:var(--blue);background:var(--blue-bg);
+  border-radius:4px;padding:2px 8px;display:inline-block;margin:14px 0 2px}
+.cnt{font-size:11.5px;color:var(--faint);margin-left:6px}
+.foot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;
+  border-top:1px solid var(--line);padding-top:14px}
+.tg{width:32px;height:18px;border-radius:999px;background:#CBD5E1;display:inline-block;
+  position:relative;vertical-align:middle}
+.tg.on{background:var(--blue)}
+.tg.off{background:#E2E8F0}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;
+  border-radius:50%;background:#fff}
+.tg.on::after{left:16px}
+.dis{opacity:.5;display:inline-flex}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.tbl th{background:#F7F8FA;color:var(--muted);font-weight:700;text-align:left;
+  padding:7px 9px;border:1px solid var(--line)}
+.tbl td{padding:7px 9px;border:1px solid var(--line)}
+
+.con{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.gnb{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.logo{font-size:14px;font-weight:800;color:#1BB98C;letter-spacing:-.02em}
+.lnb{width:150px;border-right:1px solid var(--line);background:#fff;flex:none;padding-bottom:10px}
+.lnb-h{font-size:12px;font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line)}
+.lnb-i{font-size:11.5px;color:#374151;padding:7px 12px;border-bottom:1px solid #F3F4F6}
+.lnb-i.on{background:#2BC48A;color:#fff;font-weight:700;border-color:#2BC48A}
+.lnb-s{font-size:11px;color:#6B7280;padding:5px 12px 5px 20px}
+.lnb-s.cur{color:#111;font-weight:700}
+.cnt2{flex:1;padding:12px 14px;min-width:0;overflow-x:auto}
+.crumb{font-size:12.5px;font-weight:700;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.stat{border-collapse:collapse;font-size:11px;margin-left:auto}
+.stat th,.stat td{border:1px solid var(--line);padding:5px 12px;text-align:center}
+.stat th{background:#F7F8FA;color:#6B7280;font-weight:700}
+.stat .sh{background:#F7F8FA;color:#6B7280;font-weight:700}
+.btn.g{background:#2BC48A;border-color:#2BC48A;color:#fff}
+.btn.g2{background:#8FE0C0;border-color:#8FE0C0;color:#fff}
+.btn.r2{background:#F3A0A0;border-color:#F3A0A0;color:#fff}
+.rd{font-size:11.5px;color:#374151;padding:6px 9px}
+.rd.on{color:#111;font-weight:700}
+.rd::before{content:"○ ";color:#9CA3AF}
+.rd.on::before{content:"● ";color:#2BC48A}
+.lst{width:100%;border-collapse:collapse;font-size:10.5px;white-space:nowrap}
+.lst th{background:#fff;color:#374151;font-weight:700;padding:7px 6px;
+  border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);text-align:left}
+.lst td{padding:9px 6px;border-bottom:1px solid var(--line);color:#374151;vertical-align:middle}
+.lst .st{background:#FBC02D;color:#fff;font-weight:700;border-radius:3px;padding:2px 7px;font-size:10px}
+.lst .im{color:#9CA3AF;background:#F3F4F6;text-align:center;border-radius:3px}
+.lst .lk{color:#1F5FD0;text-decoration:underline}
+
+/* description */
+.item{border:1px solid var(--line);border-radius:8px;padding:13px 15px;margin-bottom:10px;
+  scroll-margin-top:16px;transition:background .2s}
+.item.hl,.h.hl{animation:fl 1.6s ease}
+@keyframes fl{0%,55%{background:#FFF3BF;border-color:#F2CE3C}100%{background:#fff;border-color:var(--line)}}
+.item .no{display:inline-block;background:var(--red);color:#fff;font-size:11px;font-weight:700;
+  padding:2px 6px;border-radius:3px;margin-right:8px;font-variant-numeric:tabular-nums}
+.item.lv2{background:#F8FAFC;border-color:#CBD5E1}
+.item.lv3{margin-left:16px}
+.item .ttl{font-size:13.5px;font-weight:700}
+.item .dsc{margin:9px 0 0;font-size:12.8px;color:#374151;white-space:pre-wrap}
+.dsc .ref{color:var(--red);font-weight:700;cursor:pointer;text-decoration:none;
+  font-variant-numeric:tabular-nums}
+.dsc .ref:hover{text-decoration:underline}
+.dsc .secref{color:var(--blue);font-weight:700;cursor:pointer;text-decoration:none;
+  border-bottom:1px dashed var(--blue)}
+.dsc .secref:hover{border-bottom-style:solid}
+.h{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;
+  margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.h:first-child{margin-top:0}
+.h.sub{color:var(--ink);letter-spacing:0;text-transform:none;margin:16px 0 8px;
+  border-bottom:1px dashed var(--line);scroll-margin-top:16px}
+.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px}
+.tag.r{background:var(--red-bg);color:var(--red)}
+.tag.o{background:var(--orange-bg);color:var(--orange)}
+.tag.g{background:var(--green-bg);color:var(--green)}
+.tag.b{background:var(--blue-bg);color:var(--blue)}
+.tag.k{background:#F1F2F4;color:var(--muted)}
+/* 반려 사유 팝업 mock */
+.rjp{width:400px;max-width:100%;margin:6px auto;border:1px solid var(--line);border-radius:6px;padding:18px 22px 20px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.rjp .t{font-size:14px;font-weight:700;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.rjp .g{text-align:center;font-size:12.5px;font-weight:700;margin:14px 0 12px}
+.rjp .dd{border:1px solid #2BC48A;border-radius:3px;padding:8px 10px;font-size:12.5px;color:var(--faint);display:flex;justify-content:space-between}
+.rjp .dl{border:1px solid var(--line2);border-top:none;font-size:11.5px;color:#374151}
+.rjp .dl div{padding:5px 10px}
+.rjp .dl div.etc{border-top:1px solid var(--line)}
+.rjp .ta{border:1px solid #6B7280;height:64px;padding:8px 10px;font-size:12px;color:var(--faint)}
+.rjp .ct{text-align:right;font-size:11px;color:var(--faint);margin-top:3px}
+.rjp .er{text-align:center;font-size:12px;color:var(--red);font-weight:600;margin-top:14px}
+.rjp .bt{display:flex;justify-content:center;gap:8px;margin-top:16px}
+.rjp .bt .btn{border-radius:3px;padding:5px 12px}
+.btn.gr{background:#D1D5DB;border-color:#D1D5DB;color:#fff}
+/* 반려 사유 검색 드롭박스 mock */
+.rsd{position:absolute;top:calc(100% + 4px);left:0;width:210px;z-index:20;background:#fff;border:1px solid var(--line2);border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.12);font-size:11.5px;color:#374151}
+.rsd .q{margin:8px;border:1px solid #2BC48A;border-radius:4px;padding:5px 8px;color:#111}
+.rsd .q::before{content:"⌕ ";color:var(--faint)}
+.rsd div.o{padding:5px 10px}
+.rsd div.o.on{background:#EAF8F2;font-weight:700}
+.rsd b{color:var(--red)}
+
+/* page tabs */
+.ptabs{display:flex;gap:2px;background:var(--card);padding:0 24px;border-bottom:1px solid var(--line);
+  position:sticky;top:57px;z-index:40}
+.ptab{padding:12px 18px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px}
+.ptab.on{color:var(--blue);border-bottom-color:var(--blue)}
+.pg{display:none}
+/* 수정 이력 버튼 + 레이어 팝업 */
+.ptabs .hbtn{margin:8px 0 8px auto;align-self:center;border:1px solid var(--red);background:#fff;color:var(--red);border-radius:4px;padding:5px 14px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.ptabs .hbtn:hover{background:var(--red-bg)}
+#historyModal{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:16px}
+#historyModal.hidden{display:none}
+#historyModal .hBox{width:100%;max-width:760px;max-height:80vh;display:flex;flex-direction:column;background:#fff;border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.2)}
+#historyModal .hHead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
+#historyModal .hClose{border:0;background:none;font-size:16px;color:#666;cursor:pointer}
+#historyModal .hBody{overflow:auto;padding:16px 20px 20px}
+#historyModal table{width:100%;border-collapse:collapse}
+#historyModal th,#historyModal td{border-bottom:1px solid var(--line);padding:10px 12px;font-size:12px;text-align:left;vertical-align:top;line-height:1.6}
+#historyModal th{background:#F7F8FA;font-weight:700;white-space:nowrap}
+#historyModal td:nth-child(-n+3){white-space:nowrap}
+#historyModal .hgo{color:var(--blue);text-decoration:underline;cursor:pointer}
+@keyframes bping{0%,100%{box-shadow:none}20%,60%{box-shadow:0 0 0 6px rgba(217,48,37,.35)}}
+.bdg.ping{animation:bping 1.4s ease}
+.pg.on{display:contents}
+.pg-spec{display:none}
+.pg-spec.on{display:block}
+.right .grp-desc{display:none}
+.right .grp-desc.on{display:block}
+
+/* material-group setting mock */
+.sg-crumb{font-size:11px;color:#9CA3AF;margin-bottom:4px}
+.sg-title{font-size:20px;font-weight:800;margin:0}
+.sg-tgls{display:flex;gap:16px;align-items:center}
+.sg-tgls .t{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.sg-sec{border:1px solid var(--line);border-radius:8px;margin-top:14px;background:#fff}
+.sg-sec-h{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
+.sg-sec-b{padding:16px 14px}
+.sg-ci{display:flex;gap:22px;align-items:flex-start}
+.sg-slots{display:flex;gap:14px}
+.sg-slot{text-align:center}
+.sg-box{width:92px;height:92px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  position:relative;font-size:10px;color:#B6BAC0;line-height:1.4}
+.sg-box.ph{border:1.5px dashed var(--line2)}
+.sg-box.img{border:1px solid var(--line);background:#7d8a6b;overflow:hidden}
+.sg-box.fav{border:1px solid var(--line);background:linear-gradient(160deg,#fff, #4b4b4b)}
+.sg-box .rm{position:absolute;top:4px;right:4px;width:15px;height:15px;border-radius:50%;
+  background:#9CA3AF;color:#fff;font-size:10px;line-height:15px}
+.sg-box .sq{width:12px;height:12px;background:#D93025}
+.sg-cap{font-size:12px;font-weight:700;margin-top:7px}
+.sg-cap i{display:block;font-size:11px;font-weight:400;color:#9CA3AF;font-style:normal;margin-top:2px}
+.sg-color{display:flex;align-items:center}
+.sg-sw{width:34px;height:34px;background:#242a39;border:1px solid var(--line2);border-radius:6px 0 0 6px}
+.sg-hex{border:1px solid var(--line2);border-left:none;padding:8px 10px;font-size:12px;color:#374151}
+.sg-pick{border:1px solid var(--line2);border-left:none;border-radius:0 6px 6px 0;padding:8px 9px;font-size:12px}
+.sg-note{font-size:11.5px;color:var(--muted);line-height:1.7;max-width:300px}
+.sg-note b{color:#1E7C45;font-weight:700}
+.sg-name{border:1px solid var(--line2);border-radius:6px;padding:11px 12px;
+  font-size:12.5px;color:var(--faint);width:420px;background:#fff}
+
+/* ===== embedded v5 spec doc (scoped) ===== */
+.spec-doc{background:#FBFAF7;padding:40px 44px;border-radius:0;font-size:15.5px;line-height:1.75;color:#1B1B19}
+.spec-doc h1{font-size:30px;line-height:1.25;font-weight:800;margin:4px 0 0;letter-spacing:-.02em;color:#1B1B19}
+.spec-doc header.doc{padding:8px 0 26px;border-bottom:1px solid var(--line)}
+.spec-doc main{padding:0}
+.spec-doc section{padding-top:40px}
+.spec-doc p{margin:0 0 14px}
+.spec-doc ul{margin:0 0 14px;padding-left:0;list-style:none}
+.spec-doc li{position:relative;padding-left:22px;margin-bottom:9px}
+.spec-doc li::before{content:"";position:absolute;left:4px;top:11px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.spec-doc footer{border-top:1px solid var(--line);margin-top:56px;padding-top:18px;font-size:12.5px;color:var(--faint)}
+.spec-flow{margin:14px 0 8px;padding:20px 8px;background:#FCFBF8;border:1px solid #E7E3D9;border-radius:12px;overflow-x:auto}
+.spec-doc{--bg:#FBFAF7; --surface:#FFFFFF; --ink:#1B1B19; --muted:#6E6C64; --faint:#9A988E;
+  --line:#E7E3D9; --line-strong:#D8D3C6; --accent:#2A4FA6; --accent-soft:#EAF0FB;
+  --green:#2E6B2A; --green-soft:#EAF4E5; --green-line:#BCD9B4;
+  --red:#A32D2D; --red-soft:#FBECEC; --red-line:#E9C4C4;
+  --amber:#9A6512; --amber-soft:#FBF1DD; --amber-line:#EBD4A3;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --sans:"Pretendard","맑은 고딕",system-ui,sans-serif;}
+.spec-doc .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}.spec-doc .meta{display:flex;flex-wrap:wrap;gap:8px}.spec-doc .badge{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;padding:5px 12px;
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;color:var(--muted)}.spec-doc .badge b{color:var(--ink);font-weight:600}.spec-doc section{padding-top:46px;scroll-margin-top:24px}.spec-doc h2{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em;margin:0}.spec-doc h2 .num{display:inline-block;min-width:22px;color:var(--faint);font-variant-numeric:tabular-nums}.spec-doc .sec-title{font-size:23px;font-weight:800;letter-spacing:-.015em;margin:6px 0 18px;
+  padding-bottom:12px;border-bottom:1px solid var(--line)}.spec-doc h3{font-size:16.5px;font-weight:700;margin:28px 0 10px;letter-spacing:-.01em}.spec-doc h3 .sub{color:var(--faint);font-weight:600;font-size:14px}.spec-doc p{margin:0 0 14px}.spec-doc ul{margin:0 0 14px;padding-left:0;list-style:none}.spec-doc li{position:relative;padding-left:22px;margin-bottom:9px}.spec-doc li::before{content:"";position:absolute;left:4px;top:11px;width:5px;height:5px;
+  border-radius:50%;background:var(--accent)}.spec-doc code{font-family:var(--mono);font-size:.86em;background:#F3F1EA;border:1px solid var(--line);
+  padding:1px 7px;border-radius:6px;color:#3a4a2e}.spec-doc .tbl{width:100%;border-collapse:collapse;margin:6px 0 16px;font-size:14.5px;
+  border:1px solid var(--line-strong);border-radius:12px;overflow:hidden}.spec-doc .tbl th{background:#F4F2EB;text-align:left;font-weight:700;font-size:13px;color:var(--muted);
+  padding:11px 14px;border-bottom:1px solid var(--line-strong)}.spec-doc .tbl td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}.spec-doc .tbl tr:last-child td{border-bottom:none}.spec-doc .tbl tr:hover td{background:#FBFAF5}.spec-doc .tbl td.key{font-weight:600;color:var(--ink);background:#FCFBF8}.spec-doc .no{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+  border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;
+  font-family:var(--mono);flex:none}.spec-doc .callout{border-radius:12px;padding:15px 18px;margin:16px 0;font-size:14.5px;line-height:1.7}.spec-doc .callout .tag{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.04em;
+  text-transform:uppercase;margin-bottom:6px}.spec-doc .callout.info{background:var(--accent-soft);border:1px solid #cdd9f2}.spec-doc .callout.info .tag{color:var(--accent)}.spec-doc .pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap}.spec-doc .pill.on{background:var(--green-soft);color:var(--green);border:1px solid var(--green-line)}.spec-doc .pill.off{background:var(--red-soft);color:var(--red);border:1px solid var(--red-line)}.spec-doc .pill.new{background:var(--accent-soft);color:var(--accent);border:1px solid #cdd9f2}.spec-doc .pill.keep{background:#F1EFE8;color:var(--muted);border:1px solid var(--line-strong)}.spec-doc .chips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 16px}.spec-doc .chip{font-size:13px;padding:4px 13px;border:1px solid var(--line-strong);
+  border-radius:999px;background:var(--surface);color:var(--ink)}.spec-doc .note{font-size:13.5px;color:var(--muted);font-style:italic;margin:8px 0 14px}
+/* 추가 내용: 파란 글씨 */
+.spec-doc .tbl tr.add td,.spec-doc .tbl tr.add td.key{color:var(--accent)}
+/* 수정 내용: 붉은 글씨 + 수정일 표기 */
+.spec-doc .chg,.spec-doc .chg code,.spec-doc .tbl tr.chg td,.spec-doc .tbl tr.chg td.key{color:var(--red)}
+.spec-doc .em{margin-left:6px;font-size:12px;font-weight:700;font-style:normal;color:var(--red);white-space:nowrap}
+
+
+.spec-doc section{scroll-margin-top:120px}
+.spec-doc section.hl > h2,.spec-doc section.hl > .sec-title{animation:flsec 1.6s ease;border-radius:4px}
+@keyframes flsec{0%,55%{background:#FFF3BF}100%{background:transparent}}
+
+/* ===== 통합본 추가 스타일 (26.11.19) ===== */
+.spec-doc .ref{color:var(--red);font-weight:700;cursor:pointer;text-decoration:none;font-variant-numeric:tabular-nums}
+.spec-doc .ref:hover{text-decoration:underline}
+.spec-doc .secref{color:var(--accent);font-weight:700;cursor:pointer;text-decoration:none;border-bottom:1px dashed var(--accent)}
+.spec-doc .secref:hover{border-bottom-style:solid}
+.spec-doc .src{display:inline-block;padding:1px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.spec-doc .src.api{background:#e3f6ef;color:#1e8a68}
+.spec-doc .src.prd{background:#e7efff;color:#3557c9}
+.spec-doc .src.ai{background:#fff0e0;color:#c26a00}
+.spec-doc .src.sys{background:#eee;color:#555}
+.spec-doc .src.rev{background:#fbe9e9;color:#b84444}
+.spec-doc .callout.info b.lead{display:block;color:var(--accent);font-size:13.5px;margin-bottom:6px}
+.spec-doc .callout .tbl{margin:14px 0 0;background:#fff;font-size:13.5px}
+.desc-meta{font-size:12px;color:var(--muted);margin:0 0 12px;line-height:1.7}
+.pgn{min-width:24px;height:24px;border:1px solid var(--line2);display:inline-flex;align-items:center;justify-content:center;background:#fff;font-size:11px}
+.pgn.on{background:#2BC48A;border-color:#2BC48A;color:#fff}
+.spec-doc .flow-big{overflow-x:auto;padding:14px;background:#fff}
+.spec-doc .flow-big svg{display:block;width:100%;min-width:1800px;height:auto}
+.flow-tools{display:flex;justify-content:flex-end;margin:0 0 8px}
+.flow-zoom{border:1px solid #D8D3C6;background:#fff;border-radius:6px;padding:6px 14px;font:inherit;font-size:13px;font-weight:700;color:#2A4FA6;cursor:pointer}
+.flow-zoom:hover{background:#EAF0FB}
+#flowModal{position:fixed;inset:0;z-index:10001;background:rgba(20,20,20,.55);display:flex;align-items:flex-start;justify-content:flex-start;padding:24px;overflow:auto}
+#flowModal.hidden{display:none}
+#flowModal .fBox{background:#fff;border-radius:10px;padding:14px 16px 16px;box-shadow:0 10px 30px rgba(0,0,0,.25);margin:0 auto}
+#flowModal .fHead{display:flex;justify-content:space-between;align-items:center;margin:0 0 10px;font-size:14px;font-weight:700}
+#flowModal .fClose{position:fixed;top:14px;right:18px;z-index:2;width:38px;height:38px;border:1px solid #D8D3C6;border-radius:50%;background:#fff;font-size:17px;color:#444;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+#flowModal svg{display:block;width:2320px;max-width:none;height:auto}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>[카카오]_톡피드_소재 생성·자동반려</h1>
+</div>
+
+<div class="ptabs">
+  <div class="ptab on" data-pg="spec">개요</div>
+  <div class="ptab" data-pg="reject">모비센스_채팅리스트/피드</div>
+  <div class="ptab" data-pg="link">광센_소재그룹 설정 <span class="tag r">연기</span></div>
+  <div class="ptab" data-pg="ai">모비센스_채팅리스트/피드(AI) <span class="tag b">신규 메뉴</span></div>
+  <button type="button" class="hbtn" id="btnHistory">수정 이력</button>
+</div>
+
+<div class="pg-spec on" data-pg="spec">
+  <div class="spec-doc">
+
+  <header class="doc">
+    <h1>카카오_채팅리스트/톡피드 소재<br>자동 생성 · 자동 반려 · 검수</h1>
+  </header>
+
+  <div class="callout info" style="margin-top:26px">
+    <b class="lead">문서 통합 안내 (26.11.19)</b>
+    톡피드 소재 자동 생성(26.10.21 버전)과 톡피드 자동반려(26.11.11 버전) 문서를 하나로 합쳤다. 기획 내용은 그대로 옮겼고, 두 문서에 따로 있던 카테고리 표는 <a class="secref" data-sec="s2">02 공통 기준</a> 하나로 모았다. 두 문서가 서로 다르게 적은 부분은 <a class="secref" data-sec="s9">09 통합 확인 필요</a>에 정리했다.
+    <table class="tbl">
+      <thead><tr><th style="width:170px">기존 문서</th><th>기존 위치</th><th style="width:250px">이 문서 위치</th></tr></thead>
+      <tbody>
+        <tr><td class="key">톡피드 소재 자동 생성</td><td>개요 1. 자동생성 조건 · 2. 톡피드 소재 생성 flow</td><td>개요 03</td></tr>
+        <tr><td class="key">톡피드 소재 자동 생성</td><td>화면설계서 1~7</td><td>채팅리스트/피드(AI) 탭 32~57</td></tr>
+        <tr><td class="key">톡피드 자동반려</td><td>개요 01 소재 판정 흐름</td><td>개요 04</td></tr>
+        <tr><td class="key">톡피드 자동반려</td><td>개요 02 개발 범위</td><td>개요 01</td></tr>
+        <tr><td class="key">톡피드 자동반려</td><td>개요 03 송출 불가 카테고리 광고주 · 5.1 기본 등록 카테고리 표</td><td>개요 02</td></tr>
+        <tr><td class="key">톡피드 자동반려</td><td>개요 04 반려 조건 등록</td><td>개요 05 머리말</td></tr>
+        <tr><td class="key">톡피드 자동반려</td><td>개요 05~08</td><td>개요 05~08 (번호 유지)</td></tr>
+        <tr><td class="key">톡피드 자동반려</td><td>화면설계서 1~31</td><td>번호 유지</td></tr>
+      </tbody>
+    </table>
+    <p style="margin:10px 0 0;font-size:13px;color:var(--muted)">채팅리스트/피드(AI) 화면의 번호 대응(구 1~7 → 32~57)은 수정 이력 참고</p>
+  </div>
+
+  <section id="s0" style="padding-top:40px">
+    <h2><span class="num">00</span> 전체 흐름 (최신안)</h2>
+    <div class="sec-title">소재 유입 → 검수 → 카카오 심사 — LLM 사전 검수(To-Be) 반영</div>
+    <p>AI 소재는 이미지를 만들기 전에 LLM으로 먼저 검수하고, 통과한 건만 이미지를 생성한다. 광고주가 등록한 소재와 다시 검수할 건은 대기 상태로 두고 자동 반려 배치가 검수한다. 검수를 통과한 건(검수 완료)만 심사 요청 배치가 카카오에 심사를 요청한다.</p>
+    <p class="note">As-Is: 이미지를 모두 만든 뒤 LLM 심사 → 반려돼도 이미지는 이미 생성됨 / To-Be: 생성대기 상태에서 사전 검수 → 통과 건만 이미지 생성. 가로로 넓은 그림이라 화면이 좁으면 좌우로 스크롤해서 본다.</p>
+    <div class="flow-tools"><button type="button" class="flow-zoom" id="flowZoom">크게 보기 ↗</button></div>
+    <div class="spec-flow flow-big">
+<svg viewBox="0 0 2320 1410" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'맑은 고딕',sans-serif" role="img" aria-label="톡피드 소재 전체 흐름 (최신안)">
+  <defs><marker id="fa" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#6B6B6B" stroke-width="1.4"/></marker></defs>
+  <rect x="20" y="60" width="1740" height="320" rx="16" fill="#F6F4F0"/>
+  <text x="44" y="92" font-size="14.5" font-weight="700" fill="#4A4438">① AI 소재 자동 생성<tspan font-weight="400" fill="#8A8478">  생성 배치 · 매일 01:00 (주말·공휴일 제외)</tspan></text>
+  <rect x="20" y="400" width="1740" height="380" rx="16" fill="#F6F4F0"/>
+  <text x="44" y="432" font-size="14.5" font-weight="700" fill="#4A4438">② 광고주 등록 소재<tspan font-weight="400" fill="#8A8478">  광고주센터 &gt; 소재그룹 · 생성 / 수정</tspan></text>
+  <rect x="20" y="800" width="1740" height="320" rx="16" fill="#F6F4F0"/>
+  <text x="44" y="832" font-size="14.5" font-weight="700" fill="#4A4438">③ 대기 소재 자동 반려<tspan font-weight="400" fill="#8A8478">  자동 반려 배치 · 매일 05:00</tspan></text>
+  <rect x="1800" y="60" width="500" height="1060" rx="16" fill="#F6F4F0"/>
+  <text x="1824" y="92" font-size="14.5" font-weight="700" fill="#4A4438">④ 카카오 심사<tspan font-weight="400" fill="#8A8478">  </tspan></text>
+  <rect x="20" y="1140" width="1180" height="250" rx="16" fill="#F6F4F0"/>
+  <text x="44" y="1172" font-size="14.5" font-weight="700" fill="#4A4438">⑤ 운영자 수동 처리<tspan font-weight="400" fill="#8A8478">  </tspan></text>
+  <rect x="44" y="145" width="250" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="169" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">생성 대상 광고주 리스트</text>
+  <text x="169" y="197" text-anchor="middle" font-size="12.5" fill="#5B4FC4">하루 55개 · 신규 광고주 우선</text>
+  <text x="169" y="215" text-anchor="middle" font-size="12.5" fill="#5B4FC4">이벤트 ON · 제외 카테고리/광고주 아님</text>
+  <rect x="334" y="145" width="250" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="459" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">상품 · 카피 그룹 정보 수집</text>
+  <text x="459" y="197" text-anchor="middle" font-size="12.5" fill="#5B4FC4">전환 Top 100 (1달 내 생성 상품 제외)</text>
+  <text x="459" y="215" text-anchor="middle" font-size="12.5" fill="#5B4FC4">광고주당 최대 30개</text>
+  <rect x="624" y="150" width="190" height="80" rx="40" fill="#E2F3EC" stroke="#2E7D5B" stroke-width="1.4"/>
+  <text x="719" y="186" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E43">생성대기</text>
+  <text x="719" y="205" text-anchor="middle" font-size="12.5" fill="#2E7D5B">배너 이미지 빈 값</text>
+  <rect x="854" y="145" width="240" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="974" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">생성 배치 · LLM 검수</text>
+  <text x="974" y="197" text-anchor="middle" font-size="12.5" fill="#5B4FC4">생성대기 건 대상</text>
+  <text x="974" y="215" text-anchor="middle" font-size="12.5" fill="#5B4FC4">이미지 생성 전 사전 검수</text>
+  <polygon points="1220,135 1295,190 1220,245 1145,190" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="1220" y="195" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">검수 통과?</text>
+  <rect x="1340" y="145" width="200" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="1440" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">AI 톡피드 이미지 생성</text>
+  <text x="1440" y="197" text-anchor="middle" font-size="12.5" fill="#5B4FC4">통과 건만</text>
+  <text x="1440" y="215" text-anchor="middle" font-size="12.5" fill="#5B4FC4">850×850 · TP 09</text>
+  <rect x="1584" y="150" width="160" height="80" rx="40" fill="#E2F3EC" stroke="#2E7D5B" stroke-width="1.4"/>
+  <text x="1664" y="186" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E43">검수 완료</text>
+  <text x="1664" y="205" text-anchor="middle" font-size="12.5" fill="#2E7D5B">심사 요청 대상</text>
+  <rect x="1110" y="285" width="220" height="72" rx="36" fill="#FBEAE4" stroke="#B5452F" stroke-width="1.4"/>
+  <text x="1220" y="317" text-anchor="middle" font-size="15" font-weight="700" fill="#8F2D1C">모비온 반려</text>
+  <text x="1220" y="336" text-anchor="middle" font-size="12.5" fill="#B5452F">이미지 생성 안 함</text>
+  <text x="48" y="262" font-size="11.5" fill="#8A8478">제외 카테고리 = 송출 불가 카테고리 (개요 02)</text>
+  <path d="M294,190 L331,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M584,190 L621,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M814,190 L851,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1094,190 L1142,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1295,190 L1337,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1540,190 L1581,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1220,245 L1220,282" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="1306" y="180" font-size="12" fill="#6B6B6B">예</text>
+  <text x="1230" y="268" font-size="12" fill="#6B6B6B">아니오</text>
+  <rect x="44" y="445" width="220" height="70" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="154" y="476" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">소재그룹 생성</text>
+  <text x="154" y="495" text-anchor="middle" font-size="12.5" fill="#6B6B6B">광고주센터</text>
+  <polygon points="400,434 475,480 400,526 325,480" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="400" y="476" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">카카오 송출?</text>
+  <text x="400" y="495" text-anchor="middle" font-size="12.5" fill="#6B6B6B">기본 ON</text>
+  <rect x="330" y="548" width="140" height="40" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="400" y="573" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">검수 대상 없음</text>
+  <polygon points="620,432 720,480 620,528 520,480" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="620" y="476" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">등재 조건 충족?</text>
+  <text x="620" y="495" text-anchor="middle" font-size="12.5" fill="#6B6B6B">카테고리 · 이미지</text>
+  <rect x="550" y="548" width="140" height="40" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="620" y="573" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">등재 안 함</text>
+  <rect x="770" y="435" width="290" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="915" y="468" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">채팅리스트/피드 등재 → 대기</text>
+  <text x="915" y="487" text-anchor="middle" font-size="12.5" fill="#5B4FC4">이미지(TP 32 · 76 · 09 · 77)마다 1건</text>
+  <text x="915" y="505" text-anchor="middle" font-size="12.5" fill="#5B4FC4">프로필 로고 있어야 목록에 노출</text>
+  <path d="M264,480 L322,480" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M475,480 L517,480" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M720,480 L767,480" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M400,526 L400,545" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M620,528 L620,545" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="484" y="470" font-size="12" fill="#6B6B6B">on</text>
+  <text x="408" y="540" font-size="12" fill="#6B6B6B">off</text>
+  <text x="726" y="470" font-size="12" fill="#6B6B6B">예</text>
+  <text x="628" y="541" font-size="12" fill="#6B6B6B">아니오</text>
+  <rect x="1100" y="432" width="644" height="158" rx="10" fill="#FFFFFF" stroke="#C9C4B8" stroke-dasharray="5 4"/>
+  <text x="1118" y="460" font-size="13.5" font-weight="700" fill="#4A4438">등재 조건 · 노출 기준</text>
+  <text x="1118" y="484" font-size="12.5" fill="#55504A">· 카카오 송출 ON 소재그룹만 등재 (송출 불가 카테고리는 OFF 고정 — 연기)</text>
+  <text x="1118" y="506" font-size="12.5" fill="#55504A">· 광고주 카테고리가 이미지 제외 카테고리가 아닐 것</text>
+  <text x="1118" y="528" font-size="12.5" fill="#55504A">· 이미지 그룹에 채팅리스트용 이미지(TP 32 · 76 · 09 · 77)가 있을 것</text>
+  <text x="1118" y="550" font-size="12.5" fill="#55504A">· 프로필 로고(600×600)가 없으면 목록에 보이지 않음</text>
+  <rect x="44" y="625" width="220" height="70" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="154" y="656" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">소재그룹 수정</text>
+  <text x="154" y="675" text-anchor="middle" font-size="12.5" fill="#6B6B6B">카카오 송출 ON 소재그룹</text>
+  <polygon points="420,612 515,660 420,708 325,660" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="420" y="656" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">재검수 항목</text>
+  <text x="420" y="675" text-anchor="middle" font-size="12.5" fill="#6B6B6B">변경?</text>
+  <rect x="350" y="724" width="140" height="40" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="420" y="749" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">상태 유지</text>
+  <rect x="584" y="615" width="300" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="734" y="648" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">기존 건 삭제 → 대기로 재등록</text>
+  <text x="734" y="667" text-anchor="middle" font-size="12.5" fill="#5B4FC4">생성일 갱신 · 이전 반려 사유 · 메모 삭제</text>
+  <text x="734" y="685" text-anchor="middle" font-size="12.5" fill="#5B4FC4">→ ③ 자동 반려 다시 받음</text>
+  <path d="M264,660 L322,660" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M515,660 L581,660" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M420,708 L420,721" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="530" y="650" font-size="12" fill="#6B6B6B">예</text>
+  <text x="428" y="719" font-size="12" fill="#6B6B6B">아니오</text>
+  <rect x="930" y="606" width="814" height="160" rx="10" fill="#FFFFFF" stroke="#C9C4B8" stroke-dasharray="5 4"/>
+  <text x="948" y="634" font-size="13.5" font-weight="700" fill="#4A4438">재검수 항목 — 개발 코드 기준 (개요 0.3)</text>
+  <text x="948" y="658" font-size="12.5" fill="#55504A">· 다시 등록됨: 모바일 랜딩 URL · 딥링크 · 이미지 그룹 교체 · 카피 그룹 교체 · CTA 변경</text>
+  <text x="948" y="680" font-size="12.5" fill="#55504A">· 딥링크 정보(트래킹 · 쇼핑 URL · 파라미터) 수정 → 그 딥링크를 쓰는 소재그룹 모두 재등록</text>
+  <text x="948" y="702" font-size="12.5" fill="#55504A">· 프로필 로고(600×600) 삭제 → 광고주의 채팅리스트 소재 전체를 대기로 (재등록 아님)</text>
+  <text x="948" y="724" font-size="12.5" fill="#55504A">· 재검수 안 됨: PC 랜딩 URL · 프로필 로고 교체 · 그룹 안의 문구/이미지 수정 · 사이트명</text>
+  <rect x="44" y="925" width="250" height="70" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="169" y="956" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">검수 완료 → 대기 변경 건</text>
+  <text x="169" y="975" text-anchor="middle" font-size="12.5" fill="#6B6B6B">자동 반려 조건 추가 · 삭제 시</text>
+  <rect x="344" y="922" width="190" height="76" rx="38" fill="#E2F3EC" stroke="#2E7D5B" stroke-width="1.4"/>
+  <text x="439" y="956" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E43">대기</text>
+  <text x="439" y="975" text-anchor="middle" font-size="12.5" fill="#2E7D5B">자동 반려 대상</text>
+  <rect x="584" y="910" width="280" height="100" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="724" y="948" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">자동 반려 배치 · LLM 검수</text>
+  <text x="724" y="967" text-anchor="middle" font-size="12.5" fill="#5B4FC4">대기 건 대상</text>
+  <text x="724" y="985" text-anchor="middle" font-size="12.5" fill="#5B4FC4">광고주 검증 → 기본 검증 → LLM 판정</text>
+  <polygon points="990,905 1065,960 990,1015 915,960" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="990" y="965" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">검수 통과?</text>
+  <rect x="1584" y="922" width="160" height="76" rx="38" fill="#E2F3EC" stroke="#2E7D5B" stroke-width="1.4"/>
+  <text x="1664" y="956" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E43">검수 완료</text>
+  <text x="1664" y="975" text-anchor="middle" font-size="12.5" fill="#2E7D5B">통과 건</text>
+  <rect x="870" y="1040" width="240" height="66" rx="33" fill="#FBEAE4" stroke="#B5452F" stroke-width="1.4"/>
+  <text x="990" y="1069" text-anchor="middle" font-size="15" font-weight="700" fill="#8F2D1C">모비온 반려</text>
+  <text x="990" y="1088" text-anchor="middle" font-size="12.5" fill="#B5452F">심사 요청 제외 · 사유 자동 기재</text>
+  <path d="M294,960 L341,960" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M534,960 L581,960" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M864,960 L912,960" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1065,960 L1581,960" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M990,1015 L990,1037" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="1076" y="950" font-size="12" fill="#6B6B6B">예</text>
+  <text x="1000" y="1030" font-size="12" fill="#6B6B6B">아니오</text>
+  <text x="1330" y="990" font-size="11.5" fill="#8A8478" text-anchor="middle">반려 사유: {검증 단계} - {상세 사유} (검출 표현) — 개요 07</text>
+  <path d="M684,705 L684,907" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M907,525 L907,860 L764,860 L764,907" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <rect x="1900" y="110" width="300" height="76" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="2050" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">[내부승인] 버튼</text>
+  <text x="2050" y="163" text-anchor="middle" font-size="12.5" fill="#6B6B6B">운영자 수동 요청 (기존 기능)</text>
+  <rect x="1900" y="430" width="300" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="2050" y="463" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">카카오 심사 요청</text>
+  <text x="2050" y="482" text-anchor="middle" font-size="12.5" fill="#5B4FC4">심사 요청 배치: 검수 완료 건만</text>
+  <text x="2050" y="500" text-anchor="middle" font-size="12.5" fill="#5B4FC4">수동: [내부승인] 버튼 선택 건</text>
+  <polygon points="2050,570 2135,620 2050,670 1965,620" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="2050" y="625" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">요청 성공?</text>
+  <rect x="1814" y="596" width="120" height="48" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="1874" y="616" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">상태 유지</text>
+  <text x="1874" y="635" text-anchor="middle" font-size="12.5" fill="#6B6B6B">실패건 재요청</text>
+  <rect x="1950" y="710" width="200" height="72" rx="36" fill="#E2F3EC" stroke="#2E7D5B" stroke-width="1.4"/>
+  <text x="2050" y="742" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E43">내부승인</text>
+  <text x="2050" y="761" text-anchor="middle" font-size="12.5" fill="#2E7D5B">카카오 심사 결과 대기</text>
+  <polygon points="2050,820 2145,870 2050,920 1955,870" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="2050" y="866" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">카카오 심사 결과</text>
+  <text x="2050" y="885" text-anchor="middle" font-size="12.5" fill="#6B6B6B">callBack</text>
+  <rect x="1824" y="960" width="190" height="72" rx="36" fill="#E2F3EC" stroke="#2E7D5B" stroke-width="1.4"/>
+  <text x="1919" y="992" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E43">승인</text>
+  <text x="1919" y="1011" text-anchor="middle" font-size="12.5" fill="#2E7D5B">APPROVED</text>
+  <rect x="2074" y="960" width="212" height="72" rx="36" fill="#FBEAE4" stroke="#B5452F" stroke-width="1.4"/>
+  <text x="2180" y="992" text-anchor="middle" font-size="15" font-weight="700" fill="#8F2D1C">카카오 반려</text>
+  <text x="2180" y="1011" text-anchor="middle" font-size="12.5" fill="#B5452F">DISAPPROVED · 사유 노출</text>
+  <path d="M1744,190 L1778,190 L1778,960 L1744,960" fill="none" stroke="#6B6B6B" stroke-width="1.4"/>
+  <path d="M1778,475 L1897,475" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M2050,186 L2050,427" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M2050,520 L2050,567" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1965,620 L1937,620" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="1950" y="610" font-size="12" fill="#6B6B6B" text-anchor="middle">아니오</text>
+  <path d="M2050,670 L2050,707" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="2060" y="694" font-size="12" fill="#6B6B6B">예</text>
+  <path d="M2050,782 L2050,817" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1955,870 L1919,870 L1919,957" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M2145,870 L2180,870 L2180,957" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <rect x="44" y="1210" width="250" height="80" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="169" y="1246" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">자동 반려 조건 변경</text>
+  <text x="169" y="1265" text-anchor="middle" font-size="12.5" fill="#6B6B6B">추가 · 삭제 후 [바로 적용]</text>
+  <path d="M250,1210 L250,998" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="258" y="1100" font-size="11.5" fill="#6B6B6B">검수 완료 건을 대기로</text>
+  <rect x="344" y="1210" width="260" height="80" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
+  <text x="474" y="1246" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">[반려] 버튼</text>
+  <text x="474" y="1265" text-anchor="middle" font-size="12.5" fill="#6B6B6B">사유 선택 (15개 중 1개 · 기타 100자)</text>
+  <polygon points="760,1198 845,1250 760,1302 675,1250" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="760" y="1246" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">기존 상태</text>
+  <text x="760" y="1265" text-anchor="middle" font-size="12.5" fill="#6B6B6B">= 승인?</text>
+  <rect x="900" y="1214" width="220" height="72" rx="36" fill="#FBEAE4" stroke="#B5452F" stroke-width="1.4"/>
+  <text x="1010" y="1246" text-anchor="middle" font-size="15" font-weight="700" fill="#8F2D1C">모비온 반려</text>
+  <text x="1010" y="1265" text-anchor="middle" font-size="12.5" fill="#B5452F">선택한 사유 기재</text>
+  <rect x="660" y="1322" width="200" height="56" rx="28" fill="#FBEAE4" stroke="#B5452F" stroke-width="1.4"/>
+  <text x="760" y="1355" text-anchor="middle" font-size="15" font-weight="700" fill="#8F2D1C">라이브중 반려</text>
+  <path d="M604,1250 L672,1250" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M845,1250 L897,1250" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M760,1302 L760,1319" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="860" y="1240" font-size="12" fill="#6B6B6B">아니오</text>
+  <text x="770" y="1314" font-size="12" fill="#6B6B6B">예</text>
+  <rect x="1240" y="1140" width="1060" height="250" rx="16" fill="#FFFFFF" stroke="#E2DED5"/>
+  <text x="1264" y="1174" font-size="14.5" fill="#4A4438" font-weight="700">범례 · 상태 흐름</text>
+  <rect x="1264" y="1198" width="44" height="26" rx="5" fill="#EEEDFB" stroke="#5B4FC4"/>
+  <text x="1318" y="1216" font-size="12.5" fill="#55504A">처리 · 배치</text>
+  <rect x="1464" y="1198" width="44" height="26" rx="13" fill="#E2F3EC" stroke="#2E7D5B"/>
+  <text x="1518" y="1216" font-size="12.5" fill="#55504A">상태</text>
+  <rect x="1664" y="1198" width="44" height="26" rx="13" fill="#FBEAE4" stroke="#B5452F"/>
+  <text x="1718" y="1216" font-size="12.5" fill="#55504A">반려 상태</text>
+  <polygon points="1886,1198 1908,1211 1886,1224 1864,1211" fill="#FFFFFF" stroke="#8A8A8A"/>
+  <text x="1918" y="1216" font-size="12.5" fill="#55504A">판단</text>
+  <rect x="2064" y="1198" width="44" height="26" rx="5" fill="#F1EFEA" stroke="#8A857A"/>
+  <text x="2118" y="1216" font-size="12.5" fill="#55504A">시작 · 입력 · 운영자 동작</text>
+  <text x="1264" y="1264" font-size="13" fill="#55504A">상태 순서: 생성대기 → 대기 → 검수 완료 → 내부승인 → 승인</text>
+  <text x="1264" y="1292" font-size="13" fill="#55504A">반려: 모비온 반려 (자동 · 수동) · 라이브중 반려 (승인 후 수동 반려) · 카카오 반려 (심사 결과)</text>
+  <text x="1264" y="1320" font-size="13" fill="#55504A">집계: 모비온 반려 + 라이브중 반려 → 모비온 반려 / 카카오 반려 → 카카오 반려</text>
+  <text x="1264" y="1348" font-size="13" fill="#55504A">* 생성대기 · 검수 완료는 To-Be(LLM 사전 검수)에서 추가된 상태</text>
+</svg>
+    </div>
+
+    <h3>0.1 <span class="sub">상태 정의</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:150px">상태</th><th>언제 이 상태가 되나</th><th style="width:360px">다음 단계</th></tr></thead>
+      <tbody>
+        <tr><td class="key">생성대기 <span class="pill new">To-Be</span></td><td>AI 생성 배치가 대상 상품을 등록한 직후 (배너 이미지 빈 값)</td><td>LLM 사전 검수 → 통과: 이미지 생성 후 검수 완료 / 미통과: 모비온 반려</td></tr>
+        <tr><td class="key">대기</td><td>광고주 등록 소재가 검수 리스트에 등재될 때<br>소재그룹에서 재검수 항목을 바꿀 때 (<a class="secref" data-sec="s0-3">0.3</a>)<br>자동 반려 조건 변경으로 검수 완료 건을 되돌릴 때</td><td>자동 반려 배치(05:00) → 검수 완료 / 모비온 반려</td></tr>
+        <tr><td class="key">검수 완료 <span class="pill new">To-Be</span></td><td>LLM 검수 통과</td><td>심사 요청 배치 → 카카오 심사 요청</td></tr>
+        <tr><td class="key">내부승인</td><td>카카오 심사 요청 성공</td><td>카카오 심사 결과 callBack 대기</td></tr>
+        <tr><td class="key">승인</td><td>카카오 callBack <code>APPROVED</code></td><td>운영자가 [반려] 하면 라이브중 반려</td></tr>
+        <tr><td class="key">모비온 반려</td><td>자동 반려 (사유 자동 기재, 개요 07)<br>수동 반려 — 기존 상태가 승인이 아닐 때 (사유 15개 중 선택, 개요 08)</td><td>-</td></tr>
+        <tr><td class="key">라이브중 반려</td><td>승인 상태 소재를 운영자가 [반려]</td><td>상단 현황에서는 모비온 반려로 집계</td></tr>
+        <tr><td class="key">카카오 반려</td><td>카카오 callBack <code>DISAPPROVED</code></td><td>반려 사유에 심사 결과 노출</td></tr>
+      </tbody>
+    </table>
+
+    <h3>0.2 <span class="sub">정책 — 최초 개발 정책 포함</span></h3>
+    <p class="note">최초 개발 기획서(이미지 검수 &gt; 채팅리스트 신설)에서 화면 설계는 빼고 정책 · 흐름만 옮겼다.</p>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:170px">항목</th><th>정책</th><th style="width:150px">출처</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="key">노출 기준</td><td>소재그룹 등록 시 600×600 프로필 로고가 있고 등록이 완료되면 채팅리스트에 노출</td><td>최초 개발</td></tr>
+        <tr><td>2</td><td class="key">카카오 송출 토글</td><td>소재그룹 생성 시 선택, 기본 ON. OFF면 검수 대상 없음<br>수정 화면에서는 토글 수정 불가 — 카카오 아이콘만 표기<br>송출 불가 카테고리 광고주는 OFF 고정 · 변경 불가 (연기, <a class="secref" data-sec="s2">02</a>)</td><td>최초 개발 · 02</td></tr>
+        <tr><td>3</td><td class="key">소재그룹 수정 시 재검수</td><td>프로필 로고 · CTA는 카카오 송출에 쓰이므로, 관련 값을 바꾸면 채팅리스트 상태를 대기로 변경<br>실제 개발된 항목 · 처리 방식은 0.3 참고</td><td>최초 개발 · 0.3</td></tr>
+        <tr><td>4</td><td class="key">데이터 마이그레이션</td><td>최근 6개월 라이브 이력이 있는 소재그룹은 카카오 송출 ON</td><td>최초 개발</td></tr>
+        <tr><td>5</td><td class="key">카카오 심사 요청</td><td>성공: 대기 → 내부승인, 얼럿 "카카오에 소재 심사 요청이 완료되었습니다."<br>실패: 상태 변경 없음. 요청 · 성공 · 실패 건수를 보여 주고 [확인] 시 실패건만 재요청, [취소] 시 액션 없음<br>To-Be 심사 요청 배치는 검수 완료 건만 대상</td><td>최초 개발 ([내부승인] 버튼) · To-Be</td></tr>
+        <tr><td>6</td><td class="key">카카오 심사 결과</td><td>callBack <code>APPROVED</code> → 승인<br>callBack <code>DISAPPROVED</code> → 카카오 반려, 반려 사유는 심사 결과 <code>additionalInfo</code> reasons를 "title_reason" 형태로 노출</td><td>최초 개발</td></tr>
+        <tr><td>7</td><td class="key">수동 반려</td><td>기존 상태 ≠ 승인 → 모비온 반려 / 기존 상태 = 승인 → 라이브중 반려<br>반려 사유는 15개 중 선택, 기타는 직접 입력 100자 (<a class="secref" data-sec="s8">08</a>)</td><td>최초 개발 · 26.11.04</td></tr>
+        <tr><td>8</td><td class="key">상단 현황 집계</td><td>기간은 데이트 피커 기준, 기본 1일(당일)<br>모비온 반려 + 라이브중 반려 → 모비온 반려, 카카오 반려 → 카카오 반려로 집계</td><td>최초 개발</td></tr>
+        <tr><td>9</td><td class="key">승인상태 필터</td><td>반려를 모비온 반려 · 카카오 반려로 분리</td><td>최초 개발 이후 변경</td></tr>
+        <tr><td>10</td><td class="key">데이터 출처</td><td>사이트명: 광고주 사이트명 (admember <code>site_title</code>, 26.04.15 변경)<br>카피: 소재그룹 카피문구 02번(_2) · 04번(_4)<br>랜딩 URL: 소재그룹 모바일 URL 우선, 없으면 웹 URL<br>CTA: 소재그룹 CTA · 프로필 로고: 광고주 CI 600×600</td><td>최초 개발 · 코드 확인</td></tr>
+        <tr><td>11</td><td class="key">AI 소재 사전 검수</td><td>생성대기 건을 LLM으로 먼저 검수하고 통과 건만 이미지 생성 → 검수 완료<br>미통과 건은 이미지를 만들지 않고 모비온 반려</td><td>To-Be</td></tr>
+        <tr><td>12</td><td class="key">조건 변경 시 재검수</td><td>자동 반려 조건을 추가 · 삭제하면 검수 완료 건을 대기로 되돌려 다시 검수</td><td>To-Be</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="s0-3">0.3 <span class="sub">소재그룹 수정 시 재검수 — 무엇을 바꾸면 다시 검수되나 (개발 코드 기준)</span></h3>
+    <p>광고주센터에서 아래 항목을 바꾸면 채팅리스트 소재가 다시 <code>대기</code>가 되어 자동 반려 배치(③)와 운영자 검수를 다시 거친다. 카카오 송출이 ON인 소재그룹만 해당한다.</p>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:230px">바꾸는 항목</th><th style="width:190px">화면</th><th>채팅리스트 처리</th><th style="width:170px">비즈보드 · 네이티브</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="key">모바일 랜딩 URL</td><td>소재그룹 설정</td><td>기존 건 삭제 → 대기로 재등록</td><td>대기로 변경</td></tr>
+        <tr><td>2</td><td class="key">딥링크 선택 (상품 · 비상품)</td><td>소재그룹 설정</td><td>기존 건 삭제 → 대기로 재등록</td><td>대기로 변경</td></tr>
+        <tr><td>3</td><td class="key">이미지 그룹 교체</td><td>소재그룹 설정</td><td>기존 건 삭제 → 새 이미지 그룹 기준으로 대기 재등록</td><td>삭제 후 대기로 재등록</td></tr>
+        <tr><td>4</td><td class="key">카피 그룹 교체</td><td>소재그룹 설정</td><td>기존 건 삭제 → 대기로 재등록</td><td>변화 없음</td></tr>
+        <tr><td>5</td><td class="key">CTA 변경</td><td>소재그룹 설정</td><td>기존 건 삭제 → 대기로 재등록</td><td>변화 없음</td></tr>
+        <tr><td>6</td><td class="key">딥링크 정보 수정<br>(트래킹 URL · 쇼핑 URL · 파라미터)</td><td>소재 &gt; 딥링크 정보</td><td>그 딥링크를 쓰는 소재그룹 모두 삭제 → 대기로 재등록</td><td>대기로 변경</td></tr>
+        <tr><td>7</td><td class="key">프로필 로고(600×600) 삭제</td><td>CI · 시그니처 컬러 (계정 정보)</td><td>광고주의 채팅리스트 소재 전체를 대기로 변경 (재등록 아님 · 생성일 유지)</td><td>-</td></tr>
+      </tbody>
+    </table>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:230px">바꿔도 재검수 안 되는 항목</th><th>설명</th><th style="width:90px">상태</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="key">PC 랜딩 URL</td><td>채팅리스트는 모바일 URL이 비어 있으면 PC URL을 보여 주는데, PC URL만 바꾸면 재검수되지 않음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>2</td><td class="key">프로필 로고 새로 올리기 · 교체</td><td>업로드 처리에는 상태를 바꾸는 부분이 없음. 화면에서 ×로 먼저 지우면 위 7번(삭제)으로 대기가 됨</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>3</td><td class="key">카피 그룹 · 이미지 그룹 안의 내용</td><td>소재그룹에서 그룹을 바꿔 끼울 때만 재등록. 그룹 안의 문구 · 이미지를 직접 고치면 처리 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>4</td><td class="key">사이트명 (광고주 계정)</td><td>채팅리스트에 보이는 값이지만 바꿔도 처리 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>5</td><td class="key">소재그룹 이름 등 그 외 설정</td><td>처리 없음</td><td><span class="pill keep">해당 없음</span></td></tr>
+        <tr><td>6</td><td class="key">카카오 송출 토글</td><td>수정 화면에서 바꿀 수 없음 (아이콘만 표기)</td><td><span class="pill keep">해당 없음</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note">재등록 조건: 카카오 송출 ON · 광고주 카테고리가 이미지 제외 카테고리가 아님 · 이미지 그룹에 채팅리스트용 이미지(TP 32 · 76 · 09 · 77)가 있음. 이미지마다 1건씩 등록된다.<br>재등록되면 생성일이 바뀌어 채팅리스트에서 새 건으로 조회되고, 기존 건이 삭제되므로 이전 반려 사유 · 메모도 남지 않는다.<br>AI 소재(채팅리스트/피드(AI))는 생성 시점 값으로 저장되므로 소재그룹 수정과 관계없다 (<a class="ref" data-t="46">[46]</a>).</p>
+  </section>
+
+  <section id="s1">
+    <h2><span class="num">01</span> 개발 범위</h2>
+    <div class="sec-title">개발 범위</div>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:90px">구분</th><th style="width:100px">위치</th><th style="width:200px">대상</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">1</span></td><td>자동 생성</td><td>모비센스</td><td>소재 자동 생성 배치</td><td><b>매일 01:00 (주말·공휴일 제외)</b>. 하루 55개 광고주를 순서대로 처리하고, 광고주당 1일 최대 30개 생성. 전환 Top 100 상품(1달 안에 생성한 상품 제외)으로 AI 배너(850×850, TP 09)를 만든 뒤 검수 대기로 저장<br>상세는 <b>03. 소재 자동 생성</b> 참조<br><span class="chg">To-Be: 생성대기 → LLM 사전 검수 → 통과 건만 이미지 생성 → 검수 완료 (00)</span><span class="em">(261119 수정)</span></td></tr>
+        <tr><td><span class="no">2</span></td><td>자동 생성</td><td>모비센스</td><td>이미지 검수 &gt; 채팅리스트/피드(AI)</td><td>신규 메뉴. AI 생성 소재 검수 (내부승인 / 반려). 화면 32~54</td></tr>
+        <tr><td><span class="no">3</span></td><td>자동 생성</td><td>모비센스</td><td>생성 조건 팝업</td><td>생성 대상 광고주 3탭 — 광고주 리스트(생성 순서) / 생성 제외 카테고리 / 생성 제외 광고주. 화면 34 · 55~57</td></tr>
+        <tr><td><span class="no">4</span></td><td>자동 반려</td><td>광고주센터</td><td>소재그룹 설정 토글 <span class="tag r">연기</span></td><td><b style="color:var(--red)">Vue.js 개발 완료 후 반영</b> (광센_소재그룹 설정 탭 30~31 전체).<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입<br>화면 변경 없음. 자동 반려 조건에 따라 <b>토글 상태가 자동 전환</b>되는 동작만 신규</td></tr>
+        <tr><td><span class="no">5</span></td><td>자동 반려</td><td>모비센스</td><td>검수 리스트 우측 상단</td><td><code>자동 반려 조건</code> 버튼 추가</td></tr>
+        <tr><td><span class="no">6</span></td><td>자동 반려</td><td>모비센스</td><td>자동 반려 조건 팝업</td><td>3탭 구성 — 송출 불가 카테고리 / 송출 불가 광고주 / 사용 불가 표현</td></tr>
+        <tr><td><span class="no">7</span></td><td>자동 반려</td><td>모비센스</td><td>자동 반려 배치</td><td><b>일배치 — 매일 <span class="chg">5시</span> 1회 실행</b><span class="em">(261111 수정)</span>. 검수 리스트에 등재된 소재를 건별로 <b>기본 검증 → 반려 판정 LLM API 호출</b> 순으로 처리하고, 반려 대상을 <b>일괄 모비온 반려</b>로 갱신</td></tr>
+        <tr><td><span class="no">8</span></td><td>자동 반려</td><td>모비센스</td><td>반려 판정 LLM API</td><td>사이트명 · 소재 광고문구를 기준으로 소재의 <b>반려 여부를 판정</b>하는 API. 배치가 소재 단위로 호출하며, 판정 결과(반려/통과 및 사유)를 반환 <br>판정 조건은 <b>06. LLM 판정 조건</b> 참조</td></tr>
+        <tr><td><span class="no">9</span></td><td>수동 반려</td><td>모비센스</td><td>반려 사유 팝업</td><td>[반려] 클릭 시 반려 사유(15개 중 1개, 기타는 직접 입력 100자) 선택 후 반려 처리. 수동 · 자동 반려 사유 관계는 08 참조</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="s2">
+    <h2><span class="num">02</span> 공통 기준</h2>
+    <div class="sec-title">송출 불가(생성 제외) 카테고리 · 제외 광고주</div>
+    <p>자동 생성과 자동 반려는 같은 카테고리 목록을 쓴다. 이 목록이 쓰이는 곳은 아래 세 곳이며, 한 곳을 바꾸면 나머지도 함께 바꿔야 한다.</p>
+
+    <h3>2.1 <span class="sub">카테고리 목록이 쓰이는 곳</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:190px">쓰이는 곳</th><th style="width:290px">화면</th><th>처리</th></tr></thead>
+      <tbody>
+        <tr><td class="key">AI 소재 자동 생성</td><td>생성 조건 팝업 &gt; 생성 제외 카테고리 <a class="ref" data-t="56">[56]</a></td><td>해당 광고주는 생성 대상에서 제외 (이미지 생성 안 함)</td></tr>
+        <tr><td class="key">자동 반려</td><td>자동 반려 조건 팝업 &gt; 송출 불가 카테고리 <a class="ref" data-t="16">[16]</a></td><td>소재그룹 카카오 송출 OFF · disable (2.3)<br>* 토글 연동 개발 전에는 해당 광고주 전체를 송출 불가 광고주로 인입</td></tr>
+        <tr><td class="key">비즈보드(상품) 이미지 소재 생성</td><td>-</td><td>생성 시 제외하는 광고주 카테고리와 동일</td></tr>
+      </tbody>
+    </table>
+
+    <h3>2.2 <span class="sub">카테고리 목록</span></h3>
+    <p class="note">기본 등록 카테고리 (고정) — 24행 · 소분류 104개 · 칩은 소분류 단위로 등록</p>
+    <table class="tbl">
+      <thead><tr><th style="width:130px;text-align:center">대분류</th><th style="width:130px;text-align:center">중분류</th><th style="text-align:center">소분류</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:center">건강</td><td style="text-align:center">건강식품</td><td style="text-align:center">건강식품, 비타민, 헬스보충제</td></tr>
+        <tr><td style="text-align:center">건강</td><td style="text-align:center">일반병원</td><td style="text-align:center">종합병원, 일반병원</td></tr>
+        <tr><td style="text-align:center">금융</td><td style="text-align:center">대출</td><td style="text-align:center">제3금융권대출</td></tr>
+        <tr><td style="text-align:center">금융</td><td style="text-align:center">증권</td><td style="text-align:center">증시, 펀드</td></tr>
+        <tr><td style="text-align:center">금융</td><td style="text-align:center">복권/기금</td><td style="text-align:center">복권/로또, 스포츠토토</td></tr>
+        <tr><td style="text-align:center">콘텐츠서비스</td><td style="text-align:center">운세</td><td style="text-align:center">타로/사주</td></tr>
+        <tr><td style="text-align:center">기타</td><td style="text-align:center">성인서비스</td><td style="text-align:center">성기능개선, 산부인과(성인), 비뇨기과(성인), 성형외과(성인), 성인기타, 성인웹툰, 전자담배/금연용품, 성인용품, 성인방송</td></tr>
+        <tr><td style="text-align:center">결혼/육아/출산</td><td style="text-align:center">출산</td><td style="text-align:center">산부인과</td></tr>
+        <tr><td style="text-align:center">건강</td><td style="text-align:center">전문병원</td><td style="text-align:center">안과, 척추질환, 비뇨기과, 치과, 한의원, 요양병원</td></tr>
+        <tr><td style="text-align:center">뷰티</td><td style="text-align:center">성형/뷰티</td><td style="text-align:center">피부과, 성형외과</td></tr>
+        <tr><td style="text-align:center">패션</td><td style="text-align:center">남성패션</td><td style="text-align:center">남성언더웨어</td></tr>
+        <tr><td style="text-align:center">패션</td><td style="text-align:center">여성패션</td><td style="text-align:center">여성언더웨어, 비치웨어, 섹시글램</td></tr>
+        <tr><td style="text-align:center">패션</td><td style="text-align:center">멀티/레플리카</td><td style="text-align:center">레플리카</td></tr>
+        <tr><td style="text-align:center">뷰티</td><td style="text-align:center">다이어트</td><td style="text-align:center">한방다이어트</td></tr>
+        <tr><td style="text-align:center">취업교육</td><td style="text-align:center">취업</td><td style="text-align:center">취업포털</td></tr>
+        <tr><td style="text-align:center">자동차</td><td style="text-align:center">신차/중고차</td><td style="text-align:center">중고차매매</td></tr>
+        <tr><td style="text-align:center">콘텐츠서비스</td><td style="text-align:center">음원영상서비스</td><td style="text-align:center">P2P/웹하드, 일반방송</td></tr>
+        <tr><td style="text-align:center">기타</td><td style="text-align:center">인물</td><td style="text-align:center">정치인, 기타공인, 스포츠인, 연예인/인플루언서, B30, B31, B32, B33, B34, B35, B36, B37, B38, B39, B40, H01, H02, H03, H04, H05, B41, B42, B43, B44, B45, B46, B47, B48, B49, B50, B51, B52, B53, B54, B55, B56, B57, B58, B59, B60, B61, B62, B63, B64, B65, B66, B67, B68, B69, B70, B71, B72, B73, B74, B75, B76, b77</td></tr>
+        <tr><td style="text-align:center">콘텐츠서비스</td><td style="text-align:center">웹툰</td><td style="text-align:center">웹툰일반, 청소년웹툰</td></tr>
+        <tr><td style="text-align:center">게임/IT</td><td style="text-align:center">게임</td><td style="text-align:center">카드/카지노</td></tr>
+        <tr><td style="text-align:center">금융</td><td style="text-align:center">금융</td><td style="text-align:center">신용평가/조사기관</td></tr>
+        <tr><td style="text-align:center">금융</td><td style="text-align:center">가상화폐</td><td style="text-align:center">가상화폐/블록체인</td></tr>
+        <tr><td style="text-align:center">애드익스체인지</td><td style="text-align:center">수신연동</td><td style="text-align:center">워터폴, RTB</td></tr>
+        <tr><td style="text-align:center">기타</td><td style="text-align:center">단체</td><td style="text-align:center">기업</td></tr>
+      </tbody>
+    </table>
+
+    <h3>2.3 <span class="sub">송출 불가 카테고리 광고주 — 소재그룹 &gt; 카카오 송출 토글 off 및 disable</span></h3>
+    <p>자동 반려 조건 중 카테고리 조건에 해당하는 광고주는 소재그룹 생성시 "카카오 송출" 토글이 off 이며, 변경할 수 없다. </p>
+    <table class="tbl">
+      <thead><tr><th style="width:200px">조건 해당</th><th style="width:130px">카카오 송출</th><th>결과</th></tr></thead>
+      <tbody>
+        <tr><td>송출 불가 카테고리</td><td><span class="pill off">OFF</span></td><td>소재는 생성되나 카카오로 송출되지 않음 <br>(참고) 카카오 송출 off 상태에서 소재 그룹이 생성되었기 때문에  카테고리 조건이 변경되어도 해당 소재가 자동으로 검수 리스트에 등재되지 않음 </td></tr>
+        <tr><td>송출 불가 광고주</td><td><span class="pill on">ON</span></td><td>소재 생성·송출 토글 조건은 유지하되, 모비센스 &gt; 이미지검수 리스트 등재 후 배치로 모비온 반려 처리</td></tr>
+      </tbody>
+    </table>
+
+    <h3>2.4 <span class="sub">제외 광고주</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:190px">목록</th><th style="width:290px">화면</th><th>처리</th></tr></thead>
+      <tbody>
+        <tr><td class="key">생성 제외 광고주</td><td>생성 조건 팝업 <a class="ref" data-t="57">[57]</a></td><td>AI 소재 생성 대상에서 제외</td></tr>
+        <tr><td class="key">송출 불가 광고주</td><td>자동 반려 조건 팝업 <a class="ref" data-t="19">[19]</a> ~ <a class="ref" data-t="23">[23]</a></td><td>검수 리스트 등재 후 배치로 모비온 반려</td></tr>
+      </tbody>
+    </table>
+    <p class="note">두 광고주 목록을 같은 목록으로 관리할지는 정해지지 않음 → <a class="secref" data-sec="s9">09</a></p>
+  </section>
+
+  <section id="s3">
+    <h2><span class="num">03</span> 소재 자동 생성 (AI)</h2>
+    <div class="sec-title">상품형 톡피드 소재 자동 생성</div>
+    <p>매일 배치로 광고주의 수집 상품을 가져와 생성형 AI로 배너(850×850)를 만들고, 채팅리스트/피드(AI) 화면에 <code>대기</code> 상태로 저장한다. 운영자는 이 화면에서 내부승인 또는 반려한다.</p>
+
+    <h3>3.1 <span class="sub">생성 대상 · 순서 — 하루 55개 광고주를 순서대로 생성 (광고주당 최대 30개)</span></h3>
+    <div class="spec-flow">
+        <svg style="width:100%;max-width:680px;height:auto;display:block;margin:0 auto" viewBox="0 0 680 880" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'맑은 고딕',sans-serif" role="img" aria-label="자동생성 조건 흐름도">
+          <defs>
+            <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#aaa69b"/>
+            </marker>
+          </defs>
+
+          <!-- 연결선 (실선) -->
+          <g stroke="#aaa69b" stroke-width="1.5" fill="none" marker-end="url(#arr2)">
+            <line x1="282" y1="75"  x2="282" y2="100"/>
+            <line x1="282" y1="150" x2="282" y2="175"/>
+            <line x1="282" y1="246" x2="282" y2="262"/>
+            <line x1="282" y1="366" x2="282" y2="392"/>
+            <line x1="282" y1="441" x2="282" y2="468"/>
+            <line x1="282" y1="572" x2="282" y2="598"/>
+            <line x1="282" y1="647" x2="282" y2="673"/>
+            <line x1="282" y1="777" x2="282" y2="803"/>
+            <!-- 종료 조건 충족 → 배치 종료 -->
+            <path d="M432,314 L477,314"/>
+            <!-- 생성 대상 광고주? 아니오 → 건너뜀 -->
+            <path d="M432,520 L556,520 L556,560"/>
+            <!-- 만들 상품 있음? 아니오 → 건너뜀 -->
+            <path d="M432,725 L556,725 L556,609"/>
+          </g>
+          <!-- 합류 지점 (C → D) -->
+          <line x1="282" y1="225" x2="282" y2="243" stroke="#aaa69b" stroke-width="1.5"/>
+          <circle cx="282" cy="243" r="3.5" fill="#aaa69b"/>
+
+          <!-- 연결선 (점선: 다음 광고주 루프) -->
+          <g stroke="#bdb9ae" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arr2)">
+            <path d="M635,585 L651,585 L651,243 L290,243"/>
+            <path d="M150,827 L30,827 L30,243 L274,243"/>
+          </g>
+
+          <!-- 분기 라벨 -->
+          <g font-size="11">
+            <text x="446" y="306" fill="#c26a00">예</text>
+            <text x="292" y="386" fill="#c26a00">아니오</text>
+            <text x="454" y="512" fill="#c26a00">아니오</text>
+            <text x="454" y="717" fill="#c26a00">아니오</text>
+            <text x="292" y="592" fill="#c26a00" font-size="10.5">예</text>
+            <text x="292" y="797" fill="#c26a00" font-size="10.5">예</text>
+            <text x="62" y="235" fill="#777" text-anchor="middle">다음 광고주</text>
+            <text x="520" y="235" fill="#777" text-anchor="middle">다음 광고주</text>
+          </g>
+
+          <!-- 1. 시작 -->
+          <rect x="150" y="28" width="265" height="47" rx="23.5" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="49" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">생성 배치 실행</text>
+          <text x="282" y="65" font-size="10.5" fill="#777" text-anchor="middle">매일 01:00 · 주말·공휴일 제외</text>
+
+          <!-- 2. 신규 광고주 우선 -->
+          <rect x="150" y="100" width="265" height="50" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="122" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">신규 인입 광고주를 맨 앞에 배치</text>
+          <text x="282" y="139" font-size="10.5" fill="#777" text-anchor="middle">전날 인입된 광고주는 다음날 바로 생성</text>
+
+          <!-- 3. 이어서 -->
+          <rect x="150" y="175" width="265" height="50" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="197" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">전날 마지막 광고주 다음부터 이어서</text>
+          <text x="282" y="214" font-size="10.5" fill="#777" text-anchor="middle">기존 광고주는 순번 순서대로 진행</text>
+
+          <!-- 4. 분기: 종료 조건 -->
+          <polygon points="282,262 432,314 282,366 132,314" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="310" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">55개 광고주 처리 완료?</text>
+          <text x="282" y="327" font-size="10.5" fill="#777" text-anchor="middle">생성한 광고주 기준</text>
+
+          <!-- 배치 종료 -->
+          <rect x="477" y="290" width="158" height="48" rx="24" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="556" y="310" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">배치 종료</text>
+          <text x="556" y="326" font-size="10" fill="#777" text-anchor="middle">다음 생성일은 이어서 진행</text>
+
+          <!-- 5. 다음 광고주 -->
+          <rect x="150" y="392" width="265" height="49" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="414" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">리스트에서 다음 광고주 불러오기</text>
+          <text x="282" y="431" font-size="10.5" fill="#777" text-anchor="middle">1번 → 끝번 순서 · 끝번 다음은 1번으로</text>
+
+          <!-- 6. 분기: 생성 대상 광고주? -->
+          <polygon points="282,468 432,520 282,572 132,520" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="517" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">생성 대상 광고주?</text>
+          <text x="282" y="534" font-size="10.5" fill="#777" text-anchor="middle">이벤트 ON · 제외 카테고리 아님</text>
+
+          <!-- 건너뜀 -->
+          <rect x="477" y="560" width="158" height="49" rx="8" fill="#efede8" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="556" y="581" font-size="12.5" font-weight="700" fill="#555" text-anchor="middle">광고주 건너뜀</text>
+          <text x="556" y="598" font-size="10.5" fill="#888" text-anchor="middle">이미지 생성 안 함</text>
+
+          <!-- 7. Top 100 조회 -->
+          <rect x="150" y="598" width="265" height="49" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="620" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">전환 Top 100 상품 조회</text>
+          <text x="282" y="637" font-size="10.5" fill="#777" text-anchor="middle">1달 안에 생성한 상품은 제외</text>
+
+          <!-- 8. 분기: 만들 상품 있음? -->
+          <polygon points="282,673 432,725 282,777 132,725" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
+          <text x="282" y="729" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">만들 상품 있음?</text>
+
+          <!-- 9. AI 생성 -->
+          <rect x="150" y="803" width="265" height="49" rx="8" fill="#e6eefb" stroke="#3b7bd6" stroke-width="2"/>
+          <text x="282" y="825" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">상품 이미지 생성 (AI)</text>
+          <text x="282" y="842" font-size="10.5" fill="#777" text-anchor="middle">광고주당 1일 최대 30개</text>
+        </svg>
+    </div>
+
+    <h3>3.2 <span class="sub">생성 흐름 — 매일 배치: 수집 상품 → AI 배너 → 검수 대기</span></h3>
+    <p class="note"><span class="chg">※ As-Is 흐름. 최신안(To-Be)은 이미지를 만들기 전에 LLM으로 먼저 검수하고 통과 건만 이미지를 생성 → <a class="secref" data-sec="s0">00 전체 흐름</a></span><span class="em">(261119 수정)</span></p>
+    <div class="spec-flow">
+          <svg style="width:100%;max-width:820px;height:auto;display:block;margin:0 auto" viewBox="0 0 820 690" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'맑은 고딕',sans-serif" role="img" aria-label="채팅리스트/피드(AI) 배치 흐름도">
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+              </marker>
+            </defs>
+
+            <!-- 연결선 (메인) -->
+            <g stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#arr)">
+              <line x1="330" y1="64"  x2="330" y2="98"/>
+              <line x1="330" y1="144" x2="330" y2="178"/>
+              <line x1="330" y1="224" x2="330" y2="248"/>
+              <line x1="330" y1="328" x2="330" y2="368"/>
+              <line x1="330" y1="414" x2="330" y2="448"/>
+              <line x1="330" y1="494" x2="330" y2="528"/>
+              <line x1="330" y1="574" x2="330" y2="608"/>
+              <!-- 분기: 아니오 / 예 → 건너뜀 -->
+              <line x1="450" y1="288" x2="568" y2="288"/>
+              <!-- 다음 광고주/상품으로 루프 -->
+              <path d="M668,310 L668,330 L790,330 L790,122 L452,122" stroke-dasharray="4 3"/>
+            </g>
+            <text x="806" y="226" font-size="10" fill="#999" text-anchor="middle" transform="rotate(90 806 226)">다음 광고주</text>
+
+            <!-- 분기 라벨 -->
+            <g font-size="11" font-weight="700">
+              <text x="508" y="281" fill="#b84444" text-anchor="middle">아니오</text>
+              <text x="342" y="348" fill="#1e8a68">예</text>
+            </g>
+
+            <!-- 1. 시작 -->
+            <rect x="230" y="20" width="200" height="44" rx="22" fill="#2fb38a"/>
+            <text x="330" y="47" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">매일 배치 실행</text>
+
+            <!-- 2. 수집 상품 조회 -->
+            <rect x="210" y="100" width="240" height="44" rx="6" fill="#fff" stroke="#2fb38a" stroke-width="1.5"/>
+            <text x="330" y="119" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">수집 상품 조회</text>
+            <text x="330" y="135" font-size="10.5" fill="#777" text-anchor="middle">광고주별 · 상품 URL / 이미지 포함</text>
+
+            <!-- 3. 광고주 API -->
+            <rect x="210" y="180" width="240" height="44" rx="6" fill="#fff" stroke="#2fb38a" stroke-width="1.5"/>
+            <text x="330" y="199" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">광고주 API 호출</text>
+            <text x="330" y="215" font-size="10.5" fill="#777" text-anchor="middle">광고주 및 카피그룹 정보 호출</text>
+
+            <!-- 4. 분기: 필수 정보 있음? -->
+            <polygon points="330,250 450,288 330,326 210,288" fill="#fff8ec" stroke="#f0a020" stroke-width="1.5"/>
+            <text x="330" y="286" font-size="12" font-weight="700" fill="#333" text-anchor="middle">필수 정보</text>
+            <text x="330" y="301" font-size="12" font-weight="700" fill="#333" text-anchor="middle">있음?</text>
+
+            <!-- 건너뜀 A -->
+            <rect x="570" y="266" width="196" height="44" rx="6" fill="#f2f3f5" stroke="#bbb"/>
+            <text x="668" y="285" font-size="12" font-weight="700" fill="#555" text-anchor="middle">광고주 건너뜀</text>
+            <text x="668" y="301" font-size="10.5" fill="#888" text-anchor="middle">이미지 생성 안 함 (비용 절감)</text>
+
+            <!-- 6. 이미지 생성 -->
+            <rect x="210" y="370" width="240" height="44" rx="6" fill="#fff0e0" stroke="#f0a020" stroke-width="1.5"/>
+            <text x="330" y="389" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">배너 이미지 생성</text>
+            <text x="330" y="405" font-size="10.5" fill="#777" text-anchor="middle">생성형 AI · 850×850 (TP 09)</text>
+
+            <!-- 7. 업로드 -->
+            <rect x="210" y="450" width="240" height="44" rx="6" fill="#fff" stroke="#2fb38a" stroke-width="1.5"/>
+            <text x="330" y="469" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">이미지 업로드</text>
+            <text x="330" y="485" font-size="10.5" fill="#777" text-anchor="middle">이미지 서버 저장</text>
+
+            <!-- 8. INSERT -->
+            <rect x="210" y="530" width="240" height="44" rx="6" fill="#2fb38a"/>
+            <text x="330" y="556" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">톡피드 소재(멀티에셋) 정보 저장</text>
+
+            <!-- 9. 검수 -->
+            <rect x="210" y="610" width="240" height="44" rx="6" fill="#fff" stroke="#2fb38a" stroke-width="1.5"/>
+            <text x="330" y="629" font-size="12.5" font-weight="700" fill="#333" text-anchor="middle">채팅리스트/피드(AI) 화면에서 검수</text>
+            <text x="330" y="645" font-size="10.5" fill="#777" text-anchor="middle">내부승인 / 반려</text>
+
+            <!-- 범례 -->
+            <g font-size="10.5" fill="#666">
+              <rect x="20" y="20" width="12" height="12" rx="2" fill="#fff" stroke="#2fb38a"/><text x="38" y="30">처리</text>
+              <rect x="20" y="40" width="12" height="12" fill="#fff8ec" stroke="#f0a020" transform="rotate(45 26 46)"/><text x="38" y="50">분기</text>
+              <rect x="20" y="60" width="12" height="12" rx="2" fill="#f2f3f5" stroke="#bbb"/><text x="38" y="70">건너뜀</text>
+              <rect x="20" y="80" width="12" height="12" rx="2" fill="#fff0e0" stroke="#f0a020"/><text x="38" y="90">AI 생성</text>
+            </g>
+          </svg>
+    </div>
+
+    <h3>3.3 <span class="sub">테이블 컬럼별 출처</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:240px">컬럼</th><th style="width:140px">출처</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td class="key">승인상태</td><td><span class="src sys">고정값</span></td><td>대기</td></tr>
+        <tr><td class="key">광고주ID · 광고주명 · 카테고리</td><td>-</td><td>광고주 정보</td></tr>
+        <tr><td class="key">사이트명</td><td><span class="src api">광고주 API</span></td><td>광고주 정보 (adMember)</td></tr>
+        <tr><td class="key">프로필 로고</td><td><span class="src api">광고주 API</span></td><td>광고주 정보 (adMember)</td></tr>
+        <tr class="chg"><td class="key">소재 카피문구_2</td><td><span class="src api">광고주 API</span></td><td>소재그룹 카피문구 02번 → COPY (카카오 title) — 기존 '소재 광고문구'<span class="em">(261119 수정)</span></td></tr>
+        <tr class="chg"><td class="key">소재 카피문구_4</td><td><span class="src api">광고주 API</span></td><td>소재그룹 카피문구 04번 → COPY2 (카카오 description)<span class="em">(261119 수정)</span></td></tr>
+        <tr><td class="key">CTA 정보</td><td><span class="src api">광고주 API</span></td><td>광고주 정보 (adMember)</td></tr>
+        <tr><td class="key">배너이미지</td><td><span class="src ai">AI 생성</span></td><td>850×850 AI생성이미지 URL</td></tr>
+        <tr><td class="key">랜딩URL</td><td><span class="src prd">수집 상품</span></td><td>상품별 URL</td></tr>
+        <tr><td class="key">생성일자</td><td><span class="src sys">배치 시각</span></td><td>INSERT 시점</td></tr>
+        <tr><td class="key">최종업데이트일 · 반려사유</td><td><span class="src rev">검수</span></td><td>상태 변경 시 갱신(최초 - 빈값)</td></tr>
+      </tbody>
+    </table>
+    <p class="note">화면 설명은 채팅리스트/피드(AI) 탭 <a class="ref" data-t="43">[43]</a> ~ <a class="ref" data-t="53">[53]</a> 참조</p>
+  </section>
+
+  <section id="s4">
+    <h2><span class="num">04</span> 자동 반려 — 소재 판정 흐름</h2>
+    <div class="sec-title">Flowchart</div>
+    <div class="spec-flow">
+<svg viewBox="0 0 1560 470" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'맑은 고딕',sans-serif" style="width:100%;height:auto">
+  <defs>
+    <marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#B7B2A6"/>
+    </marker>
+  </defs>
+
+  <!-- 카테고리 판정 -->
+  <polygon points="30,230 110,185 190,230 110,275" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="110" y="234" text-anchor="middle" font-size="12" fill="#1B1B19">카테고리</text>
+
+  <!-- 송출 불가 카테고리 -> 소재그룹 disable -->
+  <text x="110" y="345" text-anchor="middle" font-size="11" fill="#6E6C64">송출 불가 카테고리</text>
+  <rect x="26" y="380" width="168" height="52" rx="8" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="110" y="402" text-anchor="middle" font-size="11" fill="#1B1B19">소재그룹 &gt; 카카오 송출</text>
+  <text x="110" y="418" text-anchor="middle" font-size="11" font-weight="700" fill="#A32D2D">disable</text>
+
+  <!-- 모비센스 검수 리스트 등재 -->
+  <rect x="300" y="204" width="150" height="52" rx="8" fill="#FFFFFF" stroke="#D8D3C6"/>
+  <text x="375" y="226" text-anchor="middle" font-size="11.5" fill="#1B1B19">모비센스</text>
+  <text x="375" y="242" text-anchor="middle" font-size="11.5" fill="#1B1B19">검수 리스트 등재</text>
+
+  <!-- 광고주 검증 -->
+  <polygon points="510,230 585,188 660,230 585,272" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="585" y="226" text-anchor="middle" font-size="11.5" fill="#1B1B19">광고주</text>
+  <text x="585" y="241" text-anchor="middle" font-size="11.5" fill="#1B1B19">검증</text>
+
+  <!-- 4 diamonds -->
+  <polygon points="760,230 838,188 916,230 838,272" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="838" y="234" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B1B19">필수 요소 결측</text>
+
+  <polygon points="948,230 1020,190 1092,230 1020,270" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="1020" y="234" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B1B19">텍스트 검증</text>
+
+  <polygon points="1122,230 1194,190 1266,230 1194,270" fill="#F1EFE8" stroke="#D8D3C6"/>
+  <text x="1194" y="234" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B1B19">이미지 검증</text>
+
+  <polygon points="1290,230 1368,188 1446,230 1368,272" fill="#F1EFE8" stroke="#D8D3C6" transform="translate(-8,0)"/>
+  <text x="1360" y="234" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1B1B19">랜딩 URL 유효성</text>
+
+  <!-- 상태:대기 -->
+  <rect x="1462" y="204" width="86" height="50" rx="9" fill="#EAF4E5" stroke="#BCD9B4"/>
+  <text x="1505" y="234" text-anchor="middle" font-size="12" font-weight="700" fill="#2E6B2A">상태:대기</text>
+
+  <!-- 상태:반려 -->
+  <rect x="1462" y="356" width="86" height="50" rx="9" fill="#FBF1DD" stroke="#EBD4A3"/>
+  <text x="1505" y="386" text-anchor="middle" font-size="12" font-weight="700" fill="#9A6512">상태:반려</text>
+
+  <!-- arrows -->
+  <!-- 카테고리 -> 등재 (카카오 송출on) -->
+  <line x1="190" y1="230" x2="297" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="243" y="220" text-anchor="middle" font-size="11" fill="#1B1B19">카카오 송출on</text>
+  <!-- 카테고리 -> disable (down) -->
+  <line x1="110" y1="275" x2="110" y2="377" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+
+  <!-- 등재 -> 광고주검증 -->
+  <line x1="450" y1="230" x2="507" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <!-- 광고주검증 -> 필수요소 -->
+  <path d="M660,230 L720,230 L757,230" fill="none" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="700" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+
+  <!-- pass chain -->
+  <line x1="916" y1="230" x2="945" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="931" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+  <line x1="1092" y1="230" x2="1119" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="1106" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+  <line x1="1266" y1="230" x2="1287" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="1277" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+  <line x1="1438" y1="230" x2="1459" y2="230" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="1449" y="221" text-anchor="middle" font-size="10.5" fill="#9A988E">pass</text>
+
+  <!-- fail rails to 상태:반려 (y=381) -->
+  <line x1="838" y1="272" x2="838" y2="381" stroke="#B7B2A6"/>
+  <line x1="1020" y1="270" x2="1020" y2="381" stroke="#B7B2A6"/>
+  <line x1="1194" y1="270" x2="1194" y2="381" stroke="#B7B2A6"/>
+  <line x1="1360" y1="272" x2="1360" y2="381" stroke="#B7B2A6"/>
+  <text x="848" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+  <text x="1030" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+  <text x="1204" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+  <text x="1370" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+
+  <!-- 광고주검증 fail -> 반려 rail (leftmost drop at x=585) -->
+  <path d="M585,272 L585,381 L1459,381" fill="none" stroke="#B7B2A6" marker-end="url(#ar3)"/>
+  <text x="595" y="310" font-size="11" font-weight="700" fill="#9A6512">fail</text>
+</svg>
+
+</div>
+  </section>
+
+  <section id="s5">
+    <h2><span class="num">05</span> 자동 반려 조건 팝업</h2>
+    <div class="sec-title">자동 반려 조건 확인 및 등록/수정</div>
+    <p class="note">자동 반려 조건 버튼 (구 04 반려 조건 등록)</p>
+    <table class="tbl">
+      <thead><tr><th style="width:140px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="key">위치</td><td>이미지 검수 &gt; 채팅리스트/피드 </td></tr>
+        <tr><td class="key">동작</td><td>클릭 시 자동 반려 조건 팝업 오픈 </td></tr>
+        <tr><td class="key">권한</td><td><b>파트장 이상</b>에게만 노출. 권한 구분은 <b>생성 · 삭제</b> 2종</td></tr>
+      </tbody>
+    </table>
+    <p>팝업 내 3개 탭 구조. 우측 상단 <code>X</code> 닫기. 하단 <code>바로 적용</code> / <code>저장</code> 버튼은 전 탭 공통. <br> 팝업 진입자는 전체 내용을 열람할 수 있으며, 별도의 읽기 전용 등급은 두지 않는다. 등록 · 삭제는 각 권한 보유자만 가능</p>
+
+    <h3>5.1 <span class="sub">송출 불가 카테고리</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:150px">구성 요소</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">1</span></td><td>카테고리 선택</td><td>a. 드롭다운.<br> b.이미 등록된 카테고리는 목록에서 제외 <br> c. 광고주센터 > 계정설정 > 카테고리 조건과 동일 </td></tr>
+        <tr><td><span class="no">2</span></td><td>추가</td><td>선택된 카테고리를 하단 목록에 칩(chip) 형태로 추가</td></tr>
+        <tr><td><span class="no">3</span></td><td>등록 목록</td><td> a. 등록된 카테고리 칩 나열 <br> b.각 칩 우측 <code>x</code> 클릭 시 해당 카테고리는 송출 불가 카테고리에서 제외됨 <br> c. 생성 · 삭제 권한자 상이<br> &nbsp;&nbsp;- 열람 : 모비센스 로그인 시 전체 가능<br> &nbsp;&nbsp;- 생성 · 삭제 : 권한 조건 확정 필요</td></tr>
+      </tbody>
+    </table>
+    <p class="note">기본 등록 카테고리 (고정) — <a class="secref" data-sec="s2">02 공통 기준 2.2 카테고리 목록</a>과 같은 목록 · 24행 · 소분류 104개</p>
+
+    <h3>5.2 <span class="sub">송출 불가 광고주</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:150px">구성 요소</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">4</span></td><td>광고주 검색</td><td>a. 입력창 : 인풋박스, 텍스트 포함 검색
+          <br> b. [X]: 입력값 초기화 버튼 
+          <br> c. 검색버튼 클릭시 최종 검색 </td></tr>
+        <tr><td><span class="no">5</span></td><td>기존 등록 목록</td><td>이미 제외 대상으로 포함된 광고주 계정 노출</td></tr>
+        <tr><td><span class="no">6</span></td><td>검색 결과 추가</td><td>a. 행 우측 <code>추가</code> 버튼으로 제외 목록에 추가<br>b. 이미 등록된 광고주는 <code>추가</code> 비활성 표기<br>c. 등록된 항목은 행 우측 <code>삭제</code> 버튼으로 개별 삭제</td></tr>
+      </tbody>
+    </table>
+
+    <h3>5.3 <span class="sub">사용 불가 표현</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:150px">구성 요소</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">7</span></td><td>테마 선택</td><td>드롭다운. 등록 시 필수 선택 (9종 고정)</td></tr>
+        <tr><td><span class="no">8</span></td><td>표현 입력</td><td>텍스트 입력 후 <code>추가</code> 클릭 
+          <br> 쉼표구분으로 다건 동시 등록. 선택된 테마로 일괄 귀속</td></tr>
+        <tr><td><span class="no">9</span></td><td>등록 목록</td><td>테마별 그룹 헤더 + 칩 나열. 그룹별 건수 및 총 건수 표기. 각 칩 우측 <code>x</code> 클릭 시 개별 삭제. 등록 표현이 없는 테마는 미노출</td></tr>
+        <tr><td><span class="no">10</span></td><td>등록된 표현 찾기</td><td>등록 표현 검색. 입력 후 <code>검색</code> 클릭 시 일치하는 표현만 노출. 중복 확인 및 삭제 용도</td></tr>
+      </tbody>
+    </table>
+    <table class="tbl">
+      <thead><tr><th style="width:140px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="key">등록 대상</td><td>등록된 표현은 <b>무조건 반려</b>. 등록 표현을 기준으로 <b>유사 표현도 LLM 판정하에 반려</b> 처리</td></tr>
+        <tr><td class="key">테마</td><td>카카오 서비스 명칭 변형 · <span class="chg">프로필 이름 수식어</span><span class="em">(261111 수정)</span> · 기능성 표시 표현 · 최상급 표현 · 사실 확인 필요 문구 · 사회정서 침해 · 의약품·의료기기 효능 · 전후비교 표현 · 운영자 추가</td></tr>
+        <tr><td class="key">검수 대상 컬럼</td><td>사이트명, 소재 광고문구</td></tr>
+        <tr><td class="key">매칭 규칙</td><td>공백 제거 · 대소문자 무시 후 포함(contains) 비교 — <code>카톡 채널</code> = <code>카톡채널</code>, <code>카카오톡Channel</code> = <code>카카오톡channel</code></td></tr>
+        <tr><td class="key">중복 처리</td><td>정규화 기준 동일 표현은 추가 차단 후 안내</td></tr>
+        <tr><td class="key">판정 등급</td><td>표현 검출 시 <b>모비온 반려</b><br><span class="chg">등록 표현과 일치 → 반려 사유 <code>텍스트 검증 - 등록된 금지 표현</code> (LLM 미호출, 6.1)<br>유사 표현을 LLM이 판정 → 반려 사유에 테마명 병기 (예: 텍스트 검증 - 카카오 서비스 명칭 변형)</span><span class="em">(261111 수정)</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note">등록 필요 표현 — 테마: 카카오 서비스 명칭 변형</p>
+    <div class="chips">
+      <span class="chip">플친</span><span class="chip">플러스친구</span><span class="chip">카스</span>
+      <span class="chip">카카오톡Channel</span><span class="chip">카톡 채널</span>
+    </div>
+
+    <h3>5.4 <span class="sub">하단 공통 버튼</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:120px">버튼</th><th>동작</th></tr></thead>
+      <tbody>
+        <tr><td class="key">바로 적용</td><td>설정값 저장 + 기존 소재 즉시 재판정 반영</td></tr>
+        <tr><td class="key">저장</td><td>설정값만 저장. 다음 배치부터 반영</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <section id="s6">
+    <h2><span class="num">06</span> LLM 판정 조건</h2>
+    <div class="sec-title">배치 · 반려 판정 로직</div>
+    <p>배치는 <b>일배치(매일 <span class="chg">5시</span>)</b><span class="em">(261111 수정)</span>로 실행되며, 검수 리스트에 등재된 소재를 건별로 <b>① 기본 검증</b> → <b>② 반려 판정 LLM API 호출</b> 순으로 처리한다.
+      둘 중 하나라도 반려 조건에 해당하면 <b>모비온 반려</b>로 갱신한다.
+      판정 등급은 <b>반려 단일</b>이며, 경고 등 중간 등급은 두지 않는다.</p>
+
+    <h3>6.1 <span class="sub">기본 검증 — LLM 미호출</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:160px">검증 항목</th><th>반려 조건</th><th style="width:190px">반려 사유</th></tr></thead>
+      <tbody>
+        <tr><td class="key">이미지 확장자</td><td><code>jpg</code> · <code>jpeg</code> · <code>png</code> 외 확장자<span class="chg">, 또는 확장자 없음</span><span class="em">(261111 수정)</span></td><td><span class="chg">이미지 검증 - 확장자 오류</span><span class="em">(261111 수정)</span></td></tr>
+        <tr><td class="key">필수 요소 결측</td><td>소재 구성 필수 항목 누락 <br>필수항목:사이트명,프로필로고,배너이미지,소재광고문구,랜딩URL,CTA정보 </td><td><span class="chg">필수 요소 - 필수 항목 누락</span><span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td class="key">등록된 금지 표현</td><td>사이트명 · 소재 광고문구에 사용 불가 표현 화면(5.3)에 등록된 표현 포함<br>공백 제거 · 대소문자 무시 후 포함(contains) 비교</td><td>텍스트 검증 - 등록된 금지 표현<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td class="key">도메인 주소 포함</td><td>사이트명 · 소재 광고문구에 <code>.com</code> <code>.co.kr</code> <code>.kr</code> <code>.net</code> <code>.shop</code> <code>.store</code> 포함, 또는 <code>www.</code> 로 시작</td><td>텍스트 검증 - 도메인 주소 포함<span class="em">(261111 수정)</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note"><span class="chg">등록된 금지 표현은 사용 불가 표현 화면(5.3)의 등록값으로, 나머지는</span> 별도 등록 화면 없이 고정 조건으로 처리한다.<span class="em">(261111 수정)</span></p>
+
+    <h3>6.2 <span class="sub">LLM 판정 — 조건부 반려</span></h3>
+    <p>아래 표현이 포함되면 반려한다. 단, <b>해당 표현이 광고주명과 일치하는 경우 사용 가능</b>하다. (예: 오늘의집)</p>
+    <table class="tbl">
+      <thead><tr><th style="width:170px">테마</th><th>표현 예시</th><th style="width:80px">화면 등록</th></tr></thead>
+      <tbody>
+        <tr><td class="key"><span class="chg">프로필 이름 수식어</span><span class="em">(261111 수정)</span></td><td>공식몰, 본사, 전문기업, 프리미엄, 최저가, 믿고사는, 오늘의</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">기능성 표시 표현</td><td>면역케어, 장건강, 다이어트, 글루텐 분해, 혈행 개선, 관절</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">최상급 표현</td><td>1위, 1등, 최다, 최대, 최초, 유일, 국내최고, N년 연속</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">사실 확인 필요 문구</td><td>선정, 인증, 수상, 협회, N대 프랜차이즈</td><td><span class="pill on">O</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.3 <span class="sub">LLM 판정 — 무조건 반려</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:170px">테마</th><th>표현 예시</th><th style="width:80px">화면 등록</th></tr></thead>
+      <tbody>
+        <tr><td class="key">사회정서 침해</td><td>탕감, 감형, 구제, 면책, 무죄, 합의금, 이혼</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">의약품·의료기기 효능</td><td>시술, 치료, 리프팅, 미백, 박멸, 피부과, 약국, 의사 추천, 처방</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">카카오 서비스 명칭 변형</td><td>플친, 플러스친구, 카스, 카카오톡Channel, 카톡 채널</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">전후비교 표현</td><td>전/후, Before, After, 비포, 애프터</td><td><span class="pill on">O</span></td></tr>
+        <tr><td class="key">운영자 추가</td><td>운영자가 직접 등록한 표현 — 위 테마에 속하지 않지만, 운영자 판단한에 반려처리 필요한 표현</td><td><span class="pill on">O</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.4 <span class="sub">LLM 판정 — 형식 · 유효성</span></h3>
+    <p>표현 열거가 불가능한 조건으로, <b>사용 불가 표현 화면의 등록 대상이 아니다.</b></p>
+    <table class="tbl">
+      <thead><tr><th style="width:170px">검증 항목</th><th>반려 조건</th></tr></thead>
+      <tbody>
+        <tr class="chg"><td class="key">오탈자</td><td>오탈자<span class="em">(261111 수정)</span></td></tr>
+        <tr><td class="key">유효기간 종료</td><td>시즌 키워드 경과, 명시된 기간 정보가 만료된 케이스<br>※ 문구에만 기재된 경우는 허용</td></tr>
+      </tbody>
+    </table>
+    <p class="note"><span class="chg">도메인 주소 포함은 LLM 없이 판정하므로 6.1, 랜딩 URL 유효성은 6.7에서 다룬다.</span><span class="em">(261111 수정)</span></p>
+
+    <h3>6.5 <span class="sub">사용 불가 표현 화면과의 관계</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:140px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="key">검수 대상 컬럼</td><td>사이트명, 소재 광고문구</td></tr>
+        <tr><td class="key">화면 등록 표현</td><td>등록된 표현은 <b>무조건 반려</b>. 등록 표현을 기준으로 <b>유사 표현도 LLM 판정하에 반려</b> 처리한다 <br>미등록 표현도 LLM이 6.2 · 6.3 기준으로 판정한다</td></tr>
+        <tr><td class="key">반려 사유 표기</td><td><span class="chg">등록 표현과 일치 : 텍스트 검증 - 등록된 금지 표현 (예: 텍스트 검증 - 등록된 금지 표현 (플친))<br>LLM 판정 :</span> 텍스트 검증 - {테마명} (예: 텍스트 검증 - 카카오 서비스 명칭 변형)<span class="em">(261111 수정)</span></td></tr>
+        <tr><td class="key">판정 등급</td><td>반려 단일. 경고 등 중간 등급 없음</td></tr>
+      </tbody>
+    </table>
+    <h3>6.6 <span class="sub">프로필 로고 · 배너이미지 반려 조건</span></h3>
+    <p>소재 이미지의 <b>내용</b>을 <span class="chg">LLM으로</span><span class="em">(261111 수정)</span> 판정한다. 확장자 검증(6.1)과 별개이며, 아래 조건에 해당하면 <b>모비온 반려</b>로 처리한다.</p>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:150px">검증 항목</th><th style="width:330px">반려 조건</th><th style="width:100px">대상</th><th>반려 사유</th></tr></thead>
+      <tbody>
+        <tr><td><span class="no">1</span></td><td>배경 투명</td><td>이미지 배경이 투명한 경우</td><td>로고 · 배너</td><td>배경 투명</td></tr>
+        <tr><td><span class="no">2</span></td><td>외곽선 포함</td><td>이미지 가장자리를 따라 선(stroke)이 그어진 경우</td><td>로고</td><td>외곽 테두리</td></tr>
+        <tr><td><span class="no">3</span></td><td>외곽 여백</td><td>색면이 이미지 끝까지 채워지지 않아 가장자리에 여백이 남는 경우</td><td>로고</td><td>외곽 테두리</td></tr>
+        <tr><td><span class="no">4</span></td><td>빈 이미지</td><td>흰 배경이 전부인 완전 빈 이미지</td><td>로고 · 배너</td><td>빈 이미지</td></tr>
+        <tr class="chg"><td><span class="no">5</span></td><td>로고 가독성</td><td>프로필 로고의 글자 · 형태를 알아보기 어려운 경우</td><td>확인 필요</td><td>로고 가독성<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td><span class="no">6</span></td><td>화질 저하</td><td>이미지가 흐리거나 깨져 화질이 낮은 경우</td><td>확인 필요</td><td>화질 저하<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td><span class="no">7</span></td><td>클릭 유도 오브젝트</td><td>버튼 · 화살표 · 커서 등 클릭을 유도하는 그래픽이 포함된 경우</td><td>확인 필요</td><td>클릭 유도 오브젝트<span class="em">(261111 수정)</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note">2 · 3은 가장자리가 <b>액자(프레임)처럼</b> 보이는 동일 현상이므로, 반려 사유는 <code>외곽 테두리</code>로 통일해 표기한다.</p>
+    <p class="note"><span class="chg">5 ~ 7은 개발 반려 사유 목록 기준으로 추가. 반려 조건 · 대상 상세는 확인 필요</span><span class="em">(261111 수정)</span></p>
+    <p class="note">로고 = 프로필 로고, 배너 = 배너이미지</p>
+
+    <h3>6.7 <span class="sub">랜딩 URL 유효성</span><span class="em">(261111 수정)</span></h3>
+    <p><span class="chg">랜딩 URL로 연결된 화면을 확인해 아래 조건에 해당하면 <b>모비온 반려</b>로 처리한다.</span><span class="em">(261111 수정)</span></p>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:220px">검증 항목</th><th>반려 조건</th><th style="width:250px">반려 사유</th></tr></thead>
+      <tbody>
+        <tr class="chg"><td><span class="no">1</span></td><td>연결 화면 접속 오류</td><td>랜딩 URL 화면에 접속할 수 없는 경우</td><td>랜딩 URL - 연결 화면 접속 오류<span class="em">(261111 수정)</span></td></tr>
+        <tr><td><span class="no">2</span></td><td>로그인 페이지 연결</td><td>랜딩 시 콘텐츠가 아닌 로그인 페이지로 연결되는 경우</td><td><span class="chg">랜딩 URL - 로그인 페이지 연결</span><span class="em">(261111 수정)</span></td></tr>
+        <tr><td><span class="no">3</span></td><td>연결 화면 내 서비스 비활성화</td><td>화면은 열리나 내부 서비스가 중단된 경우</td><td><span class="chg">랜딩 URL - 연결 화면 내 서비스 비활성화</span><span class="em">(261111 수정)</span></td></tr>
+        <tr><td><span class="no">4</span></td><td>종료된 이벤트 페이지 / 종료된 URL</td><td>이벤트가 종료되었거나 만료된 URL로 연결되는 경우</td><td><span class="chg">랜딩 URL - 종료된 이벤트 페이지 / 종료된 URL</span><span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td><span class="no">5</span></td><td>연결화면의 광고주 정보와 불일치</td><td>연결된 화면의 광고주 정보가 소재의 광고주와 다른 경우</td><td>랜딩 URL - 연결화면의 광고주 정보와 불일치<span class="em">(261111 수정)</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note"><span class="chg">2 ~ 5는</span> 화면 접속 성공 여부만으로 판별할 수 없어 페이지 내용까지 확인해야 하므로, 호출 비용이 발생한다.<span class="em">(261111 수정)</span></p>
+  </section>
+
+  <section id="s7">
+    <h2><span class="num">07</span> 반려 사유</h2>
+    <div class="sec-title">반려 사유 표기 체계</div>
+
+    <h3>7.1 <span class="sub">표기 규칙</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:140px">항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="key">형식</td><td><b>{검증 단계} - {상세 사유} (검출 표현)</b></td></tr>
+        <tr><td class="key">검출 표현 병기</td><td>검출된 표현을 특정할 수 있는 경우 괄호로 병기한다<br>예) <span class="chg"><code>텍스트 검증 - 프로필 이름 수식어 (공식몰)</code></span><span class="em">(261111 수정)</span></td></tr>
+        <tr><td class="key">복수 사유</td><td>복수 조건에 해당하면 <b>해당 사유를 모두 표기</b>한다<br>리스트에는 대표 1건 + <code>외 N건</code>으로 요약하고, 상세에서 전체를 노출한다</td></tr>
+        <tr><td class="key">노출 위치</td><td>이미지 검수 &gt; 채팅리스트/피드 리스트의 <b>반려사유</b> 컬럼 (기존 컬럼)<br>승인상태가 <code>모비온 반려</code>인 소재에만 표기</td></tr>
+      </tbody>
+    </table>
+
+    <h3>7.2 <span class="sub">사유 목록</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:120px">검증 단계</th><th style="width:220px">상세 사유</th><th>표기 예시</th></tr></thead>
+      <tbody>
+        <tr><td class="key">광고주 검증</td><td>송출 불가 광고주</td><td>광고주 검증 - 송출 불가 광고주</td></tr>
+        <tr><td class="key">필수 요소</td><td>필수 항목 누락</td><td>필수 요소 - 필수 항목 누락 (배너이미지)</td></tr>
+        <tr><td class="key">이미지 검증</td><td>확장자 오류</td><td>이미지 검증 - 확장자 오류 (gif)</td></tr>
+        <tr><td class="key">이미지 검증</td><td>배경 투명</td><td>이미지 검증 - 배경 투명 (프로필 로고)</td></tr>
+        <tr><td class="key">이미지 검증</td><td>외곽 테두리</td><td>이미지 검증 - 외곽 테두리 (프로필 로고)</td></tr>
+        <tr><td class="key">이미지 검증</td><td>빈 이미지</td><td>이미지 검증 - 빈 이미지 (배너이미지)</td></tr>
+        <tr class="chg"><td class="key">이미지 검증</td><td>로고 가독성</td><td>이미지 검증 - 로고 가독성 (프로필 로고)<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td class="key">이미지 검증</td><td>화질 저하</td><td>이미지 검증 - 화질 저하<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td class="key">이미지 검증</td><td>클릭 유도 오브젝트</td><td>이미지 검증 - 클릭 유도 오브젝트<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td class="key">텍스트 검증</td><td>등록된 금지 표현</td><td>텍스트 검증 - 등록된 금지 표현 (플친)<span class="em">(261111 수정)</span></td></tr>
+        <tr><td class="key">텍스트 검증</td><td>카카오 서비스 명칭 변형</td><td>텍스트 검증 - 카카오 서비스 명칭 변형 (플친)</td></tr>
+        <tr class="chg"><td class="key">텍스트 검증</td><td>프로필 이름 수식어</td><td>텍스트 검증 - 프로필 이름 수식어 (공식몰)<span class="em">(261111 수정)</span></td></tr>
+        <tr><td class="key">텍스트 검증</td><td>기능성 표시 표현</td><td>텍스트 검증 - 기능성 표시 표현 (면역케어)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>최상급 표현</td><td>텍스트 검증 - 최상급 표현 (국내최고)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>사실 확인 필요 문구</td><td>텍스트 검증 - 사실 확인 필요 문구 (N대 프랜차이즈)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>사회정서 침해</td><td>텍스트 검증 - 사회정서 침해 (합의금)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>의약품·의료기기 효능</td><td>텍스트 검증 - 의약품·의료기기 효능 (리프팅)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>전후비교 표현</td><td>텍스트 검증 - 전후비교 표현 (Before)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>운영자 추가</td><td>텍스트 검증 - 운영자 추가 (등록 표현)</td></tr>
+        <tr><td class="key">텍스트 검증</td><td>도메인 주소 포함</td><td>텍스트 검증 - 도메인 주소 포함 (www.example.com)</td></tr>
+        <tr class="chg"><td class="key">텍스트 검증</td><td>오탈자</td><td>텍스트 검증 - 오탈자<span class="em">(261111 수정)</span></td></tr>
+        <tr><td class="key">텍스트 검증</td><td>유효기간 종료</td><td>텍스트 검증 - 유효기간 종료 (2026 설날 특가)</td></tr>
+        <tr><td class="key">랜딩 URL</td><td>연결 화면 접속 오류</td><td>랜딩 URL - 연결 화면 접속 오류</td></tr>
+        <tr class="chg"><td class="key">랜딩 URL</td><td>로그인 페이지 연결</td><td>랜딩 URL - 로그인 페이지 연결<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td class="key">랜딩 URL</td><td>연결 화면 내 서비스 비활성화</td><td>랜딩 URL - 연결 화면 내 서비스 비활성화<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td class="key">랜딩 URL</td><td>종료된 이벤트 페이지 / 종료된 URL</td><td>랜딩 URL - 종료된 이벤트 페이지 / 종료된 URL<span class="em">(261111 수정)</span></td></tr>
+        <tr class="chg"><td class="key">랜딩 URL</td><td>연결화면의 광고주 정보와 불일치</td><td>랜딩 URL - 연결화면의 광고주 정보와 불일치<span class="em">(261111 수정)</span></td></tr>
+        <tr class="add"><td class="key">광고주 검증</td><td>송출 불가 광고주, 제한업종, 송출 불가 카테고리</td><td>-</td></tr>
+        <tr class="add"><td class="key">랜딩 URL</td><td>상품 구매 불가·접속 오류</td><td>-</td></tr>
+        <tr class="add"><td class="key">필수요소 누락</td><td>(해당 사유 없음)</td><td>-</td></tr>
+        <tr class="add"><td class="key">이미지 검증</td><td>의미없는 여백 사용(빈화면), 과도한 확대/잘림, 편집·조합 이미지, 의미없는 실선 사용, 해상도/비율 문제, 흐림/모자이크, 선정성, 광고목적 불분명, 일상생활 이미지 사용</td><td>-</td></tr>
+        <tr class="add"><td class="key">텍스트 검증</td><td>텍스트 가독성 저하</td><td>-</td></tr>
+        <tr class="add"><td class="key">기타</td><td>기타 (직접 입력)</td><td>-</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="s8">
+    <h2><span class="num">08</span> 반려 사유 팝업 (수동 반려)</h2>
+    <div class="sec-title">수동 반려 사유와 자동 반려 사유의 관계</div>
+    <p class="note">운영자가 [반려] 버튼으로 직접 반려할 때 고르는 사유 15개(7~11)와, 배치가 자동으로 기재하는 반려 사유(07)는 서로 다른 목록이다. 겹치거나 비슷한 사유가 있어 아래처럼 정리한다.</p>
+
+    <h3>8.1 <span class="sub">사유 대응표</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:200px">수동 반려 사유 (팝업)</th><th style="width:250px">자동 반려 사유 (07)</th><th>관계</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>송출 불가 광고주</td><td>광고주 검증 - 송출 불가 광고주</td><td>같은 사유. 수동 · 자동 둘 다 발생</td></tr>
+        <tr><td>2</td><td>의미없는 여백 사용 (빈화면)</td><td>이미지 검증 - 빈 이미지</td><td>유사. 같은 사유로 볼지 확인 필요</td></tr>
+        <tr><td>3</td><td>텍스트 가독성 저하</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>4</td><td>과도한 확대/잘림</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>5</td><td>편집·조합 이미지</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>6</td><td>의미없는 실선 사용</td><td>이미지 검증 - 외곽 테두리</td><td>유사. 프레임처럼 보이는 테두리와 같은 사유로 볼지 확인 필요</td></tr>
+        <tr><td>7</td><td>광고목적 불분명</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>8</td><td>일상생활 이미지 사용</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>9</td><td>해상도/비율 문제</td><td class="chg">이미지 검증 - 화질 저하</td><td class="chg">일부 유사 (해상도). 같은 사유로 볼지 확인 필요<span class="em">(261111 수정)</span></td></tr>
+        <tr><td>10</td><td>흐림/모자이크</td><td class="chg">이미지 검증 - 화질 저하</td><td class="chg">유사. 같은 사유로 볼지 확인 필요<span class="em">(261111 수정)</span></td></tr>
+        <tr><td>11</td><td>선정성</td><td>-</td><td>수동 전용</td></tr>
+        <tr><td>12</td><td>상품 구매 불가·접속 오류</td><td>랜딩 URL - 연결 화면 접속 오류</td><td>유사. 같은 사유로 볼지 확인 필요</td></tr>
+        <tr><td>13</td><td>제한업종</td><td>-</td><td>수동 전용. 송출 불가 카테고리와 경계 확인 필요</td></tr>
+        <tr><td>14</td><td>송출 불가 카테고리</td><td>- (자동 반려 대상 아님)</td><td>자동은 반려가 아니라 카카오 송출 OFF로 처리 (02 · 2.3). 수동 반려 사유와 처리 방식이 다름</td></tr>
+        <tr><td>15</td><td>기타 (직접 입력)</td><td>-</td><td>자유 입력 100자. 코드 · 통계 집계 방식 미정</td></tr>
+      </tbody>
+    </table>
+    <p class="note"><span class="chg">자동 반려 사유 중 텍스트 검증(등록된 금지 표현, 프로필 이름 수식어, 최상급 표현 등 13종), 필수 항목 누락, 확장자 오류, 배경 투명, 로고 가독성, 클릭 유도 오브젝트, 랜딩 URL의 로그인 페이지 연결 · 연결 화면 내 서비스 비활성화 · 종료된 이벤트 페이지 / 종료된 URL · 연결화면의 광고주 정보와 불일치는 수동 목록에 대응하는 사유가 없다.</span><span class="em">(261111 수정)</span></p>
+
+    <h3>8.2 <span class="sub">엉켜 있는 부분</span></h3>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:180px">주제</th><th>내용</th><th style="width:90px">상태</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>사유 목록이 2개</td><td>수동 15개와 자동(07) 목록의 명칭 · 분류가 다름. 같은 사유가 다른 이름으로 쌓이면 반려 사유 통계가 나뉨<br>→ 하나의 사유 코드 체계로 묶을지, 수동 · 자동 코드를 따로 둘지</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>2</td><td>서브 사유 코드</td><td>8번 "각 항목은 서브 사유 코드와 연결"의 코드 값 · 정의가 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>3</td><td>반려사유 컬럼 표기</td><td>4번 컬럼 표기 형식은 자동 기준 <code>{검증 단계} - {상세 사유} (검출 표현)</code>. 수동 반려 사유를 같은 형식으로 쓸지(검증 단계를 무엇으로 둘지), 사유명만 쓸지</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>4</td><td>송출 불가 카테고리</td><td>자동은 반려가 아닌 송출 OFF(02 · 2.3), 소재그룹 토글 연동(30~31)은 Vue.js 개발 후로 연기, 그 전에는 해당 광고주를 송출 불가 광고주로 인입. 수동 반려 사유에도 같은 이름이 있어 세 가지 처리가 섞여 있음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>5</td><td>기타 (직접 입력)</td><td>자유 입력값의 코드와 통계 집계 방식</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>6</td><td>확인 버튼 이미지 처리 (11)</td><td>통계 반영 후 이미지 보관(O) / 삭제(X)를 무엇으로 정하는지 기준 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>7</td><td>반려 사유 검색 목록 (3)</td><td>7.2 사유 목록 + 8.1 수동 반려 사유와 동일하게 노출로 결정 (송출 불가 광고주는 1개로 합침). 1번에서 같은 사유로 묶이는 항목이 생기면 검색 목록도 함께 정리</td><td><span class="pill on">확정</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="s9">
+    <h2><span class="num">09</span> 통합 확인 필요</h2>
+    <div class="sec-title">두 문서가 서로 다르게 적은 부분</div>
+    <p class="note">통합하면서 찾은 차이. 어느 쪽으로 맞출지 정해지면 해당 화면 설명을 고친다.</p>
+    <table class="tbl">
+      <thead><tr><th style="width:44px">No</th><th style="width:140px">주제</th><th>채팅리스트/피드(AI) — 자동 생성</th><th>채팅리스트/피드 — 자동 반려</th><th style="width:90px">상태</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>자동 반려 적용 대상</td><td>화면에 [자동 반려 조건] 버튼 노출 <a class="ref" data-t="33">[33]</a>. 버튼 설명은 없음</td><td>배치 대상은 "검수 리스트에 등재된 소재" (01 · 06). AI 소재 포함 여부는 적혀 있지 않음<br><span class="chg">→ 개발 코드 확인 (26.11.19): 같은 자동 반려 배치가 채팅리스트 → 톡피드 AI 순으로 둘 다 처리</span></td><td><span class="pill on">개발 확인</span></td></tr>
+        <tr><td>2</td><td>수동 반려 팝업</td><td>반려 모달 500×450, 사유 직접 입력 <a class="ref" data-t="37">[37]</a></td><td>사유 15개 중 선택 + 기타 100자 <a class="ref" data-t="7">[7]</a> ~ <a class="ref" data-t="11">[11]</a></td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>3</td><td>반려사유 컬럼</td><td>입력한 사유 노출, 카카오 반려 시 카카오 사유로 덮어쓰기 <a class="ref" data-t="53">[53]</a></td><td><code>{검증 단계} - {상세 사유} (검출 표현)</code> 형식, 모비온 반려 소재에만 표기 <a class="ref" data-t="4">[4]</a> · 7.1</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>4</td><td>카피 문구 컬럼</td><td>소재 카피문구_2 · 소재 카피문구_4 <a class="ref" data-t="49">[49]</a><br><span class="chg">26.11.19: 소재 광고문구 → 소재 카피문구_2, 소재 카피문구_4 추가</span></td><td>소재 카피 문구_2 · 소재 카피 문구_4 <a class="ref" data-t="5">[5]</a> (26.10.26 변경)<br>→ 두 화면 모두 소재그룹 카피문구 02번 · 04번. 개발 화면 컬럼명도 같음</td><td><span class="pill on">정리됨</span></td></tr>
+        <tr><td>5</td><td>제외 광고주 목록</td><td>생성 제외 광고주 <a class="ref" data-t="57">[57]</a></td><td>송출 불가 광고주 <a class="ref" data-t="19">[19]</a></td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>6</td><td>상단 현황 내부승인 컬럼</td><td>내부승인 컬럼 추가 <a class="ref" data-t="32">[32]</a></td><td>집계 표에 내부승인 컬럼 없음 (승인상태 필터에는 있음)</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>7</td><td>기간 기준 이름</td><td>생성일 / 최근 업데이트일 <a class="ref" data-t="33">[33]</a></td><td>생성일 / 최종업데이트일 <a class="ref" data-t="1">[1]</a></td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>8</td><td>카테고리 목록</td><td>생성 제외 카테고리 <a class="ref" data-t="56">[56]</a></td><td>송출 불가 카테고리 <a class="ref" data-t="16">[16]</a></td><td><span class="pill on">정리됨</span></td></tr>
+        <tr><td>9</td><td>To-Be 상태값</td><td>생성대기 · 검수 완료 추가 (<a class="secref" data-sec="s0">00</a>). 승인상태 필터 · 상단 현황 <a class="ref" data-t="32">[32]</a> <a class="ref" data-t="44">[44]</a>에는 없음</td><td>검수 완료 추가 (<a class="secref" data-sec="s0">00</a>). 승인상태 필터 · 상단 현황 <a class="ref" data-t="6">[6]</a>에는 없음</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>10</td><td>소재그룹 수정 재검수 범위</td><td>해당 없음 — 생성 시점 값으로 저장 <a class="ref" data-t="46">[46]</a></td><td>PC 랜딩 URL · 프로필 로고 교체 · 그룹 안의 문구/이미지 수정 · 사이트명은 바꿔도 재검수 안 됨 (0.3)</td><td><span class="pill off">확인 필요</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note">8번은 두 문서의 목록 내용이 같아 02 공통 기준 표 하나로 모았다. 실제 설정값을 한 곳에서 관리할지는 별도로 정해야 한다.</p>
+  </section>
+
+  <footer>카카오 톡피드 소재 자동 생성 · 자동 반려 · 화면기능정의서 · v6 (통합)</footer>
+
+  </div>
+</div>
+
+<div class="layout">
+
+<div class="left">
+
+  <div class="pg" data-pg="reject">
+
+  <div class="blk" style="padding:0;overflow:hidden">
+    <h3 style="padding:16px 18px 0;margin:0 0 12px">화면위치 : 이미지 검수 &gt; 채팅리스트/피드 <span style="color:var(--muted);font-weight:600">(1~6)</span></h3>
+    <div class="rel" style="margin:0 14px 14px">
+      <div class="con">
+
+        <div class="gnb">
+          <span class="logo">MOBSENSE</span>
+          <span style="margin-left:auto;font-size:11px;color:#6B7280"> _사용자계정정보_</span>
+        </div>
+
+        <div style="display:flex">
+          <div class="lnb">
+            <div class="lnb-h">매체 센터 <span style="float:right;color:#9CA3AF">×</span></div>
+            <div class="lnb-i">개요</div><div class="lnb-i">지면 등록</div>
+            <div class="lnb-i">지면 심사</div><div class="lnb-i">보고서</div>
+            <div class="lnb-i">MY 대행매체 관리</div><div class="lnb-i">정산 관리</div>
+            <div class="lnb-i">CPS 관리</div><div class="lnb-i">공지사항</div>
+            <div class="lnb-i">사용자 관리</div>
+            <div class="lnb-i on">이미지 검수</div>
+            <div class="lnb-s">비즈보드 (상품)</div>
+            <div class="lnb-s">비즈보드 / 네이티브</div>
+            <div class="lnb-s cur">채팅리스트 / 피드</div>
+            <div class="lnb-i">지면 관리</div><div class="lnb-i">시스템 관리</div>
+          </div>
+
+          <div class="cnt2">
+            <div class="crumb">이미지 검수 &gt; 채팅리스트/피드</div>
+
+            <div class="rel" style="text-align:right;font-size:11px;color:var(--red);margin-bottom:4px"><span class="bdg tl" data-t="6" style="left:auto;right:272px;top:-4px">6</span>* 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</div>
+            <table class="stat">
+              <tr><th></th><th>전체</th><th>대기</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr>
+              <tr><td class="sh">이미지 수</td><td>73</td><td>11</td><td>0</td><td>43</td><td>0</td></tr>
+              <tr><td class="sh">광고주 수</td><td>16</td><td>5</td><td>0</td><td>4</td><td>0</td></tr>
+            </table>
+
+            <div class="rel" style="margin-top:20px">
+
+              <div class="row" style="margin:0 0 10px">
+                <span class="rel">
+                  <span class="bdg tl" data-t="1">1</span>
+                  <span class="inp" style="width:120px">생성일 ▾</span>
+                </span>
+                <span class="inp" style="width:190px">2026-09-14 ~ 2026-09-14</span>
+                <span class="btn g">검색</span>
+              </div>
+
+              <div class="row" style="justify-content:space-between;margin-bottom:14px">
+                <span class="row" style="border:1px solid var(--line);border-radius:6px;overflow:hidden">
+                  <span class="btn g" style="border-radius:0">승인상태</span>
+                  <span class="rd">전체</span><span class="rd on">대기</span><span class="rd">내부승인</span>
+                  <span class="rd">승인</span><span class="rd">모비온 반려</span><span class="rd">카카오 반려</span>
+                </span>
+                <span class="rel">
+                  <span class="bdg tr" data-t="2">2</span>
+                  <span class="btn">자동 반려 조건</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="row" style="margin-bottom:8px">
+              <span class="btn g2">내부승인</span><span class="rel"><span class="bdg tr" data-t="7">7</span><span class="btn r2">반려</span></span>
+            </div>
+            <div class="row" style="justify-content:space-between;margin-bottom:10px">
+              <span class="row">
+                <span class="btn g">컬럼 설정</span>
+                <span class="rel">
+                  <span class="bdg tl" data-t="3">3</span>
+                  <span class="inp" style="width:150px;display:inline-block;color:#111">반려 사유 전체 ▾</span>
+                  <div class="rsd">
+                    <div class="q">확대</div>
+                    <div class="o on">반려 사유 전체</div>
+                    <div class="o">과도한 <b>확대</b>/잘림</div>
+                  </div>
+                </span>
+                <span class="inp" style="width:170px">검색어를 입력하세요.</span>
+                <span class="btn g">검색</span>
+              </span>
+              <span class="row">
+                <span class="inp" style="width:110px">100개씩 보기 ▾</span>
+                <span class="btn g">엑셀</span>
+              </span>
+            </div>
+
+            <table class="lst">
+              <tr><th>NO</th><th>승인상태</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>소재그룹명</th><th>사이트명</th><th>프로필 로고</th><th>소재 카피 문구_2</th><th class="rel"><span class="bdg tl" data-t="5" style="top:-15px;left:-6px">5</span><span style="color:var(--red)">소재 카피 문구_4</span></th><th>랜딩URL</th><th>CTA 정보</th><th>생성일자</th><th>최종업데이트일</th><th class="rel"><span class="bdg tl" data-t="4" style="top:-15px;left:-6px">4</span>반려사유</th><th>비고</th></tr>
+              <tr><td>1</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_2안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>샤브보트R 가맹 상담 신청하고 창업 혜택 받아보세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>2</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_1안_260909</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>샤브보트R 가맹 상담 신청하고 창업 혜택 받아보세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>3</td><td><span class="st">대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&gt;투자&gt;창업</td><td>샤브보트R_260902</td><td>샤브보트R</td><td class="im">로고</td><td>샤브보트R 창업하기</td><td>소자본 샤브샤브 창업, 샤브보트R와 함께 시작하세요.</td><td class="lk">https://www.sbroad.co.kr/?…</td><td>바로가기</td><td>2026-09-14 16:14:42</td><td>2026-09-14 16:14:42</td><td>-</td><td>-</td></tr>
+              <tr><td>4</td><td><span class="st">대기</span></td><td>cdhthank2026</td><td>바르게</td><td>비지니스&gt;마케팅</td><td>최초_테스트</td><td>생활비연구소</td><td class="im">로고</td><td>생활비연구소 테스트</td><td>생활비 줄이는 방법, 생활비연구소에서 확인하세요.</td><td class="lk">https://mediabigpi.com/lifecare</td><td>더알아보기</td><td>2026-09-14 16:08:47</td><td>2026-09-14 16:08:47</td><td>-</td><td>-</td></tr>
+              <tr><td>5</td><td><span class="st">대기</span></td><td>livecom</td><td>이비엠그룹_라이브커머스코리아</td><td>비지니스&gt;마케팅</td><td>제스파</td><td>라이브커머스</td><td class="im">로고</td><td>네이버쇼핑라이브</td><td>네이버 쇼핑라이브 특가를 지금 바로 만나보세요.</td><td class="lk">https://view.shoppinglive.naver.com/li…</td><td>바로가기</td><td>2026-09-14 15:12:41</td><td>2026-09-14 15:12:41</td><td>-</td><td>-</td></tr>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>반려 사유 팝업 <span style="color:var(--muted);font-weight:600">(7~11)</span></h3>
+    <div class="rel rjp">
+      <span class="bdg tl" data-t="7">7</span>
+      <div class="t">검수 상태 변경</div>
+      <div class="g">반려 사유를 선택해주세요</div>
+      <div class="rel"><span class="bdg tl" data-t="8">8</span><div class="dd"><span>반려 사유 선택</span><span style="color:#374151">▾</span></div></div>
+      <div class="dl"><div>송출 불가 광고주</div><div>의미없는 여백 사용 (빈화면)</div><div>텍스트 가독성 저하</div><div>과도한 확대/잘림</div><div>편집·조합 이미지</div><div>의미없는 실선 사용</div><div>광고목적 불분명</div><div>일상생활 이미지 사용</div><div>해상도/비율 문제</div><div>흐림/모자이크</div><div>선정성</div><div>상품 구매 불가·접속 오류</div><div>제한업종</div><div>송출 불가 카테고리</div><div class="etc">기타 (직접 입력)</div></div>
+      <div class="rel" style="margin-top:16px"><span class="bdg tl" data-t="9">9</span><div class="ta">반려 사유를 입력해주세요 (최대 100자)</div></div>
+      <div class="ct">0 / 100</div>
+      <div class="er">사유를 작성해주세요.</div>
+      <div class="bt" style="margin-top:8px">
+        <span class="rel"><span class="bdg tl" data-t="10">10</span><span class="btn gr">취소</span></span>
+        <span class="rel"><span class="bdg tl" data-t="11">11</span><span class="btn g">확인</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>자동 반려 조건 팝업 — 송출 불가 카테고리 <span style="color:var(--muted);font-weight:600">(12~18)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="12">12</span>
+      <div class="rel">
+        <span class="bdg tr" data-t="13">13</span>
+        <div class="tabs">
+          <div class="on">송출 불가 카테고리</div><div>송출 불가 광고주</div><div>사용 불가 표현</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="rel">
+          <p class="lbl">카테고리 선택 <br></p>
+          <div class="row">
+            <span class="rel" style="flex:1">
+              <span class="bdg tl" data-t="14">14</span>
+              <span class="inp" style="display:block">카테고리를 선택하세요 ▾</span>
+            </span>
+            <span class="rel">
+              <span class="bdg tr" data-t="15">15</span>
+              <span class="btn">추가</span>
+            </span>
+          </div>
+          <div class="rel" style="margin-top:14px">
+            <span class="bdg tl" data-t="16">16</span>
+            <div class="chips" style="margin-top:0">
+<span class="chip">건강식품<i>×</i></span><span class="chip">비타민<i>×</i></span><span class="chip">헬스보충제<i>×</i></span><span class="chip">종합병원<i>×</i></span><span class="chip">일반병원<i>×</i></span><span class="chip">제3금융권대출<i>×</i></span><span class="chip">증시<i>×</i></span><span class="chip">펀드<i>×</i></span><span class="chip">복권/로또<i>×</i></span><span class="chip">스포츠토토<i>×</i></span><span class="chip">타로/사주<i>×</i></span><span class="chip">성기능개선<i>×</i></span><span class="chip">산부인과(성인)<i>×</i></span><span class="chip">비뇨기과(성인)<i>×</i></span><span class="chip">성형외과(성인)<i>×</i></span><span class="chip">성인기타<i>×</i></span><span class="chip" style="color:var(--muted)">… 외 88개</span>
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <span class="rel"><span class="bdg tl" data-t="17">17</span><span class="btn">바로 적용</span></span>
+          <span class="rel"><span class="bdg tr" data-t="18">18</span><span class="btn p">저장</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>자동 반려 조건 팝업 — 송출 불가 광고주 <span style="color:var(--muted);font-weight:600">(19~23)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="19">19</span>
+      <div class="tabs">
+        <div>송출 불가 카테고리</div><div class="on">송출 불가 광고주</div><div>사용 불가 표현</div>
+      </div>
+      <div class="body">
+        <div class="rel">
+          <p class="lbl">광고주 검색</p>
+          <div class="row">
+            <span class="rel" style="flex:1">
+              <span class="bdg tl" data-t="20">20</span>
+              <span class="inp" style="display:block">광고주 ID 또는 광고주명 입력 <span style="float:right;color:#9CA3AF">×</span></span>
+            </span>
+            <span class="rel">
+              <span class="bdg tr" data-t="21">21</span>
+              <span class="btn">검색</span>
+            </span>
+          </div>
+        </div>
+        <div class="rel" style="margin-top:24px">
+          <span class="bdg tl" data-t="22" style="top:-20px">22</span>
+          <p class="lbl">검색 결과</p>
+          <table class="tbl">
+            <tr><th style="width:120px">광고주 ID</th><th>광고주명</th><th style="width:80px">추가</th></tr>
+            <tr><td>livemart</td><td>라이브마트</td><td><span class="btn sm">추가</span></td></tr>
+            <tr><td>livecom</td><td>이베이글로벌</td><td><span class="btn sm done">추가</span></td></tr>
+          </table>
+        </div>
+        <div class="rel" style="margin-top:24px">
+          <span class="bdg tl" data-t="23" style="top:-20px">23</span>
+          <p class="lbl">등록 목록</p>
+          <table class="tbl">
+            <tr><th style="width:120px">광고주 ID</th><th>광고주명</th><th style="width:80px">삭제</th></tr>
+            <tr><td>livecom</td><td>이베이글로벌</td><td><span class="btn sm">삭제</span></td></tr>
+            <tr><td>rentmall</td><td>렌트몰</td><td><span class="btn sm">삭제</span></td></tr>
+            <tr><td>zipbanchan</td><td>집반찬</td><td><span class="btn sm">삭제</span></td></tr>
+            <tr><td>coupangls</td><td>쿠팡로지스틱스</td><td><span class="btn sm">삭제</span></td></tr>
+          </table>
+        </div>
+        <div class="foot">
+          <span class="btn">바로 적용</span><span class="btn p">저장</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>자동 반려 조건 팝업 — 사용 불가 표현 <span style="color:var(--muted);font-weight:600">(24~29)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="24">24</span>
+      <div class="tabs">
+        <div>송출 불가 카테고리</div><div>송출 불가 광고주</div><div class="on">사용 불가 표현</div>
+      </div>
+      <div class="body">
+        <div class="rel">
+          <p class="lbl">표현 등록</p>
+          <div class="row">
+            <span class="rel">
+              <span class="bdg tl" data-t="25">25</span>
+              <span class="inp" style="display:block;width:180px">카카오 서비스 명칭 변형 ▾</span>
+            </span>
+            <span class="rel" style="flex:1">
+              <span class="bdg tl" data-t="26">26</span>
+              <span class="inp" style="display:block">반려 처리할 표현을 입력하세요</span>
+            </span>
+            <span class="rel">
+              <span class="bdg tr" data-t="27">27</span>
+              <span class="btn">추가</span>
+            </span>
+          </div>
+        </div>
+        <div class="rel" style="margin-top:20px">
+          <div class="rel" style="margin-top:4px">
+            <span class="bdg tl" data-t="28" style="top:-20px">28</span>
+            <p class="lbl">등록된 표현 찾기</p>
+            <div class="row">
+              <span class="inp" style="flex:1">검색어를 입력하세요.</span>
+              <span class="btn">검색</span>
+            </div>
+          </div>
+          <div class="rel" style="margin-top:24px">
+            <span class="bdg tl" data-t="29" style="top:-20px">29</span>
+            <p class="lbl">등록 표현 <b style="color:var(--ink)">5</b></p>
+            <div>
+              <span class="grp">카카오 서비스 명칭 변형</span><span class="cnt">6</span>
+              <div class="chips">
+                <span class="chip">플친<i>×</i></span><span class="chip">플러스친구<i>×</i></span>
+                <span class="chip">카스<i>×</i></span><span class="chip">카카오톡Channel<i>×</i></span>
+                <span class="chip">카톡 채널<i>×</i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <span class="btn">바로 적용</span><span class="btn p">저장</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /pg reject -->
+
+  <div class="pg" data-pg="link">
+
+  <div class="blk">
+    <h3>연동 — 소재그룹 설정 <span style="color:var(--muted);font-weight:600">(30~31)</span><span class="tag r">Vue.js 개발 완료 후 반영</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="30">30</span>
+      <div class="con" style="padding:20px 22px;background:#F5F6F8">
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+          <div>
+            <div class="sg-crumb">ROAS_12341% &gt; ROAS_12341%_202608121105</div>
+            <h2 class="sg-title">소재그룹 설정</h2>
+          </div>
+          <div class="sg-tgls rel">
+            <span class="rel">
+              <span class="bdg tl" data-t="31" style="left:-14px">31</span>
+              <span class="dis"><span class="t">카카오 송출 <span class="tg off"></span></span></span>
+            </span>
+            <span class="rel">
+              <span class="t">소재 자동 생성 <span class="tg on"></span></span>
+            </span>
+          </div>
+        </div>
+
+        <div class="sg-sec">
+          <div class="sg-sec-h">CI &amp; 시그니처 컬러 <span style="color:#9CA3AF;font-weight:400">⌃</span></div>
+          <div class="sg-sec-b">
+            <div class="sg-ci">
+              <div class="sg-slots">
+                <div class="sg-slot">
+                  <div class="sg-box ph">사용할 이미지를<br>이곳에 끌어주세요</div>
+                  <div class="sg-cap">로고<i>(200x67)</i></div>
+                </div>
+                <div class="sg-slot">
+                  <div class="sg-box img"><span class="rm">×</span></div>
+                  <div class="sg-cap">프로필 로고<i>(600x600)</i></div>
+                </div>
+                <div class="sg-slot">
+                  <div class="sg-box ph">사용할 이미지를<br>이곳에 끌어주세요</div>
+                  <div class="sg-cap">앱아이콘<i>(512x512)</i></div>
+                </div>
+                <div class="sg-slot">
+                  <div class="sg-box fav"><span class="rm">×</span><span class="sq"></span></div>
+                  <div class="sg-cap">파비콘<i>(16x16)</i></div>
+                </div>
+                <div class="sg-slot">
+                  <div class="sg-color">
+                    <span class="sg-sw"></span><span class="sg-hex">#242a39</span><span class="sg-pick">🖉</span>
+                  </div>
+                  <div class="sg-cap" style="margin-top:15px">시그니처 컬러</div>
+                </div>
+              </div>
+              <div class="sg-note">
+                본 정보는 계정 정보로, 변경 시 CI 및 시그니처 컬러를 사용하는 모든 소재 그룹 프레임에 일괄 반영됩니다.<br><br>
+                시그니처 컬러를 설정하지 않으실 경우, 일부 프레임에서는 기본 색상인 <b>#80af4d</b>으로 출력됩니다.
+                변경이 필요하신 경우, 해당 영역 또는 광고설정에서 변경이 가능합니다.<br><br>
+                ※ 컬러 피커 사용 중에는 스크롤이 제한됩니다.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-sec">
+          <div class="sg-sec-h">소재그룹 이름</div>
+          <div class="sg-sec-b">
+            <span class="sg-name">소재그룹 이름을 입력해주세요.</span>
+            <span style="font-size:12px;color:var(--muted);margin-left:10px">0 / 최대 200자</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /pg link -->
+
+  <div class="pg" data-pg="ai">
+
+  <div class="blk" style="padding:0;overflow:hidden">
+    <h3 style="padding:16px 18px 0;margin:0 0 12px">화면위치 : 이미지 검수 &gt; 채팅리스트/피드(AI) <span class="tag b">신규 메뉴</span> <span style="color:var(--muted);font-weight:600">(32~54)</span></h3>
+    <div class="rel" style="margin:0 14px 14px">
+      <div class="con">
+
+        <div class="gnb">
+          <span class="logo">MOBSENSE</span>
+          <span style="margin-left:auto;font-size:11px;color:#6B7280"> _사용자계정정보_</span>
+        </div>
+
+        <div style="display:flex">
+          <div class="lnb">
+            <div class="lnb-h">매체 센터 <span style="float:right;color:#9CA3AF">×</span></div>
+            <div class="lnb-i">개요</div><div class="lnb-i">지면 등록</div>
+            <div class="lnb-i">지면 심사</div><div class="lnb-i">보고서</div>
+            <div class="lnb-i">MY 대행매체 관리</div><div class="lnb-i">정산 관리</div>
+            <div class="lnb-i">CPS 관리</div><div class="lnb-i">공지사항</div>
+            <div class="lnb-i">사용자 관리</div>
+            <div class="lnb-i on">이미지 검수</div>
+            <div class="lnb-s">비즈보드 (상품)</div>
+            <div class="lnb-s">비즈보드 / 네이티브</div>
+            <div class="lnb-s">채팅리스트 / 피드</div>
+            <div class="lnb-s cur">채팅리스트 / 피드(AI)</div>
+            <div class="lnb-i">지면 관리</div><div class="lnb-i">시스템 관리</div>
+          </div>
+
+          <div class="cnt2">
+            <div class="crumb">이미지 검수 &gt; 채팅리스트/피드(AI)</div>
+
+            <div style="display:flex;justify-content:flex-end;padding-top:6px">
+              <span class="rel" style="display:inline-block">
+                <span class="bdg tl" data-t="32">32</span>
+                <table class="stat">
+                  <tr><th></th><th>전체</th><th>대기</th><th>내부승인</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr>
+                  <tr><td class="sh">이미지 수</td><td>4</td><td>4</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                  <tr><td class="sh">광고주 수</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                </table>
+              </span>
+            </div>
+
+            <div class="rel" style="margin-top:20px">
+              <span class="bdg tl" data-t="33">33</span>
+              <div class="row" style="margin:0 0 10px">
+                <span class="inp" style="width:120px">생성일 ▾</span>
+                <span class="inp" style="width:190px">2026-09-01 ~ 2026-09-30</span>
+                <span class="btn g">검색</span>
+              </div>
+              <div class="row" style="justify-content:space-between;margin-bottom:14px">
+                <span class="row" style="border:1px solid var(--line);border-radius:6px;overflow:hidden">
+                  <span class="btn g" style="border-radius:0">승인상태</span>
+                  <span class="rd">전체</span><span class="rd on">대기</span><span class="rd">내부승인</span>
+                  <span class="rd">승인</span><span class="rd">모비온 반려</span><span class="rd">카카오 반려</span>
+                </span>
+                <span class="row">
+                  <span class="btn">자동 반려 조건</span>
+                  <span class="rel"><span class="bdg tr" data-t="34">34</span><span class="btn">생성 조건</span></span>
+                </span>
+              </div>
+            </div>
+
+            <div class="rel row" style="margin-bottom:12px;width:max-content;gap:18px">
+              <span class="bdg tl" data-t="35">35</span>
+              <span class="rel"><span class="bdg tr" data-t="36">36</span><span class="btn g2">내부승인</span></span>
+              <span class="rel"><span class="bdg tr" data-t="37">37</span><span class="btn r2">반려</span></span>
+            </div>
+
+            <div class="rel row" style="justify-content:space-between;margin-bottom:10px">
+              <span class="bdg tl" data-t="38">38</span>
+              <span class="row" style="gap:16px">
+                <span class="rel"><span class="bdg tr" data-t="39">39</span><span class="btn g">컬럼 설정</span></span>
+                <span class="rel row"><span class="bdg tr" data-t="40">40</span><span class="inp" style="width:170px">검색어를 입력하세요.</span><span class="btn g">검색</span></span>
+              </span>
+              <span class="row" style="gap:16px">
+                <span class="rel"><span class="bdg tr" data-t="41">41</span><span class="inp" style="width:110px;display:inline-block">100개씩 보기 ▾</span></span>
+                <span class="rel"><span class="bdg tr" data-t="42">42</span><span class="btn g">엑셀</span></span>
+              </span>
+            </div>
+
+            <table class="lst">
+              <tr><th class="rel"><span class="bdg tl" data-t="43" style="top:-15px;left:-6px">43</span>☐ NO</th><th class="rel"><span class="bdg tl" data-t="44" style="top:-15px;left:-6px">44</span>승인상태</th><th class="rel"><span class="bdg tl" data-t="45" style="top:-15px;left:-6px">45</span>광고주ID</th><th>광고주명</th><th>카테고리</th><th class="rel"><span class="bdg tl" data-t="46" style="top:-15px;left:-6px">46</span>사이트명</th><th class="rel"><span class="bdg tl" data-t="47" style="top:-15px;left:-6px">47</span>프로필 로고</th><th class="rel"><span class="bdg tl" data-t="48" style="top:-15px;left:-6px">48</span>배너이미지</th><th class="rel"><span class="bdg tl" data-t="49" style="top:-15px;left:-6px">49</span><span style="color:var(--red)">소재 카피문구_2</span></th><th><span style="color:var(--red)">소재 카피문구_4</span></th><th class="rel"><span class="bdg tl" data-t="50" style="top:-15px;left:-6px">50</span>랜딩URL</th><th class="rel"><span class="bdg tl" data-t="51" style="top:-15px;left:-6px">51</span>CTA 정보</th><th class="rel"><span class="bdg tl" data-t="52" style="top:-15px;left:-6px">52</span>생성일자</th><th>최종업데이트일</th><th class="rel"><span class="bdg tl" data-t="53" style="top:-15px;left:-6px">53</span>반려사유</th></tr>
+              <tr><td>☐ 1</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>햇꽃게 특가</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:48:01</td><td>-</td><td>-</td></tr>
+              <tr><td>☐ 2</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>제철 과일 할인</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:47:34</td><td>-</td><td>-</td></tr>
+              <tr><td>☐ 3</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>추석 먹거리 모음</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:47:22</td><td>-</td><td>-</td></tr>
+            </table>
+
+            <div class="rel" style="margin:18px auto 4px;width:max-content;display:flex;gap:4px">
+              <span class="bdg tl" data-t="54">54</span>
+              <span class="pgn">«</span><span class="pgn on">1</span><span class="pgn">2</span><span class="pgn">3</span><span class="pgn">»</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>생성 조건 팝업 — 광고주 리스트 (생성 순서) <span style="color:var(--muted);font-weight:600">(55)</span></h3>
+    <div class="bar" style="margin-bottom:12px;font-size:13px;font-weight:700">생성 대상 광고주 <span style="color:var(--faint);font-weight:400">✕</span></div>
+    <div class="rel">
+      <span class="bdg tl" data-t="55">55</span>
+      <div class="tabs">
+        <div class="on">광고주 리스트 (생성 순서)</div><div>생성 제외 카테고리</div><div>생성 제외 광고주</div>
+      </div>
+      <div class="body">
+        <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span class="row">
+            <span class="inp" style="width:130px">최근 생성일 ▾</span>
+            <span class="inp" style="width:190px">2026-10-01 ~ 2026-10-31</span>
+            <span class="btn p">검색</span>
+          </span>
+          <span class="row">
+            <span class="inp" style="width:110px">100개씩 보기 ▾</span>
+            <span class="btn g">엑셀</span>
+          </span>
+        </div>
+        <table class="tbl">
+          <tr><th style="width:60px">순번</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>최근 생성일</th><th>다음 생성 예정일</th></tr>
+          <tr><td>1</td><td>adv_a</td><td>광고주 A</td><td>쇼핑</td><td>2026-10-01</td><td>2026-11-02</td></tr>
+          <tr><td>2</td><td>adv_b</td><td>광고주 B</td><td>성인용품</td><td>—</td><td>—</td></tr>
+          <tr><td>3</td><td>adv_c</td><td>광고주 C</td><td>쇼핑</td><td>2026-09-15</td><td>—</td></tr>
+          <tr><td>4</td><td>adv_d</td><td>광고주 D</td><td>패션</td><td>—</td><td>2026-10-08</td></tr>
+        </table>
+        <p class="lbl" style="margin:10px 0 0">※ 생성 제외 카테고리는 자동 반려 조건의 '송출 불가 카테고리'와 같은 목록</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>생성 조건 팝업 — 생성 제외 카테고리 <span style="color:var(--muted);font-weight:600">(56)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="56">56</span>
+      <div class="tabs">
+        <div>광고주 리스트 (생성 순서)</div><div class="on">생성 제외 카테고리</div><div>생성 제외 광고주</div>
+      </div>
+      <div class="body">
+        <table class="tbl" style="margin-top:0">
+          <tr><th style="width:120px;text-align:center">대분류</th><th style="width:120px;text-align:center">중분류</th><th style="text-align:center">소분류</th></tr>
+          <tr><td style="text-align:center">건강</td><td style="text-align:center">건강식품</td><td style="text-align:center">건강식품, 비타민, 헬스보충제</td></tr>
+          <tr><td style="text-align:center">건강</td><td style="text-align:center">일반병원</td><td style="text-align:center">종합병원, 일반병원</td></tr>
+          <tr><td style="text-align:center">금융</td><td style="text-align:center">대출</td><td style="text-align:center">제3금융권대출</td></tr>
+          <tr><td style="text-align:center">금융</td><td style="text-align:center">증권</td><td style="text-align:center">증시, 펀드</td></tr>
+          <tr><td colspan="3" style="text-align:center;color:var(--muted)">… 외 20행 · 전체 24행은 개요 &gt; 02 공통 기준 2.2 카테고리 목록과 동일</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h3>생성 조건 팝업 — 생성 제외 광고주 <span style="color:var(--muted);font-weight:600">(57)</span></h3>
+    <div class="rel">
+      <span class="bdg tl" data-t="57">57</span>
+      <div class="tabs">
+        <div>광고주 리스트 (생성 순서)</div><div>생성 제외 카테고리</div><div class="on">생성 제외 광고주</div>
+      </div>
+      <div class="body">
+        <table class="tbl" style="margin-top:0">
+          <tr><th style="width:160px">광고주ID</th><th>광고주명</th></tr>
+          <tr><td>adv_c</td><td>광고주 C</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /pg ai -->
+
+</div>
+
+<div class="right">
+
+  <div class="grp-desc" data-pg="reject">
+  <div class="h">진입점 — 이미지 검수 &gt; 채팅리스트/피드 (1~6)</div>
+  <div class="h sub">검색 · 필터 영역</div>
+  <div class="item lv3" id="d1"><span class="no">1</span><span class="ttl">기간 검색 기준 선택<span class="tag b">신규</span></span>
+    <p class="dsc">a. 기간 검색의 날짜 기준을 선택
+b. 드롭다운
+   b-1. 생성일, 최종업데이트일
+   b-2. 디폴트 : 생성일</p></div>
+  <div class="item lv3" id="d2"><span class="no">2</span><span class="ttl">자동 반려 조건 버튼<span class="tag b">신규</span></span>
+    <p class="dsc">a. 승인상태 필터 우측에 위치
+b. 클릭 시 자동 반려 조건 팝업 오픈 → <a class="ref" data-t="12">[12]</a>
+   b-1. 기본 진입 탭 : 송출 불가 카테고리
+c. 노출 권한
+   c-1. 파트장 이상에게만 노출
+   c-2. 권한 구분 : 생성 · 삭제 2종</p></div>
+
+  <div class="item lv3" id="d3"><span class="no">3</span><span class="ttl">반려 사유 검색 드롭박스<span class="tag b">신규</span></span>
+    <p class="dsc">a. 위치 : [컬럼 설정] 오른쪽, 검색어 입력칸 왼쪽
+b. 드롭박스, 1개 선택
+   b-1. 기본값 : 반려 사유 전체
+   b-2. 목록 : <a class="secref" data-sec="s7">개요 &gt; 7.2 사유 목록</a> + <a class="secref" data-sec="s8">개요 &gt; 8.1 사유 대응표</a>와 동일
+    ㄴ 수동 반려 : 8.1 수동 반려 사유 15개 (반려 사유 팝업 <a class="ref" data-t="8">[8]</a>과 동일)
+    ㄴ 자동 반려 : 7.2 사유 목록 27개, "{검증 단계} - {상세 사유}"로 표기 (예: 텍스트 검증 - 프로필 이름 수식어)
+    ㄴ 두 목록에 모두 있는 "송출 불가 광고주"는 1개로 합쳐 노출
+    ㄴ 수동 · 자동 구분 표시 없이 하나의 목록으로 노출
+c. 드롭리스트 상단에 검색 입력칸 제공
+   c-1. 입력한 글자가 포함된 사유만 목록에 노출 (입력 즉시 반영)
+   c-2. 일치하는 글자는 붉은 글씨로 표시
+   c-3. 결과가 없으면 "검색 결과가 없습니다." 노출
+d. 사유 선택 후 [검색] 클릭 시 반려사유 컬럼이 선택한 사유인 소재만 조회
+   d-1. 검색어 · 승인상태 · 기간 조건과 함께 적용 (AND)
+   d-2. 자동 반려 사유는 검출 표현(괄호)과 관계없이 사유 기준으로 조회
+    ㄴ 예: 텍스트 검증 - 프로필 이름 수식어 선택 시 (공식몰), (프리미엄) 등 모두 조회</p></div>
+
+  <div class="h sub">검수 리스트 영역</div>
+  <div class="item lv3" id="d4"><span class="no">4</span><span class="ttl">반려사유 컬럼<span class="tag g">기존 컬럼</span></span>
+    <p class="dsc">a. 컬럼 자체는 기존 화면에 존재. 화면 변경 없음
+b. 자동 반려로 처리된 소재의 반려 사유를 기입
+   b-1. 자동으로 반려 처리 시 반려 처리 규칙에 맞게 반려 사유 기재
+c. 표기 형식 : {검증 단계} - {상세 사유} (검출 표현)
+   c-1. 예) 텍스트 검증 - 프로필 이름 수식어 (공식몰)
+   c-2. 검출 표현을 특정할 수 있는 경우에만 괄호 병기
+d. 복수 사유 검출 시
+   d-1. 리스트에는 대표 1건 + 외 N건으로 요약
+   d-2. 상세에서 전체 사유 노출
+e. 전체 사유 목록은 <a class="secref" data-sec="s7">개요 &gt; 07. 반려 사유</a> 참조</p></div>
+  <div class="item lv3" id="d5"><span class="no">5</span><span class="ttl">소재 카피 문구_4 컬럼<span class="tag o">신규 컬럼</span></span>
+    <p class="dsc">a. 컬럼 추가
+   a-1. 위치: 소재 카피 문구_2 컬럼 오른쪽
+   a-2. 기존 소재 광고문구 컬럼명은 소재 카피 문구_2로 변경
+b. reviewData _ description의 값
+c. 광고주의 라이브된 소재그룹 광고 카피 (4)
+<span style="color:var(--red)">d. 수정 이력
+   d-1. 2026-10-26 수정: 소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</span></p></div>
+  <div class="item lv3" id="d6"><span class="no">6</span><span class="ttl">테이블 조회 조건 안내 문구<span class="tag o">신규</span></span>
+    <p class="dsc">a. 테이블 조회 조건 info - text 추가
+<span class="copy-like" style="color:var(--red)">   * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</span>
+<span style="color:var(--red)">b. 수정 이력
+   b-1. 2026-10-26 수정: 테이블 조회 조건 안내 문구 추가</span></p></div>
+  <div class="h">반려 사유 팝업 (7~11)</div>
+  <div class="item lv2" id="d7"><span class="no">7</span><span class="ttl">반려 사유 팝업<span class="tag b">신규</span></span>
+    <p class="dsc">a. [반려] 클릭 시 노출
+b. 팝업 제목: 검수 상태 변경
+c. 안내 문구: 반려 사유를 선택해주세요</p></div>
+  <div class="item lv3" id="d8"><span class="no">8</span><span class="ttl">반려 사유 드롭리스트<span class="tag b">신규</span></span>
+    <p class="dsc">a. 반려 사유 15개 중 1개 선택
+   a-1. 기본값: 미선택 (반려 사유 선택)
+   a-2. 첫 항목: 송출 불가 광고주
+   a-3. 마지막 항목: 기타 (직접 입력)
+b. 각 항목은 서브 사유 코드와 연결
+※ 자동 반려 사유와의 관계는 <a class="secref" data-sec="s8">개요 &gt; 08. 반려 사유 팝업</a> 참고</p></div>
+  <div class="item lv3" id="d9"><span class="no">9</span><span class="ttl">기타 입력칸<span class="tag b">신규</span></span>
+    <p class="dsc">a. 기타 선택 시에만 노출
+b. 최대 100자 입력 가능
+   b-1. 100자 초과 입력 불가
+   b-2. 입력 글자 수 실시간 표시</p></div>
+  <div class="item lv3" id="d10"><span class="no">10</span><span class="ttl">취소<span class="tag g">기존</span></span>
+    <p class="dsc">a. 클릭 시 팝업 닫힘
+b. 선택한 사유와 입력 내용 초기화</p></div>
+  <div class="item lv3" id="d11"><span class="no">11</span><span class="ttl">확인<span class="tag o">변경</span></span>
+    <p class="dsc">a. 버튼은 비활성화하지 않음. 클릭 시 아래 조건이면 얼럿 텍스트 제공, 반려 처리하지 않음
+   a-1. 사유 미선택 → 얼럿 텍스트 제공 "사유를 선택해주세요."
+   a-2. 기타 선택 + 입력 없음 → 얼럿 텍스트 제공 "사유를 작성해주세요."
+    ㄴ 텍스트 위치 : [취소] · [확인] 버튼 위 (붉은 글씨)
+b. 클릭 시 선택 소재 반려 처리
+   b-1. BIZ_STATE_CODE → 99
+   b-2. 반려 사유 코드 저장
+c. 반려 사유 통계 반영 후 이미지 처리
+   c-1. O → 반려 기록에 이미지 보관
+   c-2. X → 이미지 즉시 삭제
+※ 통계 반영 전 이미지 삭제 불가</p></div>
+  <div class="h">자동 반려 조건 팝업 — 송출 불가 카테고리 (12~18)</div>
+<div class="item lv2" id="d12"><span class="no">12</span><span class="ttl">자동 반려 조건 팝업</span>
+    <p class="dsc">a. 3개 탭으로 구성 → <a class="ref" data-t="13">[13]</a>
+b. 하단 바로 적용 / 저장 버튼은 전 탭 공통 → <a class="ref" data-t="17">[17]</a>, <a class="ref" data-t="18">[18]</a>
+c. 우측 상단 X 클릭 시 저장하지 않고 닫기
+d. 팝업 진입자는 전체 내용 열람 가능, 읽기 전용 등급 없음
+   d-1. 등록 · 삭제는 각 권한 보유자만 가능 : 팀장 이상</p></div>
+  <div class="item lv2" id="d13"><span class="no">13</span><span class="ttl">자동 반려 조건_ 탭 구성</span>
+    <p class="dsc">a. 3개 탭
+   a-1. 송출 불가 카테고리→ <a class="ref" data-t="14">[14]</a>
+   a-2. 송출 불가 광고주 → <a class="ref" data-t="19">[19]</a>
+   a-3. 사용 불가 표현 → <a class="ref" data-t="24">[24]</a>
+b. 탭 전환 시 입력 중인 값 유지</p></div>
+  <div class="h sub">카테고리 등록 영역 (14~16)</div>
+  <div class="item lv3" id="d14"><span class="no">14</span><span class="ttl">카테고리 선택 드롭다운</span>
+    <p class="dsc">a. 광고주 카테고리 정보 드롭다운으로 표시 
+      a-1.광고주>계정설정>카테고리>3depth 정보 사용
+      a-2.검색 기능 제공 필요
+b. 이미 등록된 카테고리는 드롭리스트에 노출되지 않음   → <a class="ref" data-t="16">[16]</a>
+c. 광고주센터 &gt; 계정설정의 카테고리 조건과 동일한 목록 사용</p></div>
+  <div class="item lv3" id="d15"><span class="no">15</span><span class="ttl">추가 버튼</span>
+    <p class="dsc">a. 선택된 카테고리를 등록 목록에 칩으로 추가 → <a class="ref" data-t="16">[16]</a>
+b. 미선택 상태에서 클릭 시
+   b-1. 안내 문구 노출
+   b-2. 추가하지 않음</p></div>
+  <div class="item lv3" id="d16"><span class="no">16</span><span class="ttl">등록 카테고리 목록<span class="tag o">소분류 104개 기본</span></span>
+    <p class="dsc">a. 등록된 카테고리를 칩 형태로 나열
+b. 칩 우측 × 클릭 시 송출 불가 카테고리에서 제외
+c. 생성 · 삭제 권한자 상이
+    c-1. 열람 : 모비센스 로그인시 전체 가능 
+    c-2. 생성 · 삭제 : [권한조건 추가 필요] 
+d. 기본 등록값: 생성 제외 카테고리 <a class="ref" data-t="56">[56]</a>와 같은 목록 (대분류 / 중분류 / 소분류, 24행 · 소분류 104개)
+   d-1. 칩은 소분류 단위로 등록
+   d-2. 전체 목록은 <a class="secref" data-sec="s2">개요 &gt; 02 공통 기준</a> 2.2 표 참고
+e. 해당 카테고리 광고주의 소재그룹은 카카오 송출 토글 OFF로 생성 → <a class="ref" data-t="31">[31]</a>
+   e-1. 소재는 생성되나 검수 리스트에 미등재
+f. <b>비즈보드(상품) 이미지 소재 생성 시 제외하는 광고주 카테고리와 동일</b>
+   f-1. 본 조건을 수정하는 경우 비즈보드 이미지 소재 생성 조건도 함께 수정 필요
+g. 수정 이력
+   g-1. 2026-10-20 수정: 생성 제외 카테고리 표(대분류 / 중분류 / 소분류)로 기본 등록값 일괄 변경. 기존 16종 중 빗썸·보험상조 제외, 전자담배/금연용품(성인) → 전자담배/금연용품</p></div>
+  <div class="h sub">하단 공통 버튼 (17~18)</div>
+  <div class="item lv3" id="d17"><span class="no">17</span><span class="ttl">바로 적용<span class="tag g">전 탭 공통</span></span>
+    <p class="dsc">a. 3개 탭 모두 동일하게 노출
+b. 설정값 저장 + 등록된 소재 검증 후 반려처리 
+  b-1. 상태 : 대기인 소재에 대해 검증 후 반려 진행 </p></div>
+  <div class="item lv3" id="d18"><span class="no">18</span><span class="ttl">저장<span class="tag g">전 탭 공통</span></span>
+    <p class="dsc">a. 3개 탭 모두 동일하게 노출
+b. 설정값만 저장, 다음 배치부터 반영</p></div>
+  <div class="h">자동 반려 조건 팝업 — 송출 불가 광고주 (19~23)</div>
+  <div class="item lv2" id="d19"><span class="no">19</span><span class="ttl">송출 불가 광고주 탭</span>
+    <p class="dsc">a. 광고주 계정 단위로 반려 대상 관리
+b. 해당 광고주 소재의 처리 흐름
+   b-1. 검수 리스트에 등재
+   b-2. 배치를 통해 "모비온 반려" 처리
+※ 생성 제외 광고주 <a class="ref" data-t="57">[57]</a>와 같은 목록인지 확인 필요 → <a class="secref" data-sec="s9">개요 &gt; 09</a></p></div>
+  <div class="h sub">광고주 검색 영역 (20~21)</div>
+  <div class="item lv3" id="d20"><span class="no">20</span><span class="ttl">검색 입력</span>
+    <p class="dsc">a. 인풋박스, 텍스트 포함 검색
+   a-1. 대상 : 광고주 ID, 광고주명
+b. 우측 × 클릭 시 입력값 초기화</p></div>
+  <div class="item lv3" id="d21"><span class="no">21</span><span class="ttl">검색 버튼</span>
+    <p class="dsc">a. 클릭 시점에 검
+b. 결과는 검색 결과 목록에 노출 → <a class="ref" data-t="22">[22]</a></p></div>
+  <div class="h sub">목록 영역 (22~23)</div>
+  <div class="item lv3" id="d22"><span class="no">22</span><span class="ttl">검색 결과 · 추가<span class="tag b">신규</span></span>
+    <p class="dsc">a. 행 우측 <code>추가</code> 버튼 클릭 시 등록 목록에 추가 → <a class="ref" data-t="23">[23]</a>
+b. 이미 등록된 광고주 : 버튼 disable </p></div>
+  <div class="item lv3" id="d23"><span class="no">23</span><span class="ttl">등록 광고주 목록</span>
+    <p class="dsc">a. 이미 제외 대상으로 포함된 광고주 계정 노출
+b. 행 우측 <code>삭제</code> 버튼 클릭 시 개별 삭제
+c. 예시 등록값 : livecom, rentmall, zipbanchan, coupangls</p></div>
+
+  <div class="h">자동 반려 조건 팝업 — 사용 불가 표현 (24~29)</div>
+  <div class="item lv2" id="d24"><span class="no">24</span><span class="ttl">사용 불가 표현 탭</span>
+    <p class="dsc">a. 등록 표현 정의
+   a-1. LLM의 판정 보조
+   a-2. 등록된 표현은 무조건 반려 
+   a-3. 유사표현도 LLM 판정하에 반려 처리됨
+b. 검수 대상 컬럼 
+   b-1. 사이트명
+   b-2. 소재 광고문구
+c. 검출 시 모비온 반려 처리
+   c-1. 등록 표현과 일치 시 반려 사유 "텍스트 검증 - 등록된 금지 표현" (LLM 미호출)
+   c-2. 유사 표현을 LLM이 판정한 경우 반려 사유에 테마명 병기
+   c-3. 판정 등급은 반려 단일, 경고 등 중간 등급 없음
+d. 별도 등록하지 않으나, 텍스트 검수 조건 (참고사항)
+   d-1. 도메인 주소 : 사이트명, 소재 광고문구에 도메인 주소 포함 (LLM 미호출)
+   d-2. 오탈자
+   d-3. 유효기간 종료</p></div>
+  <div class="h sub">표현 등록 영역 (25~27)</div>
+  <div class="item lv3" id="d25"><span class="no">25</span><span class="ttl">테마 선택<span class="tag o">9종 고정</span></span>
+    <p class="dsc">a. 등록 시 필수 선택
+b. 테마 > 드롭다운 리스트 
+   b-1. 카카오 서비스 명칭 변형, 프로필 이름 수식어, 기능성 표시 표현, 최상급 표현, 사실 확인 필요 문구, 사회정서 침해, 의약품·의료기기 효능, 전후비교 표현, 운영자 추가 </p></div>
+  <div class="item lv3" id="d26"><span class="no">26</span><span class="ttl">표현 입력</span>
+    <p class="dsc">a. 쉼표 또는 줄바꿈 구분으로 다건 동시 등록
+b. 입력된 표현은 선택된 테마로 일괄 귀속 → <a class="ref" data-t="25">[25]</a></p></div>
+  <div class="item lv3" id="d27"><span class="no">27</span><span class="ttl">추가 버튼</span>
+    <p class="dsc">a. 입력 표현을 등록 목록에 추가 → <a class="ref" data-t="29">[29]</a>
+b. 추가 차단 조건
+   b-1. 정규화 기준 동일 표현이 이미 있는 경우 — 차단 후 안내
+   b-2. 테마 미선택 또는 입력값 없음</p></div>
+  <div class="h sub">목록 영역 (28~29)</div>
+  <div class="item lv3" id="d28"><span class="no">28</span><span class="ttl">등록된 표현 찾기</span>
+    <p class="dsc">a. 등록된 표현을 검색하는 입력창
+b. 검색 버튼 클릭 시점에 최종 검색
+c. 일치하는 표현만 목록에 노출 → <a class="ref" data-t="29">[29]</a>
+   c-1. 용도 : 중복 확인 및 삭제</p></div>
+  <div class="item lv3" id="d29"><span class="no">29</span><span class="ttl">테마별 등록 목록</span>
+    <p class="dsc">a. 상단에 전체 등록 표현 수(총 건수) 표시
+b. 테마 그룹 헤더 + 칩으로 나열
+   b-1. 그룹별 건수 표기
+c. 등록 표현이 없는 테마는 미노출
+d. 칩 우측 × 클릭 시 개별 삭제
+e. 등록 필요 표현
+   e-1. 카카오 서비스 명칭 변형 : 플친, 플러스친구, 카스, 카카오톡Channel, 카톡 채널
+  
+  
+  </p></div>
+
+
+  </div><!-- /grp-desc reject -->
+
+  <div class="grp-desc" data-pg="link">
+  <div class="h">연동 — 소재그룹 설정 (30~31)<span class="tag r">Vue.js 개발 완료 후 반영</span></div>
+  <div class="item lv2" id="d30"><span class="no">30</span><span class="ttl">소재그룹 설정<span class="tag g">기존 화면</span></span>
+    <p class="dsc">※ 광센_소재그룹 설정 탭(30~31) 전체 연기: <b style="color:var(--red)">Vue.js 개발 완료 후 반영</b>
+* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입
+a. 화면 구성 변경 없음
+   a-1. 조건에 따른 토글 상태 제어만 신규 개발 대상
+b. 조건 등록 또는 삭제 시 대상 소재그룹 재판정 → 토글 상태 갱신
+c. 조건 해제 시 이미 반려 처리된 소재는 복원하지 않음
+※ 소재그룹 수정 시 재검수(대기 재등록) 항목: <a class="secref" data-sec="s0-3">개요 &gt; 0.3</a></p></div>
+  <div class="h sub">상단 토글 영역 (31)</div>
+  <div class="item lv3" id="d31"><span class="no">31</span><span class="ttl">카카오 송출 토글<span class="tag r">disable</span></span>
+    <p class="dsc">a. 송출 불가 카테고리 해당 시 → <a class="ref" data-t="16">[16]</a>
+   a-1. 토글 OFF로 전환
+   a-2. disable 처리, 운영자 변경 불가
+b. 그 외 조건은 수정 없음</p></div>
+  </div><!-- /grp-desc link -->
+
+  <div class="grp-desc" data-pg="ai">
+  <div class="h">이미지 검수 &gt; 채팅리스트/피드(AI) (32~54)<span class="tag b">신규 메뉴</span></div>
+  <div class="dsc desc-meta">메뉴: 모비센스 &gt; 이미지 검수 &gt; 채팅리스트 / 피드(AI)<br>목적: 매일 배치로 AI 생성된 850×850 배너 소재를 검수(내부승인/반려)<br>생성 로직: <a class="secref" data-sec="s3">개요 &gt; 03 소재 자동 생성</a></div>
+
+  <div class="h sub">상단 현황 · 검색 영역 (32~34)</div>
+  <div class="item lv3" id="d32"><span class="no">32</span><span class="ttl">상단 현황</span>
+    <p class="dsc">a. 승인상태별 이미지 수와 광고주 수 노출
+b. 컬럼: 전체 / 대기 / 내부승인 / 승인 / 모비온 반려 / 카카오 반려
+   b-1. 기존 채팅리스트/피드 컬럼에 '내부승인' 컬럼 추가
+c. 값 예시: "이미지 수 N건", "광고주 수 N개"
+d. 집계 기준: <a class="ref" data-t="33">[33]</a> 조회 기간 조건을 따름</p></div>
+  <div class="item lv3" id="d33"><span class="no">33</span><span class="ttl">검색 조건</span>
+    <p class="dsc">a. 기간과 승인상태로 목록 조회
+   a-1. 기간 기준: 생성일, 최근 업데이트일 2가지
+b. 조건 변경 시 목록과 상단 현황 재조회
+c. [자동 반려 조건] 버튼: 채팅리스트/피드 <a class="ref" data-t="2">[2]</a>와 같은 버튼
+   c-1. AI 소재도 같은 자동 반려 배치에서 처리 (개발 확인) →<a class="secref" data-sec="s9">개요 &gt; 09</a></p></div>
+  <div class="item lv3" id="d34"><span class="no">34</span><span class="ttl">생성 조건</span>
+    <p class="dsc">a. 검색 조건 영역의 [자동 반려 조건] 버튼 옆에 노출
+b. 클릭 시 '생성 대상 광고주' 팝업 오픈 → <a class="ref" data-t="55">[55]</a>
+c. 소재를 생성하는 광고주의 순서와 제외 기준 조회용 팝업
+d. [x] 버튼 클릭 시 팝업 닫힘</p></div>
+
+  <div class="h sub">일괄 처리 (35~37)</div>
+  <div class="item lv2" id="d35"><span class="no">35</span><span class="ttl">일괄 처리</span>
+    <p class="dsc">a. 목록에서 체크한 소재의 상태 일괄 변경
+b. 선택된 소재가 없는 경우 얼럿
+   b-1. "변경할 이미지를 선택해 주세요."</p></div>
+  <div class="item lv3" id="d36"><span class="no">36</span><span class="ttl">내부승인</span>
+    <p class="dsc">a. 클릭 시 내부승인 확인 모달 오픈 (500×200)
+b. 확인 시 선택 소재를 '내부승인' 상태로 변경
+   b-1. 다량의 소재를 일괄 처리하는 경우 필요시 로딩 스피너 사용</p></div>
+  <div class="item lv3" id="d37"><span class="no">37</span><span class="ttl">반려<span class="tag r">확인 필요</span></span>
+    <p class="dsc">a. 클릭 시 반려 모달 오픈 (500×450)
+b. 반려 사유 입력 후 [확인] 클릭 시 상태 변경 및 사유 저장
+c. 저장된 사유는 목록의 반려사유 <a class="ref" data-t="53">[53]</a>에 노출
+※ 채팅리스트/피드 반려 사유 팝업 <a class="ref" data-t="7">[7]</a>~<a class="ref" data-t="11">[11]</a> (15개 중 선택) 공용 여부 확인 필요 → <a class="secref" data-sec="s9">개요 &gt; 09</a></p></div>
+
+  <div class="h sub">목록 도구 (38~42)</div>
+  <div class="item lv2" id="d38"><span class="no">38</span><span class="ttl">목록 도구</span>
+    <p class="dsc">a. 목록 표시 방식 설정 및 내보내기</p></div>
+  <div class="item lv3" id="d39"><span class="no">39</span><span class="ttl">컬럼 설정</span>
+    <p class="dsc">a. 목록에 노출할 컬럼 선택(ON/OFF)
+b. 기존 채팅리스트/피드의 공통 컬럼 설정 기능과 동일</p></div>
+  <div class="item lv3" id="d40"><span class="no">40</span><span class="ttl">검색어 검색</span>
+    <p class="dsc">a. 검색어 입력 후 [검색] 클릭 또는 Enter 시 조회
+b. 검색 대상: 광고주ID, 광고주명</p></div>
+  <div class="item lv3" id="d41"><span class="no">41</span><span class="ttl">보기 개수</span>
+    <p class="dsc">a. 옵션: 100개 / 250개 / 500개씩 보기
+b. 기본값: 100개
+c. 변경 시 즉시 재조회</p></div>
+  <div class="item lv3" id="d42"><span class="no">42</span><span class="ttl">엑셀 다운로드</span>
+    <p class="dsc">a. 현재 검색 조건(기간 · 승인상태 · 검색어)으로 목록을 엑셀 파일로 다운로드
+b. 엑셀 컬럼은 화면 목록과 동일
+c. 이미지(배너이미지, 프로필 로고)는 이미지 대신 이미지 주소(URL) 제공</p></div>
+
+  <div class="h sub">소재 목록 (43~53)</div>
+  <div class="item lv2" id="d43"><span class="no">43</span><span class="ttl">소재 목록</span>
+    <p class="dsc">a. AI 생성 소재 1건당 1행 노출
+b. 맨 앞 체크박스로 일괄 처리 <a class="ref" data-t="35">[35]</a> 대상 선택
+   b-1. 헤더 체크박스는 전체 선택
+c. NO는 현재 페이지 기준 순번
+d. 기본 정렬: 생성일자 최신순
+e. 컬럼별 출처: <a class="secref" data-sec="s3">개요 &gt; 3.3 테이블 컬럼별 출처</a></p></div>
+  <div class="item lv3" id="d44"><span class="no">44</span><span class="ttl">승인상태</span>
+    <p class="dsc">a. 상태를 색 버튼으로 노출: 대기(노랑) / 내부승인 / 승인 / 모비온 반려 / 카카오 반려
+b. 배치로 생성된 직후 상태는 '대기'</p></div>
+  <div class="item lv3" id="d45"><span class="no">45</span><span class="ttl">광고주 정보</span>
+    <p class="dsc">a. 광고주ID · 광고주명 · 카테고리 노출
+b. 카테고리 표기 예시: "대분류&gt;중분류&gt;소분류"</p></div>
+  <div class="item lv3" id="d46"><span class="no">46</span><span class="ttl">사이트명</span>
+    <p class="dsc">a. 광고주 정보(adMember)의 사이트명 노출
+b. 생성 시점 값으로 저장
+   b-1. 이후 광고주 정보가 변경되어도 유지</p></div>
+  <div class="item lv3" id="d47"><span class="no">47</span><span class="ttl">프로필 로고</span>
+    <p class="dsc">a. 광고주 정보(adMember)의 프로필 로고를 썸네일로 노출
+b. 클릭 시 원본 크기 미리보기 모달 오픈 (600×600)</p></div>
+  <div class="item lv3" id="d48"><span class="no">48</span><span class="ttl">배너이미지</span>
+    <p class="dsc">a. AI 생성 850×850 배너를 썸네일로 노출
+   a-1. 썸네일 하단에 사이즈 타입 'TP 09' 표기
+b. 클릭 시 미리보기 모달 오픈 (850×850)</p></div>
+  <div class="item lv3" id="d49"><span class="no">49</span><span class="ttl">소재 카피문구_2 · _4<span class="tag o">변경</span></span>
+    <p class="dsc">a. 소재 카피문구_2: 소재그룹 카피문구 02번 노출 (광고문구 1)
+   a-1. 기존 '소재 광고문구' 컬럼
+   a-2. 저장 컬럼: COPY
+   a-3. 카카오 심사 요청 시 reviewData.title로 전송
+b. 소재 카피문구_4: 소재그룹 카피문구 04번 노출 (광고문구 2)
+   b-1. 저장 컬럼: COPY2
+   b-2. 카카오 심사 요청 시 reviewData.description으로 전송
+   b-3. 위치: 소재 카피문구_2 컬럼 오른쪽
+c. 긴 문구는 줄바꿈하여 전체 노출
+d. 채팅리스트/피드 <a class="ref" data-t="5">[5]</a>와 같은 컬럼 구성
+<span style="color:var(--red)">e. 수정 이력
+   e-1. 2026-11-19 수정: 소재 광고문구 → 소재 카피문구_2로 이름 변경, 소재 카피문구_4 컬럼 추가 (개발 화면 기준)</span></p></div>
+  <div class="item lv3" id="d50"><span class="no">50</span><span class="ttl">랜딩URL</span>
+    <p class="dsc">a. 상품 수집 시 저장된 상품별 URL 노출
+b. 클릭 시 새 탭으로 오픈
+   b-1. 마우스 오버 시 툴팁으로 전체 URL 제공</p></div>
+  <div class="item lv3" id="d51"><span class="no">51</span><span class="ttl">CTA 정보</span>
+    <p class="dsc">a. 광고주 정보(adMember)의 CTA 문구 노출
+b. 값 예시: "바로가기"</p></div>
+  <div class="item lv3" id="d52"><span class="no">52</span><span class="ttl">생성일자 · 최종업데이트일</span>
+    <p class="dsc">a. 생성일자: 배치가 소재를 생성한 시각
+b. 최종업데이트일: 상태 · 사유가 마지막으로 변경된 시각
+   b-1. 변경 이력이 없는 경우(최초) 빈값
+c. 표기 형식: YYYY-MM-DD HH:MM:SS</p></div>
+  <div class="item lv3" id="d53"><span class="no">53</span><span class="ttl">반려사유<span class="tag r">확인 필요</span></span>
+    <p class="dsc">a. 반려 <a class="ref" data-t="37">[37]</a> 시 입력한 사유를 읽기 전용 텍스트 영역에 노출
+b. 카카오 반려 사유 발생 시 카카오 반려 사유로 덮어쓰기
+※ 채팅리스트/피드 반려사유 컬럼 <a class="ref" data-t="4">[4]</a>는 "{검증 단계} - {상세 사유} (검출 표현)" 형식
+   - 표기 통일 여부 확인 필요 → <a class="secref" data-sec="s9">개요 &gt; 09</a></p></div>
+
+  <div class="h sub">페이징 (54)</div>
+  <div class="item lv3" id="d54"><span class="no">54</span><span class="ttl">페이징</span>
+    <p class="dsc">a. 보기 개수 <a class="ref" data-t="41">[41]</a> 단위로 페이지 구분
+b. «, » 클릭 시 이전 · 다음 페이지로 이동
+c. 현재 페이지는 파란색으로 표시
+d. 페이지 이동 시 검색 조건 유지</p></div>
+
+  <div class="h">생성 조건 팝업 — 생성 대상 광고주 (55~57)</div>
+  <div class="item lv3" id="d55"><span class="no">55</span><span class="ttl">광고주 리스트 (생성 순서)</span>
+    <p class="dsc">a. 팝업 오픈 시 기본 노출 탭
+b. 리스트 순서대로 소재 생성
+   b-1. 생성 순서 규칙: <a class="secref" data-sec="s3">개요 &gt; 3.1 생성 대상 · 순서</a>
+c. 조회 조건
+   c-1. 드롭박스: 최근 생성일(디폴트), 다음 생성 예정일
+   c-2. [검색] 클릭 시 조회
+d. 보기 개수: 100개 / 250개 / 500개씩 보기
+   d-1. 기본값 100개, 변경 시 즉시 재조회
+e. [엑셀]: 현재 조회된 테이블 그대로 엑셀로 데이터 다운
+<span style="color:var(--red)">   e-1. 파일명: YYYYMMDD_talkfeed_clientlist
+   e-2. 엑셀 파일 내 빈 값은 빈 값으로 유지</span>
+f. 컬럼: 순번 / 광고주ID / 광고주명 / 카테고리 / 최근 생성일 / 다음 생성 예정일 <span style="color:var(--red)">(비고 컬럼 삭제)</span>
+   f-1. 최근 생성일 · 다음 생성 예정일이 없는 경우 '—' 노출</p></div>
+  <div class="item lv3" id="d56"><span class="no">56</span><span class="ttl">생성 제외 카테고리<span class="tag o">소분류 104개</span></span>
+    <p class="dsc">a. 소재를 생성하지 않는 카테고리를 분류 체계(대분류 &gt; 중분류 &gt; 소분류) 그대로 노출
+b. 컬럼: 대분류 / 중분류 / 소분류 (가운데 정렬)
+c. 행 단위: 대분류·중분류 조합 1행, 소분류는 쉼표로 나열 (총 24행)
+d. 자동 반려 조건의 송출 불가 카테고리 <a class="ref" data-t="16">[16]</a>와 같은 목록
+   d-1. 한쪽 변경 시 동일하게 반영 필요
+   d-2. 전체 목록: <a class="secref" data-sec="s2">개요 &gt; 02 공통 기준</a> 2.2 표</p></div>
+  <div class="item lv3" id="d57"><span class="no">57</span><span class="ttl">생성 제외 광고주</span>
+    <p class="dsc">a. 소재 생성에서 제외된 광고주 목록 노출
+b. 컬럼: 광고주ID / 광고주명
+※ 자동 반려 조건의 송출 불가 광고주 <a class="ref" data-t="19">[19]</a>와 같은 목록인지 확인 필요 → <a class="secref" data-sec="s9">개요 &gt; 09</a></p></div>
+  </div><!-- /grp-desc ai -->
+
+
+</div>
+</div>
+
+<script>
+function switchPage(pg){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.toggle('on',t.dataset.pg===pg));
+  var spec=document.querySelector('.pg-spec');
+  var layout=document.querySelector('.layout');
+  if(pg==='spec'){
+    spec.classList.add('on'); layout.style.display='none';
+  }else{
+    spec.classList.remove('on'); layout.style.display='';
+    document.querySelectorAll('.pg').forEach(p=>p.classList.toggle('on',p.dataset.pg===pg));
+    document.querySelectorAll('.grp-desc').forEach(d=>d.classList.toggle('on',d.dataset.pg===pg));
+  }
+}
+document.querySelectorAll('.ptab').forEach(function(t){
+  t.addEventListener('click',function(){switchPage(t.dataset.pg);});
+});
+document.querySelectorAll('.bdg,.dsc .ref').forEach(function(b){
+  b.addEventListener('click',function(){
+    var el=document.getElementById('d'+b.dataset.t);
+    if(!el){console.warn('missing',b.dataset.t);return;}
+    var grp=el.closest('.grp-desc');
+    if(grp&&!grp.classList.contains('on')) switchPage(grp.dataset.pg);
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    el.classList.remove('hl');void el.offsetWidth;el.classList.add('hl');
+  });
+});
+document.querySelectorAll(".secref").forEach(function(a){
+  a.addEventListener("click",function(){
+    var el=document.getElementById(a.dataset.sec);
+    if(!el){console.warn("missing section",a.dataset.sec);return;}
+    switchPage("spec");
+    requestAnimationFrame(function(){
+      el.scrollIntoView({behavior:"smooth",block:"start"});
+      el.classList.remove("hl");void el.offsetWidth;el.classList.add("hl");
+    });
+  });
+});
+// 번호로 이동: 해당 화면 탭 전환 → 배지 위치 → 디스크립션 (개요 표 · 수정 이력에서 사용)
+function goBadge(t){
+  var b=document.querySelector('.bdg[data-t="'+t+'"]'); if(!b) return;
+  var pg=b.closest('.pg'); if(pg) switchPage(pg.dataset.pg);
+  requestAnimationFrame(function(){
+    b.scrollIntoView({behavior:'smooth',block:'center'});
+    b.classList.remove('ping'); void b.offsetWidth; b.classList.add('ping');
+    var el=document.getElementById('d'+t);
+    if(el) setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.classList.remove('hl'); void el.offsetWidth; el.classList.add('hl'); },400);
+  });
+}
+document.querySelectorAll('.spec-doc .ref').forEach(function(a){
+  a.addEventListener('click',function(){goBadge(a.dataset.t);});
+});
+var miss=[...document.querySelectorAll('.bdg')].filter(b=>!document.getElementById('d'+b.dataset.t));
+var noBadge=[...document.querySelectorAll('.item[id^="d"]')].filter(i=>!document.querySelector('.bdg[data-t="'+i.id.slice(1)+'"]'));
+console.log(miss.length?'broken links: '+miss.map(b=>b.dataset.t):'all badge links OK');
+if(noBadge.length) console.warn('description without badge: '+noBadge.map(i=>i.id));
+switchPage('spec');
+</script>
+<!-- 전체 흐름도 크게 보기 (원래 크기 2320px) -->
+<div id="flowModal" class="hidden" role="dialog" aria-modal="true" aria-label="전체 흐름도 크게 보기">
+  <div class="fBox">
+    <div class="fHead"><span>00 전체 흐름 (최신안) — 원래 크기 · 닫기: ✕ 또는 Esc</span><button type="button" class="fClose" aria-label="닫기">✕</button></div>
+    <div class="fBody"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var btn = document.getElementById('flowZoom'), modal = document.getElementById('flowModal');
+  if (!btn || !modal) return;
+  var body = modal.querySelector('.fBody');
+  var close = function(){ modal.classList.add('hidden'); };
+  btn.addEventListener('click', function(){
+    if (!body.firstChild) body.appendChild(document.querySelector('.flow-big svg').cloneNode(true));
+    modal.classList.remove('hidden');
+  });
+  modal.querySelector('.fClose').addEventListener('click', close);
+  modal.addEventListener('click', function(e){ if (e.target === modal) close(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+})();
+</script>
+<!-- 수정 이력 팝업 (최신 이력을 맨 위에 추가) -->
+<div id="historyModal" class="hidden" role="dialog" aria-modal="true" aria-label="수정 이력">
+  <div class="hBox">
+    <div class="hHead"><span>수정 이력</span><button type="button" class="hClose" aria-label="닫기">✕</button></div>
+    <div class="hBody">
+      <table>
+        <thead><tr><th>수정일</th><th>화면</th><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>26.11.23</td><td>개요</td><td>00 전체 흐름 (최신안)</td><td>② 광고주 등록 소재의 '채팅리스트/피드 등재 → 대기' · '기존 건 삭제 → 대기로 재등록'에서 나가는 연결을 ③ '대기' 대신 ③ '자동 반려 배치 · LLM 검수'로 바로 연결 (Figma 흐름도와 맞춤)</td></tr>
+          <tr><td>26.11.20</td><td>개요<br>광센_소재그룹 설정</td><td>0.3 소재그룹 수정 시 재검수</td><td>개발 코드 기준으로 재검수 항목 정리: 다시 등록되는 항목 7개(모바일 랜딩 URL · 딥링크 · 이미지 그룹 · 카피 그룹 · CTA · 딥링크 정보 · 프로필 로고 삭제)와 재검수 안 되는 항목 6개<br>00 흐름도 ② 레인을 생성 / 수정 두 줄로 변경, 0.1 · 0.2-3 문구 수정, 09-10 추가, 30번 설명에 0.3 연결</td></tr>
+          <tr><td>26.11.19</td><td>개요</td><td>00 전체 흐름 (최신안)</td><td>To-Be(LLM 사전 검수) 기준 전체 흐름도로 교체 — AI 생성 · 광고주 등록 소재 · 자동 반려 · 카카오 심사 · 운영자 수동 처리를 한 판으로 연결<br>최초 개발 기획서의 정책 · 흐름을 0.1 상태 정의 · 0.2 정책으로 편입 (화면 설계 제외)<br>01 개발 범위 1번 · 3.2 생성 흐름에 To-Be 표기, 09-9 To-Be 상태값 추가</td></tr>
+          <tr><td>26.11.19</td><td>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="49">49 소재 카피문구_2 · _4</td><td>소재 광고문구 → 소재 카피문구_2로 이름 변경, 소재 카피문구_4 컬럼 추가 (개발 화면 컬럼명 기준)<br>출처: 소재그룹 카피문구 02번(COPY, 카카오 title) · 04번(COPY2, 카카오 description)<br>개요 3.3 테이블 컬럼별 출처 · 09-4 함께 수정</td></tr>
+          <tr><td>26.11.19</td><td>개요<br>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="33">00 · 09-1 · 33 자동 반려 적용 대상</td><td>자동 반려 배치가 채팅리스트/피드(AI) 소재도 처리하는 것을 개발 코드로 확인해 '확인 필요' 해제<br>00 전체 흐름도의 AI → 자동 반려 연결을 실선으로 변경</td></tr>
+          <tr><td>26.11.19</td><td>전체</td><td>문서 통합</td><td>톡피드 소재 자동 생성(26.10.21 버전)과 톡피드 자동반려(26.11.11 버전)를 한 문서로 통합. 기획 내용 변경 없음, 참조 번호만 갱신<br>개요: 00 전체 흐름 · 09 통합 확인 필요 신규 / 개발 범위 02→01 (자동 생성 3행 추가) / 송출 불가 카테고리 03 + 5.1 카테고리 표 → 02 공통 기준 (카테고리 표 1개로 통합) / 소재 자동 생성 03 편입 / 판정 흐름 01→04 / 반려 조건 등록 04 → 05 머리말 / 05~08 번호 유지<br>채팅리스트/피드(AI) 화면 번호 32~57로 편입 (이전 번호 → 새 번호: 1→32, 2→33, 7→34, 3→35, 3-1→36, 3-2→37, 4→38, 4-1~4-4→39~42, 5→43, 5-1~5-10→44~53, 6→54, 7-1~7-3→55~57)<br>탭 이름 변경: 모비센스_반려조건설정 → 모비센스_채팅리스트/피드<br>AI 화면 목업 상단 현황에 내부승인 컬럼 표시 (설명 <span class="hgo" data-t="32">32</span>와 맞춤)<br>두 문서가 다른 부분에 확인 필요 표기: <span class="hgo" data-t="33">33</span> · <span class="hgo" data-t="37">37</span> · <span class="hgo" data-t="49">49</span> · <span class="hgo" data-t="53">53</span> · <span class="hgo" data-t="57">57</span> · <span class="hgo" data-t="19">19</span></td></tr>
+          <tr><td>26.11.11</td><td>개요<br>모비센스_채팅리스트/피드</td><td>개발 반려 사유 목록 반영</td><td>개발 반려 사유 목록(stage별 reason) 기준으로 자동 반려 사유 정리. 개요 변경분은 붉은 글씨 · (261111 수정) 표기<br>자동 반려 사유 19개 → 27개 (7.2): 등록된 금지 표현, 로고 가독성, 화질 저하, 클릭 유도 오브젝트, 랜딩 URL 4종 추가<br>이름 변경: 수식어 → 프로필 이름 수식어, 띄어쓰기 및 오탈자 → 오탈자<br>LLM 미호출 검증(6.1)에 등록된 금지 표현 · 도메인 주소 포함 추가, 확장자 없음도 확장자 오류로 처리<br>등록 표현과 일치하면 "텍스트 검증 - 등록된 금지 표현", LLM 판정이면 테마명으로 표기 (5.3 · 6.5)<br>랜딩 URL(6.7) 검토 항목 → 반려 조건으로 변경<br>8.1 해상도/비율 문제 · 흐림/모자이크 ↔ 화질 저하 유사 관계 추가<br>반려 배치 시간 매일 10시 → 5시 (02 · 06)<br>화면설계서 <span class="hgo" data-t="3">3 · 4</span> · <span class="hgo" data-t="24">24 · 25</span> 설명도 같은 기준으로 수정</td></tr>
+          <tr><td>26.11.10</td><td>개요</td><td>7.2 사유 목록</td><td>수동 반려 사유 분류 6행 추가 (파란 글씨): 광고주 검증 · 랜딩 URL · 필수요소 누락 · 이미지 검증 · 텍스트 검증 · 기타</td></tr>
+          <tr><td>26.11.04</td><td>전체</td><td class="hgo" data-t="1">넘버링 정리</td><td>화면 순서대로 1~31 재정리. 진입점 1~6 / 반려 사유 팝업 7~11 / 자동 반려 조건 팝업 12~29 / 소재그룹 설정 30~31<br>(이전 번호 → 새 번호: 31→3, 3→4, 24→5, 25→6, 26~30→7~11, 4~21→12~29, 22~23→30~31)</td></tr>
+          <tr><td>26.11.04</td><td>모비센스_채팅리스트/피드</td><td class="hgo" data-t="3">3 반려 사유 검색 드롭박스</td><td>검색 영역에 반려 사유 드롭박스 추가. 드롭리스트 안에서 사유 검색 가능<br>목록은 7.2 사유 목록 + 8.1 수동 반려 사유와 동일</td></tr>
+          <tr><td>26.11.04</td><td>모비센스_채팅리스트/피드</td><td class="hgo" data-t="7">7~11 반려 사유 팝업</td><td>[반려] 클릭 시 반려 사유 팝업 추가: 반려 사유 드롭리스트(15개), 기타 입력칸(100자), 취소, 확인(30)<br>[확인]은 비활성화하지 않고 클릭 시 버튼 위에 얼럿 텍스트 제공 (사유를 선택해주세요. / 사유를 작성해주세요.)<br>개요 08 반려 사유 팝업(수동 · 자동 반려 사유 관계, 확인 필요 사항) 추가</td></tr>
+          <tr><td>26.11.02</td><td>광센_소재그룹 설정</td><td class="hgo" data-t="30">30~31 소재그룹 설정</td><td>탭 전체 연기: Vue.js 개발 완료 후 반영<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입</td></tr>
+          <tr><td>26.10.26</td><td>모비센스_채팅리스트/피드</td><td class="hgo" data-t="6">6 테이블 조회 조건 안내 문구</td><td>집계 표 위에 안내 문구 추가: * 조회 영역에서 설정한 기간 조건에 따른 데이터가 노출됩니다</td></tr>
+          <tr><td>26.10.26</td><td>모비센스_채팅리스트/피드</td><td class="hgo" data-t="5">5 소재 카피 문구_4 컬럼</td><td>소재 카피 문구_4 컬럼 추가, 기존 소재 광고문구 컬럼명을 소재 카피 문구_2로 변경</td></tr>
+          <tr><td>26.10.21</td><td>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="55">55 광고주 리스트 (생성 순서)<br>(구 7-1)</td><td>엑셀 다운로드 시 빈 값은 빈 값으로 유지</td></tr>
+          <tr><td>26.10.21</td><td>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="55">55 광고주 리스트 (생성 순서)<br>(구 7-1)</td><td>테이블 비고 컬럼 삭제 (신규 광고주 표시 포함)</td></tr>
+          <tr><td>26.10.21</td><td>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="55">55 광고주 리스트 (생성 순서)<br>(구 7-1)</td><td>엑셀 다운로드 파일명 규칙 추가: YYYYMMDD_talkfeed_clientlist</td></tr>
+          <tr><td>26.10.20</td><td>모비센스_채팅리스트/피드</td><td class="hgo" data-t="16">16 등록 카테고리 목록</td><td>생성 제외 카테고리 표(대분류 / 중분류 / 소분류)로 기본 등록값 일괄 변경. 빗썸·보험상조 제외, 전자담배/금연용품(성인) → 전자담배/금연용품</td></tr>
+          <tr><td>26.10.20</td><td>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="56">56 생성 제외 카테고리<br>(구 7-2)</td><td>컬럼을 구분 / 소카테고리 → 대분류 / 중분류 / 소분류로 변경 (24행). H01~H05 추가, 배달의 민족 구분 삭제(B코드는 기타 &gt; 인물로 이동). 자동 반려 조건 '송출 불가 카테고리' 기본 등록값도 함께 변경</td></tr>
+          <tr><td>26.10.14</td><td>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="56">56 생성 제외 카테고리<br>(구 7-2)</td><td>제외 카테고리 추가 확인에 따른 조정</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const modal = document.getElementById('historyModal');
+  const close = () => modal.classList.add('hidden');
+  document.getElementById('btnHistory').addEventListener('click', () => modal.classList.remove('hidden'));
+  modal.querySelector('.hClose').addEventListener('click', close);
+  // 항목 클릭 → 해당 화면 탭으로 전환 후 배지 위치로 이동 + 디스크립션도 함께 이동
+  modal.querySelectorAll('.hgo').forEach(td => td.addEventListener('click', () => { close(); goBadge(td.dataset.t); }));
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>
