@@ -328,14 +328,14 @@ body{margin:0;background:var(--bg);color:var(--ink);
   <section id="s0" style="padding-top:40px">
     <h2><span class="num">00</span> 전체 흐름 (최신안)</h2>
     <div class="sec-title">소재 유입 → 검수 → 카카오 심사 — LLM 사전 검수(To-Be) 반영</div>
-    <p>AI 소재는 이미지를 만들기 전에 LLM으로 먼저 검수하고, 통과한 건만 이미지를 생성한다. 광고주가 등록한 소재와 다시 검수할 건은 대기 상태로 두고 자동 반려 배치가 검수한다. 검수를 통과한 건(검수 완료)만 심사 요청 배치가 카카오에 심사를 요청한다.</p>
+    <p>AI 소재는 이미지를 만들기 전에 LLM으로 먼저 검수하고, 통과한 건만 이미지를 생성한다. 광고주가 등록한 소재와 다시 검수할 건은 대기 상태로 두고 자동 반려 배치가 검수한다. 검수를 통과한 건(검수 완료)만 심사 요청 배치<span class="chg">(주말 · 공휴일 제외)</span>가 카카오에 심사를 요청한다.</p>
     <p class="note">As-Is: 이미지를 모두 만든 뒤 LLM 심사 → 반려돼도 이미지는 이미 생성됨 / To-Be: 생성대기 상태에서 사전 검수 → 통과 건만 이미지 생성. 가로로 넓은 그림이라 화면이 좁으면 좌우로 스크롤해서 본다.</p>
     <div class="flow-tools"><button type="button" class="flow-zoom" id="flowZoom">크게 보기 ↗</button></div>
     <div class="spec-flow flow-big">
 <svg viewBox="0 0 2320 1410" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'맑은 고딕',sans-serif" role="img" aria-label="톡피드 소재 전체 흐름 (최신안)">
   <defs><marker id="fa" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#6B6B6B" stroke-width="1.4"/></marker></defs>
   <rect x="20" y="60" width="1740" height="320" rx="16" fill="#F6F4F0"/>
-  <text x="44" y="92" font-size="14.5" font-weight="700" fill="#4A4438">① AI 소재 자동 생성<tspan font-weight="400" fill="#8A8478">  생성 배치 · 매일 01:00 (주말·공휴일 제외)</tspan></text>
+  <text x="44" y="92" font-size="14.5" font-weight="700" fill="#4A4438">① AI 소재 자동 생성<tspan font-weight="400" fill="#8A8478">  생성 배치 · 매일 01:00 (주말·공휴일 포함)</tspan></text>
   <rect x="20" y="400" width="1740" height="380" rx="16" fill="#F6F4F0"/>
   <text x="44" y="432" font-size="14.5" font-weight="700" fill="#4A4438">② 광고주 등록 소재<tspan font-weight="400" fill="#8A8478">  광고주센터 &gt; 소재그룹 · 생성 / 수정</tspan></text>
   <rect x="20" y="800" width="1740" height="320" rx="16" fill="#F6F4F0"/>
@@ -468,9 +468,10 @@ body{margin:0;background:var(--bg);color:var(--ink);
   <text x="2050" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#2B2B2B">[내부승인] 버튼</text>
   <text x="2050" y="163" text-anchor="middle" font-size="12.5" fill="#6B6B6B">운영자 수동 요청 (기존 기능)</text>
   <rect x="1900" y="430" width="300" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
-  <text x="2050" y="463" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">카카오 심사 요청</text>
-  <text x="2050" y="482" text-anchor="middle" font-size="12.5" fill="#5B4FC4">심사 요청 배치: 검수 완료 건만</text>
-  <text x="2050" y="500" text-anchor="middle" font-size="12.5" fill="#5B4FC4">수동: [내부승인] 버튼 선택 건</text>
+  <text x="2050" y="457" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">카카오 심사 요청</text>
+  <text x="2050" y="475" text-anchor="middle" font-size="12.5" fill="#5B4FC4">심사 요청 배치: 검수 완료 건만</text>
+  <text x="2050" y="492" text-anchor="middle" font-size="12.5" fill="#B5452F">배치는 주말 · 공휴일 제외</text>
+  <text x="2050" y="509" text-anchor="middle" font-size="12.5" fill="#5B4FC4">수동: [내부승인] 버튼 선택 건</text>
   <polygon points="2050,570 2135,620 2050,670 1965,620" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
   <text x="2050" y="625" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">요청 성공?</text>
   <rect x="1814" y="596" width="120" height="48" rx="8" fill="#F1EFEA" stroke="#8A857A" stroke-width="1.4"/>
@@ -543,9 +544,9 @@ body{margin:0;background:var(--bg);color:var(--ink);
     <table class="tbl">
       <thead><tr><th style="width:150px">상태</th><th style="width:64px">코드<span class="em">(261123 추가)</span></th><th>언제 이 상태가 되나</th><th style="width:360px">다음 단계</th></tr></thead>
       <tbody>
-        <tr><td class="key">생성대기 <span class="pill new">To-Be</span></td><td>미정</td><td>AI 생성 배치가 대상 상품을 등록한 직후 (배너 이미지 빈 값)</td><td>LLM 사전 검수 → 통과: 이미지 생성 후 검수 완료 / 미통과: 모비온 반려</td></tr>
+        <tr><td class="key">생성대기 <span class="pill new">To-Be</span></td><td>미정</td><td>AI 생성 배치가 대상 상품을 등록한 직후 (배너 이미지 빈 값)<br><span class="chg">화면에는 노출 안 함</span><span class="em">(261125 추가)</span></td><td>LLM 사전 검수 → 통과: 이미지 생성 후 검수 완료 / 미통과: 모비온 반려 (배너 빈 칸)<br><span class="chg">판정 기준은 자동 반려 LLM 판정 조건(06)과 같음</span></td></tr>
         <tr><td class="key">대기</td><td><code>01</code></td><td>광고주 등록 소재가 검수 리스트에 등재될 때<br>소재그룹에서 재검수 항목을 바꿀 때 (<a class="secref" data-sec="s0-3">0.3</a>)<br>자동 반려 조건 변경으로 검수 완료 건을 되돌릴 때</td><td>자동 반려 배치(05:00) → 검수 완료 / 모비온 반려</td></tr>
-        <tr><td class="key">검수 완료 <span class="pill new">To-Be</span></td><td>미정</td><td>LLM 검수 통과</td><td>심사 요청 배치 → 카카오 심사 요청</td></tr>
+        <tr><td class="key">검수 완료 <span class="pill new">To-Be</span></td><td>미정</td><td>LLM 검수 통과</td><td>심사 요청 배치<span class="chg">(주말 · 공휴일 제외)</span> → 카카오 심사 요청<span class="em">(261125 수정)</span></td></tr>
         <tr class="chg"><td class="key">내부검수 <span class="pill on">개발</span></td><td><code>04</code></td><td>외부 검수업체 계정이 AI 소재를 1차 통과시킬 때 ([내부검수] 버튼, <a class="secref" data-sec="s10-2">9.2</a>)<br>카카오에는 아직 보내지 않은 상태<span class="em">(261123 추가)</span></td><td>내부 직원 [내부승인] → 카카오 심사 요청</td></tr>
         <tr><td class="key">내부승인</td><td><code>03</code></td><td>카카오 심사 요청 성공</td><td>카카오 심사 결과 callBack 대기</td></tr>
         <tr><td class="key">승인</td><td><code>02</code></td><td>카카오 callBack <code>APPROVED</code></td><td>운영자가 [반려] 하면 라이브중 반려</td></tr>
@@ -566,7 +567,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
         <tr><td>2</td><td class="key">카카오 송출 토글</td><td>소재그룹 생성 시 선택, 기본 ON. OFF면 검수 대상 없음<br>수정 화면에서는 토글 수정 불가 — 카카오 아이콘만 표기<br>송출 불가 카테고리 광고주는 OFF 고정 · 변경 불가 (연기, <a class="secref" data-sec="s2">02</a>)</td><td>최초 개발 · 02</td></tr>
         <tr><td>3</td><td class="key">소재그룹 수정 시 재검수</td><td>프로필 로고 · CTA는 카카오 송출에 쓰이므로, 관련 값을 바꾸면 채팅리스트 상태를 대기로 변경<br>실제 개발된 항목 · 처리 방식은 0.3 참고</td><td>최초 개발 · 0.3</td></tr>
         <tr><td>4</td><td class="key">데이터 마이그레이션</td><td>최근 6개월 라이브 이력이 있는 소재그룹은 카카오 송출 ON</td><td>최초 개발</td></tr>
-        <tr><td>5</td><td class="key">카카오 심사 요청</td><td>성공: 대기 → 내부승인, 얼럿 "카카오에 소재 심사 요청이 완료되었습니다."<br>실패: 상태 변경 없음. 요청 · 성공 · 실패 건수를 보여 주고 [확인] 시 실패건만 재요청, [취소] 시 액션 없음<br>To-Be 심사 요청 배치는 검수 완료 건만 대상<br><span class="chg">→ 변경안: 평일 06:00 · 07:00 카카오 심사 배치가 톡피드 일반 · 비즈보드 · 톡피드 AI를 하루 최대 4,000건 요청 (<a class="secref" data-sec="s0-5">0.5</a>)</span><span class="em">(261124 추가)</span></td><td>최초 개발 ([내부승인] 버튼) · To-Be</td></tr>
+        <tr><td>5</td><td class="key">카카오 심사 요청</td><td>성공: 대기 → 내부승인, 얼럿 "카카오에 소재 심사 요청이 완료되었습니다."<br>실패: 상태 변경 없음. 요청 · 성공 · 실패 건수를 보여 주고 [확인] 시 실패건만 재요청, [취소] 시 액션 없음<br>To-Be 심사 요청 배치는 검수 완료 건만 대상<br><span class="chg">→ 변경안: 평일 06:00 · 07:00 카카오 심사 배치(주말 · 공휴일 제외)가 톡피드 일반 · 비즈보드 · 톡피드 AI를 하루 최대 4,000건 요청 (<a class="secref" data-sec="s0-5">0.5</a>)</span><span class="em">(261124 추가)</span></td><td>최초 개발 ([내부승인] 버튼) · To-Be</td></tr>
         <tr><td>6</td><td class="key">카카오 심사 결과</td><td>callBack <code>APPROVED</code> → 승인<br>callBack <code>DISAPPROVED</code> → 카카오 반려, 반려 사유는 심사 결과 <code>additionalInfo</code> reasons를 "title_reason" 형태로 노출</td><td>최초 개발</td></tr>
         <tr><td>7</td><td class="key">수동 반려</td><td>기존 상태 ≠ 승인 → 모비온 반려 / 기존 상태 = 승인 → 라이브중 반려<br>반려 사유는 15개 중 선택, 기타는 직접 입력 100자 (<a class="secref" data-sec="s8">08</a>)</td><td>최초 개발 · 26.11.04</td></tr>
         <tr><td>8</td><td class="key">상단 현황 집계</td><td>기간은 데이트 피커 기준, 기본 1일(당일)<br>모비온 반려 + 라이브중 반려 → 모비온 반려, 카카오 반려 → 카카오 반려로 집계</td><td>최초 개발</td></tr>
@@ -605,7 +606,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
     <p class="note">재등록 조건: 카카오 송출 ON · 광고주 카테고리가 이미지 제외 카테고리가 아님 · 이미지 그룹에 채팅리스트용 이미지(TP 32 · 76 · 09 · 77)가 있음. 이미지마다 1건씩 등록된다.<br>재등록되면 생성일이 바뀌어 채팅리스트에서 새 건으로 조회되고, 기존 건이 삭제되므로 이전 반려 사유 · 메모도 남지 않는다.<br>AI 소재(채팅리스트/피드(AI))는 생성 시점 값으로 저장되므로 소재그룹 수정과 관계없다 (<a class="ref" data-t="46">[46]</a>).</p>
 
     <h3 id="s0-4">0.4 <span class="sub">배치 시간표 — 비즈보드 · 톡피드</span><span class="em">(261124 추가)</span></h3>
-    <p>비즈보드 · 톡피드 소재가 만들어져 카카오 심사로 가기까지 도는 배치를 시간순으로 정리했다. 현재 개발 기준(As-Is)이고, <span class="chg">06:00 · 07:00 카카오 심사 배치만 변경안을 반영했다 (<a class="secref" data-sec="s0-5">0.5</a>)</span>.</p>
+    <p>비즈보드 · 톡피드 소재가 만들어져 카카오 심사로 가기까지 도는 배치를 시간순으로 정리했다. 현재 개발 기준(As-Is)이고, <span class="chg">06:00 · 07:00 카카오 심사 배치(<a class="secref" data-sec="s0-5">0.5</a>)와 01:00 AI 생성 배치(rtb-talkfeed-renewal)는 변경안을 반영했다</span><span class="em">(261125 수정)</span>.</p>
     <div class="spec-flow">
       <svg style="width:100%;max-width:960px;height:auto;display:block;margin:0 auto" viewBox="0 0 960 335" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'맑은 고딕',sans-serif" role="img" aria-label="비즈보드 · 톡피드 · 카카오 심사 하루 배치 시간표">
         <g stroke="#E7E3D9" stroke-width="1" stroke-dasharray="3 4">
@@ -630,7 +631,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
         <line x1="163.3" y1="170" x2="296.7" y2="170" stroke="#2A4FA6" stroke-width="6" stroke-linecap="round" opacity=".25"/>
         <circle cx="163.3" cy="170" r="7" fill="#fff" stroke="#2A4FA6" stroke-width="3"/>
         <text x="163.3" y="140" font-size="12.5" font-weight="700" fill="#4A4438" text-anchor="middle">01:00 AI 소재 생성</text>
-        <text x="163.3" y="155" font-size="11.5" fill="#8A8478" text-anchor="middle">평일 (기획 기준 · 확인 필요)</text>
+        <text x="163.3" y="155" font-size="11.5" fill="#8A8478" text-anchor="middle">매일 · 주말 · 공휴일 포함 · 사전 검수</text>
         <circle cx="296.7" cy="170" r="5.5" fill="#2A4FA6"/>
         <text x="296.7" y="194" font-size="12.5" font-weight="700" fill="#4A4438" text-anchor="middle">05:00 자동 반려</text>
         <text x="296.7" y="209" font-size="11.5" fill="#8A8478" text-anchor="middle">평일만 · 공휴일에도 실행</text>
@@ -641,16 +642,16 @@ body{margin:0;background:var(--bg);color:var(--ink);
         <line x1="130" y1="250" x2="930" y2="250" stroke="#D8D3C6" stroke-width="1.5"/>
         <line x1="330" y1="250" x2="363.3" y2="250" stroke="#A32D2D" stroke-width="6" stroke-linecap="round"/>
         <circle cx="330" cy="250" r="5.5" fill="#A32D2D"/><circle cx="363.3" cy="250" r="5.5" fill="#A32D2D"/>
-        <text x="322" y="274" font-size="12.5" font-weight="700" fill="#4A4438">06:00 카카오 심사 대상 모으기 → 07:00 카카오 심사 전송 (변경안)</text>
-        <text x="322" y="289" font-size="11.5" fill="#8A8478">하루 최대 4,000건 : 톡피드 대기 → 비즈보드 60% · 톡피드 AI 40% → 남은 자리 비즈보드 → 톡피드 AI · 평일만 · 공휴일 건너뜀</text>
+        <text x="322" y="274" font-size="12.5" font-weight="700" fill="#4A4438">06:00 카카오 심사 대상 모으기 → 07:00 카카오 심사 전송 (변경안) · 평일만 · 공휴일 건너뜀</text>
+        <text x="322" y="289" font-size="11.5" fill="#8A8478">하루 최대 4,000건 : 톡피드 검수 완료 → 비즈보드 60% · 톡피드 AI 40% → 남은 자리 비즈보드 → 톡피드 AI</text>
       </svg>
     </div>
     <table class="tbl">
       <thead><tr><th style="width:64px">시각</th><th style="width:150px">배치</th><th style="width:120px">대상</th><th>하는 일</th><th style="width:150px">실행 요일</th><th style="width:90px">근거</th></tr></thead>
       <tbody>
-        <tr><td><b>01:00</b></td><td class="key">톡피드 AI 소재 생성</td><td>톡피드 AI</td><td>하루 55개 광고주를 순서대로, 광고주당 최대 30개 AI 배너를 만들어 <code>대기</code>로 저장 (<a class="secref" data-sec="s3">03</a>)</td><td>평일 (주말 · 공휴일 제외)</td><td><span class="pill off">기획 기준</span></td></tr>
+        <tr class="chg"><td><b>01:00</b></td><td class="key">톡피드 AI 소재 생성<span class="em">(261125 수정)</span></td><td>톡피드 AI</td><td>하루 55개 광고주를 순서대로, 광고주당 최대 30개를 <code>생성대기</code>로 등록 → LLM 사전 검수 → 통과 건만 AI 배너를 만들어 <code>검수 완료</code>, 미통과는 <code>모비온 반려</code> (<a class="secref" data-sec="s3">03</a> · rtb-talkfeed-renewal)</td><td><b>매일</b><br>주말 · 공휴일 포함</td><td><span class="pill on">결정</span></td></tr>
         <tr><td><b>05:00</b></td><td class="key">톡피드 자동 반려</td><td>톡피드 일반 → AI 순서</td><td>생성일과 관계없이 <code>대기</code> 소재 전체를 기본 검증 → LLM 판정하고, 반려 대상은 <code>모비온 반려</code>로 변경 (<a class="secref" data-sec="s4">04</a>)</td><td><b>평일(월~금)</b><br>공휴일에도 실행</td><td><span class="pill on">개발 코드</span></td></tr>
-        <tr class="chg"><td><b>06:00</b></td><td class="key">카카오 심사 대상 모으기<span class="em">(261124 수정)</span></td><td>톡피드 일반 · 비즈보드 · 톡피드 AI</td><td>하루 최대 4,000건을 톡피드 <code>대기</code> → 비즈보드 60% · 톡피드 AI 40% → 남은 자리 비즈보드 → 톡피드 AI 순으로 채워 전송 큐에 적재 (<a class="secref" data-sec="s0-5">0.5</a>)<br>현행 : 비즈보드 심사 큐 적재, 비즈보드만 하루 1,500건</td><td>평일(월~금)<br>공휴일 건너뜀</td><td><span class="pill new">변경안</span></td></tr>
+        <tr class="chg"><td><b>06:00</b></td><td class="key">카카오 심사 대상 모으기<span class="em">(261124 수정)</span></td><td>톡피드 일반 · 비즈보드 · 톡피드 AI</td><td>하루 최대 4,000건을 톡피드 <code>검수 완료</code> → 비즈보드 60% · 톡피드 AI 40% → 남은 자리 비즈보드 → 톡피드 AI 순으로 채워 전송 큐에 적재 (<a class="secref" data-sec="s0-5">0.5</a>)<br>현행 : 비즈보드 심사 큐 적재, 비즈보드만 하루 1,500건</td><td>평일(월~금)<br>공휴일 건너뜀</td><td><span class="pill new">변경안</span></td></tr>
         <tr class="chg"><td><b>07:00</b></td><td class="key">카카오 심사 전송<span class="em">(261124 수정)</span></td><td>톡피드 일반 · 비즈보드 · 톡피드 AI</td><td>모은 건을 카카오 소재 심사 API로 전송. 성공하면 <code>내부승인</code><br>현행 : 비즈보드 카카오 심사 전송, 비즈보드만</td><td>평일(월~금)<br>공휴일 건너뜀</td><td><span class="pill new">변경안</span></td></tr>
         <tr><td><b>11:00</b></td><td class="key">비즈보드 이미지 생성</td><td>비즈보드<br>(기본 · 딥링크)</td><td>광고주별 인기 상품으로 비즈보드 이미지를 만들어 <code>대기</code>로 저장</td><td><b>매일</b><br>주말 · 공휴일 포함</td><td><span class="pill on">운영 확인</span></td></tr>
         <tr><td>수시</td><td class="key">톡피드 소재 등재</td><td>톡피드 일반</td><td>광고주가 소재그룹을 등록하거나 재검수 항목을 바꾸면 바로 <code>대기</code>로 등재 (<a class="secref" data-sec="s0-3">0.3</a>)</td><td>상시</td><td><span class="pill on">개발 코드</span></td></tr>
@@ -661,15 +662,15 @@ body{margin:0;background:var(--bg);color:var(--ink);
     <table class="tbl">
       <thead><tr><th style="width:280px">이럴 때</th><th>다음 처리</th></tr></thead>
       <tbody>
-        <tr><td class="key">톡피드 AI 소재 생성 (평일 01:00)</td><td>같은 날 05:00 자동 반려에서 판정 (약 4시간 뒤)</td></tr>
-        <tr><td class="key">화요일 10:00 광고주가 톡피드 소재 등록</td><td>수요일 05:00 자동 반려에서 판정 → <span class="chg">통과해 대기로 남으면 같은 날 06:00 심사 대상 · 07:00 전송</span></td></tr>
+        <tr class="chg"><td class="key">톡피드 AI 소재 생성 (매일 01:00)</td><td>생성 배치 안에서 LLM 사전 검수 → 통과 건은 바로 검수 완료 → 그날(평일) 06:00 심사 대상<br>주말 · 공휴일 생성분은 다음 평일 06:00 심사 대상<span class="em">(261125 수정)</span></td></tr>
+        <tr><td class="key">화요일 10:00 광고주가 톡피드 소재 등록</td><td>수요일 05:00 자동 반려에서 판정 → <span class="chg">통과해 검수 완료가 되면 같은 날 06:00 심사 대상 · 07:00 전송</span></td></tr>
         <tr><td class="key">금요일 05:00 이후 ~ 일요일 톡피드 소재 등록</td><td>월요일 05:00 판정 (최대 약 3일 대기) → <span class="chg">월요일 06:00 심사 대상</span></td></tr>
         <tr><td class="key">월요일 11:00 비즈보드 생성</td><td>화요일 06:00 심사 대상 · 07:00 카카오 심사 전송</td></tr>
         <tr><td class="key">금요일 ~ 일요일 11:00 비즈보드 생성</td><td>월요일 06:00 심사 대상 · 07:00 전송. <span class="chg">그날 비즈보드 몫(0.5)을 넘는 건은 다음 평일로 밀림</span></td></tr>
-        <tr><td class="key">평일 공휴일</td><td>비즈보드 생성 · 톡피드 자동 반려는 실행, <span class="chg">카카오 심사 모으기 · 전송</span>은 건너뜀, 톡피드 AI 생성은 쉼 (기획 기준)</td></tr>
+        <tr><td class="key">평일 공휴일</td><td>비즈보드 생성 · 톡피드 자동 반려는 실행, <span class="chg">카카오 심사 모으기 · 전송</span>은 건너뜀, <span class="chg">톡피드 AI 생성 · 사전 검수는 실행</span></td></tr>
       </tbody>
     </table>
-    <p class="note">05:00 · 06:00 · 07:00은 운영 코드의 기본값이며 운영 서버 환경설정(<code>TALKFEED_REJECT_BATCH_TIME</code> · <code>KAKAO_CREATIVE_BATCH_FILL_TIME</code> · <code>KAKAO_CREATIVE_BATCH_PROCESS_TIME</code>)으로 바꿀 수 있다.<br>생성 배치(비즈보드 11:00 · 톡피드 AI 01:00)의 실행 시각은 코드가 아니라 배치 서버 스케줄에 저장돼 있다. 비즈보드는 운영 확인값, 톡피드 AI는 기획값이다.</p>
+    <p class="note">05:00 · 06:00 · 07:00은 운영 코드의 기본값이며 운영 서버 환경설정(<code>TALKFEED_REJECT_BATCH_TIME</code> · <code>KAKAO_CREATIVE_BATCH_FILL_TIME</code> · <code>KAKAO_CREATIVE_BATCH_PROCESS_TIME</code>)으로 바꿀 수 있다.<br>생성 배치(비즈보드 11:00 · 톡피드 AI 01:00)의 실행 시각은 코드가 아니라 배치 서버 스케줄에 저장돼 있다. 비즈보드는 운영 확인값이다. <span class="chg">톡피드 AI는 26.11.25 결정값 (매일, 검수 완료까지 주말 · 공휴일에도 실행)</span><span class="em">(261125 수정)</span></p>
 
     <h3 id="s0-5">0.5 <span class="sub">카카오 심사 요청 배치 — 대상 · 건수 배분 (변경안)</span><span class="em">(261124 추가)</span></h3>
     <p>평일 06:00 · 07:00에 비즈보드만 보내던 심사 배치를 <b>카카오 심사 요청 배치</b>로 넓힌다. 톡피드 일반 · 비즈보드 · 톡피드 AI를 한 번에 모아 <b>하루 최대 4,000건</b>을 카카오에 심사 요청한다.</p>
@@ -680,14 +681,14 @@ body{margin:0;background:var(--bg);color:var(--ink);
         <tr><td class="key">대상</td><td>비즈보드 (톡피드 AI 제외)</td><td><b>톡피드 일반 · 비즈보드 · 톡피드 AI</b></td></tr>
         <tr><td class="key">하루 최대 건수</td><td>1,500건</td><td><b>4,000건</b></td></tr>
         <tr><td class="key">톡피드 심사 요청</td><td>[내부승인] 버튼으로만 (배치 없음)</td><td>배치로 자동 요청</td></tr>
-        <tr><td class="key">실행 시각 · 요일</td><td>06:00 · 07:00, 평일(월~금), 공휴일 건너뜀</td><td>변경 없음</td></tr>
+        <tr><td class="key">실행 시각 · 요일</td><td>06:00 · 07:00, 평일(월~금), 공휴일 건너뜀</td><td><span class="chg">06:00 · 07:00, <b>주말 · 공휴일 제외</b> (현행과 같음)</span><span class="em">(261125 수정)</span></td></tr>
       </tbody>
     </table>
     <table class="tbl">
       <thead><tr><th style="width:60px">순서</th><th style="width:220px">채우는 대상</th><th>채우는 건수</th></tr></thead>
       <tbody>
-        <tr><td><span class="no">1</span></td><td class="key">톡피드 일반 — <code>대기</code></td><td>대기 건 전부 (최대 4,000건)</td></tr>
-        <tr><td><span class="no">2</span></td><td class="key">비즈보드 · 톡피드 AI</td><td>남은 자리(4,000 − ①)를 <b>비즈보드 60% · 톡피드 AI 40%</b>로 나눠 채움<br>비즈보드 몫은 소수점 버림, 톡피드 AI 몫은 남은 자리 − 비즈보드 몫 (예: 남은 2,999건 → 비즈보드 1,799 · 톡피드 AI 1,200)</td></tr>
+        <tr><td><span class="no">1</span></td><td class="key">톡피드 일반 — <code class="chg">검수 완료</code></td><td><span class="chg">검수 완료</span> 건 전부 (최대 4,000건)<span class="em">(261125 수정)</span></td></tr>
+        <tr><td><span class="no">2</span></td><td class="key">비즈보드 · 톡피드 AI</td><td>남은 자리(4,000 − ①)를 <b>비즈보드 60% · 톡피드 AI 40%</b>로 나눠 채움<br><span class="chg">톡피드 AI는 <code>검수 완료</code> 건만 대상</span><br>비즈보드 몫은 소수점 버림, 톡피드 AI 몫은 남은 자리 − 비즈보드 몫 (예: 남은 2,999건 → 비즈보드 1,799 · 톡피드 AI 1,200)</td></tr>
         <tr><td><span class="no">3</span></td><td class="key">비즈보드 → 톡피드 AI</td><td>②에서 후보가 모자라 빈 자리를 <b>비즈보드부터, 그다음 톡피드 AI</b>로 채움<br>후보가 모두 모자라면 4,000건을 못 채운 채 있는 만큼만 보냄</td></tr>
       </tbody>
     </table>
@@ -704,9 +705,9 @@ body{margin:0;background:var(--bg);color:var(--ink);
     <table class="tbl">
       <thead><tr><th style="width:44px">No</th><th style="width:190px">확인할 것</th><th>내용</th><th style="width:90px">상태</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td class="key">톡피드 대상 상태</td><td>변경안은 <code>대기</code>. 00 · 0.2의 To-Be는 자동 반려를 통과한 <code>검수 완료</code> 건만 심사 요청이라 어느 쪽으로 맞출지 정해야 함<br><code>대기</code>로 하면 05:00 자동 반려 뒤 06:00 전에 등재된 건은 자동 반려를 거치지 않고 전송됨</td><td><span class="pill off">확인 필요</span></td></tr>
-        <tr><td>2</td><td class="key">비즈보드 · 톡피드 AI 대상 상태</td><td>현행 비즈보드는 <code>대기</code> · <code>내부검수</code>. 톡피드 AI도 같은 기준으로 할지</td><td><span class="pill off">확인 필요</span></td></tr>
-        <tr><td>3</td><td class="key">대상 안에서 고르는 순서</td><td>현행 비즈보드는 최신 생성순. 톡피드 대기가 4,000건을 넘을 때나 각 몫 안에서 최신순 · 오래된 순 중 무엇으로 고를지</td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>1</td><td class="key">톡피드 대상 상태</td><td>변경안은 <code>대기</code>. 00 · 0.2의 To-Be는 자동 반려를 통과한 <code>검수 완료</code> 건만 심사 요청이라 어느 쪽으로 맞출지 정해야 함<br><code>대기</code>로 하면 05:00 자동 반려 뒤 06:00 전에 등재된 건은 자동 반려를 거치지 않고 전송됨<br><span class="chg">→ 결정: <b>검수 완료</b> 건만 심사 요청</span><span class="em">(261125 수정)</span></td><td><span class="pill on">확정</span></td></tr>
+        <tr><td>2</td><td class="key">비즈보드 · 톡피드 AI 대상 상태</td><td>현행 비즈보드는 <code>대기</code> · <code>내부검수</code>. 톡피드 AI도 같은 기준으로 할지<br><span class="chg">→ 톡피드 AI는 <b>검수 완료</b> 건만으로 결정. 비즈보드는 현행 유지 여부 미정</span><span class="em">(261125 수정)</span></td><td><span class="pill off">확인 필요</span></td></tr>
+        <tr><td>3</td><td class="key">대상 안에서 고르는 순서</td><td>현행 비즈보드는 최신 생성순. 톡피드 검수 완료가 4,000건을 넘을 때나 각 몫 안에서 최신순 · 오래된 순 중 무엇으로 고를지</td><td><span class="pill off">확인 필요</span></td></tr>
         <tr><td>4</td><td class="key">URL 검사로 빠진 건 충원</td><td>현행은 URL 검사에서 빠진 만큼 최대 3회 충원. 변경안에서도 ①→②→③ 순서로 다시 채울지</td><td><span class="pill off">확인 필요</span></td></tr>
       </tbody>
     </table>
@@ -719,7 +720,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
     <table class="tbl">
       <thead><tr><th style="width:44px">No</th><th style="width:90px">구분</th><th style="width:100px">위치</th><th style="width:200px">대상</th><th>내용</th></tr></thead>
       <tbody>
-        <tr><td><span class="no">1</span></td><td>자동 생성</td><td>모비센스</td><td>소재 자동 생성 배치</td><td><b>매일 01:00 (주말·공휴일 제외)</b>. 하루 55개 광고주를 순서대로 처리하고, 광고주당 1일 최대 30개 생성. 전환 Top 100 상품(1달 안에 생성한 상품 제외)으로 AI 배너(850×850, TP 09)를 만든 뒤 검수 대기로 저장<br>상세는 <b>03. 소재 자동 생성</b> 참조<br><span class="chg">To-Be: 생성대기 → LLM 사전 검수 → 통과 건만 이미지 생성 → 검수 완료 (00)</span><span class="em">(261119 수정)</span></td></tr>
+        <tr><td><span class="no">1</span></td><td>자동 생성</td><td>모비센스</td><td>소재 자동 생성 배치</td><td><b>매일 01:00 (<span class="chg">주말·공휴일 포함</span>)</b><span class="em">(261125 수정)</span>. 하루 55개 광고주를 순서대로 처리하고, 광고주당 1일 최대 30개 생성. 전환 Top 100 상품(1달 안에 생성한 상품 제외)으로 AI 배너(850×850, TP 09)를 만든 뒤 검수 대기로 저장<br>상세는 <b>03. 소재 자동 생성</b> 참조<br><span class="chg">To-Be: 생성대기 → LLM 사전 검수 → 통과 건만 이미지 생성 → 검수 완료 (00)</span><span class="em">(261119 수정)</span></td></tr>
         <tr><td><span class="no">2</span></td><td>자동 생성</td><td>모비센스</td><td>이미지 검수 &gt; 채팅리스트/피드(AI)</td><td>신규 메뉴. AI 생성 소재 검수 (내부승인 / 반려). 화면 32~54</td></tr>
         <tr><td><span class="no">3</span></td><td>자동 생성</td><td>모비센스</td><td>생성 조건 팝업</td><td>생성 대상 광고주 3탭 — 광고주 리스트(생성 순서) / 생성 제외 카테고리 / 생성 제외 광고주. 화면 34 · 55~57</td></tr>
         <tr><td><span class="no">4</span></td><td>자동 반려</td><td>광고주센터</td><td>소재그룹 설정 토글 <span class="tag r">연기</span></td><td><b style="color:var(--red)">Vue.js 개발 완료 후 반영</b> (광센_소재그룹 설정 탭 30~31 전체).<br>* 개발 반영 이전 대응 : 송출 불가 카테고리 광고주 전체 송출 불가 광고주로 인입<br>화면 변경 없음. 자동 반려 조건에 따라 <b>토글 상태가 자동 전환</b>되는 동작만 신규</td></tr>
@@ -728,7 +729,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
         <tr><td><span class="no">7</span></td><td>자동 반려</td><td>모비센스</td><td>자동 반려 배치</td><td><b>일배치 — <span class="chg">평일(월~금)</span> <span class="chg">5시</span> 1회 실행</b><span class="em">(261111 · 261124 수정)</span>. <span class="chg">공휴일에도 실행 (<a class="secref" data-sec="s0-4">0.4</a>)</span>. 검수 리스트에 등재된 소재<span class="chg">(일반 · AI 소재 모두)</span>를 건별로 <b>기본 검증 → 반려 판정 LLM API 호출</b> 순으로 처리하고, 반려 대상을 <b>일괄 모비온 반려</b>로 갱신</td></tr>
         <tr><td><span class="no">8</span></td><td>자동 반려</td><td>모비센스</td><td>반려 판정 LLM API</td><td>사이트명 · 소재 광고문구를 기준으로 소재의 <b>반려 여부를 판정</b>하는 API. 배치가 소재 단위로 호출하며, 판정 결과(반려/통과 및 사유)를 반환 <br>판정 조건은 <b>06. LLM 판정 조건</b> 참조</td></tr>
         <tr><td><span class="no">9</span></td><td>수동 반려</td><td>모비센스</td><td>반려 사유 팝업</td><td>[반려] 클릭 시 반려 사유(15개 중 1개, 기타는 직접 입력 100자) 선택 후 반려 처리. 수동 · 자동 반려 사유 관계는 08 참조</td></tr>
-        <tr class="chg"><td><span class="no">10</span></td><td>심사 요청</td><td>모비센스</td><td>카카오 심사 요청 배치</td><td>평일 06:00 · 07:00 비즈보드 심사 배치를 <b>카카오 심사 대상 모으기 · 카카오 심사 전송</b>으로 변경. 대상 톡피드 일반 · 비즈보드 · 톡피드 AI, <b>하루 최대 4,000건</b>. 배분 순서는 <a class="secref" data-sec="s0-5">0.5</a><span class="em">(261124 추가)</span></td></tr>
+        <tr class="chg"><td><span class="no">10</span></td><td>심사 요청</td><td>모비센스</td><td>카카오 심사 요청 배치</td><td>평일 06:00 · 07:00 <span class="chg">(주말 · 공휴일 제외)</span> 비즈보드 심사 배치를 <b>카카오 심사 대상 모으기 · 카카오 심사 전송</b>으로 변경. 대상 톡피드 일반 · 비즈보드 · 톡피드 AI (<span class="chg">톡피드는 검수 완료 건만</span>), <b>하루 최대 4,000건</b>. 배분 순서는 <a class="secref" data-sec="s0-5">0.5</a><span class="em">(261124 추가)</span></td></tr>
       </tbody>
     </table>
   </section>
@@ -857,7 +858,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
           <!-- 1. 시작 -->
           <rect x="150" y="28" width="265" height="47" rx="23.5" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
           <text x="282" y="49" font-size="12.5" font-weight="700" fill="#222" text-anchor="middle">생성 배치 실행</text>
-          <text x="282" y="65" font-size="10.5" fill="#777" text-anchor="middle">매일 01:00 · 주말·공휴일 제외</text>
+          <text x="282" y="65" font-size="10.5" fill="#777" text-anchor="middle">매일 01:00 · 주말·공휴일 포함</text>
 
           <!-- 2. 신규 광고주 우선 -->
           <rect x="150" y="100" width="265" height="50" rx="8" fill="#fff" stroke="#c9c5bb" stroke-width="1.5"/>
@@ -1656,7 +1657,7 @@ body{margin:0;background:var(--bg);color:var(--ink);
                 </span>
                 <span class="rel">
                   <span class="bdg tr" data-t="2">2</span>
-                  <span class="btn">자동 반려 조건</span>
+                  <span class="btn g">자동 반려 조건</span>
                 </span>
               </div>
             </div>
@@ -1992,8 +1993,8 @@ body{margin:0;background:var(--bg);color:var(--ink);
                   <span class="rd">승인</span><span class="rd">모비온 반려</span><span class="rd">카카오 반려</span>
                 </span>
                 <span class="row">
-                  <span class="btn">자동 반려 조건</span>
-                  <span class="rel"><span class="bdg tr" data-t="34">34</span><span class="btn">생성 조건</span></span>
+                  <span class="rel"><span class="bdg tl" data-t="34">34</span><span class="btn g">생성 조건</span></span>
+                  <span class="btn g">자동 반려 조건</span>
                 </span>
               </div>
             </div>
@@ -2017,10 +2018,10 @@ body{margin:0;background:var(--bg);color:var(--ink);
             </div>
 
             <table class="lst">
-              <tr><th class="rel"><span class="bdg tl" data-t="43" style="top:-15px;left:-6px">43</span>☐ NO</th><th class="rel"><span class="bdg tl" data-t="44" style="top:-15px;left:-6px">44</span>승인상태</th><th class="rel"><span class="bdg tl" data-t="45" style="top:-15px;left:-6px">45</span>광고주ID</th><th>광고주명</th><th>카테고리</th><th class="rel"><span class="bdg tl" data-t="46" style="top:-15px;left:-6px">46</span>사이트명</th><th class="rel"><span class="bdg tl" data-t="47" style="top:-15px;left:-6px">47</span>프로필 로고</th><th class="rel"><span class="bdg tl" data-t="48" style="top:-15px;left:-6px">48</span>배너이미지</th><th class="rel"><span class="bdg tl" data-t="49" style="top:-15px;left:-6px">49</span><span style="color:var(--red)">소재 카피문구_2</span></th><th><span style="color:var(--red)">소재 카피문구_4</span></th><th class="rel"><span class="bdg tl" data-t="50" style="top:-15px;left:-6px">50</span>랜딩URL</th><th class="rel"><span class="bdg tl" data-t="51" style="top:-15px;left:-6px">51</span>CTA 정보</th><th class="rel"><span class="bdg tl" data-t="52" style="top:-15px;left:-6px">52</span>생성일자</th><th style="color:var(--red)">최근 업데이트일</th><th class="rel"><span class="bdg tl" data-t="53" style="top:-15px;left:-6px">53</span>반려사유</th></tr>
-              <tr><td>☐ 1</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>햇꽃게 특가</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:48:01</td><td>-</td><td>-</td></tr>
-              <tr><td>☐ 2</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>제철 과일 할인</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:47:34</td><td>-</td><td>-</td></tr>
-              <tr><td>☐ 3</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>추석 먹거리 모음</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:47:22</td><td>-</td><td>-</td></tr>
+              <tr><th class="rel"><span class="bdg tl" data-t="43" style="top:-15px;left:-6px">43</span>☐ NO</th><th class="rel"><span class="bdg tl" data-t="44" style="top:-15px;left:-6px">44</span>승인상태<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="45" style="top:-15px;left:-6px">45</span>광고주ID<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th>광고주명<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th>카테고리<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="46" style="top:-15px;left:-6px">46</span>사이트명<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="47" style="top:-15px;left:-6px">47</span>프로필 로고<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="48" style="top:-15px;left:-6px">48</span>배너이미지<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="49" style="top:-15px;left:-6px">49</span><span style="color:var(--red)">소재 카피문구_2</span><span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th><span style="color:var(--red)">소재 카피문구_4</span><span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="50" style="top:-15px;left:-6px">50</span>랜딩URL<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="51" style="top:-15px;left:-6px">51</span>CTA 정보<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="52" style="top:-15px;left:-6px">52</span>생성일자<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th style="color:var(--red)">최근 업데이트일<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th class="rel"><span class="bdg tl" data-t="53" style="top:-15px;left:-6px">53</span>반려사유<span style="color:#9CA3AF;margin-left:4px;font-size:11px">⇅</span></th><th>비고</th></tr>
+              <tr><td>☐ 1</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>햇꽃게 특가</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:48:01</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr><td>☐ 2</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>제철 과일 할인</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:47:34</td><td>-</td><td>-</td><td>-</td></tr>
+              <tr><td>☐ 3</td><td><span class="st">대기</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&gt;인물&gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td class="im">로고</td><td class="im">850×850<br><b style="color:#C2660B;font-size:9px">TP 09</b></td><td>추석 먹거리 모음</td><td>카피문구_4 예시</td><td class="lk">https://abr.ge/@homeplus/mobon?…</td><td>바로가기</td><td>2026-09-16 12:47:22</td><td>-</td><td>-</td><td>-</td></tr>
             </table>
 
             <div class="rel" style="margin:18px auto 4px;width:max-content;display:flex;gap:4px">
@@ -2380,7 +2381,7 @@ b. 조건 변경 시 목록과 상단 현황 재조회
 c. [자동 반려 조건] 버튼: 채팅리스트/피드 <a class="ref" data-t="2">[2]</a>와 같은 버튼
    c-1. AI 소재도 자동 반려 대상. 같은 자동 반려 배치에서 처리</p></div>
   <div class="item lv3" id="d34"><span class="no">34</span><span class="ttl">생성 조건</span>
-    <p class="dsc">a. 검색 조건 영역의 [자동 반려 조건] 버튼 옆에 노출
+    <p class="dsc">a. 승인상태 필터 우측, <span style="color:var(--red)">[생성 조건] → [자동 반려 조건] 순서로 노출 (실제 화면 기준, 2026-11-25 수정)</span>
 b. 클릭 시 '생성 대상 광고주' 팝업 오픈 → <a class="ref" data-t="55">[55]</a>
 c. 소재를 생성하는 광고주의 순서와 제외 기준 조회용 팝업
 d. [x] 버튼 클릭 시 팝업 닫힘</p></div>
@@ -2429,7 +2430,11 @@ e. 컬럼별 출처: <a class="secref" data-sec="s3">개요 &gt; 3.3 테이블 �
   <div class="item lv3" id="d44"><span class="no">44</span><span class="ttl">승인상태</span>
     <p class="dsc">a. 상태를 색 버튼으로 노출: 대기(노랑) / <span style="color:var(--red)">검수 완료</span> / 내부승인 / 승인 / 모비온 반려 / 카카오 반려
    <span style="color:var(--red)">a-1. 2026-11-24 수정: 검수 완료 추가</span>
-b. 배치로 생성된 직후 상태는 '대기'</p></div>
+<span style="color:var(--red)">b. 생성 직후 상태 (2026-11-25 수정)
+   b-1. 사전 검수 통과 → 검수 완료
+   b-2. 사전 검수 미통과 → 모비온 반려
+   b-3. 기존: 배치로 생성된 직후 대기
+   ※ 생성대기 건은 목록 · 상단 현황 · 승인상태 필터에 노출 안 함</span></p></div>
   <div class="item lv3" id="d45"><span class="no">45</span><span class="ttl">광고주 정보</span>
     <p class="dsc">a. 광고주ID · 광고주명 · 카테고리 노출
 b. 카테고리 표기 예시: "대분류&gt;중분류&gt;소분류"</p></div>
@@ -2443,7 +2448,8 @@ b. 클릭 시 원본 크기 미리보기 모달 오픈 (600×600)</p></div>
   <div class="item lv3" id="d48"><span class="no">48</span><span class="ttl">배너이미지</span>
     <p class="dsc">a. AI 생성 850×850 배너를 썸네일로 노출
    a-1. 썸네일 하단에 사이즈 타입 'TP 09' 표기
-b. 클릭 시 미리보기 모달 오픈 (850×850)</p></div>
+b. 클릭 시 미리보기 모달 오픈 (850×850)
+<span style="color:var(--red)">c. 사전 검수 미통과 건 : 이미지 생성 안 함 → 빈 칸 노출 (승인상태 모비온 반려) (2026-11-25 추가)</span></p></div>
   <div class="item lv3" id="d49"><span class="no">49</span><span class="ttl">소재 카피문구_2 · _4<span class="tag o">변경</span></span>
     <p class="dsc">a. 소재 카피문구_2: 소재그룹 카피문구 02번 노출 (광고문구 1)
    a-1. 기존 '소재 광고문구' 컬럼
@@ -2602,10 +2608,14 @@ switchPage('spec');
       <table>
         <thead><tr><th>수정일</th><th>화면</th><th>항목</th><th>내용</th></tr></thead>
         <tbody>
+          <tr><td>26.11.25</td><td>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="34">34 생성 조건 버튼 위치</td><td>실제 화면에 맞춰 승인상태 필터 우측 버튼 순서를 [생성 조건] → [자동 반려 조건]으로 변경, 버튼 색 초록으로 표기 (채팅리스트/피드 <span class="hgo" data-t="2">2</span>도 같은 색)</td></tr>
+          <tr><td>26.11.25</td><td>모비센스_채팅리스트/피드(AI)</td><td class="hgo" data-t="43">43 목록 컬럼</td><td>실제 화면에 맞춰 목록 끝에 비고 컬럼 추가, 컬럼 정렬 아이콘(⇅) 표기 (☐ NO · 비고 제외)</td></tr>
+          <tr><td>26.11.25</td><td>개요</td><td>카카오 심사 요청 배치 요일</td><td>카카오 심사 요청 배치에 주말 · 공휴일 제외 조건 명시 (00 흐름도 · 0.1 검수 완료 · 0.2-5 · 0.5 · 01-10)<br>수동 [내부승인]은 기존대로 즉시 요청</td></tr>
+          <tr><td>26.11.25</td><td>개요<br>모비센스_채팅리스트/피드(AI)</td><td>AI 생성 요일 · 심사 요청 대상</td><td>rtb-talkfeed-renewal 결정 사항에 맞춤<br>AI 생성 배치: 매일 01:00, 검수 완료까지 주말 · 공휴일에도 실행 (00 · 0.4 · 01-1 · 03 그림)<br>카카오 심사 요청 대상: 톡피드 일반 · AI 모두 검수 완료 건만 (0.4 · 0.5 배분 ① · ② · 확인 1~3 · 01-10)<br>생성대기 화면 노출 안 함, 사전 검수 판정 기준은 자동 반려 LLM 판정 조건과 같음 (0.1)<br>AI 생성 직후 상태 검수 완료 / 모비온 반려, 미통과 건 배너 빈 칸 (<span class="hgo" data-t="44">44</span> · <span class="hgo" data-t="48">48</span>)</td></tr>
           <tr><td>26.11.24</td><td>개요<br>모비센스_채팅리스트/피드<br>모비센스_채팅리스트/피드(AI)</td><td>8.2 · 7.1 반려 사유 표기</td><td>8.2 1번 확정: 수동 · 자동 반려 사유 목록 2개 유지 (08 머리말 · <span class="hgo" data-t="8">8</span>)<br>8.2 3번 확정: 자동 반려 {검증 단계} - {상세 사유} (검출 표현), 수동 반려는 사유명만 표기 (7.1 · <span class="hgo" data-t="4">4</span> · <span class="hgo" data-t="53">53</span>)<br>기타(직접 입력)는 사용자가 작성한 내용 그대로 표기 (7.1 · 8.2 5번 · <span class="hgo" data-t="9">9</span>)<br>8.2 7번 문구 정리</td></tr>
           <tr><td>26.11.24</td><td>개요</td><td>09 통합 확인 필요 삭제</td><td>모든 항목 정리를 마쳐 09 섹션 삭제. 결정 내용은 각 화면 설명 · 개요에 반영된 상태<br>10 개발 기준 상세 → 09로 번호 변경 (10.1~10.6 → 9.1~9.6)<br>09를 가리키던 링크 정리 (문서 통합 안내 · 2.4 · 9 머리말 · <span class="hgo" data-t="19">19</span> · <span class="hgo" data-t="33">33</span> · <span class="hgo" data-t="57">57</span>)</td></tr>
           <tr><td>26.11.24</td><td>개요<br>모비센스_채팅리스트/피드<br>모비센스_채팅리스트/피드(AI)</td><td>09 통합 확인 필요 정리</td><td>09 결정 반영 후 7건으로 정리 (삭제: 수동 반려 팝업 · 반려사유 컬럼 · 카피 문구 컬럼 · 기획서에 없는 상태값 · 내부승인 대상 상태 · 자동 심사 요청 배치 · 자동 반려 실행 요일)<br>자동 반려 대상에 AI 소재 포함 확정 (01-7 · 06 · <span class="hgo" data-t="33">33</span>)<br>제외 광고주: 생성 단계 생성 제외 광고주 / 반려 단계 송출 불가 광고주로 각각 관리 (2.4 · <span class="hgo" data-t="19">19</span> · <span class="hgo" data-t="57">57</span>)<br>상단 현황: 채팅리스트/피드에 검수 완료 · 내부승인 컬럼, AI 화면에 검수 완료 컬럼 추가. 두 화면 승인상태 필터 · 승인상태에 검수 완료 추가 (<span class="hgo" data-t="6">6</span> · <span class="hgo" data-t="32">32</span> · <span class="hgo" data-t="33">33</span> · <span class="hgo" data-t="44">44</span>)<br>최종업데이트일 → 최근 업데이트일 통일 (3.3 · <span class="hgo" data-t="1">1</span> · <span class="hgo" data-t="52">52</span>)<br>0.3 재검수 안 되는 항목 4개 확정, <span class="hgo" data-t="37">37</span> · <span class="hgo" data-t="53">53</span> 확인 필요 표시 해제</td></tr>
-          <tr><td>26.11.24</td><td>개요</td><td>0.5 카카오 심사 요청 배치 (변경안)</td><td>06:00 · 07:00 비즈보드 심사 배치를 '카카오 심사 대상 모으기' · '카카오 심사 전송'으로 변경. 대상 톡피드 일반 · 비즈보드 · 톡피드 AI, 하루 최대 4,000건 (1,500 → 4,000)<br>배분: ① 톡피드 대기 → ② 남은 자리 비즈보드 60% · 톡피드 AI 40% → ③ 빈 자리 비즈보드 → 톡피드 AI. 예시 5개 · 확인 필요 4개<br>0.4 시간표 · 0.2-5 · 01 개발 범위 10번 · 09 13번에 반영</td></tr>
+          <tr><td>26.11.24</td><td>개요</td><td>0.5 카카오 심사 요청 배치 (변경안)</td><td>06:00 · 07:00 비즈보드 심사 배치를 '카카오 심사 대상 모으기' · '카카오 심사 전송'으로 변경. 대상 톡피드 일반 · 비즈보드 · 톡피드 AI, 하루 최대 4,000건 (1,500 → 4,000)<br>배분: ① 톡피드 검수 완료 → ② 남은 자리 비즈보드 60% · 톡피드 AI 40% → ③ 빈 자리 비즈보드 → 톡피드 AI. 예시 5개 · 확인 필요 4개<br>0.4 시간표 · 0.2-5 · 01 개발 범위 10번 · 09 13번에 반영</td></tr>
           <tr><td>26.11.24</td><td>개요</td><td>0.4 배치 시간표 · 09 · 10.6</td><td>0.4 배치 시간표 신규: 비즈보드 · 톡피드 배치를 시간순으로 정리 (비즈보드 생성 매일 11:00, 큐 적재 06:00 · 전송 07:00 평일, 톡피드 AI 생성 01:00, 자동 반려 05:00)<br>자동 반려 실행 요일을 개발 기준으로 수정: 매일 → 평일(월~금), 공휴일에도 실행 (00 · 01 · 06 · 09 14번 추가)<br>10.6 근거 코드에 배치 관련 위치 추가</td></tr>
           <tr><td>26.11.24</td><td>개요<br>모비센스_채팅리스트/피드</td><td class="hgo" data-t="22">22 검색 결과 · 추가 · 삭제</td><td>송출 불가 광고주 검색 결과에 [삭제] 버튼 추가. 이미 등록된 광고주는 [추가] 비활성 + [삭제] 활성, 미등록 광고주는 반대로 표기<br>개요 5.2 검색 결과 추가 행에 같은 내용 반영</td></tr>
           <tr><td>26.11.23</td><td>개요</td><td>0.1 · 09 · 10 개발 기준 반영</td><td>모비센스 운영 코드 기준으로 정리한 내용 반영<br>0.1 상태 정의에 코드 컬럼 추가, 개발 상태값 내부검수(04) · 재생성 요청/완료/실패(05~07) 행 추가<br>10 개발 기준 상세 신규: 일반 · AI 소재 구분, 검수 역할 · 권한, 상태 흐름도, 카카오 심사 연동, 관련 데이터 테이블, 근거 코드<br>09-2 AI 수동 반려 팝업 '개발 확인'(15개 사유 공용), 09-11~13 추가 (기획서에 없는 상태값 · 내부승인 대상 상태 · 자동 심사 요청 배치)</td></tr>

@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>톡피드 생성 로직 변경</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--bg:#F5F6F8;--card:#fff;--ink:#1B1D21;--muted:#6B7280;--faint:#9CA3AF;--line:#E5E7EB;--line2:#D1D5DB;
+  --blue:#2563EB;--blue-bg:#EFF6FF;--red:#D93025;--red-bg:#FDECEA;--orange:#EA580C;--green:#16A34A;--green-bg:#E9F6EE}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,'Noto Sans KR','맑은 고딕',sans-serif;font-size:14px}
+.bar{position:fixed;top:0;left:0;right:0;height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:28px;padding:0 24px;z-index:10}
+.bar h1{font-size:15px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar h1 small{font-weight:500;color:var(--muted);margin-left:8px;font-size:12.5px}
+.tabs{display:flex;height:100%;margin-left:auto}
+.tabs button{border:0;background:none;font:inherit;font-weight:600;color:var(--muted);padding:0 18px;cursor:pointer;border-bottom:3px solid transparent}
+.tabs button.on{color:var(--blue);border-bottom-color:var(--blue)}
+.pg{display:none;padding-top:56px}
+.pg.on{display:block}
+iframe{display:block;width:100%;height:calc(100vh - 56px);border:0;background:#fff}
+/* 개요 */
+.ov{max-width:1180px;margin:0 auto;padding:24px 20px 80px}
+.meta{color:var(--muted);font-size:12.5px;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.card h2{font-size:16px;margin:0 0 14px;display:flex;align-items:center;gap:10px}
+.card h2 .n{font-size:12px;color:#fff;background:var(--ink);border-radius:4px;padding:2px 7px}
+.card p{line-height:1.75;margin:0 0 8px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi .v{font-size:28px;font-weight:800;letter-spacing:-.5px}
+.kpi .l{font-weight:600;margin-top:4px}
+.kpi .s{color:var(--muted);font-size:12.5px;margin-top:2px}
+.src{color:var(--faint);font-size:12px;margin-top:10px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.box{border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.box h3{font-size:13.5px;margin:0 0 8px}
+.box.chg h3{color:var(--red)}.box.keep h3{color:var(--muted)}
+ul.li{margin:0;padding-left:18px;line-height:1.85}
+.go{display:flex;gap:8px;margin-top:14px}
+.go button{font:inherit;font-weight:600;border:1px solid var(--blue);color:var(--blue);background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer}
+.go button:hover{background:var(--blue-bg)}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.65}
+table.t th{background:#F9FAFB;font-weight:600;color:#374151}
+table.t td.k{font-weight:600;white-space:nowrap}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 9px;white-space:nowrap}
+.pill.n{background:var(--blue-bg);color:var(--blue)}.pill.o{background:#F3F4F6;color:var(--muted)}.pill.f{background:#FEF3C7;color:#92400E}
+.flow{overflow-x:auto;border:1px solid var(--line);border-radius:10px;padding:10px;background:#FCFBF8;margin-bottom:14px}
+.flow svg{display:block;width:100%;min-width:1300px;height:auto}
+.dec{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dec .box.y h3{color:var(--green)}.dec .box.r h3{color:var(--orange)}
+@media (max-width:900px){.kpis{grid-template-columns:1fr 1fr}.cols,.dec{grid-template-columns:1fr}.bar{gap:10px;padding:0 12px}.bar h1 small{display:none}.tabs button{padding:0 10px}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1>톡피드 AI 소재 생성 로직 변경<small>LLM 사전 검수 · 검수 완료 상태 추가</small></h1>
+  <nav class="tabs" id="tabs">
+    <button data-tab="ov">개요</button>
+    <button data-tab="demo">데모</button>
+    <button data-tab="spec">화면설계서</button>
+  </nav>
+</header>
+
+<section class="pg" id="pg-ov">
+<div class="ov">
+  <p class="meta">적용 메뉴: 모비센스 &gt; 이미지 검수 &gt; 채팅리스트/피드 · 채팅리스트/피드(AI) &nbsp;|&nbsp; 출처: rtb-talkfeed.html (개요 00 · 0.1 · 03, 화면 1~6 · 32~54)에서 생성 로직 변경분만 분리 &nbsp;|&nbsp; 26.11.25 (남은 일 결정 반영)</p>
+
+  <div class="card">
+    <h2><span class="n">01</span>배경과 목적</h2>
+    <p>지금은 AI 톡피드 소재 이미지를 모두 만든 뒤에 LLM으로 검수해서, 반려될 소재도 이미지가 먼저 만들어진다. 바뀐 로직에서는 생성 대상 상품을 '생성대기'로 먼저 등록하고, 이미지를 만들기 전에 LLM으로 사전 검수해 통과한 건만 이미지를 생성한다.</p>
+    <p>검수를 통과한 소재는 '검수 완료' 상태가 된다. 운영자가 검수 리스트에서 이 상태를 바로 구분할 수 있도록 이미지 검수 &gt; 채팅리스트/피드와 채팅리스트/피드(AI) 두 메뉴의 상단 현황 · 승인상태 필터에 '검수 완료'를 추가한다.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">02</span>데이터 요약</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="v">55</div><div class="l">하루 생성 대상 광고주</div><div class="s">신규 광고주 우선</div></div>
+      <div class="kpi"><div class="v">30</div><div class="l">광고주당 하루 최대 생성 소재</div><div class="s">850×850 · TP 09</div></div>
+      <div class="kpi"><div class="v">Top 100</div><div class="l">광고주별 상품 후보</div><div class="s">전환순 · 1달 내 생성 상품 제외</div></div>
+      <div class="kpi"><div class="v">2</div><div class="l">적용 메뉴</div><div class="s">채팅리스트/피드 · 채팅리스트/피드(AI)</div></div>
+    </div>
+    <div class="src">기획 기준값 (rtb-talkfeed.html 개요 03) · 생성 배치 매일 01:00 (주말·공휴일 포함)</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">03</span>변경 범위</h2>
+    <div class="cols">
+      <div class="box chg"><h3>바뀌는 것</h3>
+        <ul class="li">
+          <li>AI 소재 생성 순서: 이미지 생성 전 LLM 사전 검수</li>
+          <li>사전 검수 미통과 건: 모비온 반려, 이미지 생성 안 함</li>
+          <li>상태값 추가: 생성대기 · 검수 완료</li>
+          <li>채팅리스트/피드 상단 현황: 검수 완료 · 내부승인 컬럼 추가</li>
+          <li>채팅리스트/피드(AI) 상단 현황: 검수 완료 컬럼 추가</li>
+          <li>두 메뉴 승인상태 필터 · 승인상태 컬럼: 검수 완료 추가</li>
+          <li>사전 검수 미통과 건: 승인상태 모비온 반려 · 배너이미지 빈 칸</li>
+          <li>AI 생성 배치 실행 요일: 주말·공휴일 포함 (기존: 주말·공휴일 제외)</li>
+        </ul>
+      </div>
+      <div class="box keep"><h3>그대로인 것</h3>
+        <ul class="li">
+          <li>생성 대상 광고주 기준: 하루 55개 · 신규 광고주 우선 · 이벤트 ON · 제외 카테고리/광고주 아님</li>
+          <li>상품 선정: 전환 Top 100 · 1달 내 생성 상품 제외 · 광고주당 최대 30개</li>
+          <li>이미지 규격: 850×850 · TP 09</li>
+          <li>생성 배치 시각: 01:00</li>
+          <li>기존 상태값: 대기 · 내부승인 · 승인 · 모비온 반려 · 카카오 반려</li>
+          <li>두 화면의 나머지 구성 (검색 · 목록 도구 · 그 외 컬럼)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="go"><button data-go="demo">데모 보기 →</button><button data-go="spec">화면설계서 보기 →</button></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">04</span>용어 정의</h2>
+    <table class="t">
+      <thead><tr><th style="width:150px">용어</th><th>정의</th><th style="width:80px">코드</th><th style="width:80px">구분</th></tr></thead>
+      <tbody>
+        <tr><td class="k">생성대기</td><td>AI 생성 배치가 대상 상품을 등록한 직후 상태<br>배너 이미지 빈 값<br>화면 노출 안 함 (목록 · 상단 현황 · 승인상태 필터 미포함)</td><td>미정</td><td><span class="pill n">신규</span></td></tr>
+        <tr><td class="k">LLM 사전 검수</td><td>생성대기 건을 이미지 생성 전에 LLM으로 판정하는 단계<br>판정 기준: 자동 반려 LLM 판정 조건과 동일 (rtb-talkfeed 개요 06)</td><td>-</td><td><span class="pill n">신규</span></td></tr>
+        <tr><td class="k">검수 완료</td><td>LLM 검수 통과 상태<br>카카오 심사 요청 대상 (검수 완료 건만 요청)<br>카카오 심사 요청 배치: 주말 · 공휴일 제외<br>AI: 사전 검수 통과 후 이미지 생성 완료 시<br>채팅리스트/피드: 자동 반려 배치(평일 05:00) 통과 시</td><td>미정</td><td><span class="pill n">신규</span></td></tr>
+        <tr><td class="k">대기</td><td>광고주 등록 소재가 검수 리스트에 등재된 상태<br>자동 반려 배치 검수 대상</td><td>01</td><td><span class="pill o">기존</span></td></tr>
+        <tr><td class="k">내부승인</td><td>카카오 심사 요청 성공 상태</td><td>03</td><td><span class="pill o">기존</span></td></tr>
+        <tr><td class="k">모비온 반려</td><td>검수 미통과 또는 운영자 반려 상태<br>사전 검수 미통과 건은 이미지 없음</td><td>99</td><td><span class="pill o">기존</span></td></tr>
+        <tr><td class="k">이미지 수</td><td>상단 현황의 상태별 소재 건수<br>전체 = 모든 상태 소재 건수 합</td><td>-</td><td><span class="pill f">계산식</span></td></tr>
+        <tr><td class="k">광고주 수</td><td>상단 현황의 상태별 광고주 ID 중복 제거 수</td><td>-</td><td><span class="pill f">계산식</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">05</span>핵심 로직 — AI 소재 자동 생성 (To-Be)</h2>
+    <div class="flow">
+<svg viewBox="20 60 1740 320" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'맑은 고딕',sans-serif" role="img" aria-label="AI 소재 자동 생성 흐름 (To-Be)">
+  <defs><marker id="fa" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#6B6B6B" stroke-width="1.4"/></marker></defs>
+  <rect x="20" y="60" width="1740" height="320" rx="16" fill="#F6F4F0"/>
+  <text x="44" y="92" font-size="14.5" font-weight="700" fill="#4A4438">① AI 소재 자동 생성<tspan font-weight="400" fill="#8A8478">  생성 배치 · 매일 01:00 (주말·공휴일 포함)</tspan></text>
+  <rect x="44" y="145" width="250" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="169" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">생성 대상 광고주 리스트</text>
+  <text x="169" y="197" text-anchor="middle" font-size="12.5" fill="#5B4FC4">하루 55개 · 신규 광고주 우선</text>
+  <text x="169" y="215" text-anchor="middle" font-size="12.5" fill="#5B4FC4">이벤트 ON · 제외 카테고리/광고주 아님</text>
+  <rect x="334" y="145" width="250" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="459" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">상품 · 카피 그룹 정보 수집</text>
+  <text x="459" y="197" text-anchor="middle" font-size="12.5" fill="#5B4FC4">전환 Top 100 (1달 내 생성 상품 제외)</text>
+  <text x="459" y="215" text-anchor="middle" font-size="12.5" fill="#5B4FC4">광고주당 최대 30개</text>
+  <rect x="624" y="150" width="190" height="80" rx="40" fill="#E2F3EC" stroke="#2E7D5B" stroke-width="1.4"/>
+  <text x="719" y="186" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E43">생성대기</text>
+  <text x="719" y="205" text-anchor="middle" font-size="12.5" fill="#2E7D5B">배너 이미지 빈 값</text>
+  <rect x="854" y="145" width="240" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="974" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">생성 배치 · LLM 검수</text>
+  <text x="974" y="197" text-anchor="middle" font-size="12.5" fill="#5B4FC4">생성대기 건 대상</text>
+  <text x="974" y="215" text-anchor="middle" font-size="12.5" fill="#5B4FC4">이미지 생성 전 사전 검수</text>
+  <polygon points="1220,135 1295,190 1220,245 1145,190" fill="#FFFFFF" stroke="#8A8A8A" stroke-width="1.3"/>
+  <text x="1220" y="195" text-anchor="middle" font-size="15" font-weight="700" fill="#1B1B19">검수 통과?</text>
+  <rect x="1340" y="145" width="200" height="90" rx="8" fill="#EEEDFB" stroke="#5B4FC4" stroke-width="1.4"/>
+  <text x="1440" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="#2D2580">AI 톡피드 이미지 생성</text>
+  <text x="1440" y="197" text-anchor="middle" font-size="12.5" fill="#5B4FC4">통과 건만</text>
+  <text x="1440" y="215" text-anchor="middle" font-size="12.5" fill="#5B4FC4">850×850 · TP 09</text>
+  <rect x="1584" y="150" width="160" height="80" rx="40" fill="#E2F3EC" stroke="#2E7D5B" stroke-width="1.4"/>
+  <text x="1664" y="180" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E43">검수 완료</text>
+  <text x="1664" y="198" text-anchor="middle" font-size="12.5" fill="#2E7D5B">심사 요청 대상</text>
+  <text x="1664" y="214" text-anchor="middle" font-size="11.5" fill="#B5452F">주말·공휴일 제외</text>
+  <rect x="1110" y="285" width="220" height="72" rx="36" fill="#FBEAE4" stroke="#B5452F" stroke-width="1.4"/>
+  <text x="1220" y="317" text-anchor="middle" font-size="15" font-weight="700" fill="#8F2D1C">모비온 반려</text>
+  <text x="1220" y="336" text-anchor="middle" font-size="12.5" fill="#B5452F">이미지 생성 안 함</text>
+  <text x="48" y="262" font-size="11.5" fill="#8A8478">제외 카테고리 = 송출 불가 카테고리 (rtb-talkfeed 개요 02)</text>
+  <path d="M294,190 L331,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M584,190 L621,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M814,190 L851,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1094,190 L1142,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1295,190 L1337,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1540,190 L1581,190" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <path d="M1220,245 L1220,282" fill="none" stroke="#6B6B6B" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="1306" y="180" font-size="12" fill="#6B6B6B">예</text>
+  <text x="1230" y="268" font-size="12" fill="#6B6B6B">아니오</text>
+</svg>
+    </div>
+    <table class="t">
+      <thead><tr><th style="width:170px">메뉴</th><th style="width:150px">단계</th><th>처리</th><th style="width:170px">결과 상태</th></tr></thead>
+      <tbody>
+        <tr><td class="k" rowspan="5">채팅리스트/피드(AI)</td><td>① 생성 대상 선정</td><td>하루 55개 광고주 · 신규 광고주 우선<br>이벤트 ON · 제외 카테고리/광고주 아님</td><td>-</td></tr>
+        <tr><td>② 상품 · 카피 수집</td><td>전환 Top 100 (1달 내 생성 상품 제외)<br>광고주당 최대 30개</td><td>생성대기</td></tr>
+        <tr><td>③ LLM 사전 검수</td><td>생성대기 건을 이미지 생성 전 판정</td><td>통과 / 미통과</td></tr>
+        <tr><td>④ 이미지 생성</td><td>통과 건만 850×850 · TP 09 생성</td><td><b>검수 완료</b></td></tr>
+        <tr><td>④' 반려</td><td>미통과 건, 이미지 생성 안 함</td><td><b>모비온 반려</b></td></tr>
+        <tr><td class="k" rowspan="2">채팅리스트/피드</td><td>① 등재</td><td>광고주 등록 소재를 검수 리스트에 등재</td><td>대기</td></tr>
+        <tr><td>② 자동 반려 배치</td><td>평일 05:00 · 대기 소재 LLM 검수</td><td>통과 → <b>검수 완료</b><br>미통과 → <b>모비온 반려</b></td></tr>
+      </tbody>
+    </table>
+    <div class="src">AI 생성 배치는 검수 완료까지 주말·공휴일에도 실행 · 이후 카카오 심사 요청 배치는 검수 완료 건만 대상, 주말·공휴일 제외 (평일 06:00 · 07:00, rtb-talkfeed 0.5)</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">06</span>눈에 띄는 점</h2>
+    <table class="t">
+      <thead><tr><th style="width:190px">항목</th><th style="width:150px">수치</th><th>메모</th></tr></thead>
+      <tbody>
+        <tr><td class="k">반려 건 이미지 생성</td><td><b>0건</b></td><td>사전 검수 미통과 건은 이미지를 만들지 않음<br>기존: 반려돼도 이미지 생성됨</td></tr>
+        <tr><td class="k">신규 상태값</td><td><b>2개</b></td><td>생성대기 · 검수 완료<br>상태 코드는 개발 완료 후 업데이트</td></tr>
+        <tr><td class="k">상단 현황 컬럼 수</td><td><b>5 → 7개</b></td><td>채팅리스트/피드 기준 (검수 완료 · 내부승인 추가)<br>AI 화면은 6 → 7개 (검수 완료 추가)</td></tr>
+        <tr><td class="k">AI 소재 생성 직후 상태</td><td><b>대기 → 검수 완료</b></td><td>바뀐 로직으로 생성된 소재는 대기를 거치지 않음<br>미통과 건은 생성 직후 모비온 반려</td></tr>
+        <tr><td class="k">주말 · 공휴일 생성분</td><td><b>다음 평일 요청</b></td><td>AI 생성 · 사전 검수는 매일 실행<br>카카오 심사 요청 배치는 주말 · 공휴일 제외</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">07</span>결정 사항과 남은 일</h2>
+    <div class="dec">
+      <div class="box y"><h3>확정</h3>
+        <ul class="li">
+          <li>AI 소재 이미지 생성 전 LLM 사전 검수</li>
+          <li>사전 검수 통과 건만 이미지 생성 → 검수 완료</li>
+          <li>사전 검수 미통과 건 → 모비온 반려, 이미지 생성 안 함</li>
+          <li>검수 완료 상태 두 메뉴 적용 (상단 현황 · 승인상태 필터 · 승인상태 컬럼)</li>
+          <li>채팅리스트/피드 상단 현황 내부승인 컬럼 추가</li>
+          <li>사전 검수 미통과 건 반려사유: 자동 반려 형식 {검증 단계} - {상세 사유} (검출 표현)</li>
+          <li>생성대기 건 화면 노출 안 함 (목록 · 상단 현황 · 승인상태 필터 미포함)</li>
+          <li>사전 검수 미통과 건 표기: 승인상태 모비온 반려 · 배너이미지 빈 칸</li>
+          <li>사전 검수 판정 기준: 자동 반려 LLM 판정 조건과 동일</li>
+          <li>AI 생성 배치: 검수 완료까지 주말·공휴일에도 실행</li>
+          <li>카카오 심사 요청 대상: 검수 완료 건만</li>
+          <li>카카오 심사 요청 배치: 주말 · 공휴일 제외</li>
+        </ul>
+      </div>
+      <div class="box r"><h3>남은 일</h3>
+        <ul class="li">
+          <li>생성대기 · 검수 완료 상태 코드 값: 개발 완료 후 업데이트 필요</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="pg" id="pg-demo"><iframe title="데모" srcdoc="<!doctype html>
+<html lang=&quot;ko&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
+<style>
+:root{--bg:#F5F6F8;--card:#fff;--ink:#1B1D21;--muted:#6B7280;--faint:#9CA3AF;--line:#E5E7EB;--line2:#D1D5DB;
+  --blue:#2563EB;--red:#D93025;--orange:#EA580C;--green:#16A34A;--mint:#22B573;--teal:#0F766E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,'Noto Sans KR','맑은 고딕',sans-serif;font-size:13px}
+.top{height:44px;background:#1F2937;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:700}
+.top small{font-weight:500;color:#D1D5DB}
+.app{display:flex;min-height:calc(100vh - 44px)}
+.lnb{width:210px;flex:none;background:#fff;border-right:1px solid var(--line);padding:12px 0}
+.lnb .g{padding:9px 18px;font-weight:700}
+.lnb .s{padding:8px 18px 8px 30px;color:var(--faint)}
+.lnb .s.nav{color:var(--muted);cursor:pointer}
+.lnb .s.nav:hover{background:#F9FAFB}
+.lnb .s.on{color:var(--mint);font-weight:700;background:#ECFDF5}
+.main{flex:1;min-width:0;padding:16px 22px 40px}
+.hint{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;color:#1E3A8A;line-height:1.7;margin-bottom:14px}
+.hint b{color:#1D4ED8}
+.sim{border:1.5px dashed #93C5FD;background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:16px}
+.sim-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sim-h .t{font-weight:700}
+.sim-h .t em{font-style:normal;font-weight:600;font-size:11px;color:#fff;background:#3B82F6;border-radius:4px;padding:2px 6px;margin-right:6px}
+.sim-h .d{color:var(--muted);font-size:12px;margin-top:3px}
+.queue{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.qi{border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:190px;background:#FAFAFA}
+.qi .n{font-weight:600}
+.qi .m{color:var(--muted);font-size:11.5px;margin-top:2px}
+.qi .chip{display:inline-block;margin-top:5px;font-size:11px;border-radius:999px;padding:1px 8px;background:#E2F3EC;color:#1F5E43;border:1px solid #B7DFCB}
+.qi.done{opacity:.55}
+.log{margin-top:10px;font-family:Consolas,'D2Coding',monospace;font-size:12px;background:#0F172A;color:#E2E8F0;border-radius:8px;padding:8px 12px;max-height:150px;overflow:auto;display:none}
+.log div{white-space:pre-wrap;line-height:1.6}
+.log .ok{color:#6EE7B7}.log .ng{color:#FCA5A5}.log .st{color:#93C5FD}
+.btn{display:inline-flex;align-items:center;border:1px solid var(--line2);background:#fff;border-radius:6px;padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.btn.p{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.g{background:var(--mint);border-color:var(--mint);color:#fff;cursor:default}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.fake{cursor:default}
+.crumb{font-weight:700;margin:4px 0 12px}
+.statw{display:flex;justify-content:flex-end}
+table.stat{border-collapse:collapse;background:#fff;font-size:12px}
+table.stat th,table.stat td{border:1px solid var(--line);padding:6px 14px;text-align:center;min-width:64px}
+table.stat th{background:#F9FAFB;font-weight:600}
+table.stat td.sh{background:#F9FAFB;color:var(--muted);text-align:left}
+table.stat .new{color:var(--red)}
+table.stat td.hot{background:#FEF9C3;transition:background .6s}
+.row{display:flex;align-items:center;gap:8px;margin:14px 0 10px;flex-wrap:wrap}
+.inp{border:1px solid var(--line2);border-radius:6px;padding:6px 10px;background:#fff;color:var(--faint)}
+.filter{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;flex-wrap:wrap}
+.filter .lab{background:var(--mint);color:#fff;padding:7px 12px;font-weight:600}
+.filter label{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;cursor:pointer;color:var(--muted)}
+.filter label.on{color:var(--ink);font-weight:700}
+.filter label.new span{color:var(--red)}
+.filter input{accent-color:var(--mint);margin:0}
+.tools{display:flex;justify-content:space-between;align-items:center;margin:4px 0 10px;gap:8px;flex-wrap:wrap}
+.tblw{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:8px}
+table.lst{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}
+table.lst th,table.lst td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+table.lst th{background:#F9FAFB;font-weight:600;color:#374151}
+table.lst tr.flash td{animation:fl 1.6s ease}
+@keyframes fl{0%{background:#FEF08A}100%{background:transparent}}
+table.lst td.empty{color:var(--faint);text-align:center;padding:24px}
+.st{display:inline-block;border-radius:4px;padding:2px 8px;font-size:11.5px;font-weight:600}
+.st-대기{background:#FEF3C7;color:#92400E}
+.st-검수완료{background:#CCFBF1;color:#0F766E}
+.st-내부승인{background:#E0E7FF;color:#3730A3}
+.st-승인{background:#DCFCE7;color:#166534}
+.st-모비온반려{background:#FEE2E2;color:#B91C1C}
+.st-카카오반려{background:#FFEDD5;color:#C2410C}
+.ban{width:38px;height:38px;border-radius:4px;background:linear-gradient(135deg,#FDE68A,#F9A8D4);display:inline-flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:#7C2D12;font-weight:700;line-height:1.1}
+.ban small{font-size:8px;font-weight:600}
+table.lst th .so{font-style:normal;color:var(--faint);margin-left:4px;font-size:11px}
+table.lst td.cut{max-width:220px;overflow:hidden;text-overflow:ellipsis}
+table.lst .url{color:var(--blue);text-decoration:underline}
+.ban.none{background:none;border:1px dashed var(--line2)}
+.logo{display:inline-block;background:#F3F4F6;color:var(--faint);border-radius:4px;padding:2px 8px}
+.ex{color:var(--faint);font-size:11px;margin-top:8px}
+@media (max-width:900px){.lnb{display:none}.statw{justify-content:flex-start;overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class=&quot;top&quot;>모비센스 <small>데모 · 예시값</small></div>
+<div class=&quot;app&quot;>
+  <nav class=&quot;lnb&quot;>
+    <div class=&quot;g&quot;>이미지 검수</div>
+    <div class=&quot;s&quot;>비즈보드 (상품)</div>
+    <div class=&quot;s&quot;>비즈보드 / 네이티브</div>
+    <div class=&quot;s nav&quot; data-menu=&quot;chat&quot;>채팅리스트 / 피드</div>
+    <div class=&quot;s nav&quot; data-menu=&quot;ai&quot;>채팅리스트 / 피드(AI)</div>
+    <div class=&quot;g&quot; style=&quot;color:var(--faint);font-weight:500&quot;>지면 관리</div>
+    <div class=&quot;g&quot; style=&quot;color:var(--faint);font-weight:500&quot;>시스템 관리</div>
+  </nav>
+  <main class=&quot;main&quot;>
+    <div class=&quot;hint&quot;>
+      <b>해 볼 것</b> · ① 왼쪽 메뉴로 두 화면 전환 · ② 승인상태에서 <b>검수 완료</b> 선택 · ③ 아래 점선 상자의 배치 실행 버튼으로 바뀐 흐름 확인 (상단 현황 숫자가 함께 바뀜)<br>
+      빨간 글씨는 이번에 추가되는 항목. 승인상태 필터는 데모 편의상 <b>전체</b>로 시작 (실제 기본값: 대기)
+    </div>
+
+    <section class=&quot;sim&quot; id=&quot;sim&quot;></section>
+
+    <div class=&quot;crumb&quot; id=&quot;crumb&quot;></div>
+    <div class=&quot;statw&quot;><table class=&quot;stat&quot; id=&quot;stat&quot;></table></div>
+
+    <div class=&quot;row&quot;>
+      <span class=&quot;inp&quot;>생성일 ▾</span>
+      <span class=&quot;inp&quot;>2026-11-24 ~ 2026-11-25</span>
+      <span class=&quot;btn g&quot;>검색</span>
+    </div>
+    <div class=&quot;row&quot; style=&quot;margin-top:0;justify-content:space-between&quot;><div class=&quot;filter&quot; id=&quot;filter&quot;></div><span id=&quot;condBtns&quot;></span></div>
+
+    <div class=&quot;tools&quot;>
+      <span id=&quot;actBtns&quot;></span>
+      <span><span class=&quot;btn fake&quot;>100개씩 보기 ▾</span> <span class=&quot;btn g&quot;>엑셀</span></span>
+    </div>
+    <div class=&quot;tblw&quot;><table class=&quot;lst&quot; id=&quot;list&quot;></table></div>
+    <div class=&quot;ex&quot;>목록 · 상단 현황 숫자는 아래 DATA에서 계산한 예시값</div>
+  </main>
+</div>
+
+<script>
+/* ===== 데이터 (예시값) — 나중에 API 응답으로 교체 ===== */
+const DATA = {
+  config: { advertiserPerDay: 55, maxPerAdvertiser: 30, topN: 100, imageSize: '850×850', imageTp: '09', genTime: '01:00', rejectTime: '05:00' },
+  statuses: ['대기', '검수 완료', '내부승인', '승인', '모비온 반려', '카카오 반려'],
+  menus: {
+    chat: {
+      crumb: '이미지 검수 > 채팅리스트/피드',
+      newCols: ['검수 완료', '내부승인'],
+      newFilters: ['검수 완료'],
+      columns: ['NO', '승인상태', '광고주ID', '광고주명', '카테고리', '소재그룹명', '사이트명', '프로필 로고', '소재 카피 문구_2', '소재 카피 문구_4', '랜딩URL', 'CTA 정보', '생성일자', '최근 업데이트일', '반려사유', '비고'],
+      sortable: false,
+      rows: [
+        { adv: 'chaesundang', name: '이인벤션_샤브보트R', cat: '금융>투자>창업', group: '샤브보트R_2안_260909', site: '샤브보트R', copy: '샤브보트R 창업하기', copy4: '샤브보트R 가맹 상담 신청하고 창업 혜택 받아보세요.', url: 'https://www.sbroad.co.kr/?…', cta: '바로가기', status: '대기', created: '2026-11-24 16:14:42', updated: '', reason: '', llm: { pass: true } },
+        { adv: 'chaesundang', name: '이인벤션_샤브보트R', cat: '금융>투자>창업', group: '샤브보트R_1안_260909', site: '샤브보트R', copy: '공식몰 샤브보트R 가맹 상담', copy4: '소자본 샤브샤브 창업, 샤브보트R와 함께 시작하세요.', url: 'https://www.sbroad.co.kr/?…', cta: '바로가기', status: '대기', created: '2026-11-24 16:14:42', updated: '', reason: '', llm: { pass: false, reason: '텍스트 검증 - 프로필 이름 수식어 (공식몰)' } },
+        { adv: 'cdhthank2026', name: '바르게', cat: '비지니스>마케팅', group: '최초_테스트', site: '생활비연구소', copy: '생활비연구소 테스트', copy4: '생활비 줄이는 방법, 생활비연구소에서 확인하세요.', url: 'https://mediabigpi.com/lifecare', cta: '더알아보기', status: '대기', created: '2026-11-24 16:08:47', updated: '', reason: '', llm: { pass: true } },
+        { adv: 'livecom', name: '이비엠그룹_라이브커머스코리아', cat: '비지니스>마케팅', group: '제스파', site: '라이브커머스', copy: '네이버 쇼핑라이브 특가', copy4: '네이버 쇼핑라이브 특가를 지금 바로 만나보세요.', url: 'https://view.shoppinglive.naver.com/li…', cta: '바로가기', status: '검수 완료', created: '2026-11-23 15:12:41', updated: '2026-11-24 05:00:12', reason: '' },
+        { adv: 'livecom', name: '이비엠그룹_라이브커머스코리아', cat: '비지니스>마케팅', group: '제스파_2', site: '라이브커머스', copy: '쇼핑라이브 오늘의 혜택', copy4: '오늘만 열리는 라이브 혜택을 확인하세요.', url: 'https://view.shoppinglive.naver.com/li…', cta: '바로가기', status: '내부승인', created: '2026-11-21 10:02:11', updated: '2026-11-21 14:30:05', reason: '' },
+        { adv: 'rentmall', name: '렌트몰', cat: '쇼핑>가전', group: '렌트몰_가전', site: '렌트몰', copy: '렌트몰 가전 렌탈 특가', copy4: '인기 가전을 월 렌탈료로 만나보세요.', url: 'https://www.rentmall.co.kr/?…', cta: '바로가기', status: '승인', created: '2026-11-20 09:40:00', updated: '2026-11-20 18:22:31', reason: '' },
+        { adv: 'zipbanchan', name: '집반찬', cat: '쇼핑>식품', group: '집반찬_정기배송', site: '집반찬', copy: '집반찬 정기배송', copy4: '매주 새로운 반찬을 집 앞까지 배송해 드려요.', url: 'https://www.zipbanchan.co.kr/?…', cta: '구매하기', status: '모비온 반려', created: '2026-11-20 11:05:20', updated: '2026-11-21 05:00:08', reason: '광고주 검증 - 송출 불가 광고주' },
+        { adv: 'coupangls', name: '쿠팡로지스틱스', cat: '서비스>물류', group: '쿠팡로지스틱스_기본', site: '쿠팡로지스틱스', copy: '쿠팡로지스틱스 당일 배송', copy4: '오늘 주문하면 오늘 도착하는 당일 배송.', url: 'https://www.coupangls.com/?…', cta: '더알아보기', status: '카카오 반려', created: '2026-11-19 13:15:10', updated: '2026-11-20 09:12:44', reason: '카카오 심사 반려 (예시)' },
+        { adv: 'homeplus_exp', name: 'NHNAD_홈플러스익스프레스(APP)', cat: '기타>인물>쇼핑페스타', group: '홈플러스_장보기', site: '홈플러스 익스프레스', copy: '홈플러스 익스프레스 장보기', copy4: '1시간 안에 배송되는 홈플러스 익스프레스 장보기.', url: 'https://abr.ge/@homeplus/mobon?…', cta: '바로가기', status: '승인', created: '2026-11-18 08:30:00', updated: '2026-11-18 17:45:19', reason: '' },
+        { adv: 'chaesundang', name: '이인벤션_샤브보트R', cat: '금융>투자>창업', group: '샤브보트R_260902', site: '샤브보트R', copy: '샤브보트R 1인 창업', copy4: '1인 창업도 샤브보트R와 함께라면 가능해요.', url: 'https://www.sbroad.co.kr/?…', cta: '바로가기', status: '모비온 반려', created: '2026-11-18 16:14:42', updated: '2026-11-19 11:20:03', reason: '과도한 확대/잘림' }
+      ],
+      queue: [],
+      batch: { title: '자동 반려 배치', time: '평일 05:00', desc: '대기 소재를 LLM으로 검수 → 통과: 검수 완료 / 미통과: 모비온 반려', stamp: '2026-11-25 05:00:0' }
+    },
+    ai: {
+      crumb: '이미지 검수 > 채팅리스트/피드(AI)',
+      newCols: ['검수 완료'],
+      newFilters: ['검수 완료'],
+      columns: ['☐ NO', '승인상태', '광고주ID', '광고주명', '카테고리', '사이트명', '프로필 로고', '배너이미지', '소재 카피문구_2', '소재 카피문구_4', '랜딩URL', 'CTA 정보', '생성일자', '최근 업데이트일', '반려사유', '비고'],
+      sortable: true,
+      rows: [
+        { adv: 'homeplus_exp', name: 'NHNAD_홈플러스익스프레스(APP)', cat: '기타>인물>쇼핑페스타', site: '홈플러스 익스프레스', copy: '신선 과일 바구니 특가', copy4: '제철 과일을 특가로 만나보세요.', url: 'https://abr.ge/@homeplus/mobon?…', cta: '바로가기', status: '검수 완료', img: true, created: '2026-11-24 01:00:05', updated: '', reason: '' },
+        { adv: 'homeplus_exp', name: 'NHNAD_홈플러스익스프레스(APP)', cat: '기타>인물>쇼핑페스타', site: '홈플러스 익스프레스', copy: '1+1 생수 묶음', copy4: '생수 2묶음을 1묶음 가격에 만나보세요.', url: 'https://abr.ge/@homeplus/mobon?…', cta: '바로가기', status: '검수 완료', img: true, created: '2026-11-24 01:00:06', updated: '', reason: '' },
+        { adv: 'livecom', name: '이비엠그룹_라이브커머스코리아', cat: '비지니스>마케팅', site: '라이브커머스', copy: '라이브 한정 특가 세트', copy4: '라이브 방송 중에만 열리는 특가를 확인하세요.', url: 'https://view.shoppinglive.naver.com/li…', cta: '바로가기', status: '내부승인', img: true, created: '2026-11-21 01:00:11', updated: '2026-11-21 15:02:40', reason: '' },
+        { adv: 'rentmall', name: '렌트몰', cat: '쇼핑>가전', site: '렌트몰', copy: '정수기 렌탈 첫 달 무료', copy4: '첫 달 렌탈료 없이 정수기를 써 보세요.', url: 'https://www.rentmall.co.kr/?…', cta: '바로가기', status: '승인', img: true, created: '2026-11-20 01:00:09', updated: '2026-11-20 17:10:02', reason: '' },
+        { adv: 'chaesundang', name: '이인벤션_샤브보트R', cat: '금융>투자>창업', site: '샤브보트R', copy: '공식몰 밀키트 세트', copy4: '샤브보트R 밀키트를 집에서 즐겨 보세요.', url: 'https://www.sbroad.co.kr/?…', cta: '바로가기', status: '모비온 반려', img: false, created: '2026-11-24 01:00:07', updated: '', reason: '텍스트 검증 - 프로필 이름 수식어 (공식몰)' }
+      ],
+      queue: [
+        { adv: 'zipbanchan', name: '집반찬', cat: '쇼핑>식품', site: '집반찬', copy: '국내산 반찬 세트 1+1', copy4: '국내산 재료로 만든 반찬 세트를 만나보세요.', url: 'https://www.zipbanchan.co.kr/?…', cta: '구매하기', llm: { pass: true } },
+        { adv: 'zipbanchan', name: '집반찬', cat: '쇼핑>식품', site: '집반찬', copy: '최고의 김치 3종', copy4: '최고의 맛, 김치 3종 세트를 만나보세요.', url: 'https://www.zipbanchan.co.kr/?…', cta: '구매하기', llm: { pass: false, reason: '텍스트 검증 - 최상급 표현 (최고)' } },
+        { adv: 'coupangls', name: '쿠팡로지스틱스', cat: '서비스>물류', site: '쿠팡로지스틱스', copy: '당일 배송 생수 2L', copy4: '오늘 주문하면 오늘 도착하는 생수.', url: 'https://www.coupangls.com/?…', cta: '더알아보기', llm: { pass: true } }
+      ],
+      batch: { title: '생성 배치', time: '매일 01:00 (주말·공휴일 포함)', desc: '생성대기 → LLM 사전 검수 (자동 반려 판정 조건과 동일) → 통과: 이미지 생성 후 검수 완료 / 미통과: 모비온 반려 (이미지 생성 안 함, 배너 빈 칸)', stamp: '2026-11-25 01:00:0' }
+    }
+  }
+};
+
+/* ===== 상태 ===== */
+const INIT = JSON.stringify(DATA.menus);
+let state = { menu: 'chat', filter: '전체', running: false, ran: { chat: false, ai: false }, logs: { chat: [], ai: [] }, flash: new Set() };
+let menus = JSON.parse(INIT);
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&amp;<>&quot;]/g, c => ({ '&amp;': '&amp;amp;', '<': '&amp;lt;', '>': '&amp;gt;', '&quot;': '&amp;quot;' }[c]));
+const stCls = s => 'st st-' + s.replace(/\s/g, '');
+
+/* 상단 현황: DATA에서 계산 */
+function calcStats(rows) {
+  const out = { '전체': { img: rows.length, adv: new Set(rows.map(r => r.adv)).size } };
+  DATA.statuses.forEach(s => {
+    const f = rows.filter(r => r.status === s);
+    out[s] = { img: f.length, adv: new Set(f.map(r => r.adv)).size };
+  });
+  return out;
+}
+
+function renderStat(prev) {
+  const m = menus[state.menu], cfg = DATA.menus[state.menu];
+  const st = calcStats(m.rows);
+  const cols = ['전체', ...DATA.statuses];
+  const hot = (c, k) => prev &amp;&amp; prev[c] &amp;&amp; prev[c][k] !== st[c][k] ? ' class=&quot;hot&quot;' : '';
+  $('#stat').innerHTML =
+    '<tr><th></th>' + cols.map(c => `<th${cfg.newCols.includes(c) ? ' class=&quot;new&quot;' : ''}>${c}</th>`).join('') + '</tr>' +
+    '<tr><td class=&quot;sh&quot;>이미지 수</td>' + cols.map(c => `<td${hot(c, 'img')}>${st[c].img}</td>`).join('') + '</tr>' +
+    '<tr><td class=&quot;sh&quot;>광고주 수</td>' + cols.map(c => `<td${hot(c, 'adv')}>${st[c].adv}</td>`).join('') + '</tr>';
+  setTimeout(() => document.querySelectorAll('#stat td.hot').forEach(td => td.classList.remove('hot')), 900);
+}
+
+function renderFilter() {
+  const cfg = DATA.menus[state.menu];
+  $('#filter').innerHTML = '<span class=&quot;lab&quot;>승인상태</span>' + ['전체', ...DATA.statuses].map(s =>
+    `<label class=&quot;${state.filter === s ? 'on' : ''}${cfg.newFilters.includes(s) ? ' new' : ''}&quot;><input type=&quot;radio&quot; name=&quot;f&quot; value=&quot;${s}&quot;${state.filter === s ? ' checked' : ''}><span>${s}</span></label>`).join('');
+  $('#filter').querySelectorAll('input').forEach(i => i.onchange = () => { state.filter = i.value; renderFilter(); renderList(); });
+}
+
+function renderList() {
+  const m = menus[state.menu], cfg = DATA.menus[state.menu];
+  const rows = m.rows.map((r, i) => ({ ...r, _i: i })).filter(r => state.filter === '전체' || r.status === state.filter);
+  const noSort = ['NO', '☐ NO', '비고'];
+  const head = '<tr>' + cfg.columns.map(c => `<th>${c}${cfg.sortable &amp;&amp; !noSort.includes(c) ? '<i class=&quot;so&quot;>⇅</i>' : ''}</th>`).join('') + '</tr>';
+  const wide = ['소재 카피 문구_4', '소재 카피문구_4', '랜딩URL', '반려사유'];
+  const body = rows.length ? rows.map((r, idx) => `<tr class=&quot;${state.flash.has(state.menu + r._i) ? 'flash' : ''}&quot;>` + cfg.columns.map(c => `<td${wide.includes(c) ? ' class=&quot;cut&quot;' : ''}>${cellOf(r, c, idx + 1)}</td>`).join('') + '</tr>').join('')
+    : `<tr><td class=&quot;empty&quot; colspan=&quot;${cfg.columns.length}&quot;>조회된 데이터가 없습니다.</td></tr>`;
+  $('#list').innerHTML = head + body;
+  state.flash.clear();
+}
+function cellOf(r, c, n) {
+  switch (c) {
+    case 'NO': return n;
+    case '☐ NO': return '☐ ' + n;
+    case '승인상태': return `<span class=&quot;${stCls(r.status)}&quot;>${r.status}</span>`;
+    case '광고주ID': return esc(r.adv);
+    case '광고주명': return esc(r.name);
+    case '카테고리': return esc(r.cat || '-');
+    case '소재그룹명': return esc(r.group || '-');
+    case '사이트명': return esc(r.site || '-');
+    case '프로필 로고': return '<span class=&quot;logo&quot;>로고</span>';
+    case '소재 카피 문구_2': case '소재 카피문구_2': return esc(r.copy);
+    case '소재 카피 문구_4': case '소재 카피문구_4': return esc(r.copy4 || '-');
+    case '랜딩URL': return `<span class=&quot;url&quot;>${esc(r.url || '-')}</span>`;
+    case 'CTA 정보': return esc(r.cta || '-');
+    case '생성일자': return r.created;
+    case '최근 업데이트일': return r.updated || '-';
+    case '배너이미지': return r.img ? `<span class=&quot;ban&quot;>${DATA.config.imageSize.split('×')[0]}<small>TP ${DATA.config.imageTp}</small></span>` : '<span class=&quot;ban none&quot; title=&quot;이미지 생성 안 함&quot;></span>';
+    case '반려사유': return esc(r.reason || '-');
+    case '비고': return '-';
+  }
+  return '';
+}
+
+function renderSim() {
+  const m = menus[state.menu], b = DATA.menus[state.menu].batch, c = DATA.config;
+  const isAi = state.menu === 'ai';
+  const pend = isAi ? m.queue : m.rows.filter(r => r.status === '대기' &amp;&amp; r.llm);
+  const items = isAi
+    ? m.queue.map(q => `<div class=&quot;qi${q.done ? ' done' : ''}&quot;><div class=&quot;n&quot;>${esc(q.adv)} · ${esc(q.copy)}</div><div class=&quot;m&quot;>배너 이미지 빈 값</div><span class=&quot;chip&quot;>${q.done ? '처리됨' : '생성대기'}</span></div>`).join('')
+    : '';
+  $('#sim').innerHTML = `
+    <div class=&quot;sim-h&quot;>
+      <div><div class=&quot;t&quot;><em>데모 전용</em>${b.title} · ${b.time}</div>
+      <div class=&quot;d&quot;>${b.desc}${isAi ? `<br>생성 대상: 하루 ${c.advertiserPerDay}개 광고주 · 광고주당 최대 ${c.maxPerAdvertiser}개 · 전환 Top ${c.topN} 상품 · 이미지 ${c.imageSize} · TP ${c.imageTp}` : ''}<br>LLM 판정 결과는 예시값으로 미리 정해 둠 · 실제 화면에는 없는 영역${isAi ? ' (생성대기 건은 실제 화면에 노출 안 함)' : ''}</div></div>
+      <div><button class=&quot;btn p&quot; id=&quot;run&quot;${state.running || state.ran[state.menu] || !pend.length ? ' disabled' : ''}>${state.ran[state.menu] ? '실행 완료' : b.title + ' 실행'}</button> <button class=&quot;btn&quot; id=&quot;reset&quot;${state.running ? ' disabled' : ''}>초기화</button></div>
+    </div>
+    ${isAi ? `<div class=&quot;queue&quot;>${items}</div>` : ''}
+    <div class=&quot;log&quot; id=&quot;log&quot;${state.logs[state.menu].length ? ' style=&quot;display:block&quot;' : ''}>${state.logs[state.menu].join('')}</div>`;
+  $('#run').onclick = runBatch;
+  $('#reset').onclick = resetAll;
+}
+
+function log(html) { state.logs[state.menu].push(`<div>${html}</div>`); const l = $('#log'); if (l) { l.style.display = 'block'; l.insertAdjacentHTML('beforeend', `<div>${html}</div>`); l.scrollTop = l.scrollHeight; } }
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+async function runBatch() {
+  const menu = state.menu, m = menus[menu], b = DATA.menus[menu].batch, c = DATA.config;
+  state.running = true; renderSim();
+  log(`<span class=&quot;st&quot;>▶ ${b.title} 시작 (${b.time})</span>`);
+  let k = 0;
+  if (menu === 'ai') {
+    for (const q of m.queue) {
+      if (q.done) continue;
+      await wait(500);
+      log(`${esc(q.adv)} · ${esc(q.copy)} : 생성대기 → LLM 사전 검수`);
+      await wait(500);
+      const prev = calcStats(m.rows);
+      k++;
+      const { llm, done, ...base } = q;
+      const row = { ...base, created: b.stamp + k, updated: '', reason: '' };
+      if (q.llm.pass) {
+        log(`<span class=&quot;ok&quot;>  통과 → 이미지 생성 (${c.imageSize} · TP ${c.imageTp}) → 검수 완료</span>`);
+        Object.assign(row, { status: '검수 완료', img: true });
+      } else {
+        log(`<span class=&quot;ng&quot;>  미통과 → 모비온 반려 · 이미지 생성 안 함 · ${esc(q.llm.reason)}</span>`);
+        Object.assign(row, { status: '모비온 반려', img: false, reason: q.llm.reason });
+      }
+      m.rows.unshift(row);
+      q.done = true;
+      state.flash = new Set([menu + '0']);
+      if (state.menu === menu) { renderStat(prev); renderList(); refreshQueue(); }
+    }
+  } else {
+    for (let i = 0; i < m.rows.length; i++) {
+      const r = m.rows[i];
+      if (r.status !== '대기' || !r.llm) continue;
+      await wait(600);
+      const prev = calcStats(m.rows);
+      k++;
+      r.updated = b.stamp + k;
+      if (r.llm.pass) { r.status = '검수 완료'; log(`<span class=&quot;ok&quot;>${esc(r.adv)} · ${esc(r.copy)} : LLM 검수 통과 → 검수 완료</span>`); }
+      else { r.status = '모비온 반려'; r.reason = r.llm.reason; log(`<span class=&quot;ng&quot;>${esc(r.adv)} · ${esc(r.copy)} : 미통과 → 모비온 반려 · ${esc(r.reason)}</span>`); }
+      delete r.llm;
+      state.flash = new Set([menu + i]);
+      if (state.menu === menu) { renderStat(prev); renderList(); }
+    }
+  }
+  await wait(300);
+  log(`<span class=&quot;st&quot;>■ ${b.title} 종료 · 처리 ${k}건</span>`);
+  state.running = false; state.ran[menu] = true;
+  if (state.menu === menu) renderSim();
+}
+function refreshQueue() {
+  const m = menus.ai, q = document.querySelector('.queue');
+  if (q) q.innerHTML = m.queue.map(x => `<div class=&quot;qi${x.done ? ' done' : ''}&quot;><div class=&quot;n&quot;>${esc(x.adv)} · ${esc(x.copy)}</div><div class=&quot;m&quot;>배너 이미지 빈 값</div><span class=&quot;chip&quot;>${x.done ? '처리됨' : '생성대기'}</span></div>`).join('');
+}
+function resetAll() {
+  menus = JSON.parse(INIT);
+  state.ran = { chat: false, ai: false }; state.logs = { chat: [], ai: [] }; state.flash.clear();
+  renderAll();
+}
+
+function renderAll() {
+  document.querySelectorAll('.lnb .nav').forEach(n => n.classList.toggle('on', n.dataset.menu === state.menu));
+  $('#crumb').textContent = DATA.menus[state.menu].crumb;
+  $('#actBtns').innerHTML = '<span class=&quot;btn fake&quot;>내부승인</span> <span class=&quot;btn fake&quot;>반려</span>';
+  // 실제 화면 기준: 승인상태 필터 우측, [생성 조건](AI만) → [자동 반려 조건]
+  $('#condBtns').innerHTML = (state.menu === 'ai' ? '<span class=&quot;btn g&quot;>생성 조건</span> ' : '') + '<span class=&quot;btn g&quot;>자동 반려 조건</span>';
+  renderSim(); renderStat(); renderFilter(); renderList();
+}
+document.querySelectorAll('.lnb .nav').forEach(n => n.onclick = () => { if (state.running) return; state.menu = n.dataset.menu; state.filter = '전체'; renderAll(); });
+renderAll();
+</script>
+</body>
+</html>
+"></iframe></section>
+<section class="pg" id="pg-spec"><iframe title="화면설계서" srcdoc="<!doctype html>
+<html lang=&quot;ko&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
+<style>
+:root{--bg:#F5F6F8;--card:#fff;--ink:#1B1D21;--muted:#6B7280;--faint:#9CA3AF;--line:#E5E7EB;--line2:#D1D5DB;
+  --blue:#2563EB;--red:#D93025;--orange:#EA580C;--green:#16A34A;--mint:#22B573}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,'Noto Sans KR','맑은 고딕',sans-serif;font-size:13px}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 440px;height:100vh}
+.left{overflow:auto;padding:22px 26px 60px}
+.right{overflow:auto;background:#fff;border-left:1px solid var(--line);padding:16px 18px 80px}
+/* 목업 */
+.scr{margin-bottom:34px}
+.scr-h{font-weight:700;font-size:14px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.scr-h span{font-size:11px;font-weight:600;color:#fff;background:#374151;border-radius:4px;padding:2px 7px}
+.frame{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px 20px}
+.crumb{font-weight:700;margin-bottom:14px}
+.rel{position:relative}
+.bdg{position:absolute;z-index:50;top:-10px;left:-10px;background:#DC2626;color:#fff;font-size:10.5px;font-weight:700;line-height:1;padding:3px 5px;border-radius:3px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap}
+.bdg:hover{background:#B91C1C}
+.statw{display:flex;justify-content:flex-end;padding-top:6px}
+table.stat{border-collapse:collapse;font-size:12px}
+table.stat th,table.stat td{border:1px solid var(--line);padding:6px 12px;text-align:center;min-width:58px}
+table.stat th{background:#F9FAFB;font-weight:600;position:relative}
+table.stat td.sh{background:#F9FAFB;color:var(--muted);text-align:left}
+.new{color:var(--red)!important}
+.row{display:flex;align-items:center;gap:8px;margin:16px 0 10px;flex-wrap:wrap}
+.inp{border:1px solid var(--line2);border-radius:6px;padding:6px 10px;color:var(--faint)}
+.btn{display:inline-block;border:1px solid var(--line2);border-radius:6px;padding:6px 12px;font-size:12.5px}
+.btn.g{background:var(--mint);border-color:var(--mint);color:#fff}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.filter{display:inline-flex;border:1px solid var(--line);border-radius:6px;flex-wrap:wrap}
+.filter .lab{background:var(--mint);color:#fff;padding:7px 12px;font-weight:600;border-radius:5px 0 0 5px}
+.filter .o{padding:7px 10px;color:var(--muted);position:relative}
+.filter .o.on{color:var(--ink);font-weight:700}
+table.lst{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap;margin-top:12px}
+table.lst th,table.lst td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+table.lst th{background:#F9FAFB;font-weight:600;color:#374151;position:relative}
+.st{display:inline-block;border-radius:4px;padding:2px 8px;font-size:11.5px;font-weight:600}
+.s-w{background:#FEF3C7;color:#92400E}.s-d{background:#CCFBF1;color:#0F766E}.s-c{background:#E0E7FF;color:#3730A3}
+.s-y{background:#DCFCE7;color:#166534}.s-mn{background:#FEE2E2;color:#B91C1C}.s-kn{background:#FFEDD5;color:#C2410C}
+.ban{width:34px;height:34px;border-radius:4px;background:linear-gradient(135deg,#FDE68A,#F9A8D4);display:inline-block;vertical-align:middle}
+.ban.none{background:none;border:1px dashed var(--line2)}
+.tblw{overflow-x:auto;padding:12px 0 6px 12px;margin-left:-12px}
+table.lst th .so{font-style:normal;color:var(--faint);margin-left:4px;font-size:11px}
+table.lst td.cut{max-width:200px;overflow:hidden;text-overflow:ellipsis}
+table.lst .url{color:var(--blue);text-decoration:underline}
+.logo{display:inline-block;background:#F3F4F6;color:var(--faint);border-radius:4px;padding:2px 8px}
+.note{color:var(--faint);font-size:11.5px;margin-top:10px}
+/* 디스크립션 */
+.check{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:16px;background:#F9FAFB;font-size:12px;line-height:1.8}
+.check b{font-size:12.5px}
+.check .ok{color:var(--green);font-weight:700}.check .ng{color:var(--red);font-weight:700}
+.grp{font-weight:700;font-size:13.5px;margin:22px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+.item{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:10px;scroll-margin-top:12px;transition:background .3s}
+.item.flash{animation:flash 1.6s ease}
+@keyframes flash{0%,40%{background:#FEF9C3}100%{background:#fff}}
+.ttl{display:flex;align-items:center;gap:6px;font-weight:700;margin-bottom:6px}
+.no{background:#DC2626;color:#fff;font-size:11px;border-radius:3px;padding:2px 5px}
+.tag{font-size:11px;font-weight:600;border-radius:4px;padding:1px 6px}
+.tag.n{background:#DBEAFE;color:#1D4ED8}.tag.c{background:#FFEDD5;color:#C2410C}.tag.k{background:#F3F4F6;color:var(--muted)}
+.desc{font-size:12.5px;line-height:1.75;color:#374151}
+.desc .l1{padding-left:1.4em;text-indent:-1.4em;white-space:pre-wrap}
+.desc .l2{padding-left:2.6em;text-indent:-1.0em;white-space:pre-wrap;color:#4B5563}
+@media (max-width:900px){.wrap{grid-template-columns:1fr;height:auto}.left,.right{overflow:visible}.right{border-left:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div class=&quot;wrap&quot;>
+<div class=&quot;left&quot;>
+
+  <!-- 화면 A -->
+  <div class=&quot;scr&quot;>
+    <div class=&quot;scr-h&quot;><span>화면 A</span>이미지 검수 &amp;gt; 채팅리스트/피드</div>
+    <div class=&quot;frame&quot;>
+      <div class=&quot;crumb&quot;>이미지 검수 &amp;gt; 채팅리스트/피드</div>
+      <div class=&quot;statw&quot;><div class=&quot;rel&quot;><span class=&quot;bdg&quot; data-t=&quot;1&quot;>1</span>
+        <table class=&quot;stat&quot;>
+          <tr><th></th><th>전체</th><th>대기</th><th class=&quot;new&quot;><span class=&quot;bdg&quot; data-t=&quot;1-1&quot;>1-1</span>검수 완료</th><th class=&quot;new&quot;><span class=&quot;bdg&quot; data-t=&quot;1-2&quot;>1-2</span>내부승인</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr>
+          <tr><td class=&quot;sh&quot;>이미지 수</td><td>10</td><td>3</td><td>1</td><td>1</td><td>2</td><td>2</td><td>1</td></tr>
+          <tr><td class=&quot;sh&quot;>광고주 수</td><td>7</td><td>2</td><td>1</td><td>1</td><td>2</td><td>2</td><td>1</td></tr>
+        </table>
+      </div></div>
+      <div class=&quot;row&quot;><span class=&quot;inp&quot;>생성일 ▾</span><span class=&quot;inp&quot;>2026-11-24 ~ 2026-11-25</span><span class=&quot;btn g&quot;>검색</span></div>
+      <div class=&quot;frow&quot;>
+        <div class=&quot;rel&quot; style=&quot;display:inline-block&quot;><span class=&quot;bdg&quot; data-t=&quot;2&quot;>2</span>
+          <div class=&quot;filter&quot;><span class=&quot;lab&quot;>승인상태</span><span class=&quot;o&quot;>○ 전체</span><span class=&quot;o on&quot;>● 대기</span><span class=&quot;o new&quot;><span class=&quot;bdg&quot; data-t=&quot;2-1&quot;>2-1</span>○ 검수 완료</span><span class=&quot;o&quot;>○ 내부승인</span><span class=&quot;o&quot;>○ 승인</span><span class=&quot;o&quot;>○ 모비온 반려</span><span class=&quot;o&quot;>○ 카카오 반려</span></div>
+        </div>
+        <span><span class=&quot;btn g&quot;>자동 반려 조건</span></span>
+      </div>
+      <div class=&quot;tblw&quot;>
+        <table class=&quot;lst&quot;>
+          <tr><th>NO</th><th><span class=&quot;bdg&quot; data-t=&quot;3&quot;>3</span>승인상태</th><th>광고주ID</th><th>광고주명</th><th>카테고리</th><th>소재그룹명</th><th>사이트명</th><th>프로필 로고</th><th>소재 카피 문구_2</th><th>소재 카피 문구_4</th><th>랜딩URL</th><th>CTA 정보</th><th>생성일자</th><th>최근 업데이트일</th><th>반려사유</th><th>비고</th></tr>
+          <tr><td>1</td><td><span class=&quot;st s-w&quot;>대기</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&amp;gt;투자&amp;gt;창업</td><td>샤브보트R_2안_260909</td><td>샤브보트R</td><td><span class=&quot;logo&quot;>로고</span></td><td>샤브보트R 창업하기</td><td class=&quot;cut&quot;>샤브보트R 가맹 상담 신청하고 창업 혜택 받아보세요.</td><td class=&quot;cut&quot;><span class=&quot;url&quot;>https://www.sbroad.co.kr/?…</span></td><td>바로가기</td><td>2026-11-24 16:14:42</td><td>-</td><td>-</td><td>-</td></tr>
+          <tr><td>2</td><td><span class=&quot;st s-d&quot;>검수 완료</span></td><td>livecom</td><td>이비엠그룹_라이브커머스코리아</td><td>비지니스&amp;gt;마케팅</td><td>제스파</td><td>라이브커머스</td><td><span class=&quot;logo&quot;>로고</span></td><td>네이버 쇼핑라이브 특가</td><td class=&quot;cut&quot;>네이버 쇼핑라이브 특가를 지금 바로 만나보세요.</td><td class=&quot;cut&quot;><span class=&quot;url&quot;>https://view.shoppinglive.naver.com/li…</span></td><td>바로가기</td><td>2026-11-23 15:12:41</td><td>2026-11-24 05:00:12</td><td>-</td><td>-</td></tr>
+          <tr><td>3</td><td><span class=&quot;st s-c&quot;>내부승인</span></td><td>livecom</td><td>이비엠그룹_라이브커머스코리아</td><td>비지니스&amp;gt;마케팅</td><td>제스파_2</td><td>라이브커머스</td><td><span class=&quot;logo&quot;>로고</span></td><td>쇼핑라이브 오늘의 혜택</td><td class=&quot;cut&quot;>오늘만 열리는 라이브 혜택을 확인하세요.</td><td class=&quot;cut&quot;><span class=&quot;url&quot;>https://view.shoppinglive.naver.com/li…</span></td><td>바로가기</td><td>2026-11-21 10:02:11</td><td>2026-11-21 14:30:05</td><td>-</td><td>-</td></tr>
+          <tr><td>4</td><td><span class=&quot;st s-mn&quot;>모비온 반려</span></td><td>zipbanchan</td><td>집반찬</td><td>쇼핑&amp;gt;식품</td><td>집반찬_정기배송</td><td>집반찬</td><td><span class=&quot;logo&quot;>로고</span></td><td>집반찬 정기배송</td><td class=&quot;cut&quot;>매주 새로운 반찬을 집 앞까지 배송해 드려요.</td><td class=&quot;cut&quot;><span class=&quot;url&quot;>https://www.zipbanchan.co.kr/?…</span></td><td>구매하기</td><td>2026-11-20 11:05:20</td><td>2026-11-21 05:00:08</td><td class=&quot;cut&quot;>광고주 검증 - 송출 불가 광고주</td><td>-</td></tr>
+        </table>
+      </div>
+      <div class=&quot;note&quot;>목업 숫자 · 목록은 예시값 (데모 초기값과 같음)</div>
+    </div>
+  </div>
+
+  <!-- 화면 B -->
+  <div class=&quot;scr&quot;>
+    <div class=&quot;scr-h&quot;><span>화면 B</span>이미지 검수 &amp;gt; 채팅리스트/피드(AI)</div>
+    <div class=&quot;frame&quot;>
+      <div class=&quot;crumb&quot;>이미지 검수 &amp;gt; 채팅리스트/피드(AI)</div>
+      <div class=&quot;statw&quot;><div class=&quot;rel&quot;><span class=&quot;bdg&quot; data-t=&quot;4&quot;>4</span>
+        <table class=&quot;stat&quot;>
+          <tr><th></th><th>전체</th><th>대기</th><th class=&quot;new&quot;><span class=&quot;bdg&quot; data-t=&quot;4-1&quot;>4-1</span>검수 완료</th><th>내부승인</th><th>승인</th><th>모비온 반려</th><th>카카오 반려</th></tr>
+          <tr><td class=&quot;sh&quot;>이미지 수</td><td>5</td><td>0</td><td>2</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+          <tr><td class=&quot;sh&quot;>광고주 수</td><td>4</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+        </table>
+      </div></div>
+      <div class=&quot;row&quot;><span class=&quot;inp&quot;>생성일 ▾</span><span class=&quot;inp&quot;>2026-11-24 ~ 2026-11-25</span><span class=&quot;btn g&quot;>검색</span></div>
+      <div class=&quot;frow&quot;>
+        <div class=&quot;rel&quot; style=&quot;display:inline-block&quot;><span class=&quot;bdg&quot; data-t=&quot;5&quot;>5</span>
+          <div class=&quot;filter&quot;><span class=&quot;lab&quot;>승인상태</span><span class=&quot;o&quot;>○ 전체</span><span class=&quot;o on&quot;>● 대기</span><span class=&quot;o new&quot;><span class=&quot;bdg&quot; data-t=&quot;5-1&quot;>5-1</span>○ 검수 완료</span><span class=&quot;o&quot;>○ 내부승인</span><span class=&quot;o&quot;>○ 승인</span><span class=&quot;o&quot;>○ 모비온 반려</span><span class=&quot;o&quot;>○ 카카오 반려</span></div>
+        </div>
+        <span><span class=&quot;btn g&quot;>생성 조건</span> <span class=&quot;btn g&quot;>자동 반려 조건</span></span>
+      </div>
+      <div class=&quot;tblw&quot;>
+        <table class=&quot;lst&quot;>
+          <tr><th>☐ NO</th><th><span class=&quot;bdg&quot; data-t=&quot;6&quot;>6</span>승인상태<i class=&quot;so&quot;>⇅</i></th><th>광고주ID<i class=&quot;so&quot;>⇅</i></th><th>광고주명<i class=&quot;so&quot;>⇅</i></th><th>카테고리<i class=&quot;so&quot;>⇅</i></th><th>사이트명<i class=&quot;so&quot;>⇅</i></th><th>프로필 로고<i class=&quot;so&quot;>⇅</i></th><th><span class=&quot;bdg&quot; data-t=&quot;7&quot;>7</span>배너이미지<i class=&quot;so&quot;>⇅</i></th><th>소재 카피문구_2<i class=&quot;so&quot;>⇅</i></th><th>소재 카피문구_4<i class=&quot;so&quot;>⇅</i></th><th>랜딩URL<i class=&quot;so&quot;>⇅</i></th><th>CTA 정보<i class=&quot;so&quot;>⇅</i></th><th>생성일자<i class=&quot;so&quot;>⇅</i></th><th>최근 업데이트일<i class=&quot;so&quot;>⇅</i></th><th>반려사유<i class=&quot;so&quot;>⇅</i></th><th>비고</th></tr>
+          <tr><td>☐ 1</td><td><span class=&quot;st s-d&quot;>검수 완료</span></td><td>homeplus_exp</td><td>NHNAD_홈플러스익스프레스(APP)</td><td>기타&amp;gt;인물&amp;gt;쇼핑페스타</td><td>홈플러스 익스프레스</td><td><span class=&quot;logo&quot;>로고</span></td><td><span class=&quot;ban&quot;></span></td><td>신선 과일 바구니 특가</td><td class=&quot;cut&quot;>제철 과일을 특가로 만나보세요.</td><td class=&quot;cut&quot;><span class=&quot;url&quot;>https://abr.ge/@homeplus/mobon?…</span></td><td>바로가기</td><td>2026-11-24 01:00:05</td><td>-</td><td>-</td><td>-</td></tr>
+          <tr><td>☐ 2</td><td><span class=&quot;st s-c&quot;>내부승인</span></td><td>livecom</td><td>이비엠그룹_라이브커머스코리아</td><td>비지니스&amp;gt;마케팅</td><td>라이브커머스</td><td><span class=&quot;logo&quot;>로고</span></td><td><span class=&quot;ban&quot;></span></td><td>라이브 한정 특가 세트</td><td class=&quot;cut&quot;>라이브 방송 중에만 열리는 특가를 확인하세요.</td><td class=&quot;cut&quot;><span class=&quot;url&quot;>https://view.shoppinglive.naver.com/li…</span></td><td>바로가기</td><td>2026-11-21 01:00:11</td><td>2026-11-21 15:02:40</td><td>-</td><td>-</td></tr>
+          <tr><td>☐ 3</td><td><span class=&quot;st s-mn&quot;>모비온 반려</span></td><td>chaesundang</td><td>이인벤션_샤브보트R</td><td>금융&amp;gt;투자&amp;gt;창업</td><td>샤브보트R</td><td><span class=&quot;logo&quot;>로고</span></td><td><span class=&quot;ban none&quot;></span></td><td>공식몰 밀키트 세트</td><td class=&quot;cut&quot;>샤브보트R 밀키트를 집에서 즐겨 보세요.</td><td class=&quot;cut&quot;><span class=&quot;url&quot;>https://www.sbroad.co.kr/?…</span></td><td>바로가기</td><td>2026-11-24 01:00:07</td><td>-</td><td class=&quot;cut&quot;>텍스트 검증 - 프로필 이름 수식어 (공식몰)</td><td>-</td></tr>
+        </table>
+      </div>
+      <div class=&quot;note&quot;>목업 숫자 · 목록은 예시값 (데모 초기값과 같음)</div>
+    </div>
+  </div>
+</div>
+
+<aside class=&quot;right&quot; id=&quot;panel&quot;>
+  <div class=&quot;check&quot; id=&quot;check&quot;>검증 중…</div>
+
+  <div class=&quot;grp&quot;>화면 A · 이미지 검수 &amp;gt; 채팅리스트/피드</div>
+
+  <div class=&quot;item&quot; id=&quot;d-1&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>1</span>[상단 현황]<span class=&quot;tag c&quot;>변경</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 승인상태별 이미지 수 · 광고주 수 노출</div>
+    <div class=&quot;l1&quot;>b. 컬럼: 전체 / 대기 / 검수 완료 / 내부승인 / 승인 / 모비온 반려 / 카카오 반려</div>
+    <div class=&quot;l2&quot;>- 기존: 전체 / 대기 / 승인 / 모비온 반려 / 카카오 반려</div>
+    <div class=&quot;l1&quot;>c. 이미지 수: 상태별 소재 건수</div>
+    <div class=&quot;l2&quot;>- 전체: 모든 상태 소재 건수 합</div>
+    <div class=&quot;l1&quot;>d. 광고주 수: 상태별 광고주 ID 중복 제거 수</div>
+    <div class=&quot;l1&quot;>e. 집계 기준: 조회 영역의 기간 조건</div>
+    <div class=&quot;l2&quot;>※ 라이브중 반려는 모비온 반려로 집계</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-1-1&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>1-1</span>[검수 완료 컬럼]<span class=&quot;tag n&quot;>신규</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 위치: 대기 컬럼 오른쪽</div>
+    <div class=&quot;l1&quot;>b. 검수 완료 상태 소재의 이미지 수 · 광고주 수 노출</div>
+    <div class=&quot;l1&quot;>c. 검수 완료 기준: 자동 반려 배치(평일 05:00) LLM 검수 통과</div>
+    <div class=&quot;l2&quot;>- 미통과 시 → 모비온 반려</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-1-2&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>1-2</span>[내부승인 컬럼]<span class=&quot;tag n&quot;>신규</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 위치: 검수 완료 컬럼 오른쪽</div>
+    <div class=&quot;l1&quot;>b. 내부승인 상태 소재의 이미지 수 · 광고주 수 노출</div>
+    <div class=&quot;l2&quot;>※ 채팅리스트/피드(AI) 상단 현황 [4]와 같은 구성</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-2&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>2</span>[승인상태 필터]<span class=&quot;tag c&quot;>변경</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 상태 1개 선택 → 해당 상태 소재만 목록에 노출</div>
+    <div class=&quot;l1&quot;>b. 값: 전체 / 대기 / 검수 완료 / 내부승인 / 승인 / 모비온 반려 / 카카오 반려</div>
+    <div class=&quot;l1&quot;>c. 기본값: 대기 (기존과 같음)</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-2-1&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>2-1</span>[검수 완료]<span class=&quot;tag n&quot;>신규</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 위치: 대기 오른쪽</div>
+    <div class=&quot;l1&quot;>b. 선택 시 검수 완료 상태 소재만 노출</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-3&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>3</span>[승인상태 컬럼]<span class=&quot;tag c&quot;>변경</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 상태를 색 배지로 노출</div>
+    <div class=&quot;l1&quot;>b. 검수 완료 배지 추가</div>
+    <div class=&quot;l2&quot;>- 대기(노랑) / 검수 완료(청록) / 내부승인(남색) / 승인(초록) / 모비온 반려(빨강) / 카카오 반려(주황)</div>
+    <div class=&quot;l2&quot;>※ 배지 색은 예시</div>
+  </div></div>
+
+  <div class=&quot;grp&quot;>화면 B · 이미지 검수 &amp;gt; 채팅리스트/피드(AI)</div>
+
+  <div class=&quot;item&quot; id=&quot;d-4&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>4</span>[상단 현황]<span class=&quot;tag c&quot;>변경</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 컬럼: 전체 / 대기 / 검수 완료 / 내부승인 / 승인 / 모비온 반려 / 카카오 반려</div>
+    <div class=&quot;l2&quot;>- 기존: 전체 / 대기 / 내부승인 / 승인 / 모비온 반려 / 카카오 반려</div>
+    <div class=&quot;l1&quot;>b. 집계 방식: 채팅리스트/피드 상단 현황 [1]과 같음</div>
+    <div class=&quot;l2&quot;>※ 생성대기 건은 집계 안 함 (화면 노출 안 함)</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-4-1&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>4-1</span>[검수 완료 컬럼]<span class=&quot;tag n&quot;>신규</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 위치: 대기 컬럼 오른쪽</div>
+    <div class=&quot;l1&quot;>b. 검수 완료 기준: 생성 배치 LLM 사전 검수 통과 + 이미지 생성 완료</div>
+    <div class=&quot;l2&quot;>※ 바뀐 로직으로 생성된 소재는 대기를 거치지 않음</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-5&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>5</span>[승인상태 필터]<span class=&quot;tag c&quot;>변경</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 값: 전체 / 대기 / 검수 완료 / 내부승인 / 승인 / 모비온 반려 / 카카오 반려</div>
+    <div class=&quot;l1&quot;>b. 동작: 채팅리스트/피드 승인상태 필터 [2]와 같음</div>
+    <div class=&quot;l2&quot;>※ 생성대기는 필터 값에 없음</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-5-1&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>5-1</span>[검수 완료]<span class=&quot;tag n&quot;>신규</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 위치: 대기 오른쪽</div>
+    <div class=&quot;l1&quot;>b. 선택 시 검수 완료 상태 소재만 노출</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-6&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>6</span>[승인상태 컬럼]<span class=&quot;tag c&quot;>변경</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 검수 완료 배지 추가 (색 구분은 [3]과 같음)</div>
+    <div class=&quot;l1&quot;>b. 생성 직후 상태 변경</div>
+    <div class=&quot;l2&quot;>- 사전 검수 통과 → 검수 완료</div>
+    <div class=&quot;l2&quot;>- 사전 검수 미통과 → 모비온 반려</div>
+    <div class=&quot;l2&quot;>- 기존: 배치로 생성된 직후 대기</div>
+    <div class=&quot;l2&quot;>※ 생성대기 건은 목록에 노출 안 함</div>
+    <div class=&quot;l1&quot;>c. 사전 검수 미통과 건 반려사유: 자동 반려 형식</div>
+    <div class=&quot;l2&quot;>- {검증 단계} - {상세 사유} (검출 표현)</div>
+    <div class=&quot;l2&quot;>- 예: 텍스트 검증 - 프로필 이름 수식어 (공식몰)</div>
+  </div></div>
+
+  <div class=&quot;item&quot; id=&quot;d-7&quot;><div class=&quot;ttl&quot;><span class=&quot;no&quot;>7</span>[배너이미지 컬럼]<span class=&quot;tag c&quot;>변경</span></div><div class=&quot;desc&quot;>
+    <div class=&quot;l1&quot;>a. 사전 검수 통과 건: 생성된 850×850 이미지 노출</div>
+    <div class=&quot;l1&quot;>b. 사전 검수 미통과 건: 이미지 생성 안 함 → 빈 칸 노출</div>
+    <div class=&quot;l2&quot;>- 승인상태: 모비온 반려 [6]</div>
+  </div></div>
+</aside>
+</div>
+
+<script>
+(function () {
+  const panel = document.getElementById('panel');
+  // 배지 클릭 → 설명으로 스크롤 + 노란 하이라이트
+  document.querySelectorAll('.bdg').forEach(b => b.addEventListener('click', () => {
+    const el = document.getElementById('d-' + b.dataset.t);
+    if (!el) return;
+    if (window.matchMedia('(max-width:900px)').matches) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else panel.scrollTo({ top: el.offsetTop - panel.offsetTop - 12, behavior: 'smooth' });
+    el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  }));
+
+  // 검증: 배지 매핑 · 중복 id · 문체
+  const badges = [...document.querySelectorAll('.bdg')].map(b => b.dataset.t);
+  const items = [...document.querySelectorAll('.item')].map(i => i.id.replace(/^d-/, ''));
+  const broken = badges.filter(t => !items.includes(t)).concat(items.filter(t => !badges.includes(t)));
+  const ids = [...document.querySelectorAll('[id]')].map(e => e.id);
+  const dup = ids.filter((v, i) => ids.indexOf(v) !== i);
+  const dupBadge = badges.filter((v, i) => badges.indexOf(v) !== i);
+  const lines = [...document.querySelectorAll('.desc .l1, .desc .l2')].map(l => l.textContent.trim());
+  const bad = /(합니다|한다|해요|됩니다|입니다|하며|하고|하면서|이며|있다|없다|된다|이다|했다)$/;
+  const nVerb = lines.filter(l => bad.test(l)).length;
+  const nDot = lines.filter(l => /\.$/.test(l) &amp;&amp; !/\d\.\d+$/.test(l)).length;
+  const nTwo = lines.filter(l => /[가-힣)]\.\s+\S/.test(l.replace(/^[a-z]\.\s/, ''))).length;
+  const ok = n => n === 0 ? `<span class=&quot;ok&quot;>${n}</span>` : `<span class=&quot;ng&quot;>${n}</span>`;
+  document.getElementById('check').innerHTML =
+    `<b>검증 결과</b> (자동 계산)<br>` +
+    `배지 ${badges.length}개 · 설명 항목 ${items.length}개 · 끊긴 링크 ${ok(broken.length)} · 중복 id ${ok(dup.length + dupBadge.length)}<br>` +
+    `문체: 서술형 어미 ${ok(nVerb)} · 문장 끝 마침표 ${ok(nDot)} · 한 줄 두 문장 ${ok(nTwo)}` +
+    (broken.length ? `<br><span class=&quot;ng&quot;>끊긴 번호: ${broken.join(', ')}</span>` : '');
+})();
+</script>
+</body>
+</html>
+"></iframe></section>
+
+<script>
+(function () {
+  const KEY = 'rtb-talkfeed-renewal:tab';
+  const tabs = ['ov', 'demo', 'spec'];
+  function show(t) {
+    if (!tabs.includes(t)) t = 'ov';
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+    tabs.forEach(x => document.getElementById('pg-' + x).classList.toggle('on', x === t));
+    try { localStorage.setItem(KEY, t); } catch (e) {}
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => show(b.dataset.tab));
+  document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => show(b.dataset.go));
+  let saved = 'ov';
+  try { saved = localStorage.getItem(KEY) || 'ov'; } catch (e) {}
+  show(saved);
+})();
+</script>
+</body>
+</html>

@@ -229,6 +229,29 @@ textarea{resize:vertical;line-height:1.6}
 .history-tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:3px;margin-right:7px;vertical-align:middle;white-space:nowrap}
 .history-tag.parent{background:#e0f2fe;color:#0369a1}
 .history-tag.child{background:#fef3c7;color:#92400e}
+.history-tag.common{background:#f3f4f6;color:#4b5563}
+
+/* ═══════ 개요 : 가중치 초기 세팅 ═══════ */
+.wt-box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-top:18px}
+.wt-box h2{font-size:14px;font-weight:700;margin-bottom:4px}
+.wt-box .cap{font-size:11.5px;color:#9ca3af;margin-bottom:14px}
+.wt-sum{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.wt-sum>div{border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#374151;line-height:1.7}
+.wt-sum .k{display:block;font-size:11px;font-weight:700;color:#1d9e75;letter-spacing:.3px}
+.wt-table-wrap{overflow-x:auto;border:1px solid #e5e7eb;border-radius:8px}
+.wt-table{width:100%;border-collapse:collapse;min-width:760px}
+.wt-table th,.wt-table td{border-bottom:1px solid #eef0f2;padding:9px 14px;font-size:12.5px;text-align:left;vertical-align:middle;line-height:1.6}
+.wt-table th{background:#f3f4f6;font-weight:600;color:#444;border-bottom:1px solid #e5e7eb;white-space:nowrap}
+.wt-table th small{font-weight:400;color:#9ca3af;margin-left:4px;font-family:Consolas,monospace;font-size:10.5px}
+.wt-table tbody tr:last-child td{border-bottom:none}
+.wt-table tr.grp td{border-top:1px solid #d9dde2}
+.wt-table td.ty{font-weight:700;color:#1a1a1a;white-space:nowrap;vertical-align:top}
+.wt-table .code{display:inline-block;font-family:Consolas,monospace;font-size:11px;font-weight:600;color:#4f46e5;background:#eef2ff;border-radius:3px;padding:0 5px;margin-left:5px}
+.wt-table td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.wt-table .diff{color:#c0392b;font-weight:700}
+.wt-table .same{color:#9ca3af}
+.wt-note{font-size:11.5px;color:#6b7280;line-height:1.8;margin-top:10px}
+.wt-note b{color:#374151}
 
 /* ═══════ 등록 : 부모/자식 툴바 · 토글 ═══════ */
 .reg-toolbar{display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #e5e7eb;padding:0 24px;position:sticky;top:87px;z-index:60}
@@ -253,6 +276,9 @@ span.chg-box{display:block}
 .chg-panel .x{position:absolute;top:12px;right:14px;border:none;background:none;font-size:16px;color:#9ca3af;cursor:pointer}
 .chg-grp{font-size:11.5px;font-weight:700;color:#0f6e56;margin:12px 0 4px;padding-top:10px;border-top:1px solid #f0f0f0}
 .chg-grp:first-child{border-top:none;padding-top:0;margin-top:4px}
+.chg-date{font-size:12.5px;font-weight:800;color:#c0392b;margin:16px 0 2px;padding-top:12px;border-top:2px solid #f3d3cf}
+.chg-date:first-child{border-top:none;padding-top:0;margin-top:2px}
+.chg-date+.chg-grp{border-top:none;padding-top:0;margin-top:4px}
 .chg-item{display:block;width:100%;text-align:left;border:none;background:none;padding:7px 8px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12.5px;color:#374151;line-height:1.55}
 .chg-item:hover{background:#fff5f4;color:#c0392b}
 .chg-item .where{display:inline-block;font-size:10.5px;font-weight:700;color:#6b7280;background:#f3f4f6;border-radius:3px;padding:0 6px;margin-right:6px}
@@ -272,13 +298,13 @@ span.chg-box{display:block}
     <button data-screen="review" onclick="showScreen('review')"><span class="n">2</span>지면 심사</button>
     <button data-screen="register-parent" onclick="showScreen('register-parent')"><span class="n">3</span>부모지면등록</button>
     <button data-screen="register-child" onclick="showScreen('register-child')"><span class="n">4</span>자식지면등록</button>
-    <button class="chg-btn" onclick="chgToggle()">📝 오늘 수정 내역 (10/01)<span class="cnt" id="chg-cnt"></span></button>
+    <button class="chg-btn" onclick="chgToggle()">📝 수정 내역 (11/25 · 10/01)<span class="cnt" id="chg-cnt"></span></button>
   </div>
 </div>
 <div class="chg-panel" id="chg-panel">
   <button class="x" onclick="chgToggle(false)">✕</button>
-  <h3>2026-10-01 수정 내역 요약</h3>
-  <p class="cap">항목을 클릭하면 해당 위치로 이동합니다 · 화면 내 <span class="edit-mark" style="margin:0">261001_수정</span> 표시 / 붉은 박스 = 오늘 수정된 설명</p>
+  <h3>수정 내역 요약 (최신순)</h3>
+  <p class="cap">항목을 클릭하면 해당 위치로 이동합니다 · 화면 내 <span class="edit-mark" style="margin:0">261125_수정</span> <span class="edit-mark" style="margin:0">261001_수정</span> 표시 / 붉은 박스 = 10/01 수정된 설명</p>
   <div id="chg-list"></div>
 </div>
 
@@ -426,9 +452,65 @@ span.chg-box{display:block}
       </div>
     </div>
 
+    <div class="wt-box" id="ov-weight">
+      <h2>자동 생성 지면 가중치 초기 세팅 (CPC · CPM)<span class="edit-mark">261125_수정</span></h2>
+      <p class="cap">지면이 자동 생성될 때 광고유형별로 아래 값이 초기 세팅된다 · 디바이스(모바일 / PC) · 지면 카테고리 · 지면 특성에 따라 값이 달라진다</p>
+
+      <div class="wt-sum">
+        <div><span class="k">CPC 가중치</span>광고유형별로 아래 표의 <b>가중치 · 노출 비율 · 광고 송출 여부</b>를 세팅한다.</div>
+        <div><span class="k">CPM 가중치</span>RTB 대상 광고유형 전체 <b>100</b>으로 세팅한다. (기존 RTB 지면 등록과 동일)</div>
+      </div>
+
+      <div class="wt-table-wrap">
+        <table class="wt-table">
+          <thead>
+            <tr>
+              <th>광고유형</th>
+              <th>조건</th>
+              <th>CPC 가중치<small>모바일 / PC</small></th>
+              <th>노출 비율<small>eprspRate</small></th>
+              <th>광고 송출 여부<small>advrtsSendYn</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="grp"><td class="ty" rowspan="2">베이스광고(AD)<span class="code">01</span></td><td>기본</td><td class="num">55 / 80</td><td class="num">100</td><td>Y</td></tr>
+            <tr><td>리워드앱 카테고리(780)</td><td class="num diff">30 / 30</td><td class="num diff">10</td><td>Y</td></tr>
+
+            <tr class="grp"><td class="ty" rowspan="3">쇼라베이스(PA)<span class="code">44</span></td><td>기본</td><td class="num">70 / 100</td><td class="num">100</td><td>N</td></tr>
+            <tr><td>저단가 지면</td><td class="num diff">15 / 15</td><td class="num">100</td><td class="diff">Y</td></tr>
+            <tr><td>리워드앱 카테고리(780)</td><td class="same">영향 없음 (위 두 줄 그대로)</td><td class="num">100</td><td class="same">위와 동일</td></tr>
+
+            <tr class="grp"><td class="ty" rowspan="2">성향매칭(UM)<span class="code">19</span></td><td>기본</td><td class="num">70 / 100</td><td class="num">100</td><td>Y</td></tr>
+            <tr><td>리워드앱 카테고리(780)</td><td class="num diff">30 / 30</td><td class="num diff">10</td><td>Y</td></tr>
+
+            <tr class="grp"><td class="ty" rowspan="2">투데이베스트<span class="code">18</span></td><td>기본</td><td class="num">70 / 100</td><td class="num">100</td><td>N</td></tr>
+            <tr><td>리워드앱 카테고리(780)</td><td class="same">영향 없음</td><td class="num">100</td><td>N</td></tr>
+
+            <tr class="grp"><td class="ty" rowspan="2">그 외 34개 유형</td><td>기본</td><td class="num">70 / 100</td><td class="num">100</td><td>Y</td></tr>
+            <tr><td>리워드앱 카테고리(780)</td><td class="num diff">30 / 30</td><td class="num">100</td><td>Y</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="wt-note">
+        ※ <b>리워드앱 카테고리(780)</b> : 쇼라베이스 · 투데이베스트를 제외한 모든 유형의 CPC 가중치를 30 / 30으로 세팅한다. 노출 비율 10은 베이스광고 · 성향매칭에만 적용된다.<br>
+        ※ <b>저단가 지면</b> : 지면 특성이 저단가인 경우 쇼라베이스만 가중치 15 / 15, 광고 송출 Y로 세팅한다.<br>
+        ※ 붉은 값 = 기본 행과 달라지는 값
+      </p>
+    </div>
+
     <div class="history-box" id="chg-ov-history">
       <h2>변경 히스토리</h2>
       <p class="cap">화면설계서 반영 기준 · 최신순</p>
+
+      <div class="history-item">
+        <div class="history-date">2026-11-25</div>
+        <div class="history-body"><ul>
+          <li><span class="history-tag common">공통</span>개요 — <b>자동 생성 지면 CPC · CPM 가중치 초기 세팅</b> 기준 추가</li>
+          <li><span class="history-tag common">공통</span>CPC 가중치 — 광고유형별 <b>가중치(모바일 / PC) · 노출 비율 · 광고 송출 여부</b> 정의, 리워드앱 카테고리(780) · 저단가 지면 조건별 값 포함</li>
+          <li><span class="history-tag common">공통</span>CPM 가중치 — RTB 대상 광고유형 전체 <b>100</b> (기존 RTB 지면 등록과 동일)</li>
+        </ul></div>
+      </div>
 
       <div class="history-item">
         <div class="history-date">2026-10-01</div>
@@ -1023,31 +1105,35 @@ function mountRegDemo(type){
   var role=m.querySelector('.reg-role__inline'); if(role) role.id='chg-role-'+type;
 }
 
-/* ── 오늘 수정 내역 (261001) : 요약 패널 · 위치 이동 ── */
+/* ── 수정 내역 (261125 · 261001) : 요약 패널 · 위치 이동 — [그룹명, 항목들, 수정일] ── */
 var CHG=[
+ ['개요 · 플로우', [
+  ['overview','','ov-weight','가중치 초기 세팅','자동 생성 지면 CPC · CPM 가중치 초기 세팅 섹션 신규 추가'],
+  ['overview','','chg-ov-history','변경 히스토리','2026-11-25 항목 추가']], '2026-11-25'],
  ['개요 · 플로우', [
   ['overview','','chg-ov-intro','개요 설명','부모 지면 생성 시 리워드 여부(rwdd)로 N / Y 부모 분리 · 자식은 같은 리워드 부모로 연결'],
   ['overview','','chg-ov-cards','STEP 카드','STEP 01 N/Y 분리 생성 · STEP 02 반려 시 종료(재심사 없음) · STEP 03 같은 리워드 부모 연결'],
   ['overview','','chg-ov-flow','플로우차트','리워드 N/Y 부모 분리 노트 추가 · 반려 → 지면 사용 불가 직행(재심사·루프백 삭제)'],
-  ['overview','','chg-ov-history','변경 히스토리','2026-10-01 항목 추가']]],
+  ['overview','','chg-ov-history','변경 히스토리','2026-10-01 항목 추가']], '2026-10-01'],
  ['지면 심사', [
   ['review','rev-demo','chg-rev-filter','데모','리워드여부 필터 O/X → Y/N'],
   ['review','rev-demo','chg-rev-table','데모','목록 지면명을 부모 규칙으로 변경 · 같은 매체 N/Y 부모 행 예시 · 재심사 버튼 삭제'],
   ['review','rev-spec','chg-rev-4','설계서 [4]','리워드여부 필터 Y/N · 같은 매체도 N/Y 부모 별도 행 노출'],
   ['review','rev-spec','chg-rev-12','설계서 [12]','반려는 최종 상태 · 재심사 기능 없음 ([14] 재심사 버튼 항목 삭제)'],
-  ['review','rev-spec','chg-rev-col','컬럼 정의','3. 지면명(_reward 규칙) · 6. 리워드 여부(Y/N, 부모 분리 기준)']]],
+  ['review','rev-spec','chg-rev-col','컬럼 정의','3. 지면명(_reward 규칙) · 6. 리워드 여부(Y/N, 부모 분리 기준)']], '2026-10-01'],
  ['부모지면등록', [
   ['register-parent','reg-demo-parent','chg-role-parent','데모','상단 설명 — 리워드 여부로 N / Y 부모 분리 생성'],
   ['register-parent','reg-spec-parent','chg-p-10','설계서 [10]','지면명 — Y는 끝에 _reward (RTB_WEB_매체명_reward 등)'],
   ['register-parent','reg-spec-parent','chg-p-13','설계서 [13]','RTB 지면 구분 — N/Y 부모 분리, 자식은 같은 리워드 부모로'],
-  ['register-parent','reg-spec-parent','chg-p-15','설계서 [15]','태그 ID — Y는 끝에 _reward (web_최상위도메인_reward_v2 등)']]],
+  ['register-parent','reg-spec-parent','chg-p-15','설계서 [15]','태그 ID — Y는 끝에 _reward (web_최상위도메인_reward_v2 등)']], '2026-10-01'],
  ['자식지면등록', [
   ['register-child','reg-demo-child','chg-role-child','데모','상단 설명 — 같은 리워드 여부의 부모 하위로만 연결'],
-  ['register-child','reg-spec-child','chg-c-13','설계서 [13]','연결 부모 지면 — N → N 부모 / Y → Y 부모']]]
+  ['register-child','reg-spec-child','chg-c-13','설계서 [13]','연결 부모 지면 — N → N 부모 / Y → Y 부모']], '2026-10-01']
 ];
 function chgRender(){
-  var h='', n=0;
+  var h='', n=0, lastDate='';
   CHG.forEach(function(g, gi){
+    if(g[2] && g[2]!==lastDate){ h+='<div class="chg-date">'+g[2]+'</div>'; lastDate=g[2]; }
     h+='<div class="chg-grp">'+g[0]+'</div>';
     g[1].forEach(function(it, ii){ n++;
       h+='<button class="chg-item" onclick="goChgAt('+gi+','+ii+')"><span class="go">이동 →</span><span class="where">'+it[3]+'</span>'+it[4]+'</button>';
