@@ -145,11 +145,12 @@
       <tr class="chg" id="scope-10"><td>10</td><td><span class="chg-in">광고 기간 수정 팝업</span><span class="edit-mark">261112_수정</span></td><td><span class="tag mod">변경</span></td><td>광고 기간 시 선택 목록</td><td>00~23만 제공 (23:59 선택지 삭제). 시작 HH:00, 종료 HH:59 (23 선택 = 23:59까지)<br><span class="chg-in">광고그룹 등록 &gt; 광고 기간은 기존 UI 유지</span></td><td><span class="chg-in">3-1</span></td></tr>
       <tr id="scope-11"><td>11</td><td>소재그룹 목록</td><td><span class="tag mod">변경</span></td><td>ON → OFF 시 게재 기간 체크</td><td>게재 기간이 미래(현재 &lt; 시작일시)인 소재그룹은 OFF 불가.<br>얼럿 "게재 기간이 시작되지 않은 소재그룹은 OFF 할 수 없습니다."<br>OFF → ON은 체크 없음</td><td>4-3</td></tr>
       <tr class="chg" id="scope-12"><td>12</td><td>게재 기간 관리 팝업</td><td><span class="tag new">신규</span></td><td>광고 일정(시간대 필터) 정보<span class="edit-mark">261104_수정</span></td><td>광고그룹 정보의 "광고 기간" 아래에 <span class="chg-in">"광고 일정: 평일 / 주말 / 수동 설정 [상세 보기]"</span> 한 줄 추가.<br><span class="chg-in">요일×시간 그리드를 읽기 전용으로 기본 펼침 (수정은 광고그룹 설정에서). [상세 닫기]로 접고 [상세 보기]로 다시 펼침</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">"전체" 외(평일·주말·수동 설정)면 빨간 글씨로 "소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!"</span><br><span class="chg-in">광고 일정이 "전체"면 "전체 (요일·시간 제한 없음)"</span><span class="edit-mark">261105_수정</span></td><td><span class="chg-in">5-2, 5-3</span><span class="edit-mark">261112_수정</span></td></tr>
-      <tr class="chg" id="scope-13"><td>13</td><td>게재 기간 관리 팝업</td><td><span class="tag new">신규</span></td><td>시간대 겹침 검증<span class="edit-mark">261104_수정</span></td><td><span class="chg-in">게재 기간을 바꾼 뒤 [게재기간 반영] 클릭 시</span><span class="edit-mark">261112_수정</span>, 시간대 필터와 겹치는 칸이 없는 행은 빨간 배경 + 경고 문구.<br><span class="chg-in">"⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요"</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">평일·주말도 같은 검증, 같은 문구</span><span class="edit-mark">261112_수정</span><br>[저장] 시 겹침 없는 소재그룹을 모아 한 번 더 안내 <span class="chg-in">(컨펌: [게재기간 수정] / [그대로 저장])</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">노출되지 않는 게재 기간(시간대 겹침 없음, 광고 기간과 겹치지 않음)은 광고 일정 그리드에 빨간 테두리로 표시. 광고 일정 "전체"면 그리드 없음</span><span class="edit-mark">261112_수정</span></td><td><span class="chg-in">5-3, 5-6, 6</span><span class="edit-mark">261112_수정</span></td></tr>
+      <tr class="chg" id="scope-13"><td>13</td><td>게재 기간 관리 팝업</td><td><span class="tag new">신규</span></td><td>시간대 겹침 검증<span class="edit-mark">261104_수정</span></td><td><span class="chg-in">팝업 오픈 시와 게재 기간을 바꿀 때마다</span><span class="edit-mark">261126_수정</span>, 시간대 필터와 겹치는 칸이 없는 행은 빨간 배경 + 경고 문구.<br><span class="chg-in">게재 기간이 광고 기간을 일부라도 벗어나는 행(광고 종료일이 있는데 종료일 없음인 행 포함)도 같은 빨간 배경 + 경고 문구 (광고 일정 "전체"여도 표시)</span><span class="edit-mark">261126_수정</span><br><span class="chg-in">"⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요"</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">평일·주말도 같은 검증, 같은 문구</span><span class="edit-mark">261112_수정</span><br>[저장] 시 겹침 없는 소재그룹을 모아 한 번 더 안내 <span class="chg-in">(컨펌: [게재기간 수정] / [그대로 저장])</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">노출되지 않는 게재 기간(시간대 겹침 없음, 광고 기간과 겹치지 않음)은 광고 일정 그리드에 빨간 테두리로 표시. 광고 일정 "전체"면 그리드 없음</span><span class="edit-mark">261112_수정</span></td><td><span class="chg-in">5-3, 5-6, 6</span><span class="edit-mark">261112_수정</span></td></tr>
       <tr class="chg" id="scope-14"><td>14</td><td>소재그룹 목록</td><td><span class="tag new">신규</span></td><td>상태 컬럼 시간대 문구<span class="edit-mark">261104_수정</span></td><td>상태값은 그대로 두고 아래에 문구만 추가 (새 컬럼 없음).<br>겹침 있음: 회색 "⏱ 시간대 필터 적용", 마우스 오버 시 요일×시간 그리드 툴팁<br><span class="chg-in">겹침 없음 · 광고 기간 밖: 빨간 "⚠ 미소진 위험이 있는 소재그룹입니다." (⏱ 문구 대신 표시), 마우스 오버 시 그리드 툴팁</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">평일·주말은 ⏱ 문구만 유형 이름으로 표기: "⏱ 평일 일정 적용"</span><span class="edit-mark">261112_수정</span><br>시간대 필터 없음, <span class="chg-in">종료됨 / 게재기간 아님(만료)</span>: 문구 없음<br><span class="chg-in">라이브 예정 / 게재기간 아님(시작 전)은 운영 중과 같이 시간대 문구 표시 (2줄 상태값 아래)</span><span class="edit-mark">261119_수정</span><br><span class="chg-in">중지됨 · 일시정지 · 제한됨: 상태값만 표시 (시간대 문구 없음)</span><span class="edit-mark">261112_수정</span></td><td><span class="chg-in">4-5</span><span class="edit-mark">261112_수정</span></td></tr>
       <tr class="chg" id="scope-15"><td>15</td><td>광고그룹 수정 &gt; 광고 일정</td><td><span class="tag new">신규</span></td><td>광고 일정 변경 시 영향 소재그룹 안내<span class="edit-mark">261104_수정</span></td><td><span class="chg-in">광고 일정을 바꿔 저장하면 소재그룹별 겹침 검사 없이 경고 얼럿만 노출 (「요일 및 시간대 수정」 [완료], 평일 · 주말 변경 저장 시)<br>"소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!"</span><span class="edit-mark">261112_수정</span></td><td><span class="chg-in">1-3, 1-4</span><span class="edit-mark">261112_수정</span></td></tr>
       <tr class="chg" id="scope-16"><td>16</td><td>광고그룹 등록 &gt; 광고 일정</td><td><span class="tag new">신규</span></td><td>미소진 주의 문구<span class="edit-mark">261105_수정</span></td><td>"전체" 외(평일·주말·수동 설정) 선택 시 기존 안내 문구 아래에 빨간 글씨로 노출.<br>"소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!"<br>"전체"로 되돌리면 숨김</td><td><span class="chg-in">1-2</span><span class="edit-mark">261112_수정</span></td></tr>
-      <tr class="chg" id="scope-17"><td>17</td><td>게재 기간 관리 팝업</td><td><span class="tag new">신규</span></td><td>초기화 · 게재기간 반영 버튼<span class="edit-mark">261112_수정</span></td><td><span class="chg-in">[초기화]: 소재그룹 목록 "게재 기간" 제목 옆. 모든 소재그룹 게재 기간을 광고그룹 기간으로 일괄 변경 (컨펌 후, 저장 전까지 미반영)<br>[게재기간 반영]: 광고 일정 그리드 오른쪽 위. 바꾼 게재 기간으로 그리드 · 행 경고 다시 표시 (저장 안 함)</span></td><td><span class="chg-in">5-3, 5-4</span></td></tr>
+      <tr class="chg" id="scope-17"><td>17</td><td>게재 기간 관리 팝업</td><td><span class="tag new">신규</span></td><td>초기화 버튼<span class="edit-mark">261126_수정</span></td><td><span class="chg-in">[초기화]: 소재그룹 목록 "게재 기간" 제목 옆. 모든 소재그룹 게재 기간을 광고그룹 기간으로 일괄 변경 (컨펌 후, 저장 전까지 미반영)</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">[게재기간 반영] 버튼 삭제. 소재그룹 행의 게재 기간을 바꾸면(날짜 · 시 선택, 종료일 없음, 초기화) 그리드 · 행 경고를 바로 다시 표시 (저장 안 함)</span><span class="edit-mark">261126_수정</span></td><td><span class="chg-in">5-3, 5-4</span></td></tr>
+      <tr class="chg" id="scope-18"><td>18</td><td>게재 기간 관리 팝업</td><td><span class="tag new">신규</span></td><td><span class="chg-in">기간 설정 YN 표시</span><span class="edit-mark">261126_수정</span></td><td><span class="chg-in">소재그룹 명 오른쪽에 "기간 설정" 열 (Y / N)<br>Y: 게재 기간을 직접 설정한 소재그룹 (광고 기간이 바뀌어도 유지) · N: 광고그룹 기간을 따르는 소재그룹<br>저장된 값을 표시 (팝업 안에서 게재 기간을 바꾸거나 [초기화]해도 바뀌지 않음, 저장 후 반영)<br>광고 기간 수정 → [다음]으로 연 팝업과 [게재 기간 관리]로 연 팝업은 같은 팝업이므로 두 곳 모두 표시<br>광고그룹 기간 수정으로 바뀐 행의 안내 문구("광고그룹 기간 수정으로 소재 그룹 게재 기간이 수정되었습니다.")는 제공하지 않음</span></td><td><span class="chg-in">3-4, 5-4</span></td></tr>
     </table>
     <p class="note">12~15는 「소재그룹 게재기간 · 시간대 필터 표시 방안(수정안)」 내용입니다. <span class="chg-in">데모 · 화면설계서에 12~14, 16 반영. 15 광고 일정 변경 안내는 화면설계서 1-3 · 1-4에만 반영 (데모 제외) (괄호 안은 수정안의 배지)</span><span class="edit-mark">261112_수정</span></p>
     <div class="btns">
@@ -165,7 +166,7 @@
       <tr><td>광고 기간</td><td>광고그룹의 시작일시 ~ 종료일시.<br>종료일시를 "없음"으로 두면 목록에 "종료일 미설정"으로 표시합니다.</td></tr>
       <tr><td>게재 기간</td><td>소재그룹이 게재되는 기간.<br>날짜 + 시(HH) 단위로 설정하며 시작은 HH:00, 종료는 HH:59입니다.<br>소재그룹 생성 시 기본값은 광고 기간과 동일합니다.</td></tr>
       <tr><td>설정 범위</td><td>광고그룹 기간과 관계없이 소재그룹별로 자유롭게 설정합니다.<br>광고 기간에 따른 소재그룹의 기간 설정에 대한 제약사항은 없습니다.<br>ㄴ 광고 기간과 소재그룹의 기간을 비교하여 설정을 막지 않음<br>시작일시가 종료일시보다 늦으면 저장할 수 없습니다.</td></tr>
-      <tr class="chg"><td>수정 이력 <span class="chg-in">(설정 YN)</span><span class="edit-mark">261111_수정</span></td><td>게재 기간 관리 팝업에서 소재그룹 게재 기간을 직접 수정해 저장한 적이 있는지 여부.<br>이력이 없으면 광고 기간이 바뀔 때 광고 기간을 따라가고, 이력이 있으면 변경하지 않습니다.<br><span class="chg-in">소재그룹의 설정 YN으로 관리합니다. 설정 Y(수정 이력 있음)는 자기 게재 기간을 유지하고, 설정 N(수정 이력 없음)은 화면에서 광고그룹 기간을 그대로 따릅니다.</span><br><span class="chg-in">게재 기간을 고쳤다가 원래 값으로 되돌려 저장해도 설정 Y입니다.<br>설정 N 소재그룹은 광고 기간이 바뀌면 시작일시 · 종료일시 모두 따라갑니다 (종료일 없음이어도 광고 종료일을 따름).</span><span class="edit-mark">261112_수정</span></td></tr>
+      <tr class="chg"><td>수정 이력 <span class="chg-in">(설정 YN)</span><span class="edit-mark">261111_수정</span></td><td>게재 기간 관리 팝업에서 소재그룹 게재 기간을 직접 수정해 저장한 적이 있는지 여부.<br>이력이 없으면 광고 기간이 바뀔 때 광고 기간을 따라가고, 이력이 있으면 변경하지 않습니다.<br><span class="chg-in">소재그룹의 설정 YN으로 관리합니다. 설정 Y(수정 이력 있음)는 자기 게재 기간을 유지하고, 설정 N(수정 이력 없음)은 화면에서 광고그룹 기간을 그대로 따릅니다.</span><br><span class="chg-in">게재 기간을 고쳤다가 원래 값으로 되돌려 저장해도 설정 Y입니다.<br>설정 N 소재그룹은 광고 기간이 바뀌면 시작일시 · 종료일시 모두 따라갑니다 (종료일 없음이어도 광고 종료일을 따름).</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">게재 기간 관리 팝업에서 소재그룹 명 오른쪽 "기간 설정" 열에 Y / N으로 표시합니다.</span><span class="edit-mark">261126_수정</span></td></tr>
       <tr class="chg"><td>게재기간 아님<span class="edit-mark">261105_수정</span></td><td><span class="chg-in">게재 기간 밖(시작일시 전 또는 종료일시 지남)인 소재그룹의 상태 표기.</span><br><span class="chg-in">시작 전과 만료를 같은 문제로 오해하지 않도록 "게재기간 아님" 위에 이유를 한 줄 더 표시합니다.<br>종료일시 지남: "종료됨 / 게재기간 아님" (빨간색) · 시작일시 전: "라이브 예정 / 게재기간 아님" (회색)</span><span class="edit-mark">261119_수정</span><br>자동으로 OFF 되지 않고, 소재그룹 목록 상태 컬럼에만 "게재기간 아님"으로 표시합니다.<br><span class="chg-in">중지됨 · 일시정지 · 제한됨 등 다른 상태값이 있으면 그 상태값을 표시하고 "게재기간 아님"은 표시하지 않습니다.</span><span class="edit-mark">261112_수정</span></td></tr>
       <tr class="chg"><td>광고 일정 (시간대 필터)<span class="edit-mark">261104_수정</span></td><td>광고그룹에서 설정하는 요일 × 24시간 노출 그리드.<br>요일마다 노출 시간이 다르고 띄엄띄엄 켜질 수 있어 "07:00 ~ 24:00" 같은 하나의 시간 범위로 표현하지 않습니다.<br>"전체"는 시간대 필터 없음, "평일"·"주말"·"수동 설정"은 시간대 필터 있음으로 봅니다.</td></tr>
       <tr class="chg"><td>시간대 겹침<span class="edit-mark">261104_수정</span></td><td>게재 기간 중 광고 기간과 겹치는 구간을 1시간 칸으로 나누고, 각 칸을 (요일, 시)로 바꿨을 때 광고 일정의 노출 칸과 하나라도 겹치면 "겹침 있음", 하나도 없으면 "겹침 없음".</td></tr>
@@ -230,7 +231,7 @@
 
     <table class="t" style="margin-top:12px">
       <tr><th style="width:170px">처리 위치</th><th>내용</th></tr>
-      <tr><td>게재 기간 관리 팝업</td><td>광고 기간 아래에 <span class="chg-in">"광고 일정: 평일 / 주말 / 수동 설정 [상세 보기]" + 빨간 미소진 주의 문구 (광고 일정 "전체"면 "전체 (요일·시간 제한 없음)")</span><span class="edit-mark">261105_수정</span>.<br><span class="chg-in">게재 기간을 바꾼 뒤 [게재기간 반영] 클릭 시</span><span class="edit-mark">261112_수정</span> 겹침 없는 행은 빨간 배경 + 경고 문구.<br>[저장] 시 겹침 없는 소재그룹을 모아 "노출되지 않는 소재그룹이 있습니다" 안내 → [게재기간 수정] / [그대로 저장] <span class="chg-in">컨펌</span><span class="edit-mark">261112_수정</span>.<br>광고 기간 수정 → [다음]으로 연 팝업에도 같은 검증을 적용합니다.<br><span class="chg-in">광고 기간과 겹치지 않는 게재 기간은 광고 일정 그리드에 "노출되지 않는 게재 기간"(빨간 테두리)으로 표시합니다. 광고 일정이 "전체"면 그리드가 없어 표시하지 않습니다.</span><span class="edit-mark">261112_수정</span></td></tr>
+      <tr><td>게재 기간 관리 팝업</td><td>광고 기간 아래에 <span class="chg-in">"광고 일정: 평일 / 주말 / 수동 설정 [상세 보기]" + 빨간 미소진 주의 문구 (광고 일정 "전체"면 "전체 (요일·시간 제한 없음)")</span><span class="edit-mark">261105_수정</span>.<br><span class="chg-in">팝업 오픈 시와 게재 기간을 바꿀 때마다</span><span class="edit-mark">261126_수정</span> 겹침 없는 행은 빨간 배경 + 경고 문구.<br><span class="chg-in">게재 기간이 광고 기간을 일부라도 벗어나는 행도 같은 빨간 배경 + 경고 문구 (그리드 빨간 테두리 · 목록 ⚠ 문구는 광고 기간과 전혀 겹치지 않을 때만)</span><span class="edit-mark">261126_수정</span><br>[저장] 시 겹침 없는 소재그룹을 모아 "노출되지 않는 소재그룹이 있습니다" 안내 → [게재기간 수정] / [그대로 저장] <span class="chg-in">컨펌</span><span class="edit-mark">261112_수정</span>.<br>광고 기간 수정 → [다음]으로 연 팝업에도 같은 검증을 적용합니다.<br><span class="chg-in">광고 기간과 겹치지 않는 게재 기간은 광고 일정 그리드에 "노출되지 않는 게재 기간"(빨간 테두리)으로 표시합니다. 광고 일정이 "전체"면 그리드가 없어 표시하지 않습니다.</span><span class="edit-mark">261112_수정</span></td></tr>
       <tr><td>소재그룹 목록 상태 컬럼</td><td>상태값은 그대로 두고 아래에 문구만 추가 (아래 표시 기준).<br>겹침 없음 경고는 원인이 게재 기간인지 광고 일정인지 알 수 없으므로 "게재기간 수정 필요"처럼 원인을 단정하는 문구는 쓰지 않습니다.</td></tr>
       <tr><td>광고 일정 변경</td><td><span class="chg-in">광고 일정을 바꿔 저장하면 소재그룹별 검사 없이 경고 얼럿만 노출 ([완료], 평일 · 주말 변경 저장 시)<br>노출되지 않게 된 소재그룹은 목록 상태 컬럼 ⚠ 문구로 확인</span><span class="edit-mark">261112_수정</span></td></tr>
     </table>
@@ -253,19 +254,19 @@
       <tr id="case-2"><td>2</td><td>시작일을 지움</td><td>행 빨간 테두리, 얼럿, 저장 불가</td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-3"><td>3</td><td>같은 시에 시작·종료 (예: 10:00 ~ 10:59)</td><td>허용 (1시간 게재)</td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-4"><td>4</td><td>[종료일 없음] 체크 해제</td><td>종료일 = 시작일, 23시(23:59)로 채워짐</td><td><span class="tag ok">확정</span></td></tr>
-      <tr id="case-5"><td>5</td><td>게재 기간이 광고 기간 밖(앞·뒤)으로 나감</td><td>허용. 광고 기간과 겹치는 구간만 노출, 전혀 안 겹치면 노출 없음</td><td><span class="tag ok">확정</span></td></tr>
+      <tr class="chg" id="case-5"><td>5</td><td>게재 기간이 광고 기간 밖(앞·뒤)으로 나감</td><td>허용. 광고 기간과 겹치는 구간만 노출, 전혀 안 겹치면 노출 없음<br><span class="chg-in">게재 기간 관리 팝업에서 행 빨간 배경 + "⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요" (일부만 벗어나도 표시, 저장 가능)</span><span class="edit-mark">261126_수정</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-6"><td>6</td><td>광고 기간 중 어떤 소재그룹도 게재되지 않는 구간이 생김</td><td>허용. 그 구간은 광고그룹이 ON이어도 노출 없음<br><span class="chg-in">광고그룹 상태 별도 표시 없음</span><span class="edit-mark">261105_수정</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-7"><td>7</td><td>종료일 없음 소재그룹 0개</td><td>허용</td><td><span class="tag ok">확정</span></td></tr>
       <tr class="chg" id="case-8"><td>8</td><td>값을 바꿨다가 원래 값으로 되돌린 뒤 저장</td><td><span class="chg-in">손댄 소재그룹은 값이 같아도 설정 Y (수정 이력 생김)</span><span class="edit-mark">261112_수정</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-9"><td>9</td><td>취소 / × / Esc</td><td>변경 버림, 수정 이력 변화 없음</td><td><span class="tag ok">확정</span></td></tr>
       <tr class="grp"><td colspan="4">② 광고 기간 수정 (광고그룹 목록 &gt; 광고 기간 수정 → [다음])<span class="edit-mark">261112_수정</span></td></tr>
-      <tr id="case-10"><td>10</td><td>수정 이력 있음</td><td>변경하지 않음. 새 광고 기간 밖으로 벗어나도 경고 없이 유지 (5와 같은 결과)</td><td><span class="tag ok">확정</span></td></tr>
+      <tr class="chg" id="case-10"><td>10</td><td>수정 이력 있음</td><td>변경하지 않음. <span class="chg-in">새 광고 기간 밖으로 벗어나면 팝업에서 행 빨간 배경 + 경고 문구, 저장은 가능 (5와 같은 결과)</span><span class="edit-mark">261126_수정</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-11"><td>11</td><td>수정 이력 없음 + 종료일 있음</td><td>시작·종료 모두 새 광고 기간으로</td><td><span class="tag ok">확정</span></td></tr>
       <tr class="chg" id="case-12"><td>12</td><td>수정 이력 없음 + 종료일 없음</td><td><span class="chg-in">시작·종료 모두 새 광고 기간으로. 광고 종료일을 새로 지정하면 종료일도 따라감</span><span class="edit-mark">261112_수정</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-13"><td>13</td><td>광고 종료일을 "없음"으로 변경</td><td>수정 이력 없는 소재그룹은 종료일 없음이 됨</td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-14"><td>14</td><td>OFF 소재그룹</td><td>ON 소재그룹과 같은 규칙으로 변경</td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-15"><td>15</td><td>팝업에서 미리 채워진 값을 직접 고쳐 저장</td><td>고친 소재그룹만 수정 이력 생김. 손대지 않은 행은 이력 없음 유지</td><td><span class="tag ok">확정</span></td></tr>
-      <tr id="case-16"><td>16</td><td>[이전] / × / Esc</td><td>[이전]: 광고 기간 팝업으로 돌아감 (입력 유지).<br>× / Esc: 광고 기간·게재 기간 모두 저장 안 됨</td><td><span class="tag ok">확정</span></td></tr>
+      <tr class="chg" id="case-16"><td>16</td><td><span class="chg-in">× / Esc</span><span class="edit-mark">261126_수정</span></td><td>광고 기간·게재 기간 모두 저장 안 됨<br><span class="chg-in">[이전] 버튼 없음 (하단 버튼은 [저장]만, 화면설계서 3-4)</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr id="case-17"><td>17</td><td>만료된 소재그룹 (수정 이력 없음)이 새 광고 기간을 따라 연장됨</td><td>만료 해제, ON이면 다시 노출</td><td><span class="tag ok">확정</span></td></tr>
       <tr class="grp"><td colspan="4">③ 시간 경과 · 상태</td></tr>
       <tr class="chg" id="case-18"><td>18</td><td>종료일시 지남</td><td><span class="chg-in">"종료됨 / 게재기간 아님" (빨간색)</span><span class="edit-mark">261119_수정</span>, 노출 중단, ON/OFF 유지</td><td><span class="tag ok">확정</span></td></tr>
@@ -282,7 +283,7 @@
       <tr class="chg" id="case-27"><td>27</td><td>비교 구간 7일 이상, 또는 게재 기간·광고 기간 모두 종료일 없음</td><td>노출 칸이 하나라도 있으면 항상 겹침 있음 (계산 생략)</td><td><span class="tag prop">수정안</span></td></tr>
       <tr class="chg" id="case-28"><td>28</td><td>겹침 없음<br>(예: 게재 기간 11-10(화) 01:00 ~ 04:59, 화요일 노출 09~12시)</td><td>팝업: 행 빨간 배경 + 안내 문구, [저장] 시 <span class="chg-in">컨펌 ([게재기간 수정] / [그대로 저장])</span><span class="edit-mark">261112_수정</span>.<br>그대로 저장하면 목록에 <span class="chg-in">"⚠ 미소진 위험이 있는 소재그룹입니다."</span><span class="edit-mark">261112_수정</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr class="chg" id="case-29"><td>29</td><td>광고 기간 수정 → [다음] 팝업에서 겹침 없는 소재그룹이 생김<br>(미리 채워진 값, 광고 기간이 줄어 비교 구간이 바뀐 경우 포함)</td><td>28과 같은 검증. <span class="chg-in">[그대로 저장] 시 광고 기간과 함께 저장</span><span class="edit-mark">261112_수정</span></td><td><span class="tag ok">확정</span></td></tr>
-      <tr class="chg" id="case-30"><td>30</td><td>게재 기간이 광고 기간과 전혀 겹치지 않음 (케이스 5)</td><td><span class="chg-in">게재 기간 관리 팝업의 광고 일정 그리드에 "노출되지 않는 게재 기간"(빨간 테두리)으로 표시<br>광고 일정 "전체"면 그리드 없음<br>목록 상태 컬럼에 "⚠ 미소진 위험이 있는 소재그룹입니다."</span><span class="edit-mark">261112_수정</span></td><td><span class="tag ok">확정</span></td></tr>
+      <tr class="chg" id="case-30"><td>30</td><td>게재 기간이 광고 기간과 전혀 겹치지 않음 (케이스 5)</td><td><span class="chg-in">게재 기간 관리 팝업의 광고 일정 그리드에 "노출되지 않는 게재 기간"(빨간 테두리)으로 표시<br>광고 일정 "전체"면 그리드 없음<br>목록 상태 컬럼에 "⚠ 미소진 위험이 있는 소재그룹입니다."</span><span class="edit-mark">261112_수정</span><br><span class="chg-in">팝업 행 빨간 배경 + 경고 문구 (케이스 5)</span><span class="edit-mark">261126_수정</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr class="chg" id="case-31"><td>31</td><td>광고 일정을 바꿔 겹침이 0이 되는 소재그룹이 생김</td><td><span class="chg-in">광고 일정 변경 저장 시 경고 얼럿만 노출 (소재그룹별 검사 없음). 노출되지 않게 된 소재그룹은 목록 ⚠ 문구로 확인</span><span class="edit-mark">261112_수정</span></td><td><span class="tag ok">확정</span></td></tr>
       <tr class="chg" id="case-32"><td>32</td><td><span class="chg-in">종료됨 / 게재기간 아님(만료)</span><span class="edit-mark">261119_수정</span></td><td>시간대 문구 없이 상태값만 표시</td><td><span class="tag prop">수정안</span></td></tr>
       <tr class="chg" id="case-33"><td>33</td><td>중지됨 · 일시정지 · 제한됨</td><td><span class="chg-in">상태값만 표시. 시간대 문구 없음, 게재 기간이 아니어도 "게재기간 아님" 표시 없음</span><span class="edit-mark">261112_수정</span></td><td><span class="tag ok">확정</span></td></tr>
@@ -371,6 +372,7 @@
       <tr class="chg"><td>31</td><td>2026-11-12</td><td>광고 일정 변경 경고만</td><td>광고 일정 변경 시 소재그룹별 겹침 검사(컨펌)를 하지 않고 경고 얼럿만 노출<br>문구: "소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!", 버튼 [확인]<br>노출되지 않게 된 소재그룹은 목록 상태 컬럼 ⚠ 문구로 확인</td><td>02-15, 04 ④ · 케이스 31, 06 확정 18 / 화면설계서 1-3, 1-4</td></tr>      <tr class="chg"><td>3</td><td>2026-11-12</td><td>소재 노출량 수정 탭</td><td>결정 필요 탭 → 소재 노출량 수정 탭으로 이름 변경, 소재 노출량 내용만 남김<br>결정 항목 요약(01)과 GitHub 결정 저장 기능 삭제<br>"소재 노출량 계산 방안" → "소재 노출량 수정 방안"<br>06의 결정 필요 항목 안내 삭제</td><td>04 ⑤, 06 / 소재 노출량 수정 탭</td></tr>
       <tr class="chg"><td>32</td><td>2026-11-19</td><td>상태 "게재기간 아님" 이유 표기</td><td>시작 전과 만료가 똑같이 "게재기간 아님"으로 보이고, 시작 전 일부에만 ⚠ 미소진 위험 문구가 붙어 두 경우를 같은 문제로 오해할 수 있어 "게재기간 아님" 위에 이유를 한 줄 추가<br>종료일시 지남: "종료됨 / 게재기간 아님" (빨간색, 중지됨과 같은 색)<br>시작일시 전: "라이브 예정 / 게재기간 아님" (회색). 시간대가 겹치지 않으면 아래 "⚠ 미소진 위험이 있는 소재그룹입니다." 유지 (현행)<br>화면설계서 4 목업: 데모6 → 종료됨, 데모9 · 데모12 → 라이브 예정</td><td>01, 02-6 · 02-14, 03, 04 ③ · ④ · 케이스 18 · 20 · 32, 06 확정 6 / 소재 노출량 수정 탭 검토 5 / 데모 / 화면설계서 4, 4-4, 4-5</td></tr>
       <tr class="chg"><td>33</td><td>2026-11-19</td><td>화면설계서 수정 표시 · 수정 이력 버튼</td><td>화면설계서 4-4 · 4-5 디스크립션 제목 옆과 왼쪽 화면 배지 옆에 "261119_수정" 표시<br>화면설계서 상단 탭 오른쪽에 [수정 이력] 버튼 추가: 이 표(07 문서 수정 이력)를 모달로 표시 (최신순, "화면설계서 반영분만" 보기, 가장 최근 수정일 행 강조)</td><td>07 / 화면설계서</td></tr>
+      <tr class="chg"><td>34</td><td>2026-11-26</td><td>게재 기간 관리 팝업 (3-4 · 5 공통)</td><td><ul class="plain"><li>[게재기간 반영] 버튼 삭제 → 게재 기간을 바꾸면 그리드 · 행 경고 바로 갱신</li><li>"광고그룹 기간 수정으로 … 수정되었습니다." 안내 삭제 (제공 불가)</li><li>소재그룹 명 옆 "기간 설정" Y / N 열 추가 (저장된 값만 표시)</li><li>광고 기간을 일부라도 벗어난 행: 빨간 배경 + 경고 (그리드 · 목록 ⚠는 기존대로)</li><li>데모 · 케이스 16: 남아 있던 [이전] 버튼 · "변경 전" 줄 삭제</li><li>화면설계서 디스크립션: 수정한 줄 붉은 글씨 + "(26.11.26 수정)"</li></ul></td><td>02-13 · 02-17 · 02-18, 03, 04 ④ · 케이스 5 · 10 · 16 · 30 / 데모 / 화면설계서 3-4, 5, 5-3, 5-4, 5-6, 5-7</td></tr>
     </table>
   </div>
 
@@ -621,7 +623,8 @@
   .ml .mr:first-child{border-radius:6px 6px 0 0}
   .mr{display:flex;align-items:center;gap:12px;padding:9px 16px;border-top:1px solid #eee}
   .mr:first-child{border-top:0;background:#fafafa;color:#888;font-size:12px}
-  .mr .n{width:210px;flex:none;display:flex;gap:10px;align-items:center}
+  .mr .n{width:190px;flex:none;display:flex;gap:10px;align-items:center}
+  .mr .yn{width:60px;flex:none;text-align:center} /* 기간 설정 Y / N */
   .mr .n .th{width:40px;height:40px;border-radius:4px;border:1px solid #e3e3e3;position:relative;cursor:zoom-in}
   /* 소재 이미지 마우스 오버(키보드 포커스) 시 확대 미리보기 */
   .mr .n .th:hover::after,.mr .n .th:focus-visible::after{content:"";position:absolute;left:50px;top:50%;transform:translateY(-50%);width:200px;height:200px;background:inherit;border:1px solid #ddd;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:5;pointer-events:none}
@@ -645,7 +648,6 @@
   .res.ng{background:#fdecec;color:var(--red)}
   .mf{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
   .bbtn.sm{padding:3px 10px;font-size:11px;color:#333;margin-left:8px}
-  .bbtn.hot{border-color:var(--blue);color:var(--blue);font-weight:700} /* 반영 안 한 변경이 있을 때 */
   .mf button{padding:10px 20px;border-radius:4px;border:1px solid #ccc;background:#fff;cursor:pointer}
   .mf .save{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
   .mf .save:disabled{opacity:.4;cursor:not-allowed}
@@ -923,7 +925,7 @@ const fromP = (s, e) => ({ sd: dateOf(s), sh: s ? s.slice(11, 13) : '00', ed: da
 // ===== 화면 전환 (데모 내부) =====
 const HOWTO = {
   ad: '기존 화면 재현. 신규 안내 문구 추가, 광고 일정에서 "전체" 외(평일·주말·수동 설정) 선택 시 미소진 주의 문구 노출 (그 외 동작 없음)',
-  adlist: '사용법: 광고기간 옆 ✎ 클릭 → 기간 수정 후 [다음] → 게재 기간 관리 팝업에서 소재그룹 기간 조정·저장. 수정 이력이 없는 소재그룹만 새 광고 기간을 따라 미리 채워짐 (수정 이력 있는 소재그룹은 유지)',
+  adlist: '사용법: 광고기간 옆 ✎ 클릭 → 기간 수정 후 [다음] → 게재 기간 관리 팝업에서 소재그룹 기간 조정·저장. 기간 설정 N 소재그룹만 새 광고 기간을 따라 미리 채워짐 (기간 설정 Y 소재그룹은 유지, 팝업의 소재그룹 명 옆에 Y / N 표시)',
   list: '사용법: [게재 기간 관리] 버튼 클릭 → 팝업에서 수정·저장. 버튼은 광고그룹을 선택했을 때만 활성. 광고 일정: 데모_전체(제한 없음), 데모_수동 설정(시간대 필터), 데모_요일 설정(평일) (상태 컬럼 ⏱ 문구에 마우스 오버 → 요일×시간 그리드). 기존 화면은 그림만 재현, 수치는 예시값'
 };
 function showScreen(s) {
@@ -954,14 +956,12 @@ function renderList() {
   let html = `<tr class="sum"><td></td><td class="nm"><span class="lnk">전체 ⓘ</span><br>(연결 ${linked}개 / 미연결 ${rows.length - linked}개)</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="lnk">0</td><td class="lnk">0</td><td style="color:var(--red)">0</td></tr>`;
   html += rows.map(c => {
     const a = adOf(c.ag);
-    // 광고그룹 광고 기간 변경으로 조정된 소재그룹 표시
-    const tag = c.adj ? '<br><span class="tg chg">광고 기간 변경으로 변경</span>' : '';
     return `<tr>
       <td><span class="cb"></span><span class="dot ${c.linked ? '' : 'off'}" data-no="${c.no}" role="button" aria-label="${c.name} ON/OFF 변경" title="ON/OFF 변경"></span></td>
       <td class="nm"><div class="nmw"><span class="th" style="background:${c.thumb}"></span><div>${c.name}<br><span class="lnk">애셋 세부정보 보기</span></div></div></td>
       <td>${c.no}</td><td>${a.name}</td><td>${a.campaign}</td>
       ${statusCell(c, a)}
-      <td class="per">${c.start}<br>~ ${endText(c.end)}${tag}</td>
+      <td class="per">${c.start}<br>~ ${endText(c.end)}</td>
       <td>${c.ratio}</td><td>0</td><td>0</td><td style="color:var(--red)">0</td></tr>`;
   }).join('');
   $('#tb').innerHTML = html;
@@ -1007,21 +1007,25 @@ function showTip(el) {
 
 // ===== 게재 기간 관리 팝업 =====
 let M = null; // { a, draft, focus }
-// pend: 광고 기간 수정 팝업에서 [다음]으로 넘어온 경우 { start, end, prev } — 수정 이력 없는 소재그룹은 새 광고 기간을 따른 값을 미리 채움
+// pend: 광고 기간 수정 팝업에서 [다음]으로 넘어온 경우 { start, end } — 수정 이력 없는 소재그룹은 새 광고 기간을 따른 값을 미리 채움
 function openModal(agId, focusNo, pend) {
   const src = adOf(agId);
   const a = pend ? { ...src, start: pend.start, end: pend.end } : src;
   const draft = {};
   cgsOf(agId).forEach(c => draft[c.no] = { ...fromP(c.start, c.end), tag: '' });
   if (pend) planSync(src, pend.start, pend.end).forEach(x => draft[x.c.no] = { ...fromP(x.s, x.e), tag: '일괄 변경' });
-  // applied: [게재기간 반영] 시점의 게재 기간. 그리드 빨간 칸 · 행 경고는 이 값 기준 (입력 즉시 바뀌지 않음)
-  M = { a, src, draft, applied: snap(draft), focus: focusNo, pend, grid: true }; // 광고 일정 그리드는 기본 펼침
+  // 그리드 빨간 칸 · 행 경고는 항상 현재 입력값 기준 (게재 기간을 바꿀 때마다 바로 다시 표시)
+  M = { a, src, draft, focus: focusNo, pend, grid: true }; // 광고 일정 그리드는 기본 펼침
   $('#dim').classList.remove('hide');
   renderModal();
 }
-const snap = dr => Object.fromEntries(Object.entries(dr).map(([k, v]) => [k, { ...v }]));
-const closeModal = () => { $('#dim').classList.add('hide'); M = null; };
+// 기간 설정 YN: 저장된 값(수정 이력)만 표시. 팝업 안에서 게재 기간을 바꾸거나 [초기화]해도 바뀌지 않음 (저장 후 반영)
+const ynOf = c => c.edited ? 'Y' : 'N';
+const closeModal = () => { $('#dim').classList.add('hide'); M = null; AP = null; }; // [다음]으로 연 경우 광고 기간 수정도 함께 취소
 
+// 광고 기간을 일부라도 벗어나는 게재 기간: 시작일시가 광고 시작 전, 종료일시가 광고 종료 후, 광고 종료일이 있는데 종료일 없음
+// 광고 일정("전체" 포함)과 관계없이 팝업 행에 빨간 배경 + 경고 문구 (목록 ⚠ · 그리드는 전혀 겹치지 않을 때만)
+const outAd = (a, p) => p.start < a.start || (!!a.end && (!p.end || p.end > a.end));
 // 오류 행: 시작일 없음 / 시작일시 > 종료일시 (광고그룹 기간과는 무관)
 function rowError(p) {
   if (!p.start) return true;
@@ -1056,17 +1060,17 @@ function renderModal() {
   const list = cgsOf(a.id);
 
   const marks = new Set(); // 겹침 없는 행의 (요일-시) 칸 → 그리드에 빨간 테두리
-  let rows = `<div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간<button class="bbtn sm" data-act="reset">초기화</button></div></div>`;
+  let rows = `<div class="mr"><div class="n">소재그룹 명</div><div class="yn">기간 설정</div><div class="p">게재 기간<button class="bbtn sm" data-act="reset">초기화</button></div></div>`;
   rows += list.map(c => {
     const d = draft[c.no], p = toP(d), err = rowError(p);
-    const ap = toP(M.applied[c.no]), apErr = rowError(ap); // [게재기간 반영] 시점 값
-    const ng = !apErr && noOverlap(a, ap); // 시간대 필터와 겹치는 칸이 없는 행 → 빨간 배경 + 경고 문구
-    if (ng) cellsOf(a, ap).forEach(k => marks.add(k));
-    // 광고 기간과 겹치지 않는 게재 기간 → 그 기간의 칸도 그리드에 빨간 테두리
-    if (!apErr && a.schedule && !cmpRange(a, ap)) periodCells(ap).forEach(k => marks.add(k));
-    const cls = (d.tag ? 'chgd' : '') + (ng ? ' tfng' : '');
-    return `<div class="mr ${cls} ${M.focus === c.no ? 'focus' : ''}">
-      <div class="n"><span class="th" style="background:${c.thumb}" role="img" tabindex="0" aria-label="${c.name} 소재 이미지 (마우스 오버 시 확대)"></span><div>${c.name}${M.pend && c.edited ? '<br><span class="tg same">수정 이력 있음 · 유지</span>' : ''}</div></div>
+    const tng = !err && noOverlap(a, p); // 시간대 필터와 겹치는 칸이 없는 행
+    if (tng) cellsOf(a, p).forEach(k => marks.add(k));
+    // 광고 기간과 전혀 겹치지 않는 게재 기간 → 그 기간의 칸도 그리드에 빨간 테두리 (일부만 벗어난 행은 그리드 표시 없음)
+    if (!err && a.schedule && !cmpRange(a, p)) periodCells(p).forEach(k => marks.add(k));
+    const ng = tng || (!err && outAd(a, p)); // 시간대 겹침 없음 또는 광고 기간을 일부라도 벗어남 → 빨간 배경 + 경고 문구
+    return `<div class="mr${ng ? ' tfng' : ''}${M.focus === c.no ? ' focus' : ''}">
+      <div class="n"><span class="th" style="background:${c.thumb}" role="img" tabindex="0" aria-label="${c.name} 소재 이미지 (마우스 오버 시 확대)"></span><div>${c.name}</div></div>
+      <div class="yn">${ynOf(c)}</div>
       <div class="p">${periodInputs(c.no, d, err)}${ng ? `<div class="msg">⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div>` : ''}</div>
       </div>`;
   }).join('');
@@ -1077,9 +1081,8 @@ function renderModal() {
     ? `<b>⏱ ${a.schedule.type}</b> <i class="sdesc">${schedOf(a).desc}</i> <button class="link" data-act="grid" aria-expanded="${!!M.grid}">${M.grid ? '상세 닫기' : '상세 보기'}</button>
        <div class="warn2">소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!</div>`
     : '전체 (요일·시간 제한 없음)';
-  const dirty = list.some(c => JSON.stringify(toP(draft[c.no])) !== JSON.stringify(toP(M.applied[c.no])));
   const gpanel = M.grid && a.schedule ? `<div class="gpanel">
-      <div class="gh">광고그룹 광고 일정 · ${a.schedule.type}<small>읽기 전용 · 수정은 광고그룹 설정에서</small><button class="bbtn sm${dirty ? ' hot' : ''}" data-act="apply">게재기간 반영</button></div>
+      <div class="gh">광고그룹 광고 일정 · ${a.schedule.type}<small>읽기 전용 · 수정은 광고그룹 설정에서</small></div>
       ${gridHTML(a, marks)}
       <div class="glg"><span><i class="on"></i>노출</span><span><i></i>미노출</span>${marks.size ? '<span><i class="mk"></i>노출되지 않는 게재 기간</span>' : ''}</div>
     </div>` : '';
@@ -1087,11 +1090,11 @@ function renderModal() {
 
   $('#modal').innerHTML = `
     <div class="mh"><h3>소재그룹 게재 기간 관리</h3><button class="x" data-act="close" aria-label="닫기">×</button></div>
-    <div class="info"><span>광고그룹</span>${a.name}<br><span>광고 기간</span>${a.start} ~ ${a.end || '종료일 미설정'}${M.pend ? `<br><span>변경 전</span><i style="color:#888;font-style:normal">${M.pend.prev}</i>` : ''}<br><span>광고 일정</span>${tf}</div>
+    <div class="info"><span>광고그룹</span>${a.name}<br><span>광고 기간</span>${a.start} ~ ${a.end || '종료일 미설정'}<br><span>광고 일정</span>${tf}</div>
     ${gpanel}
     <div style="height:16px"></div>
     <div class="ml">${rows}</div>
-    <div class="mf">${M.pend ? '<button data-act="prev">이전</button>' : '<button data-act="close">취소</button>'}<button class="save" data-act="save">저장</button></div>`;
+    <div class="mf">${M.pend ? '' : '<button data-act="close">취소</button>'}<button class="save" data-act="save">저장</button></div>`; // [다음]으로 연 경우 [저장]만 (화면설계서 3-4)
 }
 
 $('#modal').addEventListener('change', e => {
@@ -1111,10 +1114,7 @@ $('#modal').addEventListener('change', e => {
 $('#modal').addEventListener('click', e => {
   const act = e.target.dataset.act; if (!act) return;
   if (act === 'close') return closeModal();
-  if (act === 'prev') { closeModal(); $('#dimAd').classList.remove('hide'); return renderAdPeriod(); } // 광고 기간 팝업으로 돌아감 (입력값 유지)
-  if (act === 'grid') { M.grid = !M.grid; if (M.grid) M.applied = snap(M.draft); return renderModal(); } // 다시 펼칠 때는 현재 입력값으로 표시
-  // 게재기간 반영: 바꾼 게재 기간으로 그리드 · 행 경고 다시 표시 (저장 안 함)
-  if (act === 'apply') { M.applied = snap(M.draft); return renderModal(); }
+  if (act === 'grid') { M.grid = !M.grid; return renderModal(); }
   // 초기화: 모든 소재그룹 게재 기간을 광고그룹 기간으로 (저장 전까지 미반영, 저장 시 설정 N)
   if (act === 'reset') {
     if (!confirm('모든 소재그룹의 게재 기간을 광고그룹 기간으로 초기화합니다. 계속하시겠습니까?')) return;
@@ -1132,7 +1132,7 @@ $('#modal').addEventListener('click', e => {
 function doSave() {
   const pend = M.pend;
   // 직접 수정한 소재그룹은 수정 이력 남김 → 이후 광고 기간이 바뀌어도 따라가지 않음
-  cgsOf(M.a.id).forEach(c => { const d = M.draft[c.no], p = toP(d); c.start = p.start; c.end = p.end; c.adj = !!pend && d.tag === '일괄 변경'; if (d.tag === '수정됨') c.edited = true; if (d.tag === '초기화') c.edited = false; });
+  cgsOf(M.a.id).forEach(c => { const d = M.draft[c.no], p = toP(d); c.start = p.start; c.end = p.end; if (d.tag === '수정됨') c.edited = true; if (d.tag === '초기화') c.edited = false; });
   if (pend) { M.src.start = pend.start; M.src.end = pend.end; AP = null; renderAdList(); } // 광고 기간과 소재그룹 게재 기간을 함께 저장
   closeModal(); renderList();
   const t = $('#toast'); t.textContent = pend ? '광고 기간과 소재그룹 게재 기간이 저장되었습니다.' : '게재 기간이 저장되었습니다.'; t.classList.remove('hide');
@@ -1215,7 +1215,6 @@ const closeAdPeriod = () => { $('#dimAd').classList.add('hide'); AP = null; };
 // 설정 N(수정 이력 없음)은 종료일 없음이어도 시작 · 종료 모두 새 광고 기간을 따름
 const planSync = (a, nS, nE) =>
   cgsOf(a.id).filter(c => !c.edited).map(c => ({ c, s: nS, e: nE })).filter(x => x.c.start !== x.s || x.c.end !== x.e);
-const per = (s, e) => `${s} ~ ${e || '종료일 미설정'}`;
 
 function renderAdPeriod() {
   const { a } = AP;
@@ -1253,7 +1252,7 @@ $('#apd').addEventListener('click', e => {
     if (nEnd && nEnd < nStart) { AP.err = '종료일시는 시작일시 이후여야 합니다.'; return renderAdPeriod(); }
     // 다음: 광고 기간은 아직 저장하지 않고, 게재 기간 관리 팝업에서 소재그룹 기간을 설정한 뒤 함께 저장
     $('#dimAd').classList.add('hide');
-    return openModal(AP.a.id, null, { start: nStart, end: nEnd, prev: per(AP.a.start, AP.a.end) });
+    return openModal(AP.a.id, null, { start: nStart, end: nEnd });
   }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && AP) closeAdPeriod(); });
@@ -1300,6 +1299,7 @@ renderList();
   .htbl td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:top;line-height:1.6}
   .htbl td:nth-child(-n+2){white-space:nowrap}
   .htbl tr.new td{background:#fff5f4}
+  .htbl ul{margin:0;padding-left:16px}
   .htbl td.empty{text-align:center;color:#888;padding:28px 10px}
   .pg[hidden],.item[hidden]{display:none}
   .hold{display:inline-block;font-size:10px;font-weight:700;border-radius:3px;padding:0 5px;background:#ffe8e8;color:var(--red);border:1px solid #f5b5b5;vertical-align:middle}
@@ -1357,7 +1357,7 @@ renderList();
   .ml{border:1px solid var(--line);border-radius:6px}
   .mr{display:flex;align-items:center;gap:10px;padding:7px 14px;border-top:1px solid #eee}
   .mr:first-child{border-top:0;background:#fafafa;color:#888}
-  .mr .n{width:200px}.thm{display:inline-block;width:32px;height:32px;border-radius:4px;border:1px solid #e3e3e3;vertical-align:middle;margin-right:8px}.mr .p{flex:1}.mr .k{width:120px;text-align:right}
+  .mr .n{width:180px;flex:none}.mr .yn{width:52px;flex:none;text-align:center}.thm{display:inline-block;width:32px;height:32px;border-radius:4px;border:1px solid #e3e3e3;vertical-align:middle;margin-right:8px}.mr .p{flex:1}.mr .k{width:120px;text-align:right}
   .mr.pv{background:#fffdf3}
   .bar{height:12px;border-radius:6px;background:#43a047;margin:8px 0 4px}
   .ok{background:#eaf6ec;color:#2e7d32;padding:8px 12px;border-radius:4px;margin-top:8px}
@@ -1392,7 +1392,6 @@ renderList();
   .glg i.mk{background:#fff1f1;box-shadow:inset 0 0 0 1.5px var(--red)}
   .mr.tfng{background:#fff1f1}
   .msg{color:var(--red);font-size:11px;margin-top:4px}
-  .msg.upd{color:#b88a00}
   .cfm{width:460px;max-width:100%;background:#fff;border-radius:8px;padding:20px 22px 16px;margin:0 auto}
   .cfm h4{margin:0 0 8px;font-size:14px}
   /* 요일 및 시간대 수정 (광고 일정 수동 설정) */
@@ -1414,6 +1413,7 @@ renderList();
   .item.sub{padding-left:16px}
   .item .ht{display:flex;gap:6px;align-items:center;font-weight:700;font-size:13px;margin-bottom:6px}
   .item .num{background:var(--red);color:#fff;font-size:10px;padding:1px 5px;border-radius:2px;cursor:pointer}
+  .item .ht > span{flex:none;white-space:nowrap} /* 제목이 길어도 번호 · 태그 · 수정 표시는 줄바꿈하지 않음 */
   .item .num:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
   .bd.ping{animation:bping 1.4s ease}
   @keyframes bping{0%,100%{box-shadow:0 0 0 2px #fff}20%,60%{box-shadow:0 0 0 2px #fff,0 0 0 7px rgba(229,72,77,.35)}}
@@ -1425,6 +1425,8 @@ renderList();
   .item .body div.s{padding-left:3.3em;text-indent:-1.8em}
   .item .body div.c2{padding-left:3.3em;color:#666}
   .item .body div.s2{padding-left:3.3em}
+  .item .body div.upd{color:var(--red)} /* 수정한 줄 (@@YYMMDD) */
+  .item .body .updn{font-size:11px;font-weight:700;white-space:nowrap}
   .flash{animation:fl 1.6s ease}
   @keyframes fl{0%,40%{background:#fff3a0}100%{background:transparent}}
   @media (prefers-reduced-motion:reduce){.flash{animation:none;background:#fff3a0}}
@@ -1540,19 +1542,19 @@ renderList();
     <h5>소재그룹 게재 기간 관리 <span>×</span></h5>
     <div class="info"><span>광고그룹</span>데모_수동 설정<br><span>광고 기간</span>2026-05-01 00:00 ~ 2026-12-31 23:59<br><span>광고 일정</span><b>⏱ 수동 설정</b> <i class="sdesc">요일·시간 직접 설정</i> <u class="link">상세 닫기</u><div class="warn2">소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!</div></div>
     <div class="gpanel">
-      <div class="gh">광고그룹 광고 일정 · 수동 설정<small>읽기 전용 · 수정은 광고그룹 설정에서</small><span class="btn sm">게재기간 반영</span></div>
+      <div class="gh">광고그룹 광고 일정 · 수동 설정<small>읽기 전용 · 수정은 광고그룹 설정에서</small></div>
       <table class="gd" data-on="7-23|9-12|7-23|7-23|7-23|10-20|10-20" data-mk="1-1,1-2,1-3,1-4" aria-label="요일 × 시간 노출 그리드"></table>
       <div class="glg"><span><i class="on"></i>노출</span><span><i></i>미노출</span><span><i class="mk"></i>노출되지 않는 게재 기간</span></div>
     </div>
     <div class="gap"></div>
     <div class="ml">
-      <div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간<span class="btn sm">초기화</span></div></div>
-      <div class="mr tfng"><div class="n"><span class="thm" style="background:#d9cfc2"></span>소재그룹명_데모5</div><div class="p"><div class="row"><span class="sel xs">2026-04-27</span><span class="sel xxs">15</span><span class="fx">:00</span>~<span class="sel xs">2026-10-31</span><span class="sel xxs">23</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg">⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div></div></div>
-      <div class="mr"><div class="n"><span class="thm" style="background:#d9cfc2"></span>소재그룹명_데모6</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="sel xxs">09</span><span class="fx">:00</span>~<span class="sel xs">2026-05-31</span><span class="sel xxs">18</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
-      <div class="mr"><div class="n"><span class="thm" style="background:#fbf5b8"></span>소재그룹명_데모7</div><div class="p"><div class="row"><span class="sel xs">2026-05-01</span><span class="sel xxs">00</span><span class="fx">:00</span>~<span class="sel xs">2026-12-31</span><span class="sel xxs">23</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg upd">광고그룹 기간 수정으로 소재 그룹 게재 기간이 수정되었습니다.</div></div></div>
-      <div class="mr"><div class="n"><span class="thm" style="background:#fbf5b8"></span>소재그룹명_데모8</div><div class="p"><div class="row"><span class="sel xs">2026-05-01</span><span class="sel xxs">00</span><span class="fx">:00</span>~<span class="sel xs">2026-12-31</span><span class="sel xxs">23</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg upd">광고그룹 기간 수정으로 소재 그룹 게재 기간이 수정되었습니다.</div></div></div>
-      <div class="mr tfng"><div class="n"><span class="thm" style="background:#cfe3d4"></span>소재그룹명_데모9</div><div class="p"><div class="row"><span class="sel xs">2026-11-10</span><span class="sel xxs">01</span><span class="fx">:00</span>~<span class="sel xs">2026-11-10</span><span class="sel xxs">04</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg">⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div></div></div>
-      <div class="mr"><div class="n"><span class="thm" style="background:#e3dcf3"></span>소재그룹명_데모12</div><div class="p row"><span class="sel xs">2026-12-02</span><span class="sel xxs">10</span><span class="fx">:00</span>~<span class="sel xs">2026-12-02</span><span class="sel xxs">14</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n">소재그룹 명</div><div class="yn">기간 설정</div><div class="p">게재 기간<span class="btn sm">초기화</span></div></div>
+      <div class="mr tfng"><div class="n"><span class="thm" style="background:#d9cfc2"></span>소재그룹명_데모5</div><div class="yn">Y</div><div class="p"><div class="row"><span class="sel xs">2026-04-27</span><span class="sel xxs">15</span><span class="fx">:00</span>~<span class="sel xs">2026-10-31</span><span class="sel xxs">23</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg">⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div></div></div>
+      <div class="mr"><div class="n"><span class="thm" style="background:#d9cfc2"></span>소재그룹명_데모6</div><div class="yn">Y</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="sel xxs">09</span><span class="fx">:00</span>~<span class="sel xs">2026-05-31</span><span class="sel xxs">18</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n"><span class="thm" style="background:#fbf5b8"></span>소재그룹명_데모7</div><div class="yn">N</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="sel xxs">00</span><span class="fx">:00</span>~<span class="sel xs">2026-12-31</span><span class="sel xxs">23</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n"><span class="thm" style="background:#fbf5b8"></span>소재그룹명_데모8</div><div class="yn">N</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="sel xxs">00</span><span class="fx">:00</span>~<span class="sel xs">2026-12-31</span><span class="sel xxs">23</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr tfng"><div class="n"><span class="thm" style="background:#cfe3d4"></span>소재그룹명_데모9</div><div class="yn">Y</div><div class="p"><div class="row"><span class="sel xs">2026-11-10</span><span class="sel xxs">01</span><span class="fx">:00</span>~<span class="sel xs">2026-11-10</span><span class="sel xxs">04</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg">⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div></div></div>
+      <div class="mr"><div class="n"><span class="thm" style="background:#e3dcf3"></span>소재그룹명_데모12</div><div class="yn">Y</div><div class="p row"><span class="sel xs">2026-12-02</span><span class="sel xxs">10</span><span class="fx">:00</span>~<span class="sel xs">2026-12-02</span><span class="sel xxs">14</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
     </div>
     <div class="gap"></div>
     <div class="row" style="justify-content:flex-end"><span class="btn pri">저장</span></div>
@@ -1588,19 +1590,19 @@ renderList();
     <h5>소재그룹 게재 기간 관리 <span>×</span></h5>
     <div class="info rel"><span class="bd" data-t="5-1"></span><span>광고그룹</span>데모_수동 설정<br><span>광고 기간</span>2026-04-27 15:00 ~ 2026-11-30 23:59<br><span class="bd" data-t="5-2"></span><span>광고 일정</span><b>⏱ 수동 설정</b> <i class="sdesc">요일·시간 직접 설정</i> <u class="link">상세 닫기</u><div class="warn2">소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!</div></div>
     <div class="gpanel">
-      <div class="gh"><span class="bd" data-t="5-3"></span>광고그룹 광고 일정 · 수동 설정<small>읽기 전용 · 수정은 광고그룹 설정에서</small><span class="btn sm">게재기간 반영</span></div>
+      <div class="gh"><span class="bd" data-t="5-3"></span>광고그룹 광고 일정 · 수동 설정<small>읽기 전용 · 수정은 광고그룹 설정에서</small></div>
       <table class="gd" data-on="7-23|9-12|7-23|7-23|7-23|10-20|10-20" data-mk="1-1,1-2,1-3,1-4,2-10,2-11,2-12,2-13,2-14" aria-label="요일 × 시간 노출 그리드"></table>
       <div class="glg"><span><i class="on"></i>노출</span><span><i></i>미노출</span><span><i class="mk"></i>노출되지 않는 게재 기간</span></div>
     </div>
     <div class="gap"></div>
     <div class="ml rel"><span class="bd" data-t="5-4"></span>
-      <div class="mr"><div class="n">소재그룹 명</div><div class="p">게재 기간<span class="btn sm">초기화</span></div></div>
-      <div class="mr"><div class="n"><span class="thm" style="background:#d9cfc2"></span>소재그룹명_데모5</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="sel xxs">15</span><span class="fx">:00</span>~<span class="sel xs">2026-10-31</span><span class="sel xxs">23</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
-      <div class="mr"><div class="n"><span class="thm" style="background:#d9cfc2"></span>소재그룹명_데모6</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="sel xxs">09</span><span class="fx">:00</span>~<span class="sel xs">2026-05-31</span><span class="sel xxs">18</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
-      <div class="mr chgd"><div class="n"><span class="thm" style="background:#fbf5b8"></span>소재그룹명_데모7</div><div class="p row"><span class="sel xs chg">2026-04-27</span><span class="sel xxs">15</span><span class="fx">:00</span>~<span class="sel xs chg">2026-11-25</span><span class="sel xxs chg">12</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
-      <div class="mr"><div class="n"><span class="thm" style="background:#fbf5b8"></span>소재그룹명_데모8</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="sel xxs">15</span><span class="fx">:00</span>~<span class="sel xs dis">연도-월-일</span><span class="sel xxs dis">23</span><span class="fx">:59</span> <span class="rel"><span class="bd" data-t="5-5"></span>☑ 종료일 없음</span></div></div>
-      <div class="mr tfng"><div class="n"><span class="thm" style="background:#cfe3d4"></span>소재그룹명_데모9</div><div class="p"><div class="row"><span class="sel xs">2026-11-10</span><span class="sel xxs">01</span><span class="fx">:00</span>~<span class="sel xs">2026-11-10</span><span class="sel xxs">04</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg"><span class="bd" data-t="5-6"></span>⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div></div></div>
-      <div class="mr"><div class="n"><span class="thm" style="background:#e3dcf3"></span>소재그룹명_데모12</div><div class="p row"><span class="sel xs">2026-12-02</span><span class="sel xxs">10</span><span class="fx">:00</span>~<span class="sel xs">2026-12-02</span><span class="sel xxs">14</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n">소재그룹 명</div><div class="yn">기간 설정</div><div class="p">게재 기간<span class="btn sm">초기화</span></div></div>
+      <div class="mr"><div class="n"><span class="thm" style="background:#d9cfc2"></span>소재그룹명_데모5</div><div class="yn">Y</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="sel xxs">15</span><span class="fx">:00</span>~<span class="sel xs">2026-10-31</span><span class="sel xxs">23</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n"><span class="thm" style="background:#d9cfc2"></span>소재그룹명_데모6</div><div class="yn">Y</div><div class="p row"><span class="sel xs">2026-05-01</span><span class="sel xxs">09</span><span class="fx">:00</span>~<span class="sel xs">2026-05-31</span><span class="sel xxs">18</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr"><div class="n"><span class="thm" style="background:#fbf5b8"></span>소재그룹명_데모7</div><div class="yn">N</div><div class="p row"><span class="sel xs">2026-04-27</span><span class="sel xxs">15</span><span class="fx">:00</span>~<span class="sel xs">2026-11-25</span><span class="sel xxs">12</span><span class="fx">:59</span> ☐ 종료일 없음</div></div>
+      <div class="mr tfng"><div class="n"><span class="thm" style="background:#fbf5b8"></span>소재그룹명_데모8</div><div class="yn">N</div><div class="p"><div class="row"><span class="sel xs">2026-04-27</span><span class="sel xxs">15</span><span class="fx">:00</span>~<span class="sel xs dis">연도-월-일</span><span class="sel xxs dis">23</span><span class="fx">:59</span> <span class="rel"><span class="bd" data-t="5-5"></span>☑ 종료일 없음</span></div><div class="msg">⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div></div></div>
+      <div class="mr tfng"><div class="n"><span class="thm" style="background:#cfe3d4"></span>소재그룹명_데모9</div><div class="yn">Y</div><div class="p"><div class="row"><span class="sel xs">2026-11-10</span><span class="sel xxs">01</span><span class="fx">:00</span>~<span class="sel xs">2026-11-10</span><span class="sel xxs">04</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg"><span class="bd" data-t="5-6"></span>⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div></div></div>
+      <div class="mr tfng"><div class="n"><span class="thm" style="background:#e3dcf3"></span>소재그룹명_데모12</div><div class="yn">Y</div><div class="p"><div class="row"><span class="sel xs">2026-12-02</span><span class="sel xxs">10</span><span class="fx">:00</span>~<span class="sel xs">2026-12-02</span><span class="sel xxs">14</span><span class="fx">:59</span> ☐ 종료일 없음</div><div class="msg">⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요</div></div></div>
     </div>
     <div class="gap"></div>
     <div class="row rel" style="justify-content:flex-end"><span class="bd" data-t="5-7"></span><span class="btn">취소</span><span class="btn pri">저장</span></div>
@@ -1637,7 +1639,7 @@ const DESC = [
   { id: '3-1', tag: 'chg', title: '시작일시 / 종료일시 시간 선택', body: 'a. 시작 시간: HH:00 (00:00 ~ 23:00)\nb. 종료 시간: 선택한 시의 59분까지 (예: 23 선택 → 23:59)\nb-1. 시간 목록은 00 ~ 23만 제공\nb-2. 23:59 별도 선택지 없음\nc. 종료일시는 시작일시 이후여야 저장 가능' },
   { id: '3-2', tag: 'new', title: '소재그룹 기간 변경 안내 문구', body: 'a. 기존 안내 문구 하단에 노출\nb. 문구: "광고 기간 변경 시 게재 기간을 수정한 적 없는 소재그룹은 광고 기간을 따라 변경됩니다."\nc. 스타일: 빨간 글씨' },
   { id: '3-3', tag: 'chg', title: '다음', body: 'a. 기존 [저장] 버튼을 [다음]으로 변경\nb. 클릭 시: 저장 및 게재 기간 관리 팝업(3-4) 노출' },
-  { id: '3-4', tag: 'new', title: '게재 기간 관리 팝업 (광고 기간 수정에서 진입)', body: 'a. 화면 5와 동일 내용의 팝업\nb. 광고그룹 기간 수정으로 인해 수정된 내역 별도 표기\nb-1. 소재그룹 기간 설정 조건이 N인 경우 광고그룹 기간과 동일하게 변경됨\nb-2. 소재그룹 기간 설정 조건이 Y인 경우 변동 없음\nb-3. 변경된 행: 입력칸 아래 문구 노출 (배경색 없음)\nㄴ "광고그룹 기간 수정으로 소재 그룹 게재 기간이 수정되었습니다."\nc. 소재그룹 게재 기간이 광고그룹 기간 내가 아닌 경우 별도 표기\nc-1. 행에 붉은 배경색 제공\nc-2. 경고 문구 노출\nㄴ "⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요"\nc-3. 시간대 겹침 없는 행(5-6)도 같은 배경 · 같은 문구\nd. 하단 버튼: [저장]\nd-1. [게재기간 반영](5-3) · [초기화](5-4)는 화면 5와 동일\nd-2. 저장 시 체크는 화면 5와 동일 (5-7)\ne. 저장 완료 토스트: "광고 기간과 소재그룹 게재 기간이 저장되었습니다."' },
+  { id: '3-4', tag: 'new', upd: '261126', title: '게재 기간 관리 팝업 (광고 기간 수정에서 진입)', body: 'a. 화면 5와 같은 팝업 (소재그룹 목록 [게재 기간 관리]로 여는 팝업과 동일)@@261126\nb. 소재그룹 기간 설정 YN에 따라 게재 기간을 미리 채움@@261126\nb-1. 소재그룹 기간 설정 조건이 N인 경우 광고그룹 기간과 동일하게 변경됨\nb-2. 소재그룹 기간 설정 조건이 Y인 경우 변동 없음\nb-3. 소재그룹 명 오른쪽 "기간 설정" 열에 Y / N 표시 (5-4)@@261126\nㄴ 광고그룹 기간 수정으로 바뀐 행에 별도 안내 문구 없음@@261126\nc. 미소진 위험 행 표시는 화면 5와 동일 (5-6)@@261126\nc-1. 게재 기간이 새 광고 기간을 일부라도 벗어나는 행: 붉은 배경 + 경고 문구@@261126\nㄴ 예: 데모5 (04-27 시작, 새 광고 시작 05-01 전)@@261126\nc-2. 시간대 겹침 없는 행도 같은 배경 · 같은 문구 (예: 데모9)@@261126\nㄴ "⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요"\nd. 하단 버튼: [저장]\nd-1. [초기화](5-4) · 게재 기간을 바꾸면 그리드 · 행 경고 바로 표시(5-3)는 화면 5와 동일@@261126\nd-2. 저장 시 체크는 화면 5와 동일 (5-7)\ne. 저장 완료 토스트: "광고 기간과 소재그룹 게재 기간이 저장되었습니다."' },
   { id: '4', tag: 'old', title: '소재그룹 목록', body: 'a. 캠페인 > 소재그룹 목록 화면\n기존 컬럼, 필터, 지표, 다운로드 동작은 유지' },
   { id: '4-1', tag: 'new', title: '게재 기간 관리 버튼', body: 'a. 광고그룹 미선택 상태에서 클릭 시\n: 얼럿 노출: "광고그룹을 선택해주세요"\na-1. 팝업 오픈 안됨\nb. 클릭 시 게재 기간 관리 팝업(5) 오픈\nb-1. 해당 광고그룹의 모든 소재그룹 노출\nㄴ 페이지네이션 없이 무한 스크롤\nb-2. 소재그룹 목록 화면에서 소재그룹을 별도로 선택하여 게재 기간을 수정할 수 없음' },
   { id: '4-2', tag: 'new', title: '게재 기간 컬럼', body: 'a. 위치: 상태 컬럼 우측에 열 삽입\nb. 표기: 1줄 "시작일시", 2줄 "~ 종료일시" 또는 "~ 종료일 미설정"\n광고그룹 목록 광고기간 컬럼과 같은 포맷\n(예: 2026-04-27 15:00 / ~ 2026-10-31 23:59)\nc. 정렬: 시작일시 기준 오름/내림차순\nd. 컬럼설정에서 노출·숨김 가능, 다운로드 파일에도 포함' },
@@ -1647,21 +1649,34 @@ const DESC = [
   { id: '5', tag: 'new', title: '게재 기간 관리 팝업', body: 'a. 팝업 오픈 시 해당 광고그룹의 모든 소재그룹이 함께 노출\nb. 닫기(×), 취소, Esc: 저장하지 않은 변경을 버리고 닫기' },
   { id: '5-1', tag: 'new', title: '광고그룹 정보', body: 'a. 광고그룹 명, 광고 기간을 읽기 전용으로 표시\nb. 광고 기간이 종료일 미설정이면 "~ 종료일 미설정"으로 표시' },
   { id: '5-2', tag: 'new', title: '광고 일정', body: 'a. 광고 기간 아래에 광고 일정 유형 표시 (읽기 전용)\nㄴ 수동 설정: "⏱ 수동 설정 요일·시간 직접 설정"\nㄴ 평일: "⏱ 평일 월~금만 노출"\nㄴ 주말: "⏱ 주말 토·일만 노출"\nㄴ 전체: "전체 (요일·시간 제한 없음)"\nb. "전체" 외 → 광고 일정 그리드(5-3)를 펼친 상태로 노출 (디폴트)\nb-1. 유형 오른쪽에 [상세 닫기]\nb-2. [상세 닫기] 클릭 시 그리드 접힘, 버튼은 [상세 보기]로 변경\nc. "전체" 외 → 아래에 빨간 글씨 주의 문구\nㄴ 문구: 소재그룹 게재기간 설정에 따라 미소진이 발생할 수 있으니 주의하세요!\nd. "전체" → [상세 보기] · 주의 문구 · 그리드 없음' },
-  { id: '5-3', tag: 'new', title: '광고 일정 그리드', body: 'a. 광고그룹 광고 일정을 요일 × 24시간 그리드로 표시 (읽기 전용)\na-1. 수정은 광고그룹 설정에서\nb. 파란 칸: 노출, 회색 칸: 미노출\nc. 빨간 테두리 칸: 노출되지 않는 게재 기간\nㄴ 시간대 겹침이 없는 소재그룹의 게재 기간 칸 (5-6, 예: 데모9 화 01~04시)\nㄴ 광고 기간과 겹치지 않는 게재 기간 칸 (예: 데모12 수 10~14시)\nc-1. 빨간 테두리 칸이 있을 때만 범례에 "노출되지 않는 게재 기간" 표시\nc-2. 빨간 테두리 칸은 파란 · 회색 대신 연한 빨간 바탕으로 표시\nㄴ 광고 일정상 노출 시간이어도 해당 게재 기간은 노출되지 않으므로 파란색으로 두지 않음\nd. [게재기간 반영]: 그리드 오른쪽 위 버튼\nd-1. 바꾼 게재 기간으로 그리드 빨간 칸과 행 경고(5-6) 다시 표시\nd-2. [게재기간 반영] 전에는 이전 표시 유지, 저장하지 않음\nd-3. 반영하지 않은 변경이 있으면 [게재기간 반영] 버튼 강조\nd-4. 팝업 오픈 시, 그리드를 접었다 다시 펼칠 때는 현재 입력값 기준으로 표시' },
-  { id: '5-4', tag: 'new', title: '소재그룹 목록', body: 'a. 광고그룹에 속한 소재그룹 전체 노출\na-1. 최초 팝업 오픈 시 기존 게재 기간 노출\nb. 행마다 게재 기간을 직접 수정 (데이트 피커 + 시 선택)\nb-1. 광고그룹 기간과 관계없이 자유롭게 설정\nb-2. 종료일은 시작일보다 앞선 날짜 선택 불가\nc. 시(HH)까지만 선택, 분은 선택하지 않음\nㄴ 시 목록: 00~23 (광고 기간과 동일)\nㄴ 시작: 선택한 시의 00분 (예: 09 → 09:00)\nㄴ 종료: 선택한 시의 59분 (예: 23 → 23:59)\nd. 광고 기간 안에 게재 기간이 비는 구간이 있어도 됨\ne. 수정한 행 · 입력칸은 별도 강조 없음\nf. 행마다 [종료일 없음] 체크박스 노출 (5-5)\ng. 소재그룹 명 왼쪽에 소재 이미지(썸네일) 노출\ng-1. 마우스 오버 시 썸네일 오른쪽에 크게 보기 (200×200), 마우스를 떼면 닫힘\nh. [초기화]: "게재 기간" 제목 오른쪽 버튼\nh-1. 모든 소재그룹의 게재 기간을 광고그룹 기간으로 일괄 변경\nh-2. 클릭 시 컨펌: "모든 소재그룹의 게재 기간을 광고그룹 기간으로 초기화합니다. 계속하시겠습니까?"\nh-3. 시작일시 = 광고 시작일시, 종료일시 = 광고 종료일시\nㄴ 광고 종료일 없음이면 종료일 없음\nh-4. 저장 전까지 반영 안 됨\nh-5. 초기화한 소재그룹은 저장 시 설정 N (광고그룹 기간을 따름)' },
+  { id: '5-3', tag: 'new', upd: '261126', title: '광고 일정 그리드', body: 'a. 광고그룹 광고 일정을 요일 × 24시간 그리드로 표시 (읽기 전용)\na-1. 수정은 광고그룹 설정에서\nb. 파란 칸: 노출, 회색 칸: 미노출\nc. 빨간 테두리 칸: 노출되지 않는 게재 기간\nㄴ 시간대 겹침이 없는 소재그룹의 게재 기간 칸 (5-6, 예: 데모9 화 01~04시)\nㄴ 광고 기간과 겹치지 않는 게재 기간 칸 (예: 데모12 수 10~14시)\nc-1. 빨간 테두리 칸이 있을 때만 범례에 "노출되지 않는 게재 기간" 표시\nc-2. 빨간 테두리 칸은 파란 · 회색 대신 연한 빨간 바탕으로 표시\nㄴ 광고 일정상 노출 시간이어도 해당 게재 기간은 노출되지 않으므로 파란색으로 두지 않음\nd. 게재 기간을 바꾸면 그리드 빨간 칸과 행 경고(5-6)를 바로 다시 표시@@261126\nd-1. 대상: 소재그룹 행의 날짜 · 시 선택, [종료일 없음] 체크 · 해제, [초기화](5-4)@@261126\nd-2. 표시만 바뀌고 저장하지 않음@@261126\nㄴ 기존 [게재기간 반영] 버튼 삭제@@261126' },
+  { id: '5-4', tag: 'new', upd: '261126', title: '소재그룹 목록', body: 'a. 광고그룹에 속한 소재그룹 전체 노출\na-1. 최초 팝업 오픈 시 기존 게재 기간 노출\nb. 행마다 게재 기간을 직접 수정 (데이트 피커 + 시 선택)\nb-1. 광고그룹 기간과 관계없이 자유롭게 설정\nb-2. 종료일은 시작일보다 앞선 날짜 선택 불가\nc. 시(HH)까지만 선택, 분은 선택하지 않음\nㄴ 시 목록: 00~23 (광고 기간과 동일)\nㄴ 시작: 선택한 시의 00분 (예: 09 → 09:00)\nㄴ 종료: 선택한 시의 59분 (예: 23 → 23:59)\nd. 광고 기간 안에 게재 기간이 비는 구간이 있어도 됨\ne. 수정한 행 · 입력칸은 별도 강조 없음\nf. 행마다 [종료일 없음] 체크박스 노출 (5-5)\ng. 소재그룹 명 왼쪽에 소재 이미지(썸네일) 노출\ng-1. 마우스 오버 시 썸네일 오른쪽에 크게 보기 (200×200), 마우스를 떼면 닫힘\nh. [초기화]: "게재 기간" 제목 오른쪽 버튼\nh-1. 모든 소재그룹의 게재 기간을 광고그룹 기간으로 일괄 변경\nh-2. 클릭 시 컨펌: "모든 소재그룹의 게재 기간을 광고그룹 기간으로 초기화합니다. 계속하시겠습니까?"\nh-3. 시작일시 = 광고 시작일시, 종료일시 = 광고 종료일시\nㄴ 광고 종료일 없음이면 종료일 없음\nh-4. 저장 전까지 반영 안 됨\nh-5. 초기화한 소재그룹은 저장 시 설정 N (광고그룹 기간을 따름)\ni. 소재그룹 명 오른쪽에 "기간 설정" 열 (Y / N)@@261126\ni-1. Y: 게재 기간을 직접 설정한 소재그룹 (광고 기간이 바뀌어도 유지)@@261126\ni-2. N: 광고그룹 기간을 따르는 소재그룹 (광고 기간이 바뀌면 따라 변경)@@261126\ni-3. 저장된 값 표시@@261126\nㄴ 팝업 안에서 게재 기간을 바꾸거나 [초기화]해도 바뀌지 않음@@261126\nㄴ 저장 시 직접 수정한 소재그룹은 Y(5-7 d), [초기화]한 소재그룹은 N(h-5)으로 저장되고 다음 오픈 시 반영@@261126\ni-4. 광고 기간 수정 → [다음]으로 연 팝업(3-4)도 같음@@261126' },
   { id: '5-5', tag: 'new', title: '종료일 없음 선택', body: 'a. 소재그룹 행마다 종료일 입력칸 오른쪽에 [종료일 없음] 체크박스\na-1. 체크 시 종료일·시 입력칸 비활성, 게재 기간 = 시작일시 ~ 종료일 미설정\na-2. 해제 시 종료일·시 입력칸 활성 (시작일 23:59로 채워짐)\nb. 선택 개수 제한 없음 (0개여도 저장 가능)' },
-  { id: '5-6', tag: 'new', title: '시간대 겹침 없음 행', body: 'a. [게재기간 반영](5-3) 클릭 시 광고 일정과 겹침 검증 (팝업 오픈 시 1회)\nb. 겹치는 칸이 없는 행 → 빨간 배경 + 경고 문구\nㄴ "⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요"\nㄴ 광고 일정 유형(평일 · 주말 · 수동 설정)과 관계없이 같은 문구\nc. 광고 기간과 겹치지 않는 게재 기간 → 행 표시 없음, 그리드(5-3)에만 빨간 테두리' },
-  { id: '5-7', tag: 'new', title: '취소 / 저장 (유효성 검사)', body: 'a. [저장] 클릭 시 시작일이 비어 있거나 시작일시 > 종료일시인 행만 체크\nㄴ 해당 행 빨간 테두리, 얼럿 "게재 기간을 확인해주세요. 시작일이 비어 있거나 시작일시가 종료일시보다 늦은 소재그룹이 N개 있습니다."\na-1. 광고그룹 기간을 벗어나거나, 비는 구간이 있거나, 종료일 없음 소재그룹이 없어도 저장 가능 (검사하지 않음)\nb. 시간대 겹침이 없는 소재그룹이 있으면 확인창(6) 노출\nb-1. [게재기간 반영] 여부와 관계없이 현재 입력값 기준으로 확인\nc. 저장 시 팝업을 닫고 목록의 게재 기간 컬럼에 즉시 반영\nd. 직접 수정한 소재그룹은 수정 이력 생김\nㄴ 값을 고쳤다가 원래 값으로 되돌려 저장해도 수정 이력 생김\ne. 저장 완료 토스트: "게재 기간이 저장되었습니다."' },
+  { id: '5-6', tag: 'new', upd: '261126', title: '미소진 위험 행 (시간대 겹침 없음 · 광고 기간 밖)', body: 'a. 팝업 오픈 시와 게재 기간을 바꿀 때마다 검증 (5-3)@@261126\nb. 아래 행 → 빨간 배경 + 경고 문구@@261126\nㄴ "⚠ 미소진 위험이 있는 소재그룹입니다. 게재 기간을 확인해주세요"\nb-1. 시간대 겹침 없음: 광고 일정과 겹치는 칸이 없는 행 (예: 데모9)@@261126\nㄴ 광고 일정 유형(평일 · 주말 · 수동 설정)과 관계없이 같은 문구\nb-2. 광고 기간 밖: 게재 기간이 광고 기간을 일부라도 벗어나는 행 (예: 데모8 · 데모12)@@261126\nㄴ 시작일시 < 광고 시작일시, 또는 종료일시 > 광고 종료일시@@261126\nㄴ 광고 종료일이 있는데 [종료일 없음]인 행도 포함 (예: 데모8)@@261126\nㄴ 광고 일정 "전체"여도 표시@@261126\nc. 그리드(5-3) 빨간 테두리는 시간대 겹침 없는 행, 광고 기간과 전혀 겹치지 않는 행만@@261126\nㄴ 일부만 벗어난 행(예: 데모8)은 그리드 표시 없음@@261126\nd. 행 경고가 있어도 저장 가능@@261126\nd-1. 저장 시 확인창(6)은 시간대 겹침 없는 행만 (5-7)@@261126' },
+  { id: '5-7', tag: 'new', upd: '261126', title: '취소 / 저장 (유효성 검사)', body: 'a. [저장] 클릭 시 시작일이 비어 있거나 시작일시 > 종료일시인 행만 체크\nㄴ 해당 행 빨간 테두리, 얼럿 "게재 기간을 확인해주세요. 시작일이 비어 있거나 시작일시가 종료일시보다 늦은 소재그룹이 N개 있습니다."\na-1. 광고그룹 기간을 벗어나거나, 비는 구간이 있거나, 종료일 없음 소재그룹이 없어도 저장 가능 (검사하지 않음)\nb. 시간대 겹침이 없는 소재그룹이 있으면 확인창(6) 노출\nb-1. 현재 입력값 기준으로 확인@@261126\nc. 저장 시 팝업을 닫고 목록의 게재 기간 컬럼에 즉시 반영\nd. 직접 수정한 소재그룹은 수정 이력 생김\nㄴ 값을 고쳤다가 원래 값으로 되돌려 저장해도 수정 이력 생김\ne. 저장 완료 토스트: "게재 기간이 저장되었습니다."' },
   { id: '6', tag: 'new', title: '노출되지 않는 소재그룹 확인창', body: 'a. [저장] 시 시간대 겹침이 없는 소재그룹이 있으면 노출 (컨펌)\nb. 제목: 노출되지 않는 소재그룹이 있습니다\nc. 문구: "아래 소재그룹은 게재기간 전체가 광고그룹 시간대 필터의 미노출 시간에 해당합니다. 이대로 저장하면 소재가 노출되지 않습니다."\nㄴ 평일 · 주말은 "시간대 필터" 대신 "평일 일정" · "주말 일정"\nd. 해당 소재그룹 명 + 게재 기간 목록\nㄴ 예: 소재그룹명_데모9 / 2026-11-10(화) 01:00 ~ 04:59\ne. [게재기간 수정] → 확인창만 닫고 게재 기간 관리 팝업으로 돌아감\nf. [그대로 저장] → 저장\nf-1. 광고 기간 수정 [다음]으로 연 팝업(3-4)도 같음\ng. Esc → 확인창만 닫음' }
 ];
 const TAGS = { old: '기존', chg: '변경', new: '신규' };
 // upd: 마지막 수정일(YYMMDD). 있으면 디스크립션 제목 옆 · 왼쪽 화면 배지 옆에 "YYMMDD_수정" 표시
 const updMark = d => d.upd ? `<span class="edit-mark">${d.upd}_수정</span>` : '';
 
+// 디스크립션 줄 끝 "@@YYMMDD" = 그날 수정한 줄 → 붉은 글씨, 연속으로 수정한 줄 묶음의 첫 줄 옆에 "(YY.MM.DD 수정)"
+const UPD_RE = /@@(\d{6})$/;
+function bodyHTML(body) {
+  let prev = null;
+  return body.split('\n').map(raw => {
+    const m = raw.match(UPD_RE), upd = m ? m[1] : null, l = m ? raw.replace(UPD_RE, '') : raw;
+    const cls = /^ {2}/.test(l) ? 's2' : /^ㄴ/.test(l) ? 'c2' : /^[a-z]-\d\. /.test(l) ? 'm s' : /^[a-z]\. /.test(l) ? 'm' : '';
+    const note = upd && upd !== prev ? ` <span class="updn">(${upd.slice(0, 2)}.${upd.slice(2, 4)}.${upd.slice(4)} 수정)</span>` : '';
+    prev = upd;
+    return `<div class="${cls}${upd ? ' upd' : ''}">${cls === 's2' ? l.trim() : l}${note}</div>`;
+  }).join('');
+}
+
 const desc = document.getElementById('desc');
 desc.innerHTML = DESC.map(d => `<div class="item ${d.id.includes('-') ? 'sub' : ''}" id="d-${d.id}">
   <div class="ht"><span class="num">${d.id}</span>[${d.title}]<span class="t ${d.tag}">${TAGS[d.tag]}</span>${d.hold ? '<span class="hold">보류</span>' : ''}${updMark(d)}</div>
-  <div class="body">${d.body.split('\n').map(l => /^ {2}/.test(l) ? `<div class="s2">${l.trim()}</div>` : /^ㄴ/.test(l) ? `<div class="c2">${l}</div>` : /^[a-z]-\d\. /.test(l) ? `<div class="m s">${l}</div>` : /^[a-z]\. /.test(l) ? `<div class="m">${l}</div>` : `<div>${l}</div>`).join('')}</div></div>`).join('');
+  <div class="body">${bodyHTML(d.body)}</div></div>`).join('');
 
 // 요일 및 시간대 수정 목업: 시간(행) × 요일(열), data-on 은 아래 광고 일정 그리드와 같은 형식
 document.querySelectorAll('table.gdv').forEach(t => {
